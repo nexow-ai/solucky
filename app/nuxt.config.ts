@@ -1,3 +1,33 @@
+/**
+ * Security headers for production. The app talks to user-configured RPC
+ * endpoints and browser wallets, so `connect-src` allows any HTTPS/WSS host
+ * (plus localhost for local clusters). Nuxt's hydration payload and the color
+ * mode script are inline, hence `'unsafe-inline'` for scripts; nothing is ever
+ * loaded from another origin. On Cloudflare, Nitro also writes these to
+ * `_headers` so static files get them too.
+ */
+const securityHeaders = {
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self' data:",
+    "connect-src 'self' https: wss: http://127.0.0.1:* ws://127.0.0.1:* http://localhost:* ws://localhost:*",
+    "worker-src 'self' blob:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join('; '),
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+};
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
@@ -33,6 +63,13 @@ export default defineNuxtConfig({
     '/': { prerender: true },
     '/play': { ssr: false },
     '/rounds/**': { ssr: false },
+  },
+
+  // Dev and HMR stay header-free; production responses carry the headers.
+  $production: {
+    routeRules: {
+      '/**': { headers: securityHeaders },
+    },
   },
 
   runtimeConfig: {
