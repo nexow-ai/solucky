@@ -13,6 +13,7 @@ A rewrite of the 2022 prototype into a self-contained, verifiable product. Nothi
 - Winners are paid by `claim_prize` and the fee by a separate `collect_fee`, so the treasury can never hold up a payout. Buyers pass a `max_price`, and tickets cost at least 0.001 SOL so every prize can be paid.
 - Unit tests and LiteSVM integration tests for every instruction and failure path.
 - `@solucky/client`, a Codama-generated `@solana/kit` client with query, time, country, error and draw-verification helpers.
+- Neon city landing: animated skyline, synthwave sun and grid floor, digit rain, live ticket ticker and HUD cards, with the dark theme by default.
 - Nuxt 4 + Nuxt UI app with a landing page, the three-panel game, round pages with an in-browser draw check, Wallet Standard support, live updates, dark and light themes, sounds, and `/api/price` and `/api/geo` routes. Deploys to Cloudflare Workers or Node.
 - Operator scripts: `admin` (init, status, config changes), `crank` (settles finished rounds), `localnet` (loads the program into a local Surfpool, no CLI or deploy keypair needed) and `e2e` (full local round).
 - CI for the program, client and app, an end-to-end round on Surfpool played by the scripts and by Playwright in a real browser, Dependabot, and an optional scheduled crank workflow.
