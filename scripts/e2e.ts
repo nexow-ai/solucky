@@ -2,23 +2,15 @@
  * End-to-end check on a local Surfpool network (https://surfpool.run), whose
  * clock can be moved forward. It never runs against a remote cluster.
  *
- *   surfpool start --offline --no-deploy --airdrop <your keypair's address>
- *   solana program deploy -u localhost --use-rpc \
- *     --program-id target/deploy/solucky-keypair.json target/deploy/solucky.so
+ *   surfpool start --offline --no-deploy
  *   SOLANA_RPC_URL=http://127.0.0.1:8899 bun run e2e
  *
- * Three fresh players buy tickets, the clock jumps past midnight UTC, the
- * crank settles the round, and the script checks the payout, the fee, the
- * draw and the rent refund.
+ * Loads the program from `target/deploy` if needed, then three fresh players
+ * buy tickets, the clock jumps past midnight UTC, the crank settles the round,
+ * and the script checks the payout, the fee, the draw and the rent refund.
+ * CI runs it on every push.
  */
-import {
-  type Address,
-  generateKeyPairSigner,
-  getAddressEncoder,
-  getProgramDerivedAddress,
-  lamports,
-  type TransactionSigner,
-} from '@solana/kit';
+import { type Address, generateKeyPairSigner, type TransactionSigner } from '@solana/kit';
 import { fetchSysvarClock } from '@solana/sysvars';
 import {
   computeRandomness,
@@ -27,7 +19,6 @@ import {
   describeError,
   feeFor,
   fetchRoundTickets,
-  findConfigPda,
   findRoundPda,
   formatDay,
   getCloseTicketInstruction,
@@ -35,68 +26,27 @@ import {
   winningIndex,
 } from '@solucky/client';
 
-import { clientFor, createSoluckyClient, log, PROGRAM_ADDRESS, RPC_URL } from './lib';
+import { clientFor, log, PROGRAM_ADDRESS } from './lib';
 import { settleFinishedRounds } from './settle';
-
-const SOL = 1_000_000_000n;
+import { assertLocalRpc, fund, localOperator, prepareLocalnet, SOL, timeTravel } from './surfnet';
 
 function check(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(`E2E failed: ${message}`);
   log(`✔ ${message}`);
 }
 
-if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/?$/.test(RPC_URL)) {
-  console.error(`Refusing to run against ${RPC_URL}: the e2e only runs on a local Surfpool.`);
-  process.exit(1);
-}
-
-async function rpcCall(method: string, params: unknown[]) {
-  const response = await fetch(RPC_URL, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
-  });
-  const body = (await response.json()) as { error?: { message: string }; result?: unknown };
-  if (body.error) throw new Error(`${method}: ${body.error.message}`);
-  return body.result;
-}
-
-const admin = await createSoluckyClient();
+assertLocalRpc();
+const admin = clientFor(await localOperator());
 const balance = async (address: Address) => (await admin.rpc.getBalance(address).send()).value;
 
-async function fund(address: Address, amount: bigint) {
-  await admin.rpc.requestAirdrop(address, lamports(amount)).send();
-  for (let i = 0; i < 30 && (await balance(address)) < amount; i++) await Bun.sleep(500);
-}
-
-// 1. The config exists, or the operator (the upgrade authority) creates it.
-const [configAddress] = await findConfigPda({ programAddress: PROGRAM_ADDRESS });
-let config = await admin.solucky.accounts.config.fetchMaybe(configAddress);
-if (!config.exists) {
-  const treasury = await generateKeyPairSigner();
-  await fund(treasury.address, SOL);
-  const [programData] = await getProgramDerivedAddress({
-    programAddress: 'BPFLoaderUpgradeab1e11111111111111111111111' as Address,
-    seeds: [getAddressEncoder().encode(PROGRAM_ADDRESS)],
-  });
-  await admin.solucky.instructions
-    .initialize({
-      authority: admin.payer,
-      treasury: treasury.address,
-      programData,
-      ticketPrice: SOL / 10n,
-      feeBps: 500,
-      maxNumber: 1_000_000_000,
-    })
-    .sendTransaction();
-  config = await admin.solucky.accounts.config.fetchMaybe(configAddress);
-}
-check(config.exists, 'config is set up');
+// 1. The program and its config are in place.
+const config = await prepareLocalnet(admin.payer);
+check(config.exists, 'program and config are set up');
 const { ticketPrice, treasury } = config.data;
 
 // 2. Three players buy four tickets in the cluster's current day.
 const players: TransactionSigner[] = await Promise.all([1, 2, 3].map(() => generateKeyPairSigner()));
-await Promise.all(players.map((p) => fund(p.address, 5n * SOL)));
+await Promise.all(players.map((p) => fund(admin, p.address, 5n * SOL)));
 const clock = await fetchSysvarClock(admin.rpc);
 const day = dayOf(Number(clock.unixTimestamp) * 1000);
 const [roundAddress] = await findRoundPda({ day }, { programAddress: PROGRAM_ADDRESS });
@@ -142,7 +92,7 @@ const duplicate = await clientFor(players[1]!)
 check(duplicate?.startsWith('Someone already holds this number'), 'a number can only be sold once per day');
 
 // 3. Jump just past midnight UTC and settle with the crank.
-await rpcCall('surfnet_timeTravel', [{ absoluteTimestamp: (day + 1) * 86_400_000 + 2_000 }]);
+await timeTravel((day + 1) * 86_400_000 + 2_000);
 const treasuryBefore = await balance(treasury);
 const owners = new Map(
   (await fetchRoundTickets(admin.rpc, roundAddress, PROGRAM_ADDRESS)).map((t) => [t.data.index, t.data.owner]),
