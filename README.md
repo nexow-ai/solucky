@@ -121,6 +121,7 @@ The program address in the code, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`,
    Later changes: `bun run admin set --price 0.2`, `--fee-bps 300`, `--treasury <ADDRESS>`, `--authority <ADDRESS>`, `--pause`, `--resume`.
 3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc). Set the cluster, and preferably a dedicated RPC endpoint, as `NUXT_PUBLIC_*` variables there. `bun run build` produces a Node server in `app/.output` instead.
 4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so rounds are drawn within seconds of midnight. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON`. Use a dedicated, lightly funded keypair: the crank never needs authority.
+5. **Monitoring.** `bun run monitor --crank <CRANK ADDRESS>` exits with an error when a finished round is still unsettled 15 minutes after midnight, or when the crank holds less than ◎0.05; with `ALERT_WEBHOOK_URL` set it also posts to a Slack or Discord webhook. [`.github/workflows/monitor.yml`](.github/workflows/monitor.yml) runs it twice a day once the repository variable `SOLUCKY_MONITOR_ENABLED=true` is set (with the variables `SOLANA_RPC_URL` and `SOLUCKY_CRANK`, and the secret `ALERT_WEBHOOK_URL`); GitHub also emails you when a run fails.
 
 ## Verifiable builds
 
@@ -151,7 +152,7 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
 | `NUXT_PUBLIC_TWITTER_URL`, `NUXT_PUBLIC_DISCORD_URL` | empty | Footer links, hidden when empty |
 
-**Scripts** (`admin`, `crank`, `localnet`, `e2e`):
+**Scripts** (`admin`, `crank`, `monitor`, `localnet`, `e2e`):
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
@@ -159,6 +160,7 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `SOLANA_KEYPAIR` | `~/.config/solana/id.json` | Signer keypair file |
 | `SOLANA_KEYPAIR_JSON` | — | The keypair's byte array, for CI secrets |
 | `SOLUCKY_PROGRAM_ID` | from the IDL | Program address |
+| `ALERT_WEBHOOK_URL` | — | `monitor` only: Slack or Discord webhook for alerts |
 
 ## Program reference
 
@@ -180,6 +182,7 @@ Accounts are PDAs: `Config` (`"config"`), `Round` (`"round"`, day as u32 LE) and
 ```bash
 bun run program:test   # program unit + LiteSVM integration tests (needs target/deploy/solucky.so)
 bun run test:js        # client and app unit tests
+bun run test:browser   # Playwright, against a production build on a local Surfpool (see below)
 bun run typecheck
 bun run lint           # ESLint, and Clippy with warnings as errors
 bun run format         # Prettier and rustfmt
@@ -188,7 +191,9 @@ bun run check          # everything CI runs, except the program build and the e2
 
 After changing the program, run `bun run program:build`: it rebuilds the program, copies the IDL to `idl/` and regenerates `clients/js/src/generated`. Never edit generated files by hand.
 
-CI runs three jobs on every push: the program (format, build, Clippy, tests, and a check that the committed IDL matches), the client and app (stale generated code, format, types, lint, tests, Node and Cloudflare builds), and an end-to-end round on Surfpool with the program binary the first job built.
+The browser tests drive the real app in Chromium with an injected test wallet: connect, buy a number, settle the round after midnight and check the draw, with no Content Security Policy violations allowed. Run them with Surfpool up and `bun run localnet` done, after `bun run build`.
+
+CI runs three jobs on every push: the program (format, build, Clippy, tests, and a check that the committed IDL matches), the client and app (stale generated code, format, types, lint, tests, Node and Cloudflare builds), and an end-to-end job on Surfpool with the program binary the first job built, which plays a full round with the scripts and then with the browser.
 
 ## Security
 

@@ -15,14 +15,17 @@ A rewrite of the 2022 prototype into a self-contained, verifiable product. Nothi
 - `@solucky/client`, a Codama-generated `@solana/kit` client with query, time, country, error and draw-verification helpers.
 - Nuxt 4 + Nuxt UI app with a landing page, the three-panel game, round pages with an in-browser draw check, Wallet Standard support, live updates, dark and light themes, sounds, and `/api/price` and `/api/geo` routes. Deploys to Cloudflare Workers or Node.
 - Operator scripts: `admin` (init, status, config changes), `crank` (settles finished rounds), `localnet` (loads the program into a local Surfpool, no CLI or deploy keypair needed) and `e2e` (full local round).
-- CI for the program, client and app, an end-to-end round on Surfpool, Dependabot, and an optional scheduled crank workflow.
+- CI for the program, client and app, an end-to-end round on Surfpool played by the scripts and by Playwright in a real browser, Dependabot, and an optional scheduled crank workflow.
+- `monitor` script and workflow: alerts (exit code, Slack or Discord webhook) when a round is left unsettled after midnight or the crank runs low.
 - Verifiable builds in Anchor's pinned Docker image (`bun run program:build:verifiable`), and a Release workflow that attaches the binary, its hash and the IDL to each `v*` release.
+- Faster pages on mobile: number formatters are created once instead of on every clock tick, Nuxt UI only ships CSS for the components in use, the Node server serves precompressed static files, and the wallet button and live pot load after first paint.
 - Production security headers for the app (CSP, frame blocking, HSTS and more), also written to Cloudflare's `_headers`.
 - README, security policy, contributing guide and MIT license.
 
 ### Changed
 
 - Tickets cost a configurable price (0.1 SOL by default) instead of a hard-coded 1 SOL sent to a personal wallet.
+- The landing page is rendered per request instead of prerendered, so runtime settings such as `NUXT_PUBLIC_CLUSTER` apply on every page.
 - Countries come from the host's edge headers and can be changed or kept private, instead of a third-party IP lookup with an API key in the client.
 
 ### Removed
