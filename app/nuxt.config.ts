@@ -57,10 +57,11 @@ export default defineNuxtConfig({
     },
   },
 
-  // The landing page is prerendered; the dApp pages talk to a wallet and an
-  // RPC endpoint, so they only render in the browser.
+  // The landing page is rendered per request, so runtime settings such as the
+  // cluster always apply (a prerendered page would keep the build's values).
+  // The dApp pages talk to a wallet and an RPC endpoint, so they only render
+  // in the browser.
   routeRules: {
-    '/': { prerender: true },
     '/play': { ssr: false },
     '/rounds/**': { ssr: false },
   },
@@ -82,7 +83,7 @@ export default defineNuxtConfig({
       rpcWsUrl: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
-      /** Public URL of the site, for absolute links in social cards (set at build time). */
+      /** Public URL of the site, for absolute links in social cards. */
       siteUrl: '',
       twitterUrl: '',
       discordUrl: '',
