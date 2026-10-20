@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    constants::{CONFIG_SEED, MAX_FEE_BPS},
+    constants::{CONFIG_SEED, MAX_FEE_BPS, MIN_TICKET_PRICE},
     error::SoluckyError,
     events::ConfigUpdated,
     program::Solucky,
@@ -37,7 +37,10 @@ pub fn handle_initialize(
     fee_bps: u16,
     max_number: u32,
 ) -> Result<()> {
-    require!(ticket_price > 0, SoluckyError::InvalidTicketPrice);
+    require!(
+        ticket_price >= MIN_TICKET_PRICE,
+        SoluckyError::InvalidTicketPrice
+    );
     require!(fee_bps <= MAX_FEE_BPS, SoluckyError::FeeTooHigh);
     require!(max_number > 0, SoluckyError::InvalidMaxNumber);
 

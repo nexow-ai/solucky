@@ -45,6 +45,7 @@ pub fn handle_buy_ticket(
     day: u32,
     number: u32,
     country: [u8; 2],
+    max_price: u64,
 ) -> Result<()> {
     let config = &ctx.accounts.config;
     let clock = Clock::get()?;
@@ -79,6 +80,7 @@ pub fn handle_buy_ticket(
             winner_country: [0; 2],
             payout: 0,
             fee: 0,
+            fee_collected: false,
             bump: ctx.bumps.round,
         });
     }
@@ -88,6 +90,9 @@ pub fn handle_buy_ticket(
     );
 
     let price = round.ticket_price;
+    // The first ticket of a day opens the round at the config's price; the
+    // buyer never pays more than the price they were shown.
+    require!(price <= max_price, SoluckyError::PriceChanged);
     let index = round.ticket_count;
     round.ticket_count = index.checked_add(1).ok_or(SoluckyError::Overflow)?;
     round.pot = round.pot.checked_add(price).ok_or(SoluckyError::Overflow)?;

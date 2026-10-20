@@ -11,7 +11,8 @@
     {
       "name": "buy_ticket",
       "docs": [
-        "Buys `number` in today's round, opening the round if needed."
+        "Buys `number` in today's round, opening the round if needed. Fails if",
+        "the round's ticket price is above `max_price`."
       ],
       "discriminator": [
         11,
@@ -124,13 +125,17 @@
               2
             ]
           }
+        },
+        {
+          "name": "max_price",
+          "type": "u64"
         }
       ]
     },
     {
       "name": "claim_prize",
       "docs": [
-        "Pays the winner and the treasury."
+        "Pays the winner."
       ],
       "discriminator": [
         157,
@@ -143,24 +148,6 @@
         235
       ],
       "accounts": [
-        {
-          "name": "config",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
-                ]
-              }
-            ]
-          }
-        },
         {
           "name": "round",
           "writable": true,
@@ -220,10 +207,6 @@
           "relations": [
             "ticket"
           ]
-        },
-        {
-          "name": "treasury",
-          "writable": true
         }
       ],
       "args": []
@@ -266,6 +249,10 @@
               }
             ]
           }
+        },
+        {
+          "name": "slot_hashes",
+          "address": "SysvarS1otHashes111111111111111111111111111"
         }
       ],
       "args": []
@@ -346,6 +333,70 @@
               }
             ]
           }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "collect_fee",
+      "docs": [
+        "Sends a settled round's house fee to the treasury."
+      ],
+      "discriminator": [
+        60,
+        173,
+        247,
+        103,
+        4,
+        93,
+        130,
+        48
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.day",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "writable": true
         }
       ],
       "args": []
@@ -584,6 +635,19 @@
       ]
     },
     {
+      "name": "FeeCollected",
+      "discriminator": [
+        12,
+        28,
+        17,
+        248,
+        244,
+        36,
+        8,
+        73
+      ]
+    },
+    {
       "name": "PrizeClaimed",
       "discriminator": [
         213,
@@ -645,7 +709,7 @@
     {
       "code": 6001,
       "name": "InvalidTicketPrice",
-      "msg": "The ticket price must be greater than zero"
+      "msg": "The ticket price must be at least 0.001 SOL"
     },
     {
       "code": 6002,
@@ -710,7 +774,7 @@
     {
       "code": 6014,
       "name": "RandomnessUnavailable",
-      "msg": "The pinned slot hash is not available; close the round again to pin a new slot"
+      "msg": "The pinned slot's hash is not readable yet; try again shortly, or close the round again once it expired"
     },
     {
       "code": 6015,
@@ -731,6 +795,16 @@
       "code": 6018,
       "name": "Overflow",
       "msg": "Arithmetic overflow"
+    },
+    {
+      "code": 6019,
+      "name": "PriceChanged",
+      "msg": "The ticket price is higher than the price you accepted"
+    },
+    {
+      "code": 6020,
+      "name": "FeeAlreadyCollected",
+      "msg": "The fee of this round was already collected"
     }
   ],
   "types": [
@@ -750,7 +824,7 @@
           {
             "name": "treasury",
             "docs": [
-              "Receives the house fee when a prize is claimed."
+              "Receives the house fee through `collect_fee`."
             ],
             "type": "pubkey"
           },
@@ -865,6 +939,26 @@
           {
             "name": "paused",
             "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeeCollected",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day",
+            "type": "u32"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee",
+            "type": "u64"
           }
         ]
       }
@@ -1017,13 +1111,17 @@
           {
             "name": "payout",
             "docs": [
-              "Lamports paid to the winner and to the treasury."
+              "Lamports paid to the winner, and the house fee for the treasury."
             ],
             "type": "u64"
           },
           {
             "name": "fee",
             "type": "u64"
+          },
+          {
+            "name": "fee_collected",
+            "type": "bool"
           },
           {
             "name": "bump",
@@ -1221,9 +1319,9 @@
     {
       "name": "DRAW_WINDOW_SLOTS",
       "docs": [
-        "The SlotHashes sysvar only remembers the last 512 slots. Once the pinned",
-        "slot is older than this, the draw can no longer read it and anyone may",
-        "pin a new one with `close_round`."
+        "The SlotHashes sysvar only remembers the last 512 produced slots, so a",
+        "pinned slot can be drawn for about this many slots. `close_round` only",
+        "pins a new slot once SlotHashes proves the old one is out of reach."
       ],
       "type": "u64",
       "value": "500"
@@ -1235,6 +1333,15 @@
       ],
       "type": "u16",
       "value": "1000"
+    },
+    {
+      "name": "MIN_TICKET_PRICE",
+      "docs": [
+        "Lowest ticket price: 0.001 SOL. With the 10% fee cap, a prize is always",
+        "above the rent-exempt minimum of an empty wallet, so it can always be paid."
+      ],
+      "type": "u64",
+      "value": "1000000"
     },
     {
       "name": "ROUND_DURATION",

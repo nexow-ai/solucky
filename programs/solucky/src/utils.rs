@@ -52,6 +52,28 @@ pub fn find_slot_hash(data: &[u8], target: u64) -> Option<(u64, [u8; 32])> {
     found.filter(|_| reaches_target)
 }
 
+/// True when the SlotHashes data proves that `target` can never be drawn:
+/// its oldest recorded slot is already newer than `target`.
+pub fn slot_hash_expired(data: &[u8], target: u64) -> bool {
+    let Some(len) = data
+        .get(..8)
+        .and_then(|bytes| bytes.try_into().ok())
+        .map(u64::from_le_bytes)
+        .and_then(|len| usize::try_from(len).ok())
+    else {
+        return false;
+    };
+    let Some(entries) = data.get(8..) else {
+        return false;
+    };
+    let (entries, _) = entries.as_chunks::<SLOT_HASH_ENTRY_LEN>();
+    entries
+        .get(..len.min(entries.len()))
+        .and_then(<[_]>::last)
+        .map(|oldest| u64::from_le_bytes(oldest[..8].try_into().unwrap()))
+        .is_some_and(|oldest| oldest > target)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -118,5 +140,19 @@ mod tests {
     fn malformed_data() {
         assert_eq!(find_slot_hash(&[], 1), None);
         assert_eq!(find_slot_hash(&[1, 0, 0], 1), None);
+        assert!(!slot_hash_expired(&[], 1));
+        assert!(!slot_hash_expired(&[1, 0, 0], 1));
+    }
+
+    #[test]
+    fn expiry_needs_proof() {
+        let data = slot_hashes(&[(105, 5), (104, 4), (101, 1)]);
+        // Still readable, or not produced yet: no expiry.
+        assert!(!slot_hash_expired(&data, 101));
+        assert!(!slot_hash_expired(&data, 103));
+        assert!(!slot_hash_expired(&data, 200));
+        // The oldest recorded slot is newer than the target: gone for good.
+        assert!(slot_hash_expired(&data, 100));
+        assert_eq!(find_slot_hash(&data, 100), None);
     }
 }

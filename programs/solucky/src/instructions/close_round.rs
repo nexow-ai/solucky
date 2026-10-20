@@ -1,10 +1,11 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    constants::{DRAW_DELAY_SLOTS, DRAW_WINDOW_SLOTS, ROUND_SEED},
+    constants::{DRAW_DELAY_SLOTS, ROUND_SEED, SLOT_HASHES_ID},
     error::SoluckyError,
     events::RoundClosed,
     state::{Round, RoundStatus},
+    utils::slot_hash_expired,
 };
 
 /// Anyone can close a round once its day is over. Closing pins a slot a few
@@ -14,6 +15,9 @@ use crate::{
 pub struct CloseRound<'info> {
     #[account(mut, seeds = [ROUND_SEED, &round.day.to_le_bytes()], bump = round.bump)]
     pub round: Account<'info, Round>,
+    /// CHECK: the SlotHashes sysvar, read by hand to prove a pinned slot expired.
+    #[account(address = SLOT_HASHES_ID)]
+    pub slot_hashes: UncheckedAccount<'info>,
 }
 
 pub fn handle_close_round(ctx: Context<CloseRound>) -> Result<()> {
@@ -26,12 +30,15 @@ pub fn handle_close_round(ctx: Context<CloseRound>) -> Result<()> {
 
     match round.status {
         RoundStatus::Open => {}
-        // Re-pinning is only allowed once the old slot fell out of the
-        // SlotHashes window, so a known result can never be thrown away.
-        RoundStatus::Closed => require!(
-            clock.slot > round.target_slot.saturating_add(DRAW_WINDOW_SLOTS),
-            SoluckyError::DrawStillPossible
-        ),
+        // A new slot can only be pinned once SlotHashes proves the old one can
+        // never be drawn, so a known result cannot be thrown away early.
+        RoundStatus::Closed => {
+            let data = ctx.accounts.slot_hashes.try_borrow_data()?;
+            require!(
+                slot_hash_expired(&data, round.target_slot),
+                SoluckyError::DrawStillPossible
+            );
+        }
         RoundStatus::Drawn | RoundStatus::Settled => return err!(SoluckyError::RoundAlreadyDrawn),
     }
 

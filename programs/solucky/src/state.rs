@@ -8,7 +8,7 @@ use crate::constants::ROUND_DURATION;
 #[derive(InitSpace)]
 pub struct Config {
     pub authority: Pubkey,
-    /// Receives the house fee when a prize is claimed.
+    /// Receives the house fee through `collect_fee`.
     pub treasury: Pubkey,
     /// Price of one ticket, in lamports.
     pub ticket_price: u64,
@@ -30,7 +30,7 @@ pub enum RoundStatus {
     Closed,
     /// `winning_index` is known; waiting for the prize to be paid.
     Drawn,
-    /// The prize and fee were paid out.
+    /// The winner was paid. The fee may still be waiting for `collect_fee`.
     Settled,
 }
 
@@ -62,9 +62,10 @@ pub struct Round {
     pub winning_number: u32,
     pub winner: Pubkey,
     pub winner_country: [u8; 2],
-    /// Lamports paid to the winner and to the treasury.
+    /// Lamports paid to the winner, and the house fee for the treasury.
     pub payout: u64,
     pub fee: u64,
+    pub fee_collected: bool,
     pub bump: u8,
 }
 

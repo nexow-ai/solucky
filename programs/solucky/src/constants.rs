@@ -14,6 +14,11 @@ pub const TICKET_SEED: &[u8] = b"ticket";
 #[constant]
 pub const ROUND_DURATION: i64 = 86_400;
 
+/// Lowest ticket price: 0.001 SOL. With the 10% fee cap, a prize is always
+/// above the rent-exempt minimum of an empty wallet, so it can always be paid.
+#[constant]
+pub const MIN_TICKET_PRICE: u64 = 1_000_000;
+
 /// Highest house fee the authority can ever set: 10%.
 #[constant]
 pub const MAX_FEE_BPS: u16 = 1_000;
@@ -23,9 +28,9 @@ pub const MAX_FEE_BPS: u16 = 1_000;
 #[constant]
 pub const DRAW_DELAY_SLOTS: u64 = 8;
 
-/// The SlotHashes sysvar only remembers the last 512 slots. Once the pinned
-/// slot is older than this, the draw can no longer read it and anyone may
-/// pin a new one with `close_round`.
+/// The SlotHashes sysvar only remembers the last 512 produced slots, so a
+/// pinned slot can be drawn for about this many slots. `close_round` only
+/// pins a new slot once SlotHashes proves the old one is out of reach.
 #[constant]
 pub const DRAW_WINDOW_SLOTS: u64 = 500;
 

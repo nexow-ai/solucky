@@ -41,14 +41,16 @@ pub mod solucky {
         instructions::update_config::handle_update_config(ctx, update)
     }
 
-    /// Buys `number` in today's round, opening the round if needed.
+    /// Buys `number` in today's round, opening the round if needed. Fails if
+    /// the round's ticket price is above `max_price`.
     pub fn buy_ticket(
         ctx: Context<BuyTicket>,
         day: u32,
         number: u32,
         country: [u8; 2],
+        max_price: u64,
     ) -> Result<()> {
-        instructions::buy_ticket::handle_buy_ticket(ctx, day, number, country)
+        instructions::buy_ticket::handle_buy_ticket(ctx, day, number, country, max_price)
     }
 
     /// Ends a finished round and pins the slot that will seed its draw.
@@ -61,9 +63,14 @@ pub mod solucky {
         instructions::draw_round::handle_draw_round(ctx)
     }
 
-    /// Pays the winner and the treasury.
+    /// Pays the winner.
     pub fn claim_prize(ctx: Context<ClaimPrize>) -> Result<()> {
         instructions::claim_prize::handle_claim_prize(ctx)
+    }
+
+    /// Sends a settled round's house fee to the treasury.
+    pub fn collect_fee(ctx: Context<CollectFee>) -> Result<()> {
+        instructions::collect_fee::handle_collect_fee(ctx)
     }
 
     /// Returns a settled round's ticket rent to its owner.

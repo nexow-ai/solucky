@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    constants::{CONFIG_SEED, MAX_FEE_BPS},
+    constants::{CONFIG_SEED, MAX_FEE_BPS, MIN_TICKET_PRICE},
     error::SoluckyError,
     events::ConfigUpdated,
     state::Config,
@@ -34,7 +34,10 @@ pub fn handle_update_config(ctx: Context<UpdateConfig>, update: ConfigUpdate) ->
     let config = &mut ctx.accounts.config;
 
     if let Some(ticket_price) = update.ticket_price {
-        require!(ticket_price > 0, SoluckyError::InvalidTicketPrice);
+        require!(
+            ticket_price >= MIN_TICKET_PRICE,
+            SoluckyError::InvalidTicketPrice
+        );
         config.ticket_price = ticket_price;
     }
     if let Some(fee_bps) = update.fee_bps {

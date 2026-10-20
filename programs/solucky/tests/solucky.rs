@@ -30,8 +30,8 @@ use {
     solana_transaction_error::TransactionError,
     solucky::{
         accounts, error::SoluckyError, instruction, Config, ConfigUpdate, Round, RoundStatus,
-        Ticket, CONFIG_SEED, DRAW_DELAY_SLOTS, DRAW_WINDOW_SLOTS, NO_COUNTRY, ROUND_DURATION,
-        ROUND_SEED, SLOT_HASHES_ID, TICKET_SEED,
+        Ticket, CONFIG_SEED, DRAW_DELAY_SLOTS, DRAW_WINDOW_SLOTS, MIN_TICKET_PRICE, NO_COUNTRY,
+        ROUND_DURATION, ROUND_SEED, SLOT_HASHES_ID, TICKET_SEED,
     },
 };
 
@@ -249,12 +249,24 @@ impl Env {
     }
 
     fn buy(&mut self, buyer: &Keypair, day: u32, number: u32, country: [u8; 2]) -> TxResult {
+        self.buy_at_most(buyer, day, number, country, u64::MAX)
+    }
+
+    fn buy_at_most(
+        &mut self,
+        buyer: &Keypair,
+        day: u32,
+        number: u32,
+        country: [u8; 2],
+        max_price: u64,
+    ) -> TxResult {
         let result = self.send(
             ix(
                 instruction::BuyTicket {
                     day,
                     number,
                     country,
+                    max_price,
                 },
                 accounts::BuyTicket {
                     buyer: buyer.pubkey(),
@@ -280,6 +292,7 @@ impl Env {
                 instruction::CloseRound {},
                 accounts::CloseRound {
                     round: round_pda(day),
+                    slot_hashes: SLOT_HASHES_ID,
                 },
             ),
             &cranker,
@@ -302,17 +315,15 @@ impl Env {
         )
     }
 
-    fn claim_with(&mut self, day: u32, number: u32, owner: Pubkey, treasury: Pubkey) -> TxResult {
+    fn claim_with(&mut self, day: u32, number: u32, owner: Pubkey) -> TxResult {
         let cranker = self.cranker.insecure_clone();
         self.send(
             ix(
                 instruction::ClaimPrize {},
                 accounts::ClaimPrize {
-                    config: config_pda(),
                     round: round_pda(day),
                     ticket: ticket_pda(day, number),
                     owner,
-                    treasury,
                 },
             ),
             &cranker,
@@ -322,8 +333,28 @@ impl Env {
 
     fn claim(&mut self, day: u32, number: u32) -> TxResult {
         let owner = self.ticket(day, number).owner;
+        self.claim_with(day, number, owner)
+    }
+
+    fn collect_to(&mut self, day: u32, treasury: Pubkey) -> TxResult {
+        let cranker = self.cranker.insecure_clone();
+        self.send(
+            ix(
+                instruction::CollectFee {},
+                accounts::CollectFee {
+                    config: config_pda(),
+                    round: round_pda(day),
+                    treasury,
+                },
+            ),
+            &cranker,
+            &[],
+        )
+    }
+
+    fn collect(&mut self, day: u32) -> TxResult {
         let treasury = self.config().treasury;
-        self.claim_with(day, number, owner, treasury)
+        self.collect_to(day, treasury)
     }
 
     fn close_ticket(&mut self, owner: &Keypair, day: u32, number: u32) -> TxResult {
@@ -378,6 +409,10 @@ fn initialize_is_reserved_to_the_upgrade_authority() {
     );
     assert_error(
         env.initialize(&admin, 0, FEE_BPS, MAX_NUMBER),
+        SoluckyError::InvalidTicketPrice,
+    );
+    assert_error(
+        env.initialize(&admin, MIN_TICKET_PRICE - 1, FEE_BPS, MAX_NUMBER),
         SoluckyError::InvalidTicketPrice,
     );
     assert_error(
@@ -526,16 +561,13 @@ fn a_full_round_pays_the_winner_and_the_treasury() {
     let loser_number = if winner.number == 100 { 101 } else { 100 };
     assert_error(env.claim(DAY, loser_number), SoluckyError::NotWinningTicket);
 
-    // The prize can only go to the ticket's owner and the configured treasury.
+    // The prize can only go to the ticket's owner.
     let stranger = Keypair::new().pubkey();
     assert_code(
-        env.claim_with(DAY, winner.number, stranger, env.treasury),
+        env.claim_with(DAY, winner.number, stranger),
         u32::from(ErrorCode::ConstraintHasOne),
     );
-    assert_code(
-        env.claim_with(DAY, winner.number, winner.owner, stranger),
-        u32::from(ErrorCode::ConstraintAddress),
-    );
+    assert_error(env.collect(DAY), SoluckyError::RoundNotSettled);
 
     let round_before = env.balance(&round_pda(DAY));
     let winner_before = env.balance(&winner.owner);
@@ -545,8 +577,8 @@ fn a_full_round_pays_the_winner_and_the_treasury() {
     let pot = 5 * PRICE;
     let fee = pot * u64::from(FEE_BPS) / 10_000;
     assert_eq!(env.balance(&winner.owner) - winner_before, pot - fee);
-    assert_eq!(env.balance(&env.treasury) - treasury_before, fee);
-    assert_eq!(round_before - env.balance(&round_pda(DAY)), pot);
+    assert_eq!(round_before - env.balance(&round_pda(DAY)), pot - fee);
+    assert_eq!(env.balance(&env.treasury), treasury_before);
 
     let round = env.round(DAY);
     assert_eq!(round.status, RoundStatus::Settled);
@@ -555,8 +587,19 @@ fn a_full_round_pays_the_winner_and_the_treasury() {
     assert_eq!(&round.winner_country, b"JP");
     assert_eq!(round.payout, pot - fee);
     assert_eq!(round.fee, fee);
-
+    assert!(!round.fee_collected);
     assert_error(env.claim(DAY, winner.number), SoluckyError::RoundNotDrawn);
+
+    // The fee can only go to the configured treasury, once.
+    assert_code(
+        env.collect_to(DAY, stranger),
+        u32::from(ErrorCode::ConstraintAddress),
+    );
+    assert_ok(env.collect(DAY));
+    assert_eq!(env.balance(&env.treasury) - treasury_before, fee);
+    assert_eq!(round_before - env.balance(&round_pda(DAY)), pot);
+    assert!(env.round(DAY).fee_collected);
+    assert_error(env.collect(DAY), SoluckyError::FeeAlreadyCollected);
 }
 
 #[test]
@@ -674,12 +717,15 @@ fn price_and_fee_changes_wait_for_the_next_round() {
     assert_eq!(next.pot, 2 * PRICE);
     assert_eq!(next.fee_bps, 0);
 
-    // A zero fee pays the whole pot.
+    // A zero fee pays the whole pot, and leaves nothing to collect.
     let winner = env.close_and_draw(DAY + 1);
     let before = env.balance(&alice.pubkey());
     assert_ok(env.claim(DAY + 1, winner.number));
     assert_eq!(env.balance(&alice.pubkey()) - before, 2 * PRICE);
-    assert_eq!(env.round(DAY + 1).fee, 0);
+    let round = env.round(DAY + 1);
+    assert_eq!(round.fee, 0);
+    assert!(round.fee_collected);
+    assert_error(env.collect(DAY + 1), SoluckyError::FeeAlreadyCollected);
 }
 
 #[test]
@@ -758,5 +804,80 @@ fn the_treasury_can_win_too() {
     let winner = env.close_and_draw(DAY);
     let before = env.balance(&admin.pubkey());
     assert_ok(env.claim(DAY, winner.number));
+    assert_ok(env.collect(DAY));
     assert_eq!(env.balance(&admin.pubkey()) - before, PRICE);
+}
+
+#[test]
+fn a_readable_slot_cannot_be_pinned_again() {
+    let mut env = Env::new();
+    let alice = env.player();
+    assert_ok(env.buy(&alice, DAY, 42, *b"ES"));
+    env.end_of(DAY);
+    assert_ok(env.close(DAY));
+    let target = env.round(DAY).target_slot;
+
+    // Past the nominal window, but SlotHashes still holds the pinned slot:
+    // its result is known, so it must be drawn, not replaced.
+    let now = target + DRAW_WINDOW_SLOTS + 11;
+    env.set_slot(now, &[now - 1, target]);
+    assert_error(env.close(DAY), SoluckyError::DrawStillPossible);
+    assert_ok(env.draw(DAY));
+}
+
+#[test]
+fn buyers_never_pay_more_than_they_accepted() {
+    let mut env = Env::new();
+    let alice = env.player();
+    let admin = env.admin.insecure_clone();
+    // The price goes up before the day's first ticket opens the round.
+    assert_ok(env.update(
+        &admin,
+        ConfigUpdate {
+            ticket_price: Some(3 * PRICE),
+            ..Default::default()
+        },
+    ));
+    assert_error(
+        env.buy_at_most(&alice, DAY, 1, *b"ES", PRICE),
+        SoluckyError::PriceChanged,
+    );
+    assert_ok(env.buy_at_most(&alice, DAY, 1, *b"ES", 3 * PRICE));
+    assert_eq!(env.round(DAY).pot, 3 * PRICE);
+}
+
+#[test]
+fn a_bad_treasury_never_blocks_the_winner() {
+    let mut env = Env::new();
+    let alice = env.player();
+    let admin = env.admin.insecure_clone();
+    assert_ok(env.buy(&alice, DAY, 7, *b"ES"));
+
+    // A treasury that can never be written to, such as a sysvar.
+    assert_ok(env.update(
+        &admin,
+        ConfigUpdate {
+            treasury: Some(SLOT_HASHES_ID),
+            ..Default::default()
+        },
+    ));
+    let winner = env.close_and_draw(DAY);
+    let before = env.balance(&alice.pubkey());
+    assert_ok(env.claim(DAY, winner.number));
+    let fee = PRICE * u64::from(FEE_BPS) / 10_000;
+    assert_eq!(env.balance(&alice.pubkey()) - before, PRICE - fee);
+
+    // Only the fee waits, until the authority fixes the treasury.
+    assert!(env.collect(DAY).is_err());
+    let treasury = env.treasury;
+    assert_ok(env.update(
+        &admin,
+        ConfigUpdate {
+            treasury: Some(treasury),
+            ..Default::default()
+        },
+    ));
+    let treasury_before = env.balance(&treasury);
+    assert_ok(env.collect(DAY));
+    assert_eq!(env.balance(&treasury) - treasury_before, fee);
 }

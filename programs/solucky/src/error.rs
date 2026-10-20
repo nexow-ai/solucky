@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 pub enum SoluckyError {
     #[msg("Only the authority can do this")]
     Unauthorized,
-    #[msg("The ticket price must be greater than zero")]
+    #[msg("The ticket price must be at least 0.001 SOL")]
     InvalidTicketPrice,
     #[msg("The fee is above the 10% cap")]
     FeeTooHigh,
@@ -30,7 +30,7 @@ pub enum SoluckyError {
     RoundNotClosed,
     #[msg("The pinned slot has not been reached yet")]
     TargetSlotNotReached,
-    #[msg("The pinned slot hash is not available; close the round again to pin a new slot")]
+    #[msg("The pinned slot's hash is not readable yet; try again shortly, or close the round again once it expired")]
     RandomnessUnavailable,
     #[msg("The round has not been drawn")]
     RoundNotDrawn,
@@ -40,4 +40,8 @@ pub enum SoluckyError {
     RoundNotSettled,
     #[msg("Arithmetic overflow")]
     Overflow,
+    #[msg("The ticket price is higher than the price you accepted")]
+    PriceChanged,
+    #[msg("The fee of this round was already collected")]
+    FeeAlreadyCollected,
 }

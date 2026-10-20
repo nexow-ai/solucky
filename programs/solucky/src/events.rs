@@ -38,6 +38,13 @@ pub struct RoundDrawn {
 }
 
 #[event]
+pub struct FeeCollected {
+    pub day: u32,
+    pub treasury: Pubkey,
+    pub fee: u64,
+}
+
+#[event]
 pub struct PrizeClaimed {
     pub day: u32,
     pub winner: Pubkey,
