@@ -1,25 +1,30 @@
 import { lamportsToSol } from '@solucky/client';
 
+// Building an Intl.NumberFormat is slow and the panels format numbers on every
+// clock tick, so each formatter is created once.
+const integers = new Intl.NumberFormat('en-US');
+const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const sol = new Map<number, Intl.NumberFormat>();
+
 /** `1234567` → `1 234 567`, the way S☉Lucky has always shown numbers. */
 export function formatNumber(value: number | bigint): string {
-  return new Intl.NumberFormat('en-US').format(value).replaceAll(',', ' ');
+  return integers.format(value).replaceAll(',', ' ');
 }
 
 /** Lamports → `12.5`, trimmed to at most `digits` decimals. */
 export function formatSol(lamports: bigint | number, digits = 4): string {
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: digits })
-    .format(lamportsToSol(lamports))
-    .replaceAll(',', ' ');
+  let format = sol.get(digits);
+  if (!format) {
+    format = new Intl.NumberFormat('en-US', { maximumFractionDigits: digits });
+    sol.set(digits, format);
+  }
+  return format.format(lamportsToSol(lamports)).replaceAll(',', ' ');
 }
 
 /** A SOL amount in US dollars, or an em dash while the price is unknown. */
 export function formatUsd(lamports: bigint | number, solUsd: number | null): string {
   if (solUsd === null) return '—';
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(lamportsToSol(lamports) * solUsd);
+  return usd.format(lamportsToSol(lamports) * solUsd);
 }
 
 /** `4HKHnE…18dbiA`-style short address. */
