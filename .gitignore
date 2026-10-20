@@ -26,6 +26,9 @@ dist
 .wrangler
 
 # Logs and tooling
+test-results
+playwright-report
+blob-report
 logs
 *.log
 coverage
