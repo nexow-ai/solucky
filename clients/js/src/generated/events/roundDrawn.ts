@@ -27,15 +27,12 @@ import {
   type FixedSizeDecoder,
   type FixedSizeEncoder,
   type ReadonlyUint8Array,
-} from "@solana/kit";
+} from '@solana/kit';
 
-export const ROUND_DRAWN_EVENT_DISCRIMINATOR: ReadonlyUint8Array =
-  new Uint8Array([147, 89, 5, 223, 177, 229, 18, 87]);
+export const ROUND_DRAWN_EVENT_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([147, 89, 5, 223, 177, 229, 18, 87]);
 
 export function getRoundDrawnEventDiscriminatorBytes(): ReadonlyUint8Array {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(
-    ROUND_DRAWN_EVENT_DISCRIMINATOR,
-  );
+  return fixEncoderSize(getBytesEncoder(), 8).encode(ROUND_DRAWN_EVENT_DISCRIMINATOR);
 }
 
 export type RoundDrawnEvent = {
@@ -58,11 +55,11 @@ export type RoundDrawnEventArgs = {
 export function getRoundDrawnEventEncoder(): FixedSizeEncoder<RoundDrawnEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ["day", getU32Encoder()],
-      ["slot", getU64Encoder()],
-      ["slotHash", fixEncoderSize(getBytesEncoder(), 32)],
-      ["randomness", fixEncoderSize(getBytesEncoder(), 32)],
-      ["winningIndex", getU32Encoder()],
+      ['day', getU32Encoder()],
+      ['slot', getU64Encoder()],
+      ['slotHash', fixEncoderSize(getBytesEncoder(), 32)],
+      ['randomness', fixEncoderSize(getBytesEncoder(), 32)],
+      ['winningIndex', getU32Encoder()],
     ]),
     [getConstantEncoder(ROUND_DRAWN_EVENT_DISCRIMINATOR)],
   );
@@ -72,32 +69,25 @@ export function getRoundDrawnEventEncoder(): FixedSizeEncoder<RoundDrawnEventArg
 export function getRoundDrawnEventDecoder(): FixedSizeDecoder<RoundDrawnEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ["day", getU32Decoder()],
-      ["slot", getU64Decoder()],
-      ["slotHash", fixDecoderSize(getBytesDecoder(), 32)],
-      ["randomness", fixDecoderSize(getBytesDecoder(), 32)],
-      ["winningIndex", getU32Decoder()],
+      ['day', getU32Decoder()],
+      ['slot', getU64Decoder()],
+      ['slotHash', fixDecoderSize(getBytesDecoder(), 32)],
+      ['randomness', fixDecoderSize(getBytesDecoder(), 32)],
+      ['winningIndex', getU32Decoder()],
     ]),
     [getConstantDecoder(ROUND_DRAWN_EVENT_DISCRIMINATOR)],
   );
 }
 
 /** Gets the codec for {@link RoundDrawnEvent} event data. */
-export function getRoundDrawnEventCodec(): FixedSizeCodec<
-  RoundDrawnEventArgs,
-  RoundDrawnEvent
-> {
+export function getRoundDrawnEventCodec(): FixedSizeCodec<RoundDrawnEventArgs, RoundDrawnEvent> {
   return combineCodec(getRoundDrawnEventEncoder(), getRoundDrawnEventDecoder());
 }
 
 /** Parses the provided bytes into {@link RoundDrawnEvent} event data. */
-export function parseRoundDrawnEvent(
-  data: ReadonlyUint8Array | Uint8Array,
-): RoundDrawnEvent {
+export function parseRoundDrawnEvent(data: ReadonlyUint8Array | Uint8Array): RoundDrawnEvent {
   if (containsBytes(data, ROUND_DRAWN_EVENT_DISCRIMINATOR, 0)) {
     return getRoundDrawnEventDecoder().decode(data);
   }
-  throw new Error(
-    'The provided data does not match the "RoundDrawnEvent" event discriminators.',
-  );
+  throw new Error('The provided data does not match the "RoundDrawnEvent" event discriminators.');
 }

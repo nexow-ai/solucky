@@ -6,6 +6,6 @@
  * @see https://github.com/codama-idl/codama
  */
 
-export * from "./config";
-export * from "./round";
-export * from "./ticket";
+export * from './config';
+export * from './round';
+export * from './ticket';

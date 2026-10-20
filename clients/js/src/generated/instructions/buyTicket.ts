@@ -32,7 +32,7 @@ import {
   type ReadonlyUint8Array,
   type WritableAccount,
   type WritableSignerAccount,
-} from "@solana/kit";
+} from '@solana/kit';
 import {
   getAccountMetaFactory,
   getAddressFromResolvedInstructionAccount,
@@ -42,13 +42,11 @@ import {
   type InstructionSignerInput,
   type ResolvedInstructionAccount,
   type ResolvedInstructionAccountMeta,
-} from "@solana/kit/program-client-core";
-import { findConfigPda, findRoundPda, findTicketPda } from "../pdas";
-import { SOLUCKY_PROGRAM_ADDRESS } from "../programs";
+} from '@solana/kit/program-client-core';
+import { findConfigPda, findRoundPda, findTicketPda } from '../pdas';
+import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
-export const BUY_TICKET_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  11, 24, 17, 193, 168, 116, 164, 169,
-]);
+export const BUY_TICKET_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([11, 24, 17, 193, 168, 116, 164, 169]);
 
 export function getBuyTicketDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(BUY_TICKET_DISCRIMINATOR);
@@ -60,29 +58,19 @@ export type BuyTicketInstruction<
   TAccountConfig extends string | AccountMeta<string> = string,
   TAccountRound extends string | AccountMeta<string> = string,
   TAccountTicket extends string | AccountMeta<string> = string,
-  TAccountSystemProgram extends string | AccountMeta<string> =
-    "11111111111111111111111111111111",
+  TAccountSystemProgram extends string | AccountMeta<string> = '11111111111111111111111111111111',
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
   InstructionWithAccounts<
     [
       TAccountBuyer extends string
-        ? WritableSignerAccount<TAccountBuyer> &
-            AccountSignerMeta<TAccountBuyer>
+        ? WritableSignerAccount<TAccountBuyer> & AccountSignerMeta<TAccountBuyer>
         : TAccountBuyer,
-      TAccountConfig extends string
-        ? ReadonlyAccount<TAccountConfig>
-        : TAccountConfig,
-      TAccountRound extends string
-        ? WritableAccount<TAccountRound>
-        : TAccountRound,
-      TAccountTicket extends string
-        ? WritableAccount<TAccountTicket>
-        : TAccountTicket,
-      TAccountSystemProgram extends string
-        ? ReadonlyAccount<TAccountSystemProgram>
-        : TAccountSystemProgram,
+      TAccountConfig extends string ? ReadonlyAccount<TAccountConfig> : TAccountConfig,
+      TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound,
+      TAccountTicket extends string ? WritableAccount<TAccountTicket> : TAccountTicket,
+      TAccountSystemProgram extends string ? ReadonlyAccount<TAccountSystemProgram> : TAccountSystemProgram,
       ...TRemainingAccounts,
     ]
   >;
@@ -94,19 +82,15 @@ export type BuyTicketInstructionData = {
   country: ReadonlyUint8Array;
 };
 
-export type BuyTicketInstructionDataArgs = {
-  day: number;
-  number: number;
-  country: ReadonlyUint8Array;
-};
+export type BuyTicketInstructionDataArgs = { day: number; number: number; country: ReadonlyUint8Array };
 
 export function getBuyTicketInstructionDataEncoder(): FixedSizeEncoder<BuyTicketInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
-      ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
-      ["day", getU32Encoder()],
-      ["number", getU32Encoder()],
-      ["country", fixEncoderSize(getBytesEncoder(), 2)],
+      ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
+      ['day', getU32Encoder()],
+      ['number', getU32Encoder()],
+      ['country', fixEncoderSize(getBytesEncoder(), 2)],
     ]),
     (value) => ({ ...value, discriminator: BUY_TICKET_DISCRIMINATOR }),
   );
@@ -114,10 +98,10 @@ export function getBuyTicketInstructionDataEncoder(): FixedSizeEncoder<BuyTicket
 
 export function getBuyTicketInstructionDataDecoder(): FixedSizeDecoder<BuyTicketInstructionData> {
   return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-    ["day", getU32Decoder()],
-    ["number", getU32Decoder()],
-    ["country", fixDecoderSize(getBytesDecoder(), 2)],
+    ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
+    ['day', getU32Decoder()],
+    ['number', getU32Decoder()],
+    ['country', fixDecoderSize(getBytesDecoder(), 2)],
   ]);
 }
 
@@ -125,10 +109,7 @@ export function getBuyTicketInstructionDataCodec(): FixedSizeCodec<
   BuyTicketInstructionDataArgs,
   BuyTicketInstructionData
 > {
-  return combineCodec(
-    getBuyTicketInstructionDataEncoder(),
-    getBuyTicketInstructionDataDecoder(),
-  );
+  return combineCodec(getBuyTicketInstructionDataEncoder(), getBuyTicketInstructionDataDecoder());
 }
 
 export type BuyTicketAsyncInput<
@@ -136,8 +117,7 @@ export type BuyTicketAsyncInput<
   TAccountConfig extends InstructionAccountInput = InstructionAccountInput,
   TAccountRound extends InstructionAccountInput = InstructionAccountInput,
   TAccountTicket extends InstructionAccountInput = InstructionAccountInput,
-  TAccountSystemProgram extends InstructionAccountInput =
-    InstructionAccountInput,
+  TAccountSystemProgram extends InstructionAccountInput = InstructionAccountInput,
 > = {
   buyer: TAccountBuyer;
   config?: TAccountConfig;
@@ -146,9 +126,9 @@ export type BuyTicketAsyncInput<
   /** Fails with "already in use" if someone holds this number today. */
   ticket?: TAccountTicket;
   systemProgram?: TAccountSystemProgram;
-  day: BuyTicketInstructionDataArgs["day"];
-  number: BuyTicketInstructionDataArgs["number"];
-  country: BuyTicketInstructionDataArgs["country"];
+  day: BuyTicketInstructionDataArgs['day'];
+  number: BuyTicketInstructionDataArgs['number'];
+  country: BuyTicketInstructionDataArgs['country'];
 };
 
 export async function getBuyTicketInstructionAsync<
@@ -159,50 +139,24 @@ export async function getBuyTicketInstructionAsync<
   TAccountSystemProgram extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: BuyTicketAsyncInput<
-    TAccountBuyer,
-    TAccountConfig,
-    TAccountRound,
-    TAccountTicket,
-    TAccountSystemProgram
-  >,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  input: BuyTicketAsyncInput<TAccountBuyer, TAccountConfig, TAccountRound, TAccountTicket, TAccountSystemProgram>,
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): Promise<
   BuyTicketInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountBuyer,
-      InstructionAccountInputAddress<TAccountBuyer>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTicket,
-      InstructionAccountInputAddress<TAccountTicket>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountSystemProgram,
-      InstructionAccountInputAddress<TAccountSystemProgram>
-    >
+    ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+    ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
   >
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
@@ -210,16 +164,9 @@ export async function getBuyTicketInstructionAsync<
     config: { value: input.config ?? null, isSigner: false, isWritable: false },
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
     ticket: { value: input.ticket ?? null, isSigner: false, isWritable: true },
-    systemProgram: {
-      value: input.systemProgram ?? null,
-      isSigner: false,
-      isWritable: false,
-    },
+    systemProgram: { value: input.systemProgram ?? null, isSigner: false, isWritable: false },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   // Original args.
   const args = { ...input };
@@ -230,61 +177,40 @@ export async function getBuyTicketInstructionAsync<
   }
   if (!accounts.round.value) {
     accounts.round.value = await findRoundPda(
-      { day: getNonNullResolvedInstructionInput("day", args.day) },
+      { day: getNonNullResolvedInstructionInput('day', args.day) },
       { programAddress },
     );
   }
   if (!accounts.ticket.value) {
     accounts.ticket.value = await findTicketPda(
       {
-        round: getAddressFromResolvedInstructionAccount(
-          "round",
-          accounts.round.value,
-        ),
-        number: getNonNullResolvedInstructionInput("number", args.number),
+        round: getAddressFromResolvedInstructionAccount('round', accounts.round.value),
+        number: getNonNullResolvedInstructionInput('number', args.number),
       },
       { programAddress },
     );
   }
   if (!accounts.systemProgram.value) {
-    accounts.systemProgram.value =
-      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
+    accounts.systemProgram.value = '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
   }
 
   return Object.freeze({
     accounts: [
-      getAccountMeta("buyer", accounts.buyer),
-      getAccountMeta("config", accounts.config),
-      getAccountMeta("round", accounts.round),
-      getAccountMeta("ticket", accounts.ticket),
-      getAccountMeta("systemProgram", accounts.systemProgram),
+      getAccountMeta('buyer', accounts.buyer),
+      getAccountMeta('config', accounts.config),
+      getAccountMeta('round', accounts.round),
+      getAccountMeta('ticket', accounts.ticket),
+      getAccountMeta('systemProgram', accounts.systemProgram),
     ],
-    data: getBuyTicketInstructionDataEncoder().encode(
-      args as BuyTicketInstructionDataArgs,
-    ),
+    data: getBuyTicketInstructionDataEncoder().encode(args as BuyTicketInstructionDataArgs),
     programAddress,
   } as BuyTicketInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountBuyer,
-      InstructionAccountInputAddress<TAccountBuyer>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTicket,
-      InstructionAccountInputAddress<TAccountTicket>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountSystemProgram,
-      InstructionAccountInputAddress<TAccountSystemProgram>
-    >
+    ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+    ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
   >);
 }
 
@@ -293,8 +219,7 @@ export type BuyTicketInput<
   TAccountConfig extends InstructionAccountInput = InstructionAccountInput,
   TAccountRound extends InstructionAccountInput = InstructionAccountInput,
   TAccountTicket extends InstructionAccountInput = InstructionAccountInput,
-  TAccountSystemProgram extends InstructionAccountInput =
-    InstructionAccountInput,
+  TAccountSystemProgram extends InstructionAccountInput = InstructionAccountInput,
 > = {
   buyer: TAccountBuyer;
   config: TAccountConfig;
@@ -303,9 +228,9 @@ export type BuyTicketInput<
   /** Fails with "already in use" if someone holds this number today. */
   ticket: TAccountTicket;
   systemProgram?: TAccountSystemProgram;
-  day: BuyTicketInstructionDataArgs["day"];
-  number: BuyTicketInstructionDataArgs["number"];
-  country: BuyTicketInstructionDataArgs["country"];
+  day: BuyTicketInstructionDataArgs['day'];
+  number: BuyTicketInstructionDataArgs['number'];
+  country: BuyTicketInstructionDataArgs['country'];
 };
 
 export function getBuyTicketInstruction<
@@ -316,48 +241,22 @@ export function getBuyTicketInstruction<
   TAccountSystemProgram extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: BuyTicketInput<
-    TAccountBuyer,
-    TAccountConfig,
-    TAccountRound,
-    TAccountTicket,
-    TAccountSystemProgram
-  >,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  input: BuyTicketInput<TAccountBuyer, TAccountConfig, TAccountRound, TAccountTicket, TAccountSystemProgram>,
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): BuyTicketInstruction<
   TProgramAddress,
-  ResolvedInstructionAccountMeta<
-    TAccountBuyer,
-    InstructionAccountInputAddress<TAccountBuyer>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountConfig,
-    InstructionAccountInputAddress<TAccountConfig>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountRound,
-    InstructionAccountInputAddress<TAccountRound>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountTicket,
-    InstructionAccountInputAddress<TAccountTicket>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountSystemProgram,
-    InstructionAccountInputAddress<TAccountSystemProgram>
-  >
+  ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
+  ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+  ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+  ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+  ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
@@ -365,60 +264,35 @@ export function getBuyTicketInstruction<
     config: { value: input.config ?? null, isSigner: false, isWritable: false },
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
     ticket: { value: input.ticket ?? null, isSigner: false, isWritable: true },
-    systemProgram: {
-      value: input.systemProgram ?? null,
-      isSigner: false,
-      isWritable: false,
-    },
+    systemProgram: { value: input.systemProgram ?? null, isSigner: false, isWritable: false },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   // Original args.
   const args = { ...input };
 
   // Resolve default values.
   if (!accounts.systemProgram.value) {
-    accounts.systemProgram.value =
-      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
+    accounts.systemProgram.value = '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
   }
 
   return Object.freeze({
     accounts: [
-      getAccountMeta("buyer", accounts.buyer),
-      getAccountMeta("config", accounts.config),
-      getAccountMeta("round", accounts.round),
-      getAccountMeta("ticket", accounts.ticket),
-      getAccountMeta("systemProgram", accounts.systemProgram),
+      getAccountMeta('buyer', accounts.buyer),
+      getAccountMeta('config', accounts.config),
+      getAccountMeta('round', accounts.round),
+      getAccountMeta('ticket', accounts.ticket),
+      getAccountMeta('systemProgram', accounts.systemProgram),
     ],
-    data: getBuyTicketInstructionDataEncoder().encode(
-      args as BuyTicketInstructionDataArgs,
-    ),
+    data: getBuyTicketInstructionDataEncoder().encode(args as BuyTicketInstructionDataArgs),
     programAddress,
   } as BuyTicketInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountBuyer,
-      InstructionAccountInputAddress<TAccountBuyer>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTicket,
-      InstructionAccountInputAddress<TAccountTicket>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountSystemProgram,
-      InstructionAccountInputAddress<TAccountSystemProgram>
-    >
+    ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+    ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
   >);
 }
 
@@ -439,22 +313,14 @@ export type ParsedBuyTicketInstruction<
   data: BuyTicketInstructionData;
 };
 
-export function parseBuyTicketInstruction<
-  TProgram extends string,
-  TAccountMetas extends readonly AccountMeta[],
->(
-  instruction: Instruction<TProgram> &
-    InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>,
+export function parseBuyTicketInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
+  instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedBuyTicketInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 5) {
-    throw new SolanaError(
-      SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
-      {
-        actualAccountMetas: instruction.accounts.length,
-        expectedAccountMetas: 5,
-      },
-    );
+    throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
+      actualAccountMetas: instruction.accounts.length,
+      expectedAccountMetas: 5,
+    });
   }
   let accountIndex = 0;
   const getNextAccount = () => {

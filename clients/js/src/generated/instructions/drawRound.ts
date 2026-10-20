@@ -28,19 +28,17 @@ import {
   type ReadonlyAccount,
   type ReadonlyUint8Array,
   type WritableAccount,
-} from "@solana/kit";
+} from '@solana/kit';
 import {
   getAccountMetaFactory,
   type InstructionAccountInput,
   type InstructionAccountInputAddress,
   type ResolvedInstructionAccount,
   type ResolvedInstructionAccountMeta,
-} from "@solana/kit/program-client-core";
-import { SOLUCKY_PROGRAM_ADDRESS } from "../programs";
+} from '@solana/kit/program-client-core';
+import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
-export const DRAW_ROUND_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  193, 98, 43, 206, 179, 168, 227, 135,
-]);
+export const DRAW_ROUND_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([193, 98, 43, 206, 179, 168, 227, 135]);
 
 export function getDrawRoundDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(DRAW_ROUND_DISCRIMINATOR);
@@ -49,19 +47,14 @@ export function getDrawRoundDiscriminatorBytes(): ReadonlyUint8Array {
 export type DrawRoundInstruction<
   TProgram extends string = typeof SOLUCKY_PROGRAM_ADDRESS,
   TAccountRound extends string | AccountMeta<string> = string,
-  TAccountSlotHashes extends string | AccountMeta<string> =
-    "SysvarS1otHashes111111111111111111111111111",
+  TAccountSlotHashes extends string | AccountMeta<string> = 'SysvarS1otHashes111111111111111111111111111',
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
   InstructionWithAccounts<
     [
-      TAccountRound extends string
-        ? WritableAccount<TAccountRound>
-        : TAccountRound,
-      TAccountSlotHashes extends string
-        ? ReadonlyAccount<TAccountSlotHashes>
-        : TAccountSlotHashes,
+      TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound,
+      TAccountSlotHashes extends string ? ReadonlyAccount<TAccountSlotHashes> : TAccountSlotHashes,
       ...TRemainingAccounts,
     ]
   >;
@@ -71,26 +64,21 @@ export type DrawRoundInstructionData = { discriminator: ReadonlyUint8Array };
 export type DrawRoundInstructionDataArgs = {};
 
 export function getDrawRoundInstructionDataEncoder(): FixedSizeEncoder<DrawRoundInstructionDataArgs> {
-  return transformEncoder(
-    getStructEncoder([["discriminator", fixEncoderSize(getBytesEncoder(), 8)]]),
-    (value) => ({ ...value, discriminator: DRAW_ROUND_DISCRIMINATOR }),
-  );
+  return transformEncoder(getStructEncoder([['discriminator', fixEncoderSize(getBytesEncoder(), 8)]]), (value) => ({
+    ...value,
+    discriminator: DRAW_ROUND_DISCRIMINATOR,
+  }));
 }
 
 export function getDrawRoundInstructionDataDecoder(): FixedSizeDecoder<DrawRoundInstructionData> {
-  return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-  ]);
+  return getStructDecoder([['discriminator', fixDecoderSize(getBytesDecoder(), 8)]]);
 }
 
 export function getDrawRoundInstructionDataCodec(): FixedSizeCodec<
   DrawRoundInstructionDataArgs,
   DrawRoundInstructionData
 > {
-  return combineCodec(
-    getDrawRoundInstructionDataEncoder(),
-    getDrawRoundInstructionDataDecoder(),
-  );
+  return combineCodec(getDrawRoundInstructionDataEncoder(), getDrawRoundInstructionDataDecoder());
 }
 
 export type DrawRoundInput<
@@ -108,67 +96,40 @@ export function getDrawRoundInstruction<
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
   input: DrawRoundInput<TAccountRound, TAccountSlotHashes>,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): DrawRoundInstruction<
   TProgramAddress,
-  ResolvedInstructionAccountMeta<
-    TAccountRound,
-    InstructionAccountInputAddress<TAccountRound>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountSlotHashes,
-    InstructionAccountInputAddress<TAccountSlotHashes>
-  >
+  ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+  ResolvedInstructionAccountMeta<TAccountSlotHashes, InstructionAccountInputAddress<TAccountSlotHashes>>
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
-    slotHashes: {
-      value: input.slotHashes ?? null,
-      isSigner: false,
-      isWritable: false,
-    },
+    slotHashes: { value: input.slotHashes ?? null, isSigner: false, isWritable: false },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   // Resolve default values.
   if (!accounts.slotHashes.value) {
     accounts.slotHashes.value =
-      "SysvarS1otHashes111111111111111111111111111" as Address<"SysvarS1otHashes111111111111111111111111111">;
+      'SysvarS1otHashes111111111111111111111111111' as Address<'SysvarS1otHashes111111111111111111111111111'>;
   }
 
   return Object.freeze({
-    accounts: [
-      getAccountMeta("round", accounts.round),
-      getAccountMeta("slotHashes", accounts.slotHashes),
-    ],
+    accounts: [getAccountMeta('round', accounts.round), getAccountMeta('slotHashes', accounts.slotHashes)],
     data: getDrawRoundInstructionDataEncoder().encode({}),
     programAddress,
   } as DrawRoundInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountSlotHashes,
-      InstructionAccountInputAddress<TAccountSlotHashes>
-    >
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountSlotHashes, InstructionAccountInputAddress<TAccountSlotHashes>>
   >);
 }
 
@@ -185,22 +146,14 @@ export type ParsedDrawRoundInstruction<
   data: DrawRoundInstructionData;
 };
 
-export function parseDrawRoundInstruction<
-  TProgram extends string,
-  TAccountMetas extends readonly AccountMeta[],
->(
-  instruction: Instruction<TProgram> &
-    InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>,
+export function parseDrawRoundInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
+  instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedDrawRoundInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 2) {
-    throw new SolanaError(
-      SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
-      {
-        actualAccountMetas: instruction.accounts.length,
-        expectedAccountMetas: 2,
-      },
-    );
+    throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
+      actualAccountMetas: instruction.accounts.length,
+      expectedAccountMetas: 2,
+    });
   }
   let accountIndex = 0;
   const getNextAccount = () => {

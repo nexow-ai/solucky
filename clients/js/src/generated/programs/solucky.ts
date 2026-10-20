@@ -27,13 +27,13 @@ import {
   type Instruction,
   type InstructionWithData,
   type ReadonlyUint8Array,
-} from "@solana/kit";
+} from '@solana/kit';
 import {
   addSelfFetchFunctions,
   addSelfPlanAndSendFunctions,
   type SelfFetchFunctions,
   type SelfPlanAndSendFunctions,
-} from "@solana/kit/program-client-core";
+} from '@solana/kit/program-client-core';
 import {
   getConfigCodec,
   getRoundCodec,
@@ -44,7 +44,7 @@ import {
   type RoundArgs,
   type Ticket,
   type TicketArgs,
-} from "../accounts";
+} from '../accounts';
 import {
   getBuyTicketInstructionAsync,
   getClaimPrizeInstructionAsync,
@@ -74,11 +74,11 @@ import {
   type ParsedInitializeInstruction,
   type ParsedUpdateConfigInstruction,
   type UpdateConfigAsyncInput,
-} from "../instructions";
-import { findConfigPda, findRoundPda, findTicketPda } from "../pdas";
+} from '../instructions';
+import { findConfigPda, findRoundPda, findTicketPda } from '../pdas';
 
 export const SOLUCKY_PROGRAM_ADDRESS =
-  "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2" as Address<"8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2">;
+  '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2' as Address<'8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'>;
 
 export enum SoluckyAccount {
   Config,
@@ -86,16 +86,12 @@ export enum SoluckyAccount {
   Ticket,
 }
 
-export function identifySoluckyAccount(
-  account: { data: ReadonlyUint8Array } | ReadonlyUint8Array,
-): SoluckyAccount {
-  const data = "data" in account ? account.data : account;
+export function identifySoluckyAccount(account: { data: ReadonlyUint8Array } | ReadonlyUint8Array): SoluckyAccount {
+  const data = 'data' in account ? account.data : account;
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([155, 12, 170, 224, 30, 250, 204, 130]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([155, 12, 170, 224, 30, 250, 204, 130])),
       0,
     )
   ) {
@@ -104,9 +100,7 @@ export function identifySoluckyAccount(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([87, 127, 165, 51, 73, 78, 116, 174]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([87, 127, 165, 51, 73, 78, 116, 174])),
       0,
     )
   ) {
@@ -115,18 +109,16 @@ export function identifySoluckyAccount(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([41, 228, 24, 165, 78, 90, 235, 200]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([41, 228, 24, 165, 78, 90, 235, 200])),
       0,
     )
   ) {
     return SoluckyAccount.Ticket;
   }
-  throw new SolanaError(
-    SOLANA_ERROR__PROGRAM_CLIENTS__FAILED_TO_IDENTIFY_ACCOUNT,
-    { accountData: data, programName: "solucky" },
-  );
+  throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__FAILED_TO_IDENTIFY_ACCOUNT, {
+    accountData: data,
+    programName: 'solucky',
+  });
 }
 
 export enum SoluckyEvent {
@@ -137,16 +129,12 @@ export enum SoluckyEvent {
   TicketPurchased,
 }
 
-export function identifySoluckyEvent(
-  event: { data: ReadonlyUint8Array } | ReadonlyUint8Array,
-): SoluckyEvent {
-  const data = "data" in event ? event.data : event;
+export function identifySoluckyEvent(event: { data: ReadonlyUint8Array } | ReadonlyUint8Array): SoluckyEvent {
+  const data = 'data' in event ? event.data : event;
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([40, 241, 230, 122, 11, 19, 198, 194]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([40, 241, 230, 122, 11, 19, 198, 194])),
       0,
     )
   ) {
@@ -155,9 +143,7 @@ export function identifySoluckyEvent(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([213, 150, 192, 76, 199, 33, 212, 38]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([213, 150, 192, 76, 199, 33, 212, 38])),
       0,
     )
   ) {
@@ -166,9 +152,7 @@ export function identifySoluckyEvent(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([45, 243, 28, 22, 132, 70, 175, 226]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([45, 243, 28, 22, 132, 70, 175, 226])),
       0,
     )
   ) {
@@ -177,9 +161,7 @@ export function identifySoluckyEvent(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([147, 89, 5, 223, 177, 229, 18, 87]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([147, 89, 5, 223, 177, 229, 18, 87])),
       0,
     )
   ) {
@@ -188,17 +170,13 @@ export function identifySoluckyEvent(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([108, 59, 246, 95, 84, 145, 13, 71]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([108, 59, 246, 95, 84, 145, 13, 71])),
       0,
     )
   ) {
     return SoluckyEvent.TicketPurchased;
   }
-  throw new Error(
-    "The provided event could not be identified as a solucky event.",
-  );
+  throw new Error('The provided event could not be identified as a solucky event.');
 }
 
 export enum SoluckyInstruction {
@@ -214,13 +192,11 @@ export enum SoluckyInstruction {
 export function identifySoluckyInstruction(
   instruction: { data: ReadonlyUint8Array } | ReadonlyUint8Array,
 ): SoluckyInstruction {
-  const data = "data" in instruction ? instruction.data : instruction;
+  const data = 'data' in instruction ? instruction.data : instruction;
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([11, 24, 17, 193, 168, 116, 164, 169]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([11, 24, 17, 193, 168, 116, 164, 169])),
       0,
     )
   ) {
@@ -229,9 +205,7 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([157, 233, 139, 121, 246, 62, 234, 235]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([157, 233, 139, 121, 246, 62, 234, 235])),
       0,
     )
   ) {
@@ -240,9 +214,7 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([149, 14, 81, 88, 230, 226, 234, 37]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([149, 14, 81, 88, 230, 226, 234, 37])),
       0,
     )
   ) {
@@ -251,9 +223,7 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([66, 209, 114, 197, 75, 27, 182, 117]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([66, 209, 114, 197, 75, 27, 182, 117])),
       0,
     )
   ) {
@@ -262,9 +232,7 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([193, 98, 43, 206, 179, 168, 227, 135]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([193, 98, 43, 206, 179, 168, 227, 135])),
       0,
     )
   ) {
@@ -273,9 +241,7 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([175, 175, 109, 31, 13, 152, 155, 237]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([175, 175, 109, 31, 13, 152, 155, 237])),
       0,
     )
   ) {
@@ -284,44 +250,26 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([29, 158, 252, 191, 10, 83, 219, 99]),
-      ),
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([29, 158, 252, 191, 10, 83, 219, 99])),
       0,
     )
   ) {
     return SoluckyInstruction.UpdateConfig;
   }
-  throw new SolanaError(
-    SOLANA_ERROR__PROGRAM_CLIENTS__FAILED_TO_IDENTIFY_INSTRUCTION,
-    { instructionData: data, programName: "solucky" },
-  );
+  throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__FAILED_TO_IDENTIFY_INSTRUCTION, {
+    instructionData: data,
+    programName: 'solucky',
+  });
 }
 
-export type ParsedSoluckyInstruction<
-  TProgram extends string = "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2",
-> =
-  | ({
-      instructionType: SoluckyInstruction.BuyTicket;
-    } & ParsedBuyTicketInstruction<TProgram>)
-  | ({
-      instructionType: SoluckyInstruction.ClaimPrize;
-    } & ParsedClaimPrizeInstruction<TProgram>)
-  | ({
-      instructionType: SoluckyInstruction.CloseRound;
-    } & ParsedCloseRoundInstruction<TProgram>)
-  | ({
-      instructionType: SoluckyInstruction.CloseTicket;
-    } & ParsedCloseTicketInstruction<TProgram>)
-  | ({
-      instructionType: SoluckyInstruction.DrawRound;
-    } & ParsedDrawRoundInstruction<TProgram>)
-  | ({
-      instructionType: SoluckyInstruction.Initialize;
-    } & ParsedInitializeInstruction<TProgram>)
-  | ({
-      instructionType: SoluckyInstruction.UpdateConfig;
-    } & ParsedUpdateConfigInstruction<TProgram>);
+export type ParsedSoluckyInstruction<TProgram extends string = '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'> =
+  | ({ instructionType: SoluckyInstruction.BuyTicket } & ParsedBuyTicketInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.ClaimPrize } & ParsedClaimPrizeInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.CloseRound } & ParsedCloseRoundInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.CloseTicket } & ParsedCloseTicketInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.DrawRound } & ParsedDrawRoundInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.Initialize } & ParsedInitializeInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.UpdateConfig } & ParsedUpdateConfigInstruction<TProgram>);
 
 export function parseSoluckyInstruction<TProgram extends string>(
   instruction: Instruction<TProgram> & InstructionWithData<ReadonlyUint8Array>,
@@ -330,58 +278,37 @@ export function parseSoluckyInstruction<TProgram extends string>(
   switch (instructionType) {
     case SoluckyInstruction.BuyTicket: {
       assertIsInstructionWithAccounts(instruction);
-      return {
-        instructionType: SoluckyInstruction.BuyTicket,
-        ...parseBuyTicketInstruction(instruction),
-      };
+      return { instructionType: SoluckyInstruction.BuyTicket, ...parseBuyTicketInstruction(instruction) };
     }
     case SoluckyInstruction.ClaimPrize: {
       assertIsInstructionWithAccounts(instruction);
-      return {
-        instructionType: SoluckyInstruction.ClaimPrize,
-        ...parseClaimPrizeInstruction(instruction),
-      };
+      return { instructionType: SoluckyInstruction.ClaimPrize, ...parseClaimPrizeInstruction(instruction) };
     }
     case SoluckyInstruction.CloseRound: {
       assertIsInstructionWithAccounts(instruction);
-      return {
-        instructionType: SoluckyInstruction.CloseRound,
-        ...parseCloseRoundInstruction(instruction),
-      };
+      return { instructionType: SoluckyInstruction.CloseRound, ...parseCloseRoundInstruction(instruction) };
     }
     case SoluckyInstruction.CloseTicket: {
       assertIsInstructionWithAccounts(instruction);
-      return {
-        instructionType: SoluckyInstruction.CloseTicket,
-        ...parseCloseTicketInstruction(instruction),
-      };
+      return { instructionType: SoluckyInstruction.CloseTicket, ...parseCloseTicketInstruction(instruction) };
     }
     case SoluckyInstruction.DrawRound: {
       assertIsInstructionWithAccounts(instruction);
-      return {
-        instructionType: SoluckyInstruction.DrawRound,
-        ...parseDrawRoundInstruction(instruction),
-      };
+      return { instructionType: SoluckyInstruction.DrawRound, ...parseDrawRoundInstruction(instruction) };
     }
     case SoluckyInstruction.Initialize: {
       assertIsInstructionWithAccounts(instruction);
-      return {
-        instructionType: SoluckyInstruction.Initialize,
-        ...parseInitializeInstruction(instruction),
-      };
+      return { instructionType: SoluckyInstruction.Initialize, ...parseInitializeInstruction(instruction) };
     }
     case SoluckyInstruction.UpdateConfig: {
       assertIsInstructionWithAccounts(instruction);
-      return {
-        instructionType: SoluckyInstruction.UpdateConfig,
-        ...parseUpdateConfigInstruction(instruction),
-      };
+      return { instructionType: SoluckyInstruction.UpdateConfig, ...parseUpdateConfigInstruction(instruction) };
     }
     default:
-      throw new SolanaError(
-        SOLANA_ERROR__PROGRAM_CLIENTS__UNRECOGNIZED_INSTRUCTION_TYPE,
-        { instructionType: instructionType as string, programName: "solucky" },
-      );
+      throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__UNRECOGNIZED_INSTRUCTION_TYPE, {
+        instructionType: instructionType as string,
+        programName: 'solucky',
+      });
   }
 }
 
@@ -395,25 +322,20 @@ export type SoluckyPlugin = {
 };
 
 export type SoluckyPluginAccounts = {
-  config: ReturnType<typeof getConfigCodec> &
-    SelfFetchFunctions<ConfigArgs, Config>;
-  round: ReturnType<typeof getRoundCodec> &
-    SelfFetchFunctions<RoundArgs, Round>;
-  ticket: ReturnType<typeof getTicketCodec> &
-    SelfFetchFunctions<TicketArgs, Ticket>;
+  config: ReturnType<typeof getConfigCodec> & SelfFetchFunctions<ConfigArgs, Config>;
+  round: ReturnType<typeof getRoundCodec> & SelfFetchFunctions<RoundArgs, Round>;
+  ticket: ReturnType<typeof getTicketCodec> & SelfFetchFunctions<TicketArgs, Ticket>;
 };
 
 export type SoluckyPluginInstructions = {
   buyTicket: (
     input: BuyTicketAsyncInput,
     config?: { programAddress?: Address | HasAddress },
-  ) => ReturnType<typeof getBuyTicketInstructionAsync> &
-    SelfPlanAndSendFunctions;
+  ) => ReturnType<typeof getBuyTicketInstructionAsync> & SelfPlanAndSendFunctions;
   claimPrize: (
     input: ClaimPrizeAsyncInput,
     config?: { programAddress?: Address | HasAddress },
-  ) => ReturnType<typeof getClaimPrizeInstructionAsync> &
-    SelfPlanAndSendFunctions;
+  ) => ReturnType<typeof getClaimPrizeInstructionAsync> & SelfPlanAndSendFunctions;
   closeRound: (
     input: CloseRoundInput,
     config?: { programAddress?: Address | HasAddress },
@@ -429,13 +351,11 @@ export type SoluckyPluginInstructions = {
   initialize: (
     input: InitializeAsyncInput,
     config?: { programAddress?: Address | HasAddress },
-  ) => ReturnType<typeof getInitializeInstructionAsync> &
-    SelfPlanAndSendFunctions;
+  ) => ReturnType<typeof getInitializeInstructionAsync> & SelfPlanAndSendFunctions;
   updateConfig: (
     input: UpdateConfigAsyncInput,
     config?: { programAddress?: Address | HasAddress },
-  ) => ReturnType<typeof getUpdateConfigInstructionAsync> &
-    SelfPlanAndSendFunctions;
+  ) => ReturnType<typeof getUpdateConfigInstructionAsync> & SelfPlanAndSendFunctions;
 };
 
 export type SoluckyPluginPdas = {
@@ -444,18 +364,12 @@ export type SoluckyPluginPdas = {
   ticket: typeof findTicketPda;
 };
 
-export type SoluckyPluginRequirements = ClientWithRpc<
-  GetAccountInfoApi & GetMultipleAccountsApi
-> &
+export type SoluckyPluginRequirements = ClientWithRpc<GetAccountInfoApi & GetMultipleAccountsApi> &
   ClientWithTransactionPlanning &
   ClientWithTransactionSending;
 
-export function soluckyProgram(
-  config: { programAddress?: Address | HasAddress } = {},
-) {
-  return <T extends SoluckyPluginRequirements>(
-    client: T,
-  ): ExtendedClient<T, { solucky: SoluckyPlugin }> => {
+export function soluckyProgram(config: { programAddress?: Address | HasAddress } = {}) {
+  return <T extends SoluckyPluginRequirements>(client: T): ExtendedClient<T, { solucky: SoluckyPlugin }> => {
     return extendClient(client, {
       solucky: <SoluckyPlugin>{
         accounts: {
@@ -468,75 +382,58 @@ export function soluckyProgram(
             addSelfPlanAndSendFunctions(
               client,
               getBuyTicketInstructionAsync(input, {
-                programAddress:
-                  instructionConfig?.programAddress ?? config.programAddress,
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
           claimPrize: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
               getClaimPrizeInstructionAsync(input, {
-                programAddress:
-                  instructionConfig?.programAddress ?? config.programAddress,
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
           closeRound: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
               getCloseRoundInstruction(input, {
-                programAddress:
-                  instructionConfig?.programAddress ?? config.programAddress,
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
           closeTicket: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
               getCloseTicketInstruction(input, {
-                programAddress:
-                  instructionConfig?.programAddress ?? config.programAddress,
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
           drawRound: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
               getDrawRoundInstruction(input, {
-                programAddress:
-                  instructionConfig?.programAddress ?? config.programAddress,
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
           initialize: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
               getInitializeInstructionAsync(input, {
-                programAddress:
-                  instructionConfig?.programAddress ?? config.programAddress,
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
           updateConfig: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
               getUpdateConfigInstructionAsync(input, {
-                programAddress:
-                  instructionConfig?.programAddress ?? config.programAddress,
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
         },
         pdas: {
-          config: (pdaConfig) =>
-            findConfigPda({
-              programAddress:
-                pdaConfig?.programAddress ?? config.programAddress,
-            }),
+          config: (pdaConfig) => findConfigPda({ programAddress: pdaConfig?.programAddress ?? config.programAddress }),
           round: (seeds, pdaConfig) =>
-            findRoundPda(seeds, {
-              programAddress:
-                pdaConfig?.programAddress ?? config.programAddress,
-            }),
+            findRoundPda(seeds, { programAddress: pdaConfig?.programAddress ?? config.programAddress }),
           ticket: (seeds, pdaConfig) =>
-            findTicketPda(seeds, {
-              programAddress:
-                pdaConfig?.programAddress ?? config.programAddress,
-            }),
+            findTicketPda(seeds, { programAddress: pdaConfig?.programAddress ?? config.programAddress }),
         },
         identifyAccount: identifySoluckyAccount,
         identifyInstruction: identifySoluckyInstruction,

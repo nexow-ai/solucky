@@ -13,7 +13,7 @@ import {
   type FixedSizeCodec,
   type FixedSizeDecoder,
   type FixedSizeEncoder,
-} from "@solana/kit";
+} from '@solana/kit';
 
 export enum RoundStatus {
   Open,
@@ -32,9 +32,6 @@ export function getRoundStatusDecoder(): FixedSizeDecoder<RoundStatus> {
   return getEnumDecoder(RoundStatus);
 }
 
-export function getRoundStatusCodec(): FixedSizeCodec<
-  RoundStatusArgs,
-  RoundStatus
-> {
+export function getRoundStatusCodec(): FixedSizeCodec<RoundStatusArgs, RoundStatus> {
   return combineCodec(getRoundStatusEncoder(), getRoundStatusDecoder());
 }

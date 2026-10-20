@@ -25,23 +25,17 @@ import {
   type FixedSizeDecoder,
   type FixedSizeEncoder,
   type ReadonlyUint8Array,
-} from "@solana/kit";
+} from '@solana/kit';
 
-export const ROUND_CLOSED_EVENT_DISCRIMINATOR: ReadonlyUint8Array =
-  new Uint8Array([45, 243, 28, 22, 132, 70, 175, 226]);
+export const ROUND_CLOSED_EVENT_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
+  45, 243, 28, 22, 132, 70, 175, 226,
+]);
 
 export function getRoundClosedEventDiscriminatorBytes(): ReadonlyUint8Array {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(
-    ROUND_CLOSED_EVENT_DISCRIMINATOR,
-  );
+  return fixEncoderSize(getBytesEncoder(), 8).encode(ROUND_CLOSED_EVENT_DISCRIMINATOR);
 }
 
-export type RoundClosedEvent = {
-  day: number;
-  ticketCount: number;
-  pot: bigint;
-  targetSlot: bigint;
-};
+export type RoundClosedEvent = { day: number; ticketCount: number; pot: bigint; targetSlot: bigint };
 
 export type RoundClosedEventArgs = {
   day: number;
@@ -54,10 +48,10 @@ export type RoundClosedEventArgs = {
 export function getRoundClosedEventEncoder(): FixedSizeEncoder<RoundClosedEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ["day", getU32Encoder()],
-      ["ticketCount", getU32Encoder()],
-      ["pot", getU64Encoder()],
-      ["targetSlot", getU64Encoder()],
+      ['day', getU32Encoder()],
+      ['ticketCount', getU32Encoder()],
+      ['pot', getU64Encoder()],
+      ['targetSlot', getU64Encoder()],
     ]),
     [getConstantEncoder(ROUND_CLOSED_EVENT_DISCRIMINATOR)],
   );
@@ -67,34 +61,24 @@ export function getRoundClosedEventEncoder(): FixedSizeEncoder<RoundClosedEventA
 export function getRoundClosedEventDecoder(): FixedSizeDecoder<RoundClosedEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ["day", getU32Decoder()],
-      ["ticketCount", getU32Decoder()],
-      ["pot", getU64Decoder()],
-      ["targetSlot", getU64Decoder()],
+      ['day', getU32Decoder()],
+      ['ticketCount', getU32Decoder()],
+      ['pot', getU64Decoder()],
+      ['targetSlot', getU64Decoder()],
     ]),
     [getConstantDecoder(ROUND_CLOSED_EVENT_DISCRIMINATOR)],
   );
 }
 
 /** Gets the codec for {@link RoundClosedEvent} event data. */
-export function getRoundClosedEventCodec(): FixedSizeCodec<
-  RoundClosedEventArgs,
-  RoundClosedEvent
-> {
-  return combineCodec(
-    getRoundClosedEventEncoder(),
-    getRoundClosedEventDecoder(),
-  );
+export function getRoundClosedEventCodec(): FixedSizeCodec<RoundClosedEventArgs, RoundClosedEvent> {
+  return combineCodec(getRoundClosedEventEncoder(), getRoundClosedEventDecoder());
 }
 
 /** Parses the provided bytes into {@link RoundClosedEvent} event data. */
-export function parseRoundClosedEvent(
-  data: ReadonlyUint8Array | Uint8Array,
-): RoundClosedEvent {
+export function parseRoundClosedEvent(data: ReadonlyUint8Array | Uint8Array): RoundClosedEvent {
   if (containsBytes(data, ROUND_CLOSED_EVENT_DISCRIMINATOR, 0)) {
     return getRoundClosedEventDecoder().decode(data);
   }
-  throw new Error(
-    'The provided data does not match the "RoundClosedEvent" event discriminators.',
-  );
+  throw new Error('The provided data does not match the "RoundClosedEvent" event discriminators.');
 }

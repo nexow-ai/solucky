@@ -44,7 +44,7 @@ import {
   type ReadonlySignerAccount,
   type ReadonlyUint8Array,
   type WritableAccount,
-} from "@solana/kit";
+} from '@solana/kit';
 import {
   getAccountMetaFactory,
   type InstructionAccountInput,
@@ -52,18 +52,14 @@ import {
   type InstructionSignerInput,
   type ResolvedInstructionAccount,
   type ResolvedInstructionAccountMeta,
-} from "@solana/kit/program-client-core";
-import { findConfigPda } from "../pdas";
-import { SOLUCKY_PROGRAM_ADDRESS } from "../programs";
+} from '@solana/kit/program-client-core';
+import { findConfigPda } from '../pdas';
+import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
-export const UPDATE_CONFIG_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  29, 158, 252, 191, 10, 83, 219, 99,
-]);
+export const UPDATE_CONFIG_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([29, 158, 252, 191, 10, 83, 219, 99]);
 
 export function getUpdateConfigDiscriminatorBytes(): ReadonlyUint8Array {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(
-    UPDATE_CONFIG_DISCRIMINATOR,
-  );
+  return fixEncoderSize(getBytesEncoder(), 8).encode(UPDATE_CONFIG_DISCRIMINATOR);
 }
 
 export type UpdateConfigInstruction<
@@ -76,12 +72,9 @@ export type UpdateConfigInstruction<
   InstructionWithAccounts<
     [
       TAccountAuthority extends string
-        ? ReadonlySignerAccount<TAccountAuthority> &
-            AccountSignerMeta<TAccountAuthority>
+        ? ReadonlySignerAccount<TAccountAuthority> & AccountSignerMeta<TAccountAuthority>
         : TAccountAuthority,
-      TAccountConfig extends string
-        ? WritableAccount<TAccountConfig>
-        : TAccountConfig,
+      TAccountConfig extends string ? WritableAccount<TAccountConfig> : TAccountConfig,
       ...TRemainingAccounts,
     ]
   >;
@@ -108,13 +101,13 @@ export type UpdateConfigInstructionDataArgs = {
 export function getUpdateConfigInstructionDataEncoder(): Encoder<UpdateConfigInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
-      ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
-      ["authority", getOptionEncoder(getAddressEncoder())],
-      ["treasury", getOptionEncoder(getAddressEncoder())],
-      ["ticketPrice", getOptionEncoder(getU64Encoder())],
-      ["feeBps", getOptionEncoder(getU16Encoder())],
-      ["maxNumber", getOptionEncoder(getU32Encoder())],
-      ["paused", getOptionEncoder(getBooleanEncoder())],
+      ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
+      ['authority', getOptionEncoder(getAddressEncoder())],
+      ['treasury', getOptionEncoder(getAddressEncoder())],
+      ['ticketPrice', getOptionEncoder(getU64Encoder())],
+      ['feeBps', getOptionEncoder(getU16Encoder())],
+      ['maxNumber', getOptionEncoder(getU32Encoder())],
+      ['paused', getOptionEncoder(getBooleanEncoder())],
     ]),
     (value) => ({ ...value, discriminator: UPDATE_CONFIG_DISCRIMINATOR }),
   );
@@ -122,13 +115,13 @@ export function getUpdateConfigInstructionDataEncoder(): Encoder<UpdateConfigIns
 
 export function getUpdateConfigInstructionDataDecoder(): Decoder<UpdateConfigInstructionData> {
   return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-    ["authority", getOptionDecoder(getAddressDecoder())],
-    ["treasury", getOptionDecoder(getAddressDecoder())],
-    ["ticketPrice", getOptionDecoder(getU64Decoder())],
-    ["feeBps", getOptionDecoder(getU16Decoder())],
-    ["maxNumber", getOptionDecoder(getU32Decoder())],
-    ["paused", getOptionDecoder(getBooleanDecoder())],
+    ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
+    ['authority', getOptionDecoder(getAddressDecoder())],
+    ['treasury', getOptionDecoder(getAddressDecoder())],
+    ['ticketPrice', getOptionDecoder(getU64Decoder())],
+    ['feeBps', getOptionDecoder(getU16Decoder())],
+    ['maxNumber', getOptionDecoder(getU32Decoder())],
+    ['paused', getOptionDecoder(getBooleanDecoder())],
   ]);
 }
 
@@ -136,10 +129,7 @@ export function getUpdateConfigInstructionDataCodec(): Codec<
   UpdateConfigInstructionDataArgs,
   UpdateConfigInstructionData
 > {
-  return combineCodec(
-    getUpdateConfigInstructionDataEncoder(),
-    getUpdateConfigInstructionDataDecoder(),
-  );
+  return combineCodec(getUpdateConfigInstructionDataEncoder(), getUpdateConfigInstructionDataDecoder());
 }
 
 export type UpdateConfigAsyncInput<
@@ -148,12 +138,12 @@ export type UpdateConfigAsyncInput<
 > = {
   authority: TAccountAuthority;
   config?: TAccountConfig;
-  authorityArg: UpdateConfigInstructionDataArgs["authority"];
-  treasury: UpdateConfigInstructionDataArgs["treasury"];
-  ticketPrice: UpdateConfigInstructionDataArgs["ticketPrice"];
-  feeBps: UpdateConfigInstructionDataArgs["feeBps"];
-  maxNumber: UpdateConfigInstructionDataArgs["maxNumber"];
-  paused: UpdateConfigInstructionDataArgs["paused"];
+  authorityArg: UpdateConfigInstructionDataArgs['authority'];
+  treasury: UpdateConfigInstructionDataArgs['treasury'];
+  ticketPrice: UpdateConfigInstructionDataArgs['ticketPrice'];
+  feeBps: UpdateConfigInstructionDataArgs['feeBps'];
+  maxNumber: UpdateConfigInstructionDataArgs['maxNumber'];
+  paused: UpdateConfigInstructionDataArgs['paused'];
 };
 
 export async function getUpdateConfigInstructionAsync<
@@ -162,45 +152,27 @@ export async function getUpdateConfigInstructionAsync<
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
   input: UpdateConfigAsyncInput<TAccountAuthority, TAccountConfig>,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): Promise<
   UpdateConfigInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountAuthority,
-      InstructionAccountInputAddress<TAccountAuthority>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >
+    ResolvedInstructionAccountMeta<TAccountAuthority, InstructionAccountInputAddress<TAccountAuthority>>,
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>
   >
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
-    authority: {
-      value: input.authority ?? null,
-      isSigner: true,
-      isWritable: false,
-    },
+    authority: { value: input.authority ?? null, isSigner: true, isWritable: false },
     config: { value: input.config ?? null, isSigner: false, isWritable: true },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   // Original args.
   const args = { ...input, authority: input.authorityArg };
@@ -211,24 +183,13 @@ export async function getUpdateConfigInstructionAsync<
   }
 
   return Object.freeze({
-    accounts: [
-      getAccountMeta("authority", accounts.authority),
-      getAccountMeta("config", accounts.config),
-    ],
-    data: getUpdateConfigInstructionDataEncoder().encode(
-      args as UpdateConfigInstructionDataArgs,
-    ),
+    accounts: [getAccountMeta('authority', accounts.authority), getAccountMeta('config', accounts.config)],
+    data: getUpdateConfigInstructionDataEncoder().encode(args as UpdateConfigInstructionDataArgs),
     programAddress,
   } as UpdateConfigInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountAuthority,
-      InstructionAccountInputAddress<TAccountAuthority>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >
+    ResolvedInstructionAccountMeta<TAccountAuthority, InstructionAccountInputAddress<TAccountAuthority>>,
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>
   >);
 }
 
@@ -238,12 +199,12 @@ export type UpdateConfigInput<
 > = {
   authority: TAccountAuthority;
   config: TAccountConfig;
-  authorityArg: UpdateConfigInstructionDataArgs["authority"];
-  treasury: UpdateConfigInstructionDataArgs["treasury"];
-  ticketPrice: UpdateConfigInstructionDataArgs["ticketPrice"];
-  feeBps: UpdateConfigInstructionDataArgs["feeBps"];
-  maxNumber: UpdateConfigInstructionDataArgs["maxNumber"];
-  paused: UpdateConfigInstructionDataArgs["paused"];
+  authorityArg: UpdateConfigInstructionDataArgs['authority'];
+  treasury: UpdateConfigInstructionDataArgs['treasury'];
+  ticketPrice: UpdateConfigInstructionDataArgs['ticketPrice'];
+  feeBps: UpdateConfigInstructionDataArgs['feeBps'];
+  maxNumber: UpdateConfigInstructionDataArgs['maxNumber'];
+  paused: UpdateConfigInstructionDataArgs['paused'];
 };
 
 export function getUpdateConfigInstruction<
@@ -252,66 +213,37 @@ export function getUpdateConfigInstruction<
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
   input: UpdateConfigInput<TAccountAuthority, TAccountConfig>,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): UpdateConfigInstruction<
   TProgramAddress,
-  ResolvedInstructionAccountMeta<
-    TAccountAuthority,
-    InstructionAccountInputAddress<TAccountAuthority>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountConfig,
-    InstructionAccountInputAddress<TAccountConfig>
-  >
+  ResolvedInstructionAccountMeta<TAccountAuthority, InstructionAccountInputAddress<TAccountAuthority>>,
+  ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
-    authority: {
-      value: input.authority ?? null,
-      isSigner: true,
-      isWritable: false,
-    },
+    authority: { value: input.authority ?? null, isSigner: true, isWritable: false },
     config: { value: input.config ?? null, isSigner: false, isWritable: true },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   // Original args.
   const args = { ...input, authority: input.authorityArg };
 
   return Object.freeze({
-    accounts: [
-      getAccountMeta("authority", accounts.authority),
-      getAccountMeta("config", accounts.config),
-    ],
-    data: getUpdateConfigInstructionDataEncoder().encode(
-      args as UpdateConfigInstructionDataArgs,
-    ),
+    accounts: [getAccountMeta('authority', accounts.authority), getAccountMeta('config', accounts.config)],
+    data: getUpdateConfigInstructionDataEncoder().encode(args as UpdateConfigInstructionDataArgs),
     programAddress,
   } as UpdateConfigInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountAuthority,
-      InstructionAccountInputAddress<TAccountAuthority>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >
+    ResolvedInstructionAccountMeta<TAccountAuthority, InstructionAccountInputAddress<TAccountAuthority>>,
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>
   >);
 }
 
@@ -327,22 +259,14 @@ export type ParsedUpdateConfigInstruction<
   data: UpdateConfigInstructionData;
 };
 
-export function parseUpdateConfigInstruction<
-  TProgram extends string,
-  TAccountMetas extends readonly AccountMeta[],
->(
-  instruction: Instruction<TProgram> &
-    InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>,
+export function parseUpdateConfigInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
+  instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedUpdateConfigInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 2) {
-    throw new SolanaError(
-      SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
-      {
-        actualAccountMetas: instruction.accounts.length,
-        expectedAccountMetas: 2,
-      },
-    );
+    throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
+      actualAccountMetas: instruction.accounts.length,
+      expectedAccountMetas: 2,
+    });
   }
   let accountIndex = 0;
   const getNextAccount = () => {

@@ -28,20 +28,18 @@ import {
   type ReadonlyAccount,
   type ReadonlyUint8Array,
   type WritableAccount,
-} from "@solana/kit";
+} from '@solana/kit';
 import {
   getAccountMetaFactory,
   type InstructionAccountInput,
   type InstructionAccountInputAddress,
   type ResolvedInstructionAccount,
   type ResolvedInstructionAccountMeta,
-} from "@solana/kit/program-client-core";
-import { findConfigPda } from "../pdas";
-import { SOLUCKY_PROGRAM_ADDRESS } from "../programs";
+} from '@solana/kit/program-client-core';
+import { findConfigPda } from '../pdas';
+import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
-export const CLAIM_PRIZE_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  157, 233, 139, 121, 246, 62, 234, 235,
-]);
+export const CLAIM_PRIZE_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([157, 233, 139, 121, 246, 62, 234, 235]);
 
 export function getClaimPrizeDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(CLAIM_PRIZE_DISCRIMINATOR);
@@ -59,21 +57,11 @@ export type ClaimPrizeInstruction<
   InstructionWithData<ReadonlyUint8Array> &
   InstructionWithAccounts<
     [
-      TAccountConfig extends string
-        ? ReadonlyAccount<TAccountConfig>
-        : TAccountConfig,
-      TAccountRound extends string
-        ? WritableAccount<TAccountRound>
-        : TAccountRound,
-      TAccountTicket extends string
-        ? ReadonlyAccount<TAccountTicket>
-        : TAccountTicket,
-      TAccountOwner extends string
-        ? WritableAccount<TAccountOwner>
-        : TAccountOwner,
-      TAccountTreasury extends string
-        ? WritableAccount<TAccountTreasury>
-        : TAccountTreasury,
+      TAccountConfig extends string ? ReadonlyAccount<TAccountConfig> : TAccountConfig,
+      TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound,
+      TAccountTicket extends string ? ReadonlyAccount<TAccountTicket> : TAccountTicket,
+      TAccountOwner extends string ? WritableAccount<TAccountOwner> : TAccountOwner,
+      TAccountTreasury extends string ? WritableAccount<TAccountTreasury> : TAccountTreasury,
       ...TRemainingAccounts,
     ]
   >;
@@ -83,26 +71,21 @@ export type ClaimPrizeInstructionData = { discriminator: ReadonlyUint8Array };
 export type ClaimPrizeInstructionDataArgs = {};
 
 export function getClaimPrizeInstructionDataEncoder(): FixedSizeEncoder<ClaimPrizeInstructionDataArgs> {
-  return transformEncoder(
-    getStructEncoder([["discriminator", fixEncoderSize(getBytesEncoder(), 8)]]),
-    (value) => ({ ...value, discriminator: CLAIM_PRIZE_DISCRIMINATOR }),
-  );
+  return transformEncoder(getStructEncoder([['discriminator', fixEncoderSize(getBytesEncoder(), 8)]]), (value) => ({
+    ...value,
+    discriminator: CLAIM_PRIZE_DISCRIMINATOR,
+  }));
 }
 
 export function getClaimPrizeInstructionDataDecoder(): FixedSizeDecoder<ClaimPrizeInstructionData> {
-  return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-  ]);
+  return getStructDecoder([['discriminator', fixDecoderSize(getBytesDecoder(), 8)]]);
 }
 
 export function getClaimPrizeInstructionDataCodec(): FixedSizeCodec<
   ClaimPrizeInstructionDataArgs,
   ClaimPrizeInstructionData
 > {
-  return combineCodec(
-    getClaimPrizeInstructionDataEncoder(),
-    getClaimPrizeInstructionDataDecoder(),
-  );
+  return combineCodec(getClaimPrizeInstructionDataEncoder(), getClaimPrizeInstructionDataDecoder());
 }
 
 export type ClaimPrizeAsyncInput<
@@ -127,50 +110,24 @@ export async function getClaimPrizeInstructionAsync<
   TAccountTreasury extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: ClaimPrizeAsyncInput<
-    TAccountConfig,
-    TAccountRound,
-    TAccountTicket,
-    TAccountOwner,
-    TAccountTreasury
-  >,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  input: ClaimPrizeAsyncInput<TAccountConfig, TAccountRound, TAccountTicket, TAccountOwner, TAccountTreasury>,
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): Promise<
   ClaimPrizeInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTicket,
-      InstructionAccountInputAddress<TAccountTicket>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountOwner,
-      InstructionAccountInputAddress<TAccountOwner>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTreasury,
-      InstructionAccountInputAddress<TAccountTreasury>
-    >
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+    ResolvedInstructionAccountMeta<TAccountOwner, InstructionAccountInputAddress<TAccountOwner>>,
+    ResolvedInstructionAccountMeta<TAccountTreasury, InstructionAccountInputAddress<TAccountTreasury>>
   >
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
@@ -178,16 +135,9 @@ export async function getClaimPrizeInstructionAsync<
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
     ticket: { value: input.ticket ?? null, isSigner: false, isWritable: false },
     owner: { value: input.owner ?? null, isSigner: false, isWritable: true },
-    treasury: {
-      value: input.treasury ?? null,
-      isSigner: false,
-      isWritable: true,
-    },
+    treasury: { value: input.treasury ?? null, isSigner: false, isWritable: true },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   // Resolve default values.
   if (!accounts.config.value) {
@@ -196,36 +146,21 @@ export async function getClaimPrizeInstructionAsync<
 
   return Object.freeze({
     accounts: [
-      getAccountMeta("config", accounts.config),
-      getAccountMeta("round", accounts.round),
-      getAccountMeta("ticket", accounts.ticket),
-      getAccountMeta("owner", accounts.owner),
-      getAccountMeta("treasury", accounts.treasury),
+      getAccountMeta('config', accounts.config),
+      getAccountMeta('round', accounts.round),
+      getAccountMeta('ticket', accounts.ticket),
+      getAccountMeta('owner', accounts.owner),
+      getAccountMeta('treasury', accounts.treasury),
     ],
     data: getClaimPrizeInstructionDataEncoder().encode({}),
     programAddress,
   } as ClaimPrizeInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTicket,
-      InstructionAccountInputAddress<TAccountTicket>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountOwner,
-      InstructionAccountInputAddress<TAccountOwner>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTreasury,
-      InstructionAccountInputAddress<TAccountTreasury>
-    >
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+    ResolvedInstructionAccountMeta<TAccountOwner, InstructionAccountInputAddress<TAccountOwner>>,
+    ResolvedInstructionAccountMeta<TAccountTreasury, InstructionAccountInputAddress<TAccountTreasury>>
   >);
 }
 
@@ -251,48 +186,22 @@ export function getClaimPrizeInstruction<
   TAccountTreasury extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: ClaimPrizeInput<
-    TAccountConfig,
-    TAccountRound,
-    TAccountTicket,
-    TAccountOwner,
-    TAccountTreasury
-  >,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  input: ClaimPrizeInput<TAccountConfig, TAccountRound, TAccountTicket, TAccountOwner, TAccountTreasury>,
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): ClaimPrizeInstruction<
   TProgramAddress,
-  ResolvedInstructionAccountMeta<
-    TAccountConfig,
-    InstructionAccountInputAddress<TAccountConfig>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountRound,
-    InstructionAccountInputAddress<TAccountRound>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountTicket,
-    InstructionAccountInputAddress<TAccountTicket>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountOwner,
-    InstructionAccountInputAddress<TAccountOwner>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountTreasury,
-    InstructionAccountInputAddress<TAccountTreasury>
-  >
+  ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+  ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+  ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+  ResolvedInstructionAccountMeta<TAccountOwner, InstructionAccountInputAddress<TAccountOwner>>,
+  ResolvedInstructionAccountMeta<TAccountTreasury, InstructionAccountInputAddress<TAccountTreasury>>
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
@@ -300,49 +209,27 @@ export function getClaimPrizeInstruction<
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
     ticket: { value: input.ticket ?? null, isSigner: false, isWritable: false },
     owner: { value: input.owner ?? null, isSigner: false, isWritable: true },
-    treasury: {
-      value: input.treasury ?? null,
-      isSigner: false,
-      isWritable: true,
-    },
+    treasury: { value: input.treasury ?? null, isSigner: false, isWritable: true },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   return Object.freeze({
     accounts: [
-      getAccountMeta("config", accounts.config),
-      getAccountMeta("round", accounts.round),
-      getAccountMeta("ticket", accounts.ticket),
-      getAccountMeta("owner", accounts.owner),
-      getAccountMeta("treasury", accounts.treasury),
+      getAccountMeta('config', accounts.config),
+      getAccountMeta('round', accounts.round),
+      getAccountMeta('ticket', accounts.ticket),
+      getAccountMeta('owner', accounts.owner),
+      getAccountMeta('treasury', accounts.treasury),
     ],
     data: getClaimPrizeInstructionDataEncoder().encode({}),
     programAddress,
   } as ClaimPrizeInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountConfig,
-      InstructionAccountInputAddress<TAccountConfig>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTicket,
-      InstructionAccountInputAddress<TAccountTicket>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountOwner,
-      InstructionAccountInputAddress<TAccountOwner>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTreasury,
-      InstructionAccountInputAddress<TAccountTreasury>
-    >
+    ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
+    ResolvedInstructionAccountMeta<TAccountOwner, InstructionAccountInputAddress<TAccountOwner>>,
+    ResolvedInstructionAccountMeta<TAccountTreasury, InstructionAccountInputAddress<TAccountTreasury>>
   >);
 }
 
@@ -361,22 +248,14 @@ export type ParsedClaimPrizeInstruction<
   data: ClaimPrizeInstructionData;
 };
 
-export function parseClaimPrizeInstruction<
-  TProgram extends string,
-  TAccountMetas extends readonly AccountMeta[],
->(
-  instruction: Instruction<TProgram> &
-    InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>,
+export function parseClaimPrizeInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
+  instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedClaimPrizeInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 5) {
-    throw new SolanaError(
-      SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
-      {
-        actualAccountMetas: instruction.accounts.length,
-        expectedAccountMetas: 5,
-      },
-    );
+    throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
+      actualAccountMetas: instruction.accounts.length,
+      expectedAccountMetas: 5,
+    });
   }
   let accountIndex = 0;
   const getNextAccount = () => {

@@ -12,8 +12,8 @@ import {
   type HasAddress,
   type SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM,
   type SolanaError,
-} from "@solana/kit";
-import { SOLUCKY_PROGRAM_ADDRESS } from "../programs";
+} from '@solana/kit';
+import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
 /** Unauthorized: Only the authority can do this */
 export const SOLUCKY_ERROR__UNAUTHORIZED = 0x1770; // 6000
@@ -76,7 +76,7 @@ export type SoluckyError =
   | typeof SOLUCKY_ERROR__WRONG_DAY;
 
 let soluckyErrorMessages: Record<SoluckyError, string> | undefined;
-if (process.env["NODE_ENV"] !== "production") {
+if (process.env['NODE_ENV'] !== 'production') {
   soluckyErrorMessages = {
     [SOLUCKY_ERROR__DRAW_STILL_POSSIBLE]: `The pinned slot can still be drawn`,
     [SOLUCKY_ERROR__FEE_TOO_HIGH]: `The fee is above the 10% cap`,
@@ -101,31 +101,21 @@ if (process.env["NODE_ENV"] !== "production") {
 }
 
 export function getSoluckyErrorMessage(code: SoluckyError): string {
-  if (process.env["NODE_ENV"] !== "production") {
+  if (process.env['NODE_ENV'] !== 'production') {
     return (soluckyErrorMessages as Record<SoluckyError, string>)[code];
   }
 
-  return "Error message not available in production bundles.";
+  return 'Error message not available in production bundles.';
 }
 
 export function isSoluckyError<TProgramErrorCode extends SoluckyError>(
   error: unknown,
-  transactionMessage: {
-    instructions: Record<number, { programAddress: Address }>;
-  },
+  transactionMessage: { instructions: Record<number, { programAddress: Address }> },
   code?: TProgramErrorCode,
   config: { programAddress?: Address | HasAddress } = {},
 ): error is SolanaError<typeof SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM> &
   Readonly<{ context: Readonly<{ code: TProgramErrorCode }> }> {
   const programAddressInput = config.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
-  return isProgramError<TProgramErrorCode>(
-    error,
-    transactionMessage,
-    programAddress,
-    code,
-  );
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
+  return isProgramError<TProgramErrorCode>(error, transactionMessage, programAddress, code);
 }

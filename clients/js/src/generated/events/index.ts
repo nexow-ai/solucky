@@ -6,8 +6,8 @@
  * @see https://github.com/codama-idl/codama
  */
 
-export * from "./configUpdated";
-export * from "./prizeClaimed";
-export * from "./roundClosed";
-export * from "./roundDrawn";
-export * from "./ticketPurchased";
+export * from './configUpdated';
+export * from './prizeClaimed';
+export * from './roundClosed';
+export * from './roundDrawn';
+export * from './ticketPurchased';

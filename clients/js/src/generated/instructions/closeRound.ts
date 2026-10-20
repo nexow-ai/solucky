@@ -27,19 +27,17 @@ import {
   type InstructionWithData,
   type ReadonlyUint8Array,
   type WritableAccount,
-} from "@solana/kit";
+} from '@solana/kit';
 import {
   getAccountMetaFactory,
   type InstructionAccountInput,
   type InstructionAccountInputAddress,
   type ResolvedInstructionAccount,
   type ResolvedInstructionAccountMeta,
-} from "@solana/kit/program-client-core";
-import { SOLUCKY_PROGRAM_ADDRESS } from "../programs";
+} from '@solana/kit/program-client-core';
+import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
-export const CLOSE_ROUND_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  149, 14, 81, 88, 230, 226, 234, 37,
-]);
+export const CLOSE_ROUND_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([149, 14, 81, 88, 230, 226, 234, 37]);
 
 export function getCloseRoundDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(CLOSE_ROUND_DISCRIMINATOR);
@@ -52,12 +50,7 @@ export type CloseRoundInstruction<
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
   InstructionWithAccounts<
-    [
-      TAccountRound extends string
-        ? WritableAccount<TAccountRound>
-        : TAccountRound,
-      ...TRemainingAccounts,
-    ]
+    [TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound, ...TRemainingAccounts]
   >;
 
 export type CloseRoundInstructionData = { discriminator: ReadonlyUint8Array };
@@ -65,31 +58,24 @@ export type CloseRoundInstructionData = { discriminator: ReadonlyUint8Array };
 export type CloseRoundInstructionDataArgs = {};
 
 export function getCloseRoundInstructionDataEncoder(): FixedSizeEncoder<CloseRoundInstructionDataArgs> {
-  return transformEncoder(
-    getStructEncoder([["discriminator", fixEncoderSize(getBytesEncoder(), 8)]]),
-    (value) => ({ ...value, discriminator: CLOSE_ROUND_DISCRIMINATOR }),
-  );
+  return transformEncoder(getStructEncoder([['discriminator', fixEncoderSize(getBytesEncoder(), 8)]]), (value) => ({
+    ...value,
+    discriminator: CLOSE_ROUND_DISCRIMINATOR,
+  }));
 }
 
 export function getCloseRoundInstructionDataDecoder(): FixedSizeDecoder<CloseRoundInstructionData> {
-  return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-  ]);
+  return getStructDecoder([['discriminator', fixDecoderSize(getBytesDecoder(), 8)]]);
 }
 
 export function getCloseRoundInstructionDataCodec(): FixedSizeCodec<
   CloseRoundInstructionDataArgs,
   CloseRoundInstructionData
 > {
-  return combineCodec(
-    getCloseRoundInstructionDataEncoder(),
-    getCloseRoundInstructionDataDecoder(),
-  );
+  return combineCodec(getCloseRoundInstructionDataEncoder(), getCloseRoundInstructionDataDecoder());
 }
 
-export type CloseRoundInput<
-  TAccountRound extends InstructionAccountInput = InstructionAccountInput,
-> = {
+export type CloseRoundInput<TAccountRound extends InstructionAccountInput = InstructionAccountInput> = {
   round: TAccountRound;
 };
 
@@ -98,45 +84,29 @@ export function getCloseRoundInstruction<
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
   input: CloseRoundInput<TAccountRound>,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): CloseRoundInstruction<
   TProgramAddress,
-  ResolvedInstructionAccountMeta<
-    TAccountRound,
-    InstructionAccountInputAddress<TAccountRound>
-  >
+  ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
-  const originalAccounts = {
-    round: { value: input.round ?? null, isSigner: false, isWritable: true },
-  };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const originalAccounts = { round: { value: input.round ?? null, isSigner: false, isWritable: true } };
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   return Object.freeze({
-    accounts: [getAccountMeta("round", accounts.round)],
+    accounts: [getAccountMeta('round', accounts.round)],
     data: getCloseRoundInstructionDataEncoder().encode({}),
     programAddress,
   } as CloseRoundInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>
   >);
 }
 
@@ -151,22 +121,14 @@ export type ParsedCloseRoundInstruction<
   data: CloseRoundInstructionData;
 };
 
-export function parseCloseRoundInstruction<
-  TProgram extends string,
-  TAccountMetas extends readonly AccountMeta[],
->(
-  instruction: Instruction<TProgram> &
-    InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>,
+export function parseCloseRoundInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
+  instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedCloseRoundInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 1) {
-    throw new SolanaError(
-      SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
-      {
-        actualAccountMetas: instruction.accounts.length,
-        expectedAccountMetas: 1,
-      },
-    );
+    throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
+      actualAccountMetas: instruction.accounts.length,
+      expectedAccountMetas: 1,
+    });
   }
   let accountIndex = 0;
   const getNextAccount = () => {

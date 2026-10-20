@@ -12,23 +12,18 @@ import {
   type Address,
   type HasAddress,
   type ProgramDerivedAddress,
-} from "@solana/kit";
+} from '@solana/kit';
 
 export async function findConfigPda(
   config: { programAddress?: Address | HasAddress | undefined } = {},
 ): Promise<ProgramDerivedAddress> {
   const {
     programAddress:
-      programAddressInput = "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2" as Address<"8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2">,
+      programAddressInput = '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2' as Address<'8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'>,
   } = config;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
   return await getProgramDerivedAddress({
     programAddress,
-    seeds: [
-      getBytesEncoder().encode(new Uint8Array([99, 111, 110, 102, 105, 103])),
-    ],
+    seeds: [getBytesEncoder().encode(new Uint8Array([99, 111, 110, 102, 105, 103]))],
   });
 }

@@ -45,17 +45,10 @@ import {
   type MaybeAccount,
   type MaybeEncodedAccount,
   type ReadonlyUint8Array,
-} from "@solana/kit";
-import {
-  getRoundStatusDecoder,
-  getRoundStatusEncoder,
-  type RoundStatus,
-  type RoundStatusArgs,
-} from "../types";
+} from '@solana/kit';
+import { getRoundStatusDecoder, getRoundStatusEncoder, type RoundStatus, type RoundStatusArgs } from '../types';
 
-export const ROUND_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  87, 127, 165, 51, 73, 78, 116, 174,
-]);
+export const ROUND_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([87, 127, 165, 51, 73, 78, 116, 174]);
 
 export function getRoundDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(ROUND_DISCRIMINATOR);
@@ -126,25 +119,25 @@ export type RoundArgs = {
 export function getRoundEncoder(): FixedSizeEncoder<RoundArgs> {
   return transformEncoder(
     getStructEncoder([
-      ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
-      ["day", getU32Encoder()],
-      ["status", getRoundStatusEncoder()],
-      ["ticketPrice", getU64Encoder()],
-      ["feeBps", getU16Encoder()],
-      ["ticketCount", getU32Encoder()],
-      ["pot", getU64Encoder()],
-      ["entropy", fixEncoderSize(getBytesEncoder(), 32)],
-      ["targetSlot", getU64Encoder()],
-      ["drawSlot", getU64Encoder()],
-      ["slotHash", fixEncoderSize(getBytesEncoder(), 32)],
-      ["randomness", fixEncoderSize(getBytesEncoder(), 32)],
-      ["winningIndex", getU32Encoder()],
-      ["winningNumber", getU32Encoder()],
-      ["winner", getAddressEncoder()],
-      ["winnerCountry", fixEncoderSize(getBytesEncoder(), 2)],
-      ["payout", getU64Encoder()],
-      ["fee", getU64Encoder()],
-      ["bump", getU8Encoder()],
+      ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
+      ['day', getU32Encoder()],
+      ['status', getRoundStatusEncoder()],
+      ['ticketPrice', getU64Encoder()],
+      ['feeBps', getU16Encoder()],
+      ['ticketCount', getU32Encoder()],
+      ['pot', getU64Encoder()],
+      ['entropy', fixEncoderSize(getBytesEncoder(), 32)],
+      ['targetSlot', getU64Encoder()],
+      ['drawSlot', getU64Encoder()],
+      ['slotHash', fixEncoderSize(getBytesEncoder(), 32)],
+      ['randomness', fixEncoderSize(getBytesEncoder(), 32)],
+      ['winningIndex', getU32Encoder()],
+      ['winningNumber', getU32Encoder()],
+      ['winner', getAddressEncoder()],
+      ['winnerCountry', fixEncoderSize(getBytesEncoder(), 2)],
+      ['payout', getU64Encoder()],
+      ['fee', getU64Encoder()],
+      ['bump', getU8Encoder()],
     ]),
     (value) => ({ ...value, discriminator: ROUND_DISCRIMINATOR }),
   );
@@ -153,25 +146,25 @@ export function getRoundEncoder(): FixedSizeEncoder<RoundArgs> {
 /** Gets the decoder for {@link Round} account data. */
 export function getRoundDecoder(): FixedSizeDecoder<Round> {
   return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-    ["day", getU32Decoder()],
-    ["status", getRoundStatusDecoder()],
-    ["ticketPrice", getU64Decoder()],
-    ["feeBps", getU16Decoder()],
-    ["ticketCount", getU32Decoder()],
-    ["pot", getU64Decoder()],
-    ["entropy", fixDecoderSize(getBytesDecoder(), 32)],
-    ["targetSlot", getU64Decoder()],
-    ["drawSlot", getU64Decoder()],
-    ["slotHash", fixDecoderSize(getBytesDecoder(), 32)],
-    ["randomness", fixDecoderSize(getBytesDecoder(), 32)],
-    ["winningIndex", getU32Decoder()],
-    ["winningNumber", getU32Decoder()],
-    ["winner", getAddressDecoder()],
-    ["winnerCountry", fixDecoderSize(getBytesDecoder(), 2)],
-    ["payout", getU64Decoder()],
-    ["fee", getU64Decoder()],
-    ["bump", getU8Decoder()],
+    ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
+    ['day', getU32Decoder()],
+    ['status', getRoundStatusDecoder()],
+    ['ticketPrice', getU64Decoder()],
+    ['feeBps', getU16Decoder()],
+    ['ticketCount', getU32Decoder()],
+    ['pot', getU64Decoder()],
+    ['entropy', fixDecoderSize(getBytesDecoder(), 32)],
+    ['targetSlot', getU64Decoder()],
+    ['drawSlot', getU64Decoder()],
+    ['slotHash', fixDecoderSize(getBytesDecoder(), 32)],
+    ['randomness', fixDecoderSize(getBytesDecoder(), 32)],
+    ['winningIndex', getU32Decoder()],
+    ['winningNumber', getU32Decoder()],
+    ['winner', getAddressDecoder()],
+    ['winnerCountry', fixDecoderSize(getBytesDecoder(), 2)],
+    ['payout', getU64Decoder()],
+    ['fee', getU64Decoder()],
+    ['bump', getU8Decoder()],
   ]);
 }
 
@@ -189,16 +182,11 @@ export function decodeRound<TAddress extends string = string>(
 export function decodeRound<TAddress extends string = string>(
   encodedAccount: EncodedAccount<TAddress> | MaybeEncodedAccount<TAddress>,
 ): Account<Round, TAddress> | MaybeAccount<Round, TAddress> {
-  return decodeAccount(
-    encodedAccount as MaybeEncodedAccount<TAddress>,
-    getRoundDecoder(),
-  );
+  return decodeAccount(encodedAccount as MaybeEncodedAccount<TAddress>, getRoundDecoder());
 }
 
 export async function fetchRound<TAddress extends string = string>(
-  rpc:
-    | Parameters<typeof fetchEncodedAccount>[0]
-    | ClientWithRpc<GetAccountInfoApi>,
+  rpc: Parameters<typeof fetchEncodedAccount>[0] | ClientWithRpc<GetAccountInfoApi>,
   address: Address<TAddress> | HasAddress<TAddress>,
   config?: FetchAccountConfig,
 ): Promise<Account<Round, TAddress>> {
@@ -208,24 +196,20 @@ export async function fetchRound<TAddress extends string = string>(
 }
 
 export async function fetchMaybeRound<TAddress extends string = string>(
-  rpc:
-    | Parameters<typeof fetchEncodedAccount>[0]
-    | ClientWithRpc<GetAccountInfoApi>,
+  rpc: Parameters<typeof fetchEncodedAccount>[0] | ClientWithRpc<GetAccountInfoApi>,
   address: Address<TAddress> | HasAddress<TAddress>,
   config?: FetchAccountConfig,
 ): Promise<MaybeAccount<Round, TAddress>> {
   const maybeAccount = await fetchEncodedAccount(
-    "rpc" in rpc ? rpc.rpc : rpc,
-    typeof address === "string" ? address : address.address,
+    'rpc' in rpc ? rpc.rpc : rpc,
+    typeof address === 'string' ? address : address.address,
     config,
   );
   return decodeRound(maybeAccount);
 }
 
 export async function fetchAllRound(
-  rpc:
-    | Parameters<typeof fetchEncodedAccounts>[0]
-    | ClientWithRpc<GetMultipleAccountsApi>,
+  rpc: Parameters<typeof fetchEncodedAccounts>[0] | ClientWithRpc<GetMultipleAccountsApi>,
   addresses: Array<Address | HasAddress>,
   config?: FetchAccountsConfig,
 ): Promise<Account<Round>[]> {
@@ -235,15 +219,13 @@ export async function fetchAllRound(
 }
 
 export async function fetchAllMaybeRound(
-  rpc:
-    | Parameters<typeof fetchEncodedAccounts>[0]
-    | ClientWithRpc<GetMultipleAccountsApi>,
+  rpc: Parameters<typeof fetchEncodedAccounts>[0] | ClientWithRpc<GetMultipleAccountsApi>,
   addresses: Array<Address | HasAddress>,
   config?: FetchAccountsConfig,
 ): Promise<MaybeAccount<Round>[]> {
   const maybeAccounts = await fetchEncodedAccounts(
-    "rpc" in rpc ? rpc.rpc : rpc,
-    addresses.map((a) => (typeof a === "string" ? a : a.address)),
+    'rpc' in rpc ? rpc.rpc : rpc,
+    addresses.map((a) => (typeof a === 'string' ? a : a.address)),
     config,
   );
   return maybeAccounts.map((maybeAccount) => decodeRound(maybeAccount));

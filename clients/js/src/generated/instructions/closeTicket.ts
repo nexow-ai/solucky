@@ -30,7 +30,7 @@ import {
   type ReadonlyUint8Array,
   type WritableAccount,
   type WritableSignerAccount,
-} from "@solana/kit";
+} from '@solana/kit';
 import {
   getAccountMetaFactory,
   type InstructionAccountInput,
@@ -38,17 +38,13 @@ import {
   type InstructionSignerInput,
   type ResolvedInstructionAccount,
   type ResolvedInstructionAccountMeta,
-} from "@solana/kit/program-client-core";
-import { SOLUCKY_PROGRAM_ADDRESS } from "../programs";
+} from '@solana/kit/program-client-core';
+import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
-export const CLOSE_TICKET_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  66, 209, 114, 197, 75, 27, 182, 117,
-]);
+export const CLOSE_TICKET_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([66, 209, 114, 197, 75, 27, 182, 117]);
 
 export function getCloseTicketDiscriminatorBytes(): ReadonlyUint8Array {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(
-    CLOSE_TICKET_DISCRIMINATOR,
-  );
+  return fixEncoderSize(getBytesEncoder(), 8).encode(CLOSE_TICKET_DISCRIMINATOR);
 }
 
 export type CloseTicketInstruction<
@@ -62,15 +58,10 @@ export type CloseTicketInstruction<
   InstructionWithAccounts<
     [
       TAccountOwner extends string
-        ? WritableSignerAccount<TAccountOwner> &
-            AccountSignerMeta<TAccountOwner>
+        ? WritableSignerAccount<TAccountOwner> & AccountSignerMeta<TAccountOwner>
         : TAccountOwner,
-      TAccountRound extends string
-        ? ReadonlyAccount<TAccountRound>
-        : TAccountRound,
-      TAccountTicket extends string
-        ? WritableAccount<TAccountTicket>
-        : TAccountTicket,
+      TAccountRound extends string ? ReadonlyAccount<TAccountRound> : TAccountRound,
+      TAccountTicket extends string ? WritableAccount<TAccountTicket> : TAccountTicket,
       ...TRemainingAccounts,
     ]
   >;
@@ -80,26 +71,21 @@ export type CloseTicketInstructionData = { discriminator: ReadonlyUint8Array };
 export type CloseTicketInstructionDataArgs = {};
 
 export function getCloseTicketInstructionDataEncoder(): FixedSizeEncoder<CloseTicketInstructionDataArgs> {
-  return transformEncoder(
-    getStructEncoder([["discriminator", fixEncoderSize(getBytesEncoder(), 8)]]),
-    (value) => ({ ...value, discriminator: CLOSE_TICKET_DISCRIMINATOR }),
-  );
+  return transformEncoder(getStructEncoder([['discriminator', fixEncoderSize(getBytesEncoder(), 8)]]), (value) => ({
+    ...value,
+    discriminator: CLOSE_TICKET_DISCRIMINATOR,
+  }));
 }
 
 export function getCloseTicketInstructionDataDecoder(): FixedSizeDecoder<CloseTicketInstructionData> {
-  return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-  ]);
+  return getStructDecoder([['discriminator', fixDecoderSize(getBytesDecoder(), 8)]]);
 }
 
 export function getCloseTicketInstructionDataCodec(): FixedSizeCodec<
   CloseTicketInstructionDataArgs,
   CloseTicketInstructionData
 > {
-  return combineCodec(
-    getCloseTicketInstructionDataEncoder(),
-    getCloseTicketInstructionDataDecoder(),
-  );
+  return combineCodec(getCloseTicketInstructionDataEncoder(), getCloseTicketInstructionDataDecoder());
 }
 
 export type CloseTicketInput<
@@ -119,33 +105,19 @@ export function getCloseTicketInstruction<
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
   input: CloseTicketInput<TAccountOwner, TAccountRound, TAccountTicket>,
-  config?: {
-    programAddress?: TProgramAddress | { readonly address: TProgramAddress };
-  },
+  config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): CloseTicketInstruction<
   TProgramAddress,
-  ResolvedInstructionAccountMeta<
-    TAccountOwner,
-    InstructionAccountInputAddress<TAccountOwner>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountRound,
-    InstructionAccountInputAddress<TAccountRound>
-  >,
-  ResolvedInstructionAccountMeta<
-    TAccountTicket,
-    InstructionAccountInputAddress<TAccountTicket>
-  >
+  ResolvedInstructionAccountMeta<TAccountOwner, InstructionAccountInputAddress<TAccountOwner>>,
+  ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+  ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
-  const programAddress =
-    typeof programAddressInput === "string"
-      ? programAddressInput
-      : programAddressInput.address;
+  const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
 
   // Account meta helper.
-  const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
+  const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
   const originalAccounts = {
@@ -153,33 +125,21 @@ export function getCloseTicketInstruction<
     round: { value: input.round ?? null, isSigner: false, isWritable: false },
     ticket: { value: input.ticket ?? null, isSigner: false, isWritable: true },
   };
-  const accounts = originalAccounts as Record<
-    keyof typeof originalAccounts,
-    ResolvedInstructionAccount
-  >;
+  const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
   return Object.freeze({
     accounts: [
-      getAccountMeta("owner", accounts.owner),
-      getAccountMeta("round", accounts.round),
-      getAccountMeta("ticket", accounts.ticket),
+      getAccountMeta('owner', accounts.owner),
+      getAccountMeta('round', accounts.round),
+      getAccountMeta('ticket', accounts.ticket),
     ],
     data: getCloseTicketInstructionDataEncoder().encode({}),
     programAddress,
   } as CloseTicketInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<
-      TAccountOwner,
-      InstructionAccountInputAddress<TAccountOwner>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountRound,
-      InstructionAccountInputAddress<TAccountRound>
-    >,
-    ResolvedInstructionAccountMeta<
-      TAccountTicket,
-      InstructionAccountInputAddress<TAccountTicket>
-    >
+    ResolvedInstructionAccountMeta<TAccountOwner, InstructionAccountInputAddress<TAccountOwner>>,
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>
   >);
 }
 
@@ -196,22 +156,14 @@ export type ParsedCloseTicketInstruction<
   data: CloseTicketInstructionData;
 };
 
-export function parseCloseTicketInstruction<
-  TProgram extends string,
-  TAccountMetas extends readonly AccountMeta[],
->(
-  instruction: Instruction<TProgram> &
-    InstructionWithAccounts<TAccountMetas> &
-    InstructionWithData<ReadonlyUint8Array>,
+export function parseCloseTicketInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
+  instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedCloseTicketInstruction<TProgram, TAccountMetas> {
   if (instruction.accounts.length < 3) {
-    throw new SolanaError(
-      SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
-      {
-        actualAccountMetas: instruction.accounts.length,
-        expectedAccountMetas: 3,
-      },
-    );
+    throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
+      actualAccountMetas: instruction.accounts.length,
+      expectedAccountMetas: 3,
+    });
   }
   let accountIndex = 0;
   const getNextAccount = () => {
@@ -221,11 +173,7 @@ export function parseCloseTicketInstruction<
   };
   return {
     programAddress: instruction.programAddress,
-    accounts: {
-      owner: getNextAccount(),
-      round: getNextAccount(),
-      ticket: getNextAccount(),
-    },
+    accounts: { owner: getNextAccount(), round: getNextAccount(), ticket: getNextAccount() },
     data: getCloseTicketInstructionDataDecoder().decode(instruction.data),
   };
 }

@@ -29,24 +29,17 @@ import {
   type FixedSizeEncoder,
   type HasAddress,
   type ReadonlyUint8Array,
-} from "@solana/kit";
+} from '@solana/kit';
 
-export const PRIZE_CLAIMED_EVENT_DISCRIMINATOR: ReadonlyUint8Array =
-  new Uint8Array([213, 150, 192, 76, 199, 33, 212, 38]);
+export const PRIZE_CLAIMED_EVENT_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
+  213, 150, 192, 76, 199, 33, 212, 38,
+]);
 
 export function getPrizeClaimedEventDiscriminatorBytes(): ReadonlyUint8Array {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(
-    PRIZE_CLAIMED_EVENT_DISCRIMINATOR,
-  );
+  return fixEncoderSize(getBytesEncoder(), 8).encode(PRIZE_CLAIMED_EVENT_DISCRIMINATOR);
 }
 
-export type PrizeClaimedEvent = {
-  day: number;
-  winner: Address;
-  number: number;
-  payout: bigint;
-  fee: bigint;
-};
+export type PrizeClaimedEvent = { day: number; winner: Address; number: number; payout: bigint; fee: bigint };
 
 export type PrizeClaimedEventArgs = {
   day: number;
@@ -60,11 +53,11 @@ export type PrizeClaimedEventArgs = {
 export function getPrizeClaimedEventEncoder(): FixedSizeEncoder<PrizeClaimedEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ["day", getU32Encoder()],
-      ["winner", getAddressEncoder()],
-      ["number", getU32Encoder()],
-      ["payout", getU64Encoder()],
-      ["fee", getU64Encoder()],
+      ['day', getU32Encoder()],
+      ['winner', getAddressEncoder()],
+      ['number', getU32Encoder()],
+      ['payout', getU64Encoder()],
+      ['fee', getU64Encoder()],
     ]),
     [getConstantEncoder(PRIZE_CLAIMED_EVENT_DISCRIMINATOR)],
   );
@@ -74,35 +67,25 @@ export function getPrizeClaimedEventEncoder(): FixedSizeEncoder<PrizeClaimedEven
 export function getPrizeClaimedEventDecoder(): FixedSizeDecoder<PrizeClaimedEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ["day", getU32Decoder()],
-      ["winner", getAddressDecoder()],
-      ["number", getU32Decoder()],
-      ["payout", getU64Decoder()],
-      ["fee", getU64Decoder()],
+      ['day', getU32Decoder()],
+      ['winner', getAddressDecoder()],
+      ['number', getU32Decoder()],
+      ['payout', getU64Decoder()],
+      ['fee', getU64Decoder()],
     ]),
     [getConstantDecoder(PRIZE_CLAIMED_EVENT_DISCRIMINATOR)],
   );
 }
 
 /** Gets the codec for {@link PrizeClaimedEvent} event data. */
-export function getPrizeClaimedEventCodec(): FixedSizeCodec<
-  PrizeClaimedEventArgs,
-  PrizeClaimedEvent
-> {
-  return combineCodec(
-    getPrizeClaimedEventEncoder(),
-    getPrizeClaimedEventDecoder(),
-  );
+export function getPrizeClaimedEventCodec(): FixedSizeCodec<PrizeClaimedEventArgs, PrizeClaimedEvent> {
+  return combineCodec(getPrizeClaimedEventEncoder(), getPrizeClaimedEventDecoder());
 }
 
 /** Parses the provided bytes into {@link PrizeClaimedEvent} event data. */
-export function parsePrizeClaimedEvent(
-  data: ReadonlyUint8Array | Uint8Array,
-): PrizeClaimedEvent {
+export function parsePrizeClaimedEvent(data: ReadonlyUint8Array | Uint8Array): PrizeClaimedEvent {
   if (containsBytes(data, PRIZE_CLAIMED_EVENT_DISCRIMINATOR, 0)) {
     return getPrizeClaimedEventDecoder().decode(data);
   }
-  throw new Error(
-    'The provided data does not match the "PrizeClaimedEvent" event discriminators.',
-  );
+  throw new Error('The provided data does not match the "PrizeClaimedEvent" event discriminators.');
 }

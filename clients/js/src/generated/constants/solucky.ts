@@ -6,11 +6,9 @@
  * @see https://github.com/codama-idl/codama
  */
 
-import type { ReadonlyUint8Array } from "@solana/kit";
+import type { ReadonlyUint8Array } from '@solana/kit';
 
-export const CONFIG_SEED: ReadonlyUint8Array = new Uint8Array([
-  99, 111, 110, 102, 105, 103,
-]);
+export const CONFIG_SEED: ReadonlyUint8Array = new Uint8Array([99, 111, 110, 102, 105, 103]);
 
 export const DRAW_DELAY_SLOTS: bigint = 8n;
 
@@ -20,10 +18,6 @@ export const MAX_FEE_BPS: number = 1000;
 
 export const ROUND_DURATION: bigint = 86400n;
 
-export const ROUND_SEED: ReadonlyUint8Array = new Uint8Array([
-  114, 111, 117, 110, 100,
-]);
+export const ROUND_SEED: ReadonlyUint8Array = new Uint8Array([114, 111, 117, 110, 100]);
 
-export const TICKET_SEED: ReadonlyUint8Array = new Uint8Array([
-  116, 105, 99, 107, 101, 116,
-]);
+export const TICKET_SEED: ReadonlyUint8Array = new Uint8Array([116, 105, 99, 107, 101, 116]);

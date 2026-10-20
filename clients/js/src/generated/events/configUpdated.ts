@@ -33,15 +33,14 @@ import {
   type FixedSizeEncoder,
   type HasAddress,
   type ReadonlyUint8Array,
-} from "@solana/kit";
+} from '@solana/kit';
 
-export const CONFIG_UPDATED_EVENT_DISCRIMINATOR: ReadonlyUint8Array =
-  new Uint8Array([40, 241, 230, 122, 11, 19, 198, 194]);
+export const CONFIG_UPDATED_EVENT_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
+  40, 241, 230, 122, 11, 19, 198, 194,
+]);
 
 export function getConfigUpdatedEventDiscriminatorBytes(): ReadonlyUint8Array {
-  return fixEncoderSize(getBytesEncoder(), 8).encode(
-    CONFIG_UPDATED_EVENT_DISCRIMINATOR,
-  );
+  return fixEncoderSize(getBytesEncoder(), 8).encode(CONFIG_UPDATED_EVENT_DISCRIMINATOR);
 }
 
 export type ConfigUpdatedEvent = {
@@ -66,12 +65,12 @@ export type ConfigUpdatedEventArgs = {
 export function getConfigUpdatedEventEncoder(): FixedSizeEncoder<ConfigUpdatedEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ["authority", getAddressEncoder()],
-      ["treasury", getAddressEncoder()],
-      ["ticketPrice", getU64Encoder()],
-      ["feeBps", getU16Encoder()],
-      ["maxNumber", getU32Encoder()],
-      ["paused", getBooleanEncoder()],
+      ['authority', getAddressEncoder()],
+      ['treasury', getAddressEncoder()],
+      ['ticketPrice', getU64Encoder()],
+      ['feeBps', getU16Encoder()],
+      ['maxNumber', getU32Encoder()],
+      ['paused', getBooleanEncoder()],
     ]),
     [getConstantEncoder(CONFIG_UPDATED_EVENT_DISCRIMINATOR)],
   );
@@ -81,36 +80,26 @@ export function getConfigUpdatedEventEncoder(): FixedSizeEncoder<ConfigUpdatedEv
 export function getConfigUpdatedEventDecoder(): FixedSizeDecoder<ConfigUpdatedEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ["authority", getAddressDecoder()],
-      ["treasury", getAddressDecoder()],
-      ["ticketPrice", getU64Decoder()],
-      ["feeBps", getU16Decoder()],
-      ["maxNumber", getU32Decoder()],
-      ["paused", getBooleanDecoder()],
+      ['authority', getAddressDecoder()],
+      ['treasury', getAddressDecoder()],
+      ['ticketPrice', getU64Decoder()],
+      ['feeBps', getU16Decoder()],
+      ['maxNumber', getU32Decoder()],
+      ['paused', getBooleanDecoder()],
     ]),
     [getConstantDecoder(CONFIG_UPDATED_EVENT_DISCRIMINATOR)],
   );
 }
 
 /** Gets the codec for {@link ConfigUpdatedEvent} event data. */
-export function getConfigUpdatedEventCodec(): FixedSizeCodec<
-  ConfigUpdatedEventArgs,
-  ConfigUpdatedEvent
-> {
-  return combineCodec(
-    getConfigUpdatedEventEncoder(),
-    getConfigUpdatedEventDecoder(),
-  );
+export function getConfigUpdatedEventCodec(): FixedSizeCodec<ConfigUpdatedEventArgs, ConfigUpdatedEvent> {
+  return combineCodec(getConfigUpdatedEventEncoder(), getConfigUpdatedEventDecoder());
 }
 
 /** Parses the provided bytes into {@link ConfigUpdatedEvent} event data. */
-export function parseConfigUpdatedEvent(
-  data: ReadonlyUint8Array | Uint8Array,
-): ConfigUpdatedEvent {
+export function parseConfigUpdatedEvent(data: ReadonlyUint8Array | Uint8Array): ConfigUpdatedEvent {
   if (containsBytes(data, CONFIG_UPDATED_EVENT_DISCRIMINATOR, 0)) {
     return getConfigUpdatedEventDecoder().decode(data);
   }
-  throw new Error(
-    'The provided data does not match the "ConfigUpdatedEvent" event discriminators.',
-  );
+  throw new Error('The provided data does not match the "ConfigUpdatedEvent" event discriminators.');
 }

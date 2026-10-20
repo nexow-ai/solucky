@@ -47,11 +47,9 @@ import {
   type MaybeAccount,
   type MaybeEncodedAccount,
   type ReadonlyUint8Array,
-} from "@solana/kit";
+} from '@solana/kit';
 
-export const CONFIG_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([
-  155, 12, 170, 224, 30, 250, 204, 130,
-]);
+export const CONFIG_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([155, 12, 170, 224, 30, 250, 204, 130]);
 
 export function getConfigDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(CONFIG_DISCRIMINATOR);
@@ -98,14 +96,14 @@ export type ConfigArgs = {
 export function getConfigEncoder(): FixedSizeEncoder<ConfigArgs> {
   return transformEncoder(
     getStructEncoder([
-      ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
-      ["authority", getAddressEncoder()],
-      ["treasury", getAddressEncoder()],
-      ["ticketPrice", getU64Encoder()],
-      ["feeBps", getU16Encoder()],
-      ["maxNumber", getU32Encoder()],
-      ["paused", getBooleanEncoder()],
-      ["bump", getU8Encoder()],
+      ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
+      ['authority', getAddressEncoder()],
+      ['treasury', getAddressEncoder()],
+      ['ticketPrice', getU64Encoder()],
+      ['feeBps', getU16Encoder()],
+      ['maxNumber', getU32Encoder()],
+      ['paused', getBooleanEncoder()],
+      ['bump', getU8Encoder()],
     ]),
     (value) => ({ ...value, discriminator: CONFIG_DISCRIMINATOR }),
   );
@@ -114,14 +112,14 @@ export function getConfigEncoder(): FixedSizeEncoder<ConfigArgs> {
 /** Gets the decoder for {@link Config} account data. */
 export function getConfigDecoder(): FixedSizeDecoder<Config> {
   return getStructDecoder([
-    ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-    ["authority", getAddressDecoder()],
-    ["treasury", getAddressDecoder()],
-    ["ticketPrice", getU64Decoder()],
-    ["feeBps", getU16Decoder()],
-    ["maxNumber", getU32Decoder()],
-    ["paused", getBooleanDecoder()],
-    ["bump", getU8Decoder()],
+    ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
+    ['authority', getAddressDecoder()],
+    ['treasury', getAddressDecoder()],
+    ['ticketPrice', getU64Decoder()],
+    ['feeBps', getU16Decoder()],
+    ['maxNumber', getU32Decoder()],
+    ['paused', getBooleanDecoder()],
+    ['bump', getU8Decoder()],
   ]);
 }
 
@@ -139,16 +137,11 @@ export function decodeConfig<TAddress extends string = string>(
 export function decodeConfig<TAddress extends string = string>(
   encodedAccount: EncodedAccount<TAddress> | MaybeEncodedAccount<TAddress>,
 ): Account<Config, TAddress> | MaybeAccount<Config, TAddress> {
-  return decodeAccount(
-    encodedAccount as MaybeEncodedAccount<TAddress>,
-    getConfigDecoder(),
-  );
+  return decodeAccount(encodedAccount as MaybeEncodedAccount<TAddress>, getConfigDecoder());
 }
 
 export async function fetchConfig<TAddress extends string = string>(
-  rpc:
-    | Parameters<typeof fetchEncodedAccount>[0]
-    | ClientWithRpc<GetAccountInfoApi>,
+  rpc: Parameters<typeof fetchEncodedAccount>[0] | ClientWithRpc<GetAccountInfoApi>,
   address: Address<TAddress> | HasAddress<TAddress>,
   config?: FetchAccountConfig,
 ): Promise<Account<Config, TAddress>> {
@@ -158,24 +151,20 @@ export async function fetchConfig<TAddress extends string = string>(
 }
 
 export async function fetchMaybeConfig<TAddress extends string = string>(
-  rpc:
-    | Parameters<typeof fetchEncodedAccount>[0]
-    | ClientWithRpc<GetAccountInfoApi>,
+  rpc: Parameters<typeof fetchEncodedAccount>[0] | ClientWithRpc<GetAccountInfoApi>,
   address: Address<TAddress> | HasAddress<TAddress>,
   config?: FetchAccountConfig,
 ): Promise<MaybeAccount<Config, TAddress>> {
   const maybeAccount = await fetchEncodedAccount(
-    "rpc" in rpc ? rpc.rpc : rpc,
-    typeof address === "string" ? address : address.address,
+    'rpc' in rpc ? rpc.rpc : rpc,
+    typeof address === 'string' ? address : address.address,
     config,
   );
   return decodeConfig(maybeAccount);
 }
 
 export async function fetchAllConfig(
-  rpc:
-    | Parameters<typeof fetchEncodedAccounts>[0]
-    | ClientWithRpc<GetMultipleAccountsApi>,
+  rpc: Parameters<typeof fetchEncodedAccounts>[0] | ClientWithRpc<GetMultipleAccountsApi>,
   addresses: Array<Address | HasAddress>,
   config?: FetchAccountsConfig,
 ): Promise<Account<Config>[]> {
@@ -185,15 +174,13 @@ export async function fetchAllConfig(
 }
 
 export async function fetchAllMaybeConfig(
-  rpc:
-    | Parameters<typeof fetchEncodedAccounts>[0]
-    | ClientWithRpc<GetMultipleAccountsApi>,
+  rpc: Parameters<typeof fetchEncodedAccounts>[0] | ClientWithRpc<GetMultipleAccountsApi>,
   addresses: Array<Address | HasAddress>,
   config?: FetchAccountsConfig,
 ): Promise<MaybeAccount<Config>[]> {
   const maybeAccounts = await fetchEncodedAccounts(
-    "rpc" in rpc ? rpc.rpc : rpc,
-    addresses.map((a) => (typeof a === "string" ? a : a.address)),
+    'rpc' in rpc ? rpc.rpc : rpc,
+    addresses.map((a) => (typeof a === 'string' ? a : a.address)),
     config,
   );
   return maybeAccounts.map((maybeAccount) => decodeConfig(maybeAccount));

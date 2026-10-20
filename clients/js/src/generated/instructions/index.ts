@@ -6,10 +6,10 @@
  * @see https://github.com/codama-idl/codama
  */
 
-export * from "./buyTicket";
-export * from "./claimPrize";
-export * from "./closeRound";
-export * from "./closeTicket";
-export * from "./drawRound";
-export * from "./initialize";
-export * from "./updateConfig";
+export * from './buyTicket';
+export * from './claimPrize';
+export * from './closeRound';
+export * from './closeTicket';
+export * from './drawRound';
+export * from './initialize';
+export * from './updateConfig';
