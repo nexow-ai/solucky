@@ -33,11 +33,11 @@ const SLOT_HASH_ENTRY_LEN: usize = 8 + 32;
 /// prove which slot came first, so the answer would not be deterministic.
 pub fn find_slot_hash(data: &[u8], target: u64) -> Option<(u64, [u8; 32])> {
     let len = usize::try_from(u64::from_le_bytes(data.get(..8)?.try_into().ok()?)).ok()?;
-    let entries = data.get(8..)?.chunks_exact(SLOT_HASH_ENTRY_LEN).take(len);
+    let (entries, _) = data.get(8..)?.as_chunks::<SLOT_HASH_ENTRY_LEN>();
 
     let mut found = None;
     let mut reaches_target = false;
-    for entry in entries {
+    for entry in entries.iter().take(len) {
         let slot = u64::from_le_bytes(entry[..8].try_into().ok()?);
         if slot < target {
             reaches_target = true;

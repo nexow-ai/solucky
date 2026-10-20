@@ -1,6 +1,9 @@
 //! End-to-end tests of the program on LiteSVM. Run `anchor build` first: the
 //! tests load `target/deploy/solucky.so`.
 
+// LiteSVM's failed-transaction metadata is large; it only lives in tests.
+#![allow(clippy::result_large_err)]
+
 use {
     anchor_lang::{
         error::ErrorCode,
@@ -588,7 +591,7 @@ fn tickets_can_be_closed_once_the_round_is_settled() {
     assert!(env
         .svm
         .get_account(&ticket_pda(DAY, 1))
-        .map_or(true, |a| a.lamports == 0));
+        .is_none_or(|a| a.lamports == 0));
 }
 
 #[test]
