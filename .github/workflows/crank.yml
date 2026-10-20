@@ -1,4 +1,6 @@
-# Settles yesterday's round right after midnight UTC: close, draw, pay.
+# Backup crank: settles yesterday's round after midnight UTC (close, draw, pay
+# the winner, collect the fee). Scheduled Actions often start minutes late, so
+# run `bun run crank --watch` as a service for the main crank; see README.
 # Every step is permissionless, so the crank keypair only pays network fees.
 #
 # Turn it on with the repository variable SOLUCKY_CRANK_ENABLED=true, then set:

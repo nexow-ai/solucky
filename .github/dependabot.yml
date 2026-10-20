@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: bun
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      solana:
+        patterns: ['@solana/*', '@solana-program/*', 'codama', '@codama/*']
+      nuxt:
+        patterns: ['nuxt', '@nuxt/*', 'vue', 'vue-router', 'tailwindcss', '@iconify-json/*']
+      tooling:
+        patterns: ['eslint', 'prettier', 'typescript', 'vue-tsc', 'vitest', 'wrangler', '@types/*']
+    commit-message:
+      prefix: build(deps)
+
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      anchor-and-solana:
+        patterns: ['anchor-*', 'solana-*', 'litesvm']
+    commit-message:
+      prefix: build(deps)
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
