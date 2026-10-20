@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUN_VERSION: 1.2.21
+  ANCHOR_VERSION: 1.2.1
+  SOLANA_VERSION: 3.1.14
+
+jobs:
+  program:
+    name: Program (build, lint, test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Cache Solana platform tools
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/solana
+          key: solana-${{ env.SOLANA_VERSION }}-anchor-${{ env.ANCHOR_VERSION }}
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install the Solana CLI and Anchor
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v${SOLANA_VERSION}/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL -o "$HOME/.local/bin/anchor" \
+            "https://github.com/otter-sec/anchor/releases/download/v${ANCHOR_VERSION}/anchor-${ANCHOR_VERSION}-x86_64-unknown-linux-gnu"
+          chmod +x "$HOME/.local/bin/anchor"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Format
+        run: cargo fmt --check
+
+      - name: Build
+        # A fresh checkout has no program keypair; the address comes from declare_id!.
+        run: anchor build --ignore-keys
+
+      - name: The committed IDL matches the program
+        run: diff target/idl/solucky.json idl/solucky.json
+
+      - name: Clippy
+        run: cargo clippy -p solucky --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test -p solucky
+
+  app:
+    name: Client and app (types, lint, test, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - run: bun install --frozen-lockfile
+
+      - name: Generated client is up to date
+        run: bun run codegen && git diff --exit-code clients/js
+
+      - name: Format
+        run: bunx prettier --check .
+
+      - name: Types
+        run: bun run typecheck
+
+      - name: Lint
+        run: bun run --cwd app lint
+
+      - name: Unit tests
+        run: bun run test:js
+
+      - name: Build (Node and Cloudflare)
+        run: bun run build && bun run build:cloudflare
