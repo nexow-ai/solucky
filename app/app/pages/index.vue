@@ -61,7 +61,7 @@ const fairness = [
   {
     title: 'Hard limits on the house',
     description:
-      'The program caps the fee at 10%. Price and fee changes only apply to the next day’s round, never to one already selling.',
+      'The program caps the fee at 10%. Price and fee changes only apply to the next day’s round, and a buyer never pays more than the price they were shown.',
     icon: 'i-lucide-shield-check',
   },
   {
@@ -90,7 +90,7 @@ const faq = [
   {
     label: 'What if nobody draws the round?',
     content:
-      'The project ships a small bot (the crank) that settles rounds right after midnight, but anyone can do it from the History panel. If the pinned slot gets too old to read (about three minutes), the round can be closed again to pin a fresh one.',
+      'A small bot (the crank) closes, draws and pays every round within seconds of midnight, and anyone can do the same from the History panel. If the pinned slot ever becomes too old to read (about three minutes), the round can be closed again to pin a fresh one; the program only allows that once the old slot is provably out of reach.',
   },
   {
     label: 'Why do you show my country?',
@@ -100,7 +100,7 @@ const faq = [
   {
     label: 'Can a validator cheat the draw?',
     content:
-      'Only the leader of the pinned slot could influence its hash, and only by skipping their own block, which hands the draw to the next slot. For a lottery with large real-money pots, plug in a verifiable randomness oracle; the README explains where.',
+      'Players cannot: the winning hash does not exist when sales close. The validator that produces the pinned slot could bias it, by choosing what goes in that block or by skipping it. That is acceptable for a test-money game; for real-money pots, the draw should use a verifiable randomness oracle, and the README explains where to plug one in.',
   },
 ];
 </script>

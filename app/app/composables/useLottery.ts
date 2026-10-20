@@ -4,7 +4,6 @@ import {
   countryFromBytes,
   countryToBytes,
   dayOf,
-  DRAW_WINDOW_SLOTS,
   feeFor,
   fetchOwnerTickets,
   fetchRounds,
@@ -14,6 +13,7 @@ import {
   findRoundPda,
   formatDay,
   getCloseTicketInstruction,
+  isPinnedSlotExpired,
   type Round,
   RoundStatus,
   type Ticket,
@@ -51,15 +51,13 @@ export function useLottery() {
   }
 
   async function loadToday() {
-    const [address] = await findRoundPda({ day: today.value }, { programAddress });
+    const day = today.value;
+    const [address] = await findRoundPda({ day }, { programAddress });
     const account = await client.solucky.accounts.round.fetchMaybe(address, { commitment: 'confirmed' });
-    if (!account.exists) {
-      round.value = null;
-      tickets.value = [];
-      return;
-    }
-    const list = await fetchRoundTickets(client.rpc, address, programAddress);
-    round.value = account;
+    const list = account.exists ? await fetchRoundTickets(client.rpc, address, programAddress) : [];
+    // A slower load for a day that already ended must not overwrite the new day.
+    if (day !== today.value) return;
+    round.value = account.exists ? account : null;
     tickets.value = list;
   }
 
@@ -149,16 +147,23 @@ export function useLottery() {
     await Promise.all([loadToday(), loadHistory(), refreshBalance()]).catch(() => {});
   }
 
-  /** Buys `number` in today's round. */
+  /** Buys `number` in today's round, never paying more than the price shown. */
   async function buy(number: number, country: string | null) {
-    if (!wallet.value) return null;
+    const price = ticketPrice.value;
+    if (!wallet.value || price === null) return null;
     busy.value = true;
     try {
       const signature = await run(
         `Buying number ${formatNumber(number)}`,
         () =>
           client.solucky.instructions
-            .buyTicket({ buyer: client.payer, day: today.value, number, country: countryToBytes(country) })
+            .buyTicket({
+              buyer: client.payer,
+              day: today.value,
+              number,
+              country: countryToBytes(country),
+              maxPrice: price,
+            })
             .sendTransaction(),
         `Number ${formatNumber(number)} is yours. Good luck!`,
       );
@@ -192,8 +197,7 @@ export function useLottery() {
       };
 
       if (current.data.status === RoundStatus.Closed) {
-        const slot = await client.rpc.getSlot({ commitment: 'confirmed' }).send();
-        if (slot > current.data.targetSlot + DRAW_WINDOW_SLOTS) {
+        if (await isPinnedSlotExpired(client.rpc, current.data.targetSlot)) {
           if (
             !(await run(`Re-pinning the draw slot for ${label}`, () =>
               ix.closeRound({ round: current.address }).sendTransaction(),
@@ -214,17 +218,12 @@ export function useLottery() {
       }
       if (current.data.status === RoundStatus.Drawn) {
         const winner = await fetchTicketByIndex(client.rpc, current.address, current.data.winningIndex, programAddress);
-        if (!winner || !config.value) throw new Error('The winning ticket could not be found.');
+        if (!winner) throw new Error('The winning ticket could not be found.');
         await run(
           `Paying the ${label} winner`,
           () =>
             ix
-              .claimPrize({
-                round: current.address,
-                ticket: winner.address,
-                owner: winner.data.owner,
-                treasury: config.value!.data.treasury,
-              })
+              .claimPrize({ round: current.address, ticket: winner.address, owner: winner.data.owner })
               .sendTransaction(),
           `Paid ◎${formatSol(current.data.pot - feeFor(current.data.pot, current.data.feeBps))} to the ${label} winner`,
         );
