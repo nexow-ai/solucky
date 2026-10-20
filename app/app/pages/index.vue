@@ -130,7 +130,9 @@ const faq = [
       </template>
       <template #title>
         Pick a number.<br />
-        <span class="glitch text-lucky glow-primary" data-text="Win the pot at midnight.">Win the pot at midnight.</span>
+        <span class="glitch text-lucky glow-primary" data-text="Win the pot at midnight."
+          >Win the pot at midnight.</span
+        >
       </template>
       <template #description>
         One draw a day, one winner, the whole pot. Every ticket, every lamport and every draw lives on Solana, where
@@ -143,7 +145,7 @@ const faq = [
             to="/play"
             size="xl"
             icon="i-lucide-ticket"
-            class="bg-lucky shadow-neon font-semibold tracking-wide text-white hover:opacity-90"
+            class="bg-lucky shadow-neon shine font-semibold tracking-wide text-white hover:opacity-90"
           />
           <UButton
             label="How it works"
@@ -294,7 +296,7 @@ const faq = [
               to: '/play',
               size: 'xl',
               icon: 'i-lucide-ticket',
-              class: 'bg-lucky shadow-neon font-semibold tracking-wide text-white hover:opacity-90',
+              class: 'bg-lucky shadow-neon shine font-semibold tracking-wide text-white hover:opacity-90',
             },
             {
               label: 'Read the code',

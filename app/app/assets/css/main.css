@@ -321,6 +321,37 @@ html {
   }
 }
 
+/* A streak of light sweeping across a button every few seconds. */
+@utility shine {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in oklab, white 45%, transparent) 50%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    animation: shine 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes shine {
+  0%,
+  70% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
 /* Depth layers that follow the pointer. The scene sets `--px`/`--py` (-0.5 to 0.5); each layer sets its `--depth`. */
 @utility parallax {
   transform: translate3d(

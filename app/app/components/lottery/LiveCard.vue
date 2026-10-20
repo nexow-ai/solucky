@@ -20,7 +20,10 @@ watch(pot, (next, previous) => {
 <template>
   <div class="relative mx-auto w-full max-w-sm">
     <!-- A neon rim running around the card. -->
-    <div aria-hidden="true" class="mask-ring absolute -inset-px overflow-hidden rounded-(--ui-radius) [--ring-width:1.5px]">
+    <div
+      aria-hidden="true"
+      class="mask-ring absolute -inset-px overflow-hidden rounded-(--ui-radius) [--ring-width:1.5px]"
+    >
       <div
         class="absolute inset-[-60%] animate-spin-slow bg-[conic-gradient(var(--ui-primary),transparent_25%,transparent_50%,var(--ui-secondary),transparent_75%,transparent)]"
       />
@@ -86,7 +89,7 @@ watch(pot, (next, previous) => {
         size="lg"
         block
         trailing-icon="i-lucide-arrow-right"
-        class="bg-lucky shadow-neon font-semibold tracking-wide text-white hover:opacity-90"
+        class="bg-lucky shadow-neon shine font-semibold tracking-wide text-white hover:opacity-90"
       />
     </UCard>
   </div>

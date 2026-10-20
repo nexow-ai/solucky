@@ -19,9 +19,7 @@ const latest = computed(() => [...(props.tickets ?? [])].reverse().slice(0, 12))
 </script>
 
 <template>
-  <div
-    class="relative border-y border-primary/30 bg-default/90 py-3 shadow-[0_0_40px_-12px_var(--ui-primary)]"
-  >
+  <div class="relative border-y border-primary/30 bg-default/90 py-3 shadow-[0_0_40px_-12px_var(--ui-primary)]">
     <UMarquee pause-on-hover :repeat="2" :ui="{ root: '[--gap:--spacing(8)] [--duration:60s]' }">
       <span
         v-for="ticket in latest"
