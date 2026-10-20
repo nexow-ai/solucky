@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { address, getAddressEncoder } from '@solana/kit';
+import { address, type Blockhash, getAddressEncoder, getBase64Decoder } from '@solana/kit';
+import { getSysvarSlotHashesEncoder } from '@solana/sysvars';
 
 import {
   computeRandomness,
@@ -16,6 +17,7 @@ import {
   formatDay,
   getTicketEncoder,
   getTicketSize,
+  isPinnedSlotExpired,
   lamportsToSol,
   msUntilClose,
   parseDay,
@@ -78,6 +80,30 @@ describe('draw', () => {
     expect(winningIndex(randomness, 7)).toBe(2);
     expect(winningIndex(randomness, 1)).toBe(0);
     expect(() => winningIndex(randomness, 0)).toThrow();
+  });
+});
+
+describe('pinned slot expiry', () => {
+  /** A fake RPC serving a SlotHashes sysvar that remembers `slots` (newest first). */
+  function rpcWithSlotHashes(slots: bigint[]) {
+    const hash = '11111111111111111111111111111111' as Blockhash;
+    const data = getSysvarSlotHashesEncoder().encode(slots.map((slot) => ({ slot, hash })));
+    const value = {
+      data: [getBase64Decoder().decode(data), 'base64'],
+      executable: false,
+      lamports: 1n,
+      owner: 'Sysvar1111111111111111111111111111111111111',
+      space: BigInt(data.length),
+    };
+    return { getAccountInfo: () => ({ send: async () => ({ value }) }) } as never;
+  }
+
+  test('mirrors the program rule', async () => {
+    const rpc = rpcWithSlotHashes([105n, 104n, 101n]);
+    expect(await isPinnedSlotExpired(rpc, 101n)).toBe(false);
+    expect(await isPinnedSlotExpired(rpc, 103n)).toBe(false);
+    expect(await isPinnedSlotExpired(rpc, 200n)).toBe(false);
+    expect(await isPinnedSlotExpired(rpc, 100n)).toBe(true);
   });
 });
 

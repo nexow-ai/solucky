@@ -1,9 +1,17 @@
-import { type Address, getAddressEncoder, getU64Encoder, type ReadonlyUint8Array } from '@solana/kit';
+import {
+  type Address,
+  getAddressEncoder,
+  type GetAccountInfoApi,
+  getU64Encoder,
+  type ReadonlyUint8Array,
+  type Rpc,
+} from '@solana/kit';
+import { fetchSysvarSlotHashes } from '@solana/sysvars';
 
 /**
  * Recomputes a round's randomness the way `draw_round` does:
  * `sha256(entropy || slot_hash || slot (u64 LE) || round address)`.
- * Anyone can run it against the round account and the slot's block hash.
+ * Anyone can run it with the entropy, slot hash and draw slot stored in the round.
  */
 export async function computeRandomness(input: {
   entropy: ReadonlyUint8Array;
@@ -31,4 +39,14 @@ export function winningIndex(randomness: ReadonlyUint8Array, ticketCount: number
   if (ticketCount <= 0) throw new RangeError('A round needs at least one ticket');
   const view = new DataView(randomness.buffer, randomness.byteOffset, 8);
   return Number(view.getBigUint64(0, true) % BigInt(ticketCount));
+}
+
+/**
+ * True when SlotHashes no longer reaches `targetSlot`, so the round can never
+ * be drawn from it and `close_round` may pin a new slot. Mirrors the program.
+ */
+export async function isPinnedSlotExpired(rpc: Rpc<GetAccountInfoApi>, targetSlot: bigint): Promise<boolean> {
+  const entries = await fetchSysvarSlotHashes(rpc, { commitment: 'confirmed' });
+  const oldest = entries.at(-1);
+  return oldest !== undefined && oldest.slot > targetSlot;
 }

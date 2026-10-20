@@ -16,6 +16,8 @@ export const DRAW_WINDOW_SLOTS: bigint = 500n;
 
 export const MAX_FEE_BPS: number = 1000;
 
+export const MIN_TICKET_PRICE: bigint = 1000000n;
+
 export const ROUND_DURATION: bigint = 86400n;
 
 export const ROUND_SEED: ReadonlyUint8Array = new Uint8Array([114, 111, 117, 110, 100]);

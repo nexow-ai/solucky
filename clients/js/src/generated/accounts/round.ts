@@ -17,6 +17,8 @@ import {
   fixEncoderSize,
   getAddressDecoder,
   getAddressEncoder,
+  getBooleanDecoder,
+  getBooleanEncoder,
   getBytesDecoder,
   getBytesEncoder,
   getStructDecoder,
@@ -79,9 +81,10 @@ export type Round = {
   winningNumber: number;
   winner: Address;
   winnerCountry: ReadonlyUint8Array;
-  /** Lamports paid to the winner and to the treasury. */
+  /** Lamports paid to the winner, and the house fee for the treasury. */
   payout: bigint;
   fee: bigint;
+  feeCollected: boolean;
   bump: number;
 };
 
@@ -109,9 +112,10 @@ export type RoundArgs = {
   winningNumber: number;
   winner: Address | HasAddress;
   winnerCountry: ReadonlyUint8Array;
-  /** Lamports paid to the winner and to the treasury. */
+  /** Lamports paid to the winner, and the house fee for the treasury. */
   payout: number | bigint;
   fee: number | bigint;
+  feeCollected: boolean;
   bump: number;
 };
 
@@ -137,6 +141,7 @@ export function getRoundEncoder(): FixedSizeEncoder<RoundArgs> {
       ['winnerCountry', fixEncoderSize(getBytesEncoder(), 2)],
       ['payout', getU64Encoder()],
       ['fee', getU64Encoder()],
+      ['feeCollected', getBooleanEncoder()],
       ['bump', getU8Encoder()],
     ]),
     (value) => ({ ...value, discriminator: ROUND_DISCRIMINATOR }),
@@ -164,6 +169,7 @@ export function getRoundDecoder(): FixedSizeDecoder<Round> {
     ['winnerCountry', fixDecoderSize(getBytesDecoder(), 2)],
     ['payout', getU64Decoder()],
     ['fee', getU64Decoder()],
+    ['feeCollected', getBooleanDecoder()],
     ['bump', getU8Decoder()],
   ]);
 }
@@ -232,5 +238,5 @@ export async function fetchAllMaybeRound(
 }
 
 export function getRoundSize(): number {
-  return 206;
+  return 207;
 }

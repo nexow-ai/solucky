@@ -10,6 +10,7 @@ export * from './buyTicket';
 export * from './claimPrize';
 export * from './closeRound';
 export * from './closeTicket';
+export * from './collectFee';
 export * from './drawRound';
 export * from './initialize';
 export * from './updateConfig';

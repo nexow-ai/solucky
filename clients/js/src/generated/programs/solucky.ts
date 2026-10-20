@@ -47,9 +47,10 @@ import {
 } from '../accounts';
 import {
   getBuyTicketInstructionAsync,
-  getClaimPrizeInstructionAsync,
+  getClaimPrizeInstruction,
   getCloseRoundInstruction,
   getCloseTicketInstruction,
+  getCollectFeeInstructionAsync,
   getDrawRoundInstruction,
   getInitializeInstructionAsync,
   getUpdateConfigInstructionAsync,
@@ -57,19 +58,22 @@ import {
   parseClaimPrizeInstruction,
   parseCloseRoundInstruction,
   parseCloseTicketInstruction,
+  parseCollectFeeInstruction,
   parseDrawRoundInstruction,
   parseInitializeInstruction,
   parseUpdateConfigInstruction,
   type BuyTicketAsyncInput,
-  type ClaimPrizeAsyncInput,
+  type ClaimPrizeInput,
   type CloseRoundInput,
   type CloseTicketInput,
+  type CollectFeeAsyncInput,
   type DrawRoundInput,
   type InitializeAsyncInput,
   type ParsedBuyTicketInstruction,
   type ParsedClaimPrizeInstruction,
   type ParsedCloseRoundInstruction,
   type ParsedCloseTicketInstruction,
+  type ParsedCollectFeeInstruction,
   type ParsedDrawRoundInstruction,
   type ParsedInitializeInstruction,
   type ParsedUpdateConfigInstruction,
@@ -123,6 +127,7 @@ export function identifySoluckyAccount(account: { data: ReadonlyUint8Array } | R
 
 export enum SoluckyEvent {
   ConfigUpdated,
+  FeeCollected,
   PrizeClaimed,
   RoundClosed,
   RoundDrawn,
@@ -139,6 +144,15 @@ export function identifySoluckyEvent(event: { data: ReadonlyUint8Array } | Reado
     )
   ) {
     return SoluckyEvent.ConfigUpdated;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([12, 28, 17, 248, 244, 36, 8, 73])),
+      0,
+    )
+  ) {
+    return SoluckyEvent.FeeCollected;
   }
   if (
     containsBytes(
@@ -184,6 +198,7 @@ export enum SoluckyInstruction {
   ClaimPrize,
   CloseRound,
   CloseTicket,
+  CollectFee,
   DrawRound,
   Initialize,
   UpdateConfig,
@@ -232,6 +247,15 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([60, 173, 247, 103, 4, 93, 130, 48])),
+      0,
+    )
+  ) {
+    return SoluckyInstruction.CollectFee;
+  }
+  if (
+    containsBytes(
+      data,
       fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([193, 98, 43, 206, 179, 168, 227, 135])),
       0,
     )
@@ -267,6 +291,7 @@ export type ParsedSoluckyInstruction<TProgram extends string = '8uiVKnUeC7L4KG93
   | ({ instructionType: SoluckyInstruction.ClaimPrize } & ParsedClaimPrizeInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.CloseRound } & ParsedCloseRoundInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.CloseTicket } & ParsedCloseTicketInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.CollectFee } & ParsedCollectFeeInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.DrawRound } & ParsedDrawRoundInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.Initialize } & ParsedInitializeInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.UpdateConfig } & ParsedUpdateConfigInstruction<TProgram>);
@@ -291,6 +316,10 @@ export function parseSoluckyInstruction<TProgram extends string>(
     case SoluckyInstruction.CloseTicket: {
       assertIsInstructionWithAccounts(instruction);
       return { instructionType: SoluckyInstruction.CloseTicket, ...parseCloseTicketInstruction(instruction) };
+    }
+    case SoluckyInstruction.CollectFee: {
+      assertIsInstructionWithAccounts(instruction);
+      return { instructionType: SoluckyInstruction.CollectFee, ...parseCollectFeeInstruction(instruction) };
     }
     case SoluckyInstruction.DrawRound: {
       assertIsInstructionWithAccounts(instruction);
@@ -333,9 +362,9 @@ export type SoluckyPluginInstructions = {
     config?: { programAddress?: Address | HasAddress },
   ) => ReturnType<typeof getBuyTicketInstructionAsync> & SelfPlanAndSendFunctions;
   claimPrize: (
-    input: ClaimPrizeAsyncInput,
+    input: ClaimPrizeInput,
     config?: { programAddress?: Address | HasAddress },
-  ) => ReturnType<typeof getClaimPrizeInstructionAsync> & SelfPlanAndSendFunctions;
+  ) => ReturnType<typeof getClaimPrizeInstruction> & SelfPlanAndSendFunctions;
   closeRound: (
     input: CloseRoundInput,
     config?: { programAddress?: Address | HasAddress },
@@ -344,6 +373,10 @@ export type SoluckyPluginInstructions = {
     input: CloseTicketInput,
     config?: { programAddress?: Address | HasAddress },
   ) => ReturnType<typeof getCloseTicketInstruction> & SelfPlanAndSendFunctions;
+  collectFee: (
+    input: CollectFeeAsyncInput,
+    config?: { programAddress?: Address | HasAddress },
+  ) => ReturnType<typeof getCollectFeeInstructionAsync> & SelfPlanAndSendFunctions;
   drawRound: (
     input: DrawRoundInput,
     config?: { programAddress?: Address | HasAddress },
@@ -388,7 +421,7 @@ export function soluckyProgram(config: { programAddress?: Address | HasAddress }
           claimPrize: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
-              getClaimPrizeInstructionAsync(input, {
+              getClaimPrizeInstruction(input, {
                 programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
@@ -403,6 +436,13 @@ export function soluckyProgram(config: { programAddress?: Address | HasAddress }
             addSelfPlanAndSendFunctions(
               client,
               getCloseTicketInstruction(input, {
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
+              }),
+            ),
+          collectFee: (input, instructionConfig) =>
+            addSelfPlanAndSendFunctions(
+              client,
+              getCollectFeeInstructionAsync(input, {
                 programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),

@@ -16,6 +16,8 @@ import {
   getStructEncoder,
   getU32Decoder,
   getU32Encoder,
+  getU64Decoder,
+  getU64Encoder,
   SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
   SolanaError,
   transformEncoder,
@@ -80,9 +82,15 @@ export type BuyTicketInstructionData = {
   day: number;
   number: number;
   country: ReadonlyUint8Array;
+  maxPrice: bigint;
 };
 
-export type BuyTicketInstructionDataArgs = { day: number; number: number; country: ReadonlyUint8Array };
+export type BuyTicketInstructionDataArgs = {
+  day: number;
+  number: number;
+  country: ReadonlyUint8Array;
+  maxPrice: number | bigint;
+};
 
 export function getBuyTicketInstructionDataEncoder(): FixedSizeEncoder<BuyTicketInstructionDataArgs> {
   return transformEncoder(
@@ -91,6 +99,7 @@ export function getBuyTicketInstructionDataEncoder(): FixedSizeEncoder<BuyTicket
       ['day', getU32Encoder()],
       ['number', getU32Encoder()],
       ['country', fixEncoderSize(getBytesEncoder(), 2)],
+      ['maxPrice', getU64Encoder()],
     ]),
     (value) => ({ ...value, discriminator: BUY_TICKET_DISCRIMINATOR }),
   );
@@ -102,6 +111,7 @@ export function getBuyTicketInstructionDataDecoder(): FixedSizeDecoder<BuyTicket
     ['day', getU32Decoder()],
     ['number', getU32Decoder()],
     ['country', fixDecoderSize(getBytesDecoder(), 2)],
+    ['maxPrice', getU64Decoder()],
   ]);
 }
 
@@ -129,6 +139,7 @@ export type BuyTicketAsyncInput<
   day: BuyTicketInstructionDataArgs['day'];
   number: BuyTicketInstructionDataArgs['number'];
   country: BuyTicketInstructionDataArgs['country'];
+  maxPrice: BuyTicketInstructionDataArgs['maxPrice'];
 };
 
 export async function getBuyTicketInstructionAsync<
@@ -231,6 +242,7 @@ export type BuyTicketInput<
   day: BuyTicketInstructionDataArgs['day'];
   number: BuyTicketInstructionDataArgs['number'];
   country: BuyTicketInstructionDataArgs['country'];
+  maxPrice: BuyTicketInstructionDataArgs['maxPrice'];
 };
 
 export function getBuyTicketInstruction<

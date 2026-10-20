@@ -25,6 +25,7 @@ import {
   type Instruction,
   type InstructionWithAccounts,
   type InstructionWithData,
+  type ReadonlyAccount,
   type ReadonlyUint8Array,
   type WritableAccount,
 } from '@solana/kit';
@@ -46,11 +47,16 @@ export function getCloseRoundDiscriminatorBytes(): ReadonlyUint8Array {
 export type CloseRoundInstruction<
   TProgram extends string = typeof SOLUCKY_PROGRAM_ADDRESS,
   TAccountRound extends string | AccountMeta<string> = string,
+  TAccountSlotHashes extends string | AccountMeta<string> = 'SysvarS1otHashes111111111111111111111111111',
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
   InstructionWithAccounts<
-    [TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound, ...TRemainingAccounts]
+    [
+      TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound,
+      TAccountSlotHashes extends string ? ReadonlyAccount<TAccountSlotHashes> : TAccountSlotHashes,
+      ...TRemainingAccounts,
+    ]
   >;
 
 export type CloseRoundInstructionData = { discriminator: ReadonlyUint8Array };
@@ -75,19 +81,25 @@ export function getCloseRoundInstructionDataCodec(): FixedSizeCodec<
   return combineCodec(getCloseRoundInstructionDataEncoder(), getCloseRoundInstructionDataDecoder());
 }
 
-export type CloseRoundInput<TAccountRound extends InstructionAccountInput = InstructionAccountInput> = {
+export type CloseRoundInput<
+  TAccountRound extends InstructionAccountInput = InstructionAccountInput,
+  TAccountSlotHashes extends InstructionAccountInput = InstructionAccountInput,
+> = {
   round: TAccountRound;
+  slotHashes?: TAccountSlotHashes;
 };
 
 export function getCloseRoundInstruction<
   TAccountRound extends InstructionAccountInput,
+  TAccountSlotHashes extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: CloseRoundInput<TAccountRound>,
+  input: CloseRoundInput<TAccountRound, TAccountSlotHashes>,
   config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): CloseRoundInstruction<
   TProgramAddress,
-  ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>
+  ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+  ResolvedInstructionAccountMeta<TAccountSlotHashes, InstructionAccountInputAddress<TAccountSlotHashes>>
 > {
   // Program address.
   const programAddressInput = config?.programAddress ?? SOLUCKY_PROGRAM_ADDRESS;
@@ -97,16 +109,26 @@ export function getCloseRoundInstruction<
   const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
 
   // Original accounts.
-  const originalAccounts = { round: { value: input.round ?? null, isSigner: false, isWritable: true } };
+  const originalAccounts = {
+    round: { value: input.round ?? null, isSigner: false, isWritable: true },
+    slotHashes: { value: input.slotHashes ?? null, isSigner: false, isWritable: false },
+  };
   const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
 
+  // Resolve default values.
+  if (!accounts.slotHashes.value) {
+    accounts.slotHashes.value =
+      'SysvarS1otHashes111111111111111111111111111' as Address<'SysvarS1otHashes111111111111111111111111111'>;
+  }
+
   return Object.freeze({
-    accounts: [getAccountMeta('round', accounts.round)],
+    accounts: [getAccountMeta('round', accounts.round), getAccountMeta('slotHashes', accounts.slotHashes)],
     data: getCloseRoundInstructionDataEncoder().encode({}),
     programAddress,
   } as CloseRoundInstruction<
     TProgramAddress,
-    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>
+    ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountSlotHashes, InstructionAccountInputAddress<TAccountSlotHashes>>
   >);
 }
 
@@ -117,6 +139,7 @@ export type ParsedCloseRoundInstruction<
   programAddress: Address<TProgram>;
   accounts: {
     round: TAccountMetas[0];
+    slotHashes: TAccountMetas[1];
   };
   data: CloseRoundInstructionData;
 };
@@ -124,10 +147,10 @@ export type ParsedCloseRoundInstruction<
 export function parseCloseRoundInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
   instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedCloseRoundInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 1) {
+  if (instruction.accounts.length < 2) {
     throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
       actualAccountMetas: instruction.accounts.length,
-      expectedAccountMetas: 1,
+      expectedAccountMetas: 2,
     });
   }
   let accountIndex = 0;
@@ -138,7 +161,7 @@ export function parseCloseRoundInstruction<TProgram extends string, TAccountMeta
   };
   return {
     programAddress: instruction.programAddress,
-    accounts: { round: getNextAccount() },
+    accounts: { round: getNextAccount(), slotHashes: getNextAccount() },
     data: getCloseRoundInstructionDataDecoder().decode(instruction.data),
   };
 }

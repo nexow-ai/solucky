@@ -17,7 +17,7 @@ import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
 /** Unauthorized: Only the authority can do this */
 export const SOLUCKY_ERROR__UNAUTHORIZED = 0x1770; // 6000
-/** InvalidTicketPrice: The ticket price must be greater than zero */
+/** InvalidTicketPrice: The ticket price must be at least 0.001 SOL */
 export const SOLUCKY_ERROR__INVALID_TICKET_PRICE = 0x1771; // 6001
 /** FeeTooHigh: The fee is above the 10% cap */
 export const SOLUCKY_ERROR__FEE_TOO_HIGH = 0x1772; // 6002
@@ -43,7 +43,7 @@ export const SOLUCKY_ERROR__DRAW_STILL_POSSIBLE = 0x177b; // 6011
 export const SOLUCKY_ERROR__ROUND_NOT_CLOSED = 0x177c; // 6012
 /** TargetSlotNotReached: The pinned slot has not been reached yet */
 export const SOLUCKY_ERROR__TARGET_SLOT_NOT_REACHED = 0x177d; // 6013
-/** RandomnessUnavailable: The pinned slot hash is not available; close the round again to pin a new slot */
+/** RandomnessUnavailable: The pinned slot's hash is not readable yet; try again shortly, or close the round again once it expired */
 export const SOLUCKY_ERROR__RANDOMNESS_UNAVAILABLE = 0x177e; // 6014
 /** RoundNotDrawn: The round has not been drawn */
 export const SOLUCKY_ERROR__ROUND_NOT_DRAWN = 0x177f; // 6015
@@ -53,9 +53,14 @@ export const SOLUCKY_ERROR__NOT_WINNING_TICKET = 0x1780; // 6016
 export const SOLUCKY_ERROR__ROUND_NOT_SETTLED = 0x1781; // 6017
 /** Overflow: Arithmetic overflow */
 export const SOLUCKY_ERROR__OVERFLOW = 0x1782; // 6018
+/** PriceChanged: The ticket price is higher than the price you accepted */
+export const SOLUCKY_ERROR__PRICE_CHANGED = 0x1783; // 6019
+/** FeeAlreadyCollected: The fee of this round was already collected */
+export const SOLUCKY_ERROR__FEE_ALREADY_COLLECTED = 0x1784; // 6020
 
 export type SoluckyError =
   | typeof SOLUCKY_ERROR__DRAW_STILL_POSSIBLE
+  | typeof SOLUCKY_ERROR__FEE_ALREADY_COLLECTED
   | typeof SOLUCKY_ERROR__FEE_TOO_HIGH
   | typeof SOLUCKY_ERROR__INVALID_COUNTRY
   | typeof SOLUCKY_ERROR__INVALID_MAX_NUMBER
@@ -64,6 +69,7 @@ export type SoluckyError =
   | typeof SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE
   | typeof SOLUCKY_ERROR__OVERFLOW
   | typeof SOLUCKY_ERROR__PAUSED
+  | typeof SOLUCKY_ERROR__PRICE_CHANGED
   | typeof SOLUCKY_ERROR__RANDOMNESS_UNAVAILABLE
   | typeof SOLUCKY_ERROR__ROUND_ALREADY_DRAWN
   | typeof SOLUCKY_ERROR__ROUND_NOT_CLOSED
@@ -79,15 +85,17 @@ let soluckyErrorMessages: Record<SoluckyError, string> | undefined;
 if (process.env['NODE_ENV'] !== 'production') {
   soluckyErrorMessages = {
     [SOLUCKY_ERROR__DRAW_STILL_POSSIBLE]: `The pinned slot can still be drawn`,
+    [SOLUCKY_ERROR__FEE_ALREADY_COLLECTED]: `The fee of this round was already collected`,
     [SOLUCKY_ERROR__FEE_TOO_HIGH]: `The fee is above the 10% cap`,
     [SOLUCKY_ERROR__INVALID_COUNTRY]: `The country must be an uppercase ISO 3166-1 alpha-2 code`,
     [SOLUCKY_ERROR__INVALID_MAX_NUMBER]: `The highest number must be greater than zero`,
-    [SOLUCKY_ERROR__INVALID_TICKET_PRICE]: `The ticket price must be greater than zero`,
+    [SOLUCKY_ERROR__INVALID_TICKET_PRICE]: `The ticket price must be at least 0.001 SOL`,
     [SOLUCKY_ERROR__NOT_WINNING_TICKET]: `This is not the winning ticket`,
     [SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE]: `The number is out of range`,
     [SOLUCKY_ERROR__OVERFLOW]: `Arithmetic overflow`,
     [SOLUCKY_ERROR__PAUSED]: `Ticket sales are paused`,
-    [SOLUCKY_ERROR__RANDOMNESS_UNAVAILABLE]: `The pinned slot hash is not available; close the round again to pin a new slot`,
+    [SOLUCKY_ERROR__PRICE_CHANGED]: `The ticket price is higher than the price you accepted`,
+    [SOLUCKY_ERROR__RANDOMNESS_UNAVAILABLE]: `The pinned slot's hash is not readable yet; try again shortly, or close the round again once it expired`,
     [SOLUCKY_ERROR__ROUND_ALREADY_DRAWN]: `The round was already drawn`,
     [SOLUCKY_ERROR__ROUND_NOT_CLOSED]: `The round is not closed`,
     [SOLUCKY_ERROR__ROUND_NOT_DRAWN]: `The round has not been drawn`,

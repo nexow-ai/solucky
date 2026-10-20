@@ -17,9 +17,11 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@solana/kit": "^8.5.0"
+    "@solana/kit": "^8.5.0",
+    "@solana/sysvars": "^8.5.0"
   },
   "devDependencies": {
-    "@solana/kit": "8.5.0"
+    "@solana/kit": "8.5.0",
+    "@solana/sysvars": "8.5.0"
   }
 }

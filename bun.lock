@@ -49,9 +49,11 @@
       "version": "1.0.0",
       "devDependencies": {
         "@solana/kit": "8.5.0",
+        "@solana/sysvars": "8.5.0",
       },
       "peerDependencies": {
         "@solana/kit": "^8.5.0",
+        "@solana/sysvars": "^8.5.0",
       },
     },
   },

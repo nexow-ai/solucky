@@ -58,7 +58,7 @@ export function getConfigDiscriminatorBytes(): ReadonlyUint8Array {
 export type Config = {
   discriminator: ReadonlyUint8Array;
   authority: Address;
-  /** Receives the house fee when a prize is claimed. */
+  /** Receives the house fee through `collect_fee`. */
   treasury: Address;
   /** Price of one ticket, in lamports. */
   ticketPrice: bigint;
@@ -76,7 +76,7 @@ export type Config = {
 
 export type ConfigArgs = {
   authority: Address | HasAddress;
-  /** Receives the house fee when a prize is claimed. */
+  /** Receives the house fee through `collect_fee`. */
   treasury: Address | HasAddress;
   /** Price of one ticket, in lamports. */
   ticketPrice: number | bigint;
