@@ -177,15 +177,18 @@ const faq = [
         </dl>
       </template>
 
-      <ClientOnly>
-        <LazyLotteryLiveCard />
-        <template #fallback>
-          <USkeleton class="mx-auto h-[30rem] w-full max-w-sm" />
-        </template>
-      </ClientOnly>
+      <!-- Holds the card's height while its chunk loads, so the scene anchored to the hero's bottom stays put. -->
+      <div class="min-h-[26.5rem]">
+        <ClientOnly>
+          <LazyLotteryLiveCard />
+          <template #fallback>
+            <USkeleton class="mx-auto h-[26.5rem] w-full max-w-sm" />
+          </template>
+        </ClientOnly>
+      </div>
     </UPageHero>
 
-    <div class="dark relative z-10">
+    <div class="dark relative z-10 min-h-[2.625rem]">
       <ClientOnly>
         <LazyLandingLiveTicker />
         <template #fallback>
