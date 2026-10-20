@@ -20,7 +20,14 @@ We aim to acknowledge reports within three business days and to agree on a fix a
 
 ## Trust model and known limits
 
-The guarantees and their limits are listed in the README under [Fairness and trust](README.md#fairness-and-trust). In short: pots can only go to the winning ticket's owner and the fee to the treasury; every round can be finished by anyone; the draw uses a slot hash pinned in the future, which the leader of that slot could influence only by skipping their block. The program is upgradeable, so its upgrade authority is trusted until the program is made immutable or handed to a multisig.
+The guarantees and their limits are listed in the README under [Fairness and trust](README.md#fairness-and-trust). In short:
+
+- Pots can only go to the winning ticket's owner, and fees to the treasury, in two separate steps so a bad treasury cannot block a winner.
+- Every round can be finished by anyone.
+- The draw uses a slot hash pinned in the future. Players cannot predict it, but the validator producing that slot can bias it, and a closer can hold back an unfavourable draw until the slot leaves SlotHashes. A continuously running crank limits the second risk; only a verifiable randomness oracle removes the first. Do not run real-money pots on this draw.
+- The program is upgradeable, so its upgrade authority is trusted until the program is made immutable or handed to a multisig.
+
+An internal review before 1.0.0 led to the separate fee step, the provable-expiry rule for re-pinning, the minimum ticket price and the buyer's `max_price`.
 
 ## Secrets in the git history
 

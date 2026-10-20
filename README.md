@@ -30,30 +30,37 @@ stateDiagram-v2
     Open --> Closed: close_round, after 00:00 UTC
     Closed --> Drawn: draw_round, once the pinned slot is produced
     Closed --> Closed: close_round again if the pinned slot expired
-    Drawn --> Settled: claim_prize pays winner and treasury
-    Settled --> [*]
+    Drawn --> Settled: claim_prize pays the winner
+    Settled --> [*]: collect_fee pays the treasury
 ```
 
-1. **Buy.** `buy_ticket` moves the ticket price from the player to the day's round account and mixes the purchase into the round's entropy. The first ticket of the day opens the round.
+1. **Buy.** `buy_ticket` moves the ticket price from the player to the day's round account and mixes the purchase into the round's entropy. The first ticket of the day opens the round. The buyer passes the price they were shown and never pays more.
 2. **Close.** After midnight UTC anyone can call `close_round`. It pins a slot 8 slots in the future, whose hash nobody knows yet.
 3. **Draw.** Once that slot exists, anyone can call `draw_round`. The program reads the slot's hash from the SlotHashes sysvar and computes `randomness = sha256(entropy ‖ slot_hash ‖ slot ‖ round)`. The winning ticket is purchase number `u64(randomness[0..8]) mod ticket_count`.
-4. **Pay.** Anyone can call `claim_prize`. The pot minus the house fee goes to the winning ticket's owner, and the fee to the treasury. Nobody else can receive it.
+4. **Pay.** Anyone can call `claim_prize`. The pot minus the house fee goes to the winning ticket's owner, and nobody else can receive it. Anyone can then call `collect_fee` to send the fee to the treasury; the two steps are separate so the treasury can never hold up a winner.
 5. **Reclaim.** After the payout, players can close their tickets to get the account rent back. The round account stays on-chain as the public record of the day.
 
-A bot (the **crank**, `bun run crank`) does steps 2–4 right after midnight, and any player can do them from the History panel of the app. Each step only costs network fees.
+A bot (the **crank**, `bun run crank`) does steps 2–4 right after midnight, and any player can close, draw and pay from the History panel of the app. Each step only costs network fees.
 
 ## Fairness and trust
 
 | Guarantee | Enforced by |
 | --- | --- |
-| The pot can only go to the winner and the fee to the treasury | `claim_prize` checks the ticket, its owner and the configured treasury |
-| The operator cannot withdraw a pot or stop it from being paid | No such instruction exists; pausing only blocks new tickets. The authority can only change where future fees go |
+| The pot can only go to the winner and the fee to the treasury | `claim_prize` checks the ticket and its owner; `collect_fee` checks the configured treasury |
+| The operator cannot withdraw a pot or stop it from being paid | No such instruction exists; pausing only blocks new tickets, and the winner's payout never touches the treasury. The authority can only change where fees go |
 | The fee is at most 10%, and price or fee changes never affect a round already selling | `MAX_FEE_BPS`, and each round copies the price and fee when it opens |
+| A buyer never pays more than the price they saw | `buy_ticket` takes a `max_price` |
+| Prizes can always be paid, even to an empty wallet | Tickets cost at least 0.001 SOL, so a prize is always above the rent-exempt minimum |
 | Only the program's upgrade authority can create the config | `initialize` checks the program data account |
 | Anyone can finish a round | `close_round`, `draw_round` and `claim_prize` need no special signer |
 | Anyone can check the draw | The round stores the entropy, slot, slot hash and randomness; the app recomputes them in the browser |
 
-**Known limits.** The randomness comes from a slot hash pinned in the future, so nobody knows it when the round closes. The leader of that slot could still influence it, but only by skipping their own block, which hands the draw to the next produced slot. If nobody draws within the ~500 slots the sysvar remembers (~3 minutes), `close_round` pins a fresh slot; a running crank makes that window irrelevant. For large real-money pots, swap in a verifiable randomness oracle such as Switchboard On-Demand or ORAO VRF: the draw logic is one function in [`draw_round.rs`](programs/solucky/src/instructions/draw_round.rs). Upgradeable programs are only as trustworthy as their upgrade authority, so consider a multisig or making the program immutable once it is stable.
+**Known limits.** This draw is fair against players, not against validators:
+
+- The randomness comes from the hash of a slot pinned a few slots in the future, so nobody can predict it when the round closes. But the slot hash is a bank hash, which depends on the block's contents: the leader of that slot can try different blocks and publish a favourable one, or skip it (leaders produce 4 slots in a row, and the next leader can fork a block out). A validator who also closes the round can aim the pinned slot at its own leader slots.
+- Once the pinned slot exists, anyone can compute the result before drawing. The draw stays possible while SlotHashes still holds that slot (about 512 slots, ~3.5 minutes), and `close_round` only pins a new slot once SlotHashes proves the old one is out of reach. A player who closes a round and dislikes the result could still withhold the draw and hope nobody else draws in time. Run the crank continuously (`bun run crank --watch --interval 10`) so every round is drawn within seconds.
+- For real-money pots, replace the draw with a verifiable randomness oracle such as Switchboard On-Demand or ORAO VRF. The draw logic is one function in [`draw_round.rs`](programs/solucky/src/instructions/draw_round.rs).
+- An upgradeable program is only as trustworthy as its upgrade authority. Consider a multisig, or making the program immutable once it is stable.
 
 ## Repository layout
 
@@ -102,14 +109,14 @@ The program address in the code, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`,
    bun run program:build
    solana program deploy -u devnet --program-id target/deploy/solucky-keypair.json target/deploy/solucky.so
    ```
-2. **Config.** As the upgrade authority, create the config. Fund the treasury with at least ◎0.001 first, so it can receive small fees:
+2. **Config.** As the upgrade authority, create the config (tickets cost at least ◎0.001). Fund the treasury with at least ◎0.001 first, so it can receive small fees:
    ```bash
    SOLANA_RPC_URL=https://api.devnet.solana.com bun run admin init --treasury <ADDRESS> --price 0.1 --fee-bps 500
    bun run admin status
    ```
    Later changes: `bun run admin set --price 0.2`, `--fee-bps 300`, `--treasury <ADDRESS>`, `--authority <ADDRESS>`, `--pause`, `--resume`.
 3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc). Set the cluster, and preferably a dedicated RPC endpoint, as `NUXT_PUBLIC_*` variables there. `bun run build` produces a Node server in `app/.output` instead.
-4. **Crank.** Run `bun run crank` from cron shortly after 00:00 UTC, `bun run crank --watch` as a service, or enable [`.github/workflows/crank.yml`](.github/workflows/crank.yml) with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON`. Use a dedicated, lightly funded keypair: the crank never needs authority.
+4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so rounds are drawn within seconds of midnight. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON`. Use a dedicated, lightly funded keypair: the crank never needs authority.
 
 ## Configuration
 
@@ -139,10 +146,11 @@ The program address in the code, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`,
 | --- | --- | --- |
 | `initialize(ticket_price, fee_bps, max_number)` | upgrade authority | Creates the config |
 | `update_config(update)` | config authority | Changes the authority, treasury, price, fee, number range or pause flag |
-| `buy_ticket(day, number, country)` | any player | Buys `number` in today's round |
+| `buy_ticket(day, number, country, max_price)` | any player | Buys `number` in today's round, at no more than `max_price` |
 | `close_round` | anyone | Ends a finished round and pins the draw slot |
 | `draw_round` | anyone | Picks the winning ticket |
-| `claim_prize` | anyone | Pays the winner and the treasury |
+| `claim_prize` | anyone | Pays the winner |
+| `collect_fee` | anyone | Sends a settled round's fee to the treasury |
 | `close_ticket` | ticket owner | Returns a settled round's ticket rent |
 
 Accounts are PDAs: `Config` (`"config"`), `Round` (`"round"`, day as u32 LE) and `Ticket` (`"ticket"`, round, number as u32 LE). Days count from the Unix epoch in UTC. A ticket's country is an ISO 3166-1 alpha-2 code, or two zero bytes when the player keeps it private. Error codes start at 6000; see [`error.rs`](programs/solucky/src/error.rs).

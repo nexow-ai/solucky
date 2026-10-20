@@ -8,8 +8,9 @@ A rewrite of the 2022 prototype into a self-contained, verifiable product. Nothi
 
 ### Added
 
-- Anchor 1.2 program that holds each day's pot in the round account and settles it on-chain: `buy_ticket`, `close_round`, `draw_round`, `claim_prize`, `close_ticket`, plus `initialize` (upgrade authority only) and `update_config`.
-- Draw from a slot hash pinned in the future, mixed with every purchase; the round stores the inputs so anyone can recompute it.
+- Anchor 1.2 program that holds each day's pot in the round account and settles it on-chain: `buy_ticket`, `close_round`, `draw_round`, `claim_prize`, `collect_fee`, `close_ticket`, plus `initialize` (upgrade authority only) and `update_config`.
+- Draw from a slot hash pinned in the future, mixed with every purchase; the round stores the inputs so anyone can recompute it. A new slot can only be pinned once SlotHashes proves the old one is out of reach.
+- Winners are paid by `claim_prize` and the fee by a separate `collect_fee`, so the treasury can never hold up a payout. Buyers pass a `max_price`, and tickets cost at least 0.001 SOL so every prize can be paid.
 - Unit tests and LiteSVM integration tests for every instruction and failure path.
 - `@solucky/client`, a Codama-generated `@solana/kit` client with query, time, country, error and draw-verification helpers.
 - Nuxt 4 + Nuxt UI app with a landing page, the three-panel game, round pages with an in-browser draw check, Wallet Standard support, live updates, dark and light themes, sounds, and `/api/price` and `/api/geo` routes. Deploys to Cloudflare Workers or Node.
