@@ -1,0 +1,14 @@
+// Cloudflare Workers deployment of the app: `bun run deploy` from the repo root.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "solucky",
+  "main": "./.output/server/index.mjs",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "./.output/public", "binding": "ASSETS" },
+  "observability": { "enabled": true },
+  // Public settings read by the app at runtime (see app/.env.example).
+  "vars": {
+    "NUXT_PUBLIC_CLUSTER": "devnet",
+  },
+}
