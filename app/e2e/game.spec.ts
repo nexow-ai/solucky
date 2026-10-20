@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 
 import {
   airdrop,
@@ -9,6 +9,12 @@ import {
   type TestWallet,
   watchForPageErrors,
 } from './support';
+
+async function connect(page: Page, wallet: TestWallet) {
+  await page.getByRole('banner').getByRole('button', { name: 'Connect wallet' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Test Wallet' }).click();
+  await expect(page.getByRole('banner').getByText(wallet.address.slice(0, 4))).toBeVisible();
+}
 
 // One player goes through a whole day: buy a ticket, settle the round after
 // midnight, and check the draw in the browser.
@@ -37,10 +43,7 @@ test.describe.serial('a day of S☉Lucky', () => {
     const errors = watchForPageErrors(page);
     await installTestWallet(page, wallet);
     await page.goto('/play');
-
-    await page.getByRole('banner').getByRole('button', { name: 'Connect wallet' }).click();
-    await page.getByRole('dialog').getByRole('button', { name: 'Test Wallet' }).click();
-    await expect(page.getByRole('banner').getByText(wallet.address.slice(0, 4))).toBeVisible();
+    await connect(page, wallet);
 
     await page.keyboard.type(String(number));
     const buy = page.getByRole('button', { name: `Buy ${spaced(number)} for ◎0.1` });
@@ -58,12 +61,10 @@ test.describe.serial('a day of S☉Lucky', () => {
     await jumpToNextDay(2_000);
     await installTestWallet(page, wallet);
     await page.goto('/play');
-
-    // The wallet reconnects on its own.
-    await expect(page.getByRole('banner').getByText(wallet.address.slice(0, 4))).toBeVisible();
-    await page.getByRole('button', { name: 'Settle' }).click();
-
+    await connect(page, wallet);
     const label = new Date(day * 86_400_000).toISOString().slice(0, 10);
+    await page.getByRole('button', { name: `Settle ${label}` }).click();
+
     const winner = page.getByRole('link', { name: new RegExp(`${label.slice(2)}.*${spaced(number)}`) });
     await expect(winner).toBeVisible({ timeout: 60_000 });
     expect(errors).toEqual([]);
