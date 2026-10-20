@@ -41,6 +41,7 @@
     "check": "bun run format:check && bun run lint && bun run typecheck && bun run test && bun run build",
     "admin": "bun scripts/admin.ts",
     "crank": "bun scripts/crank.ts",
+    "localnet": "bun scripts/localnet.ts",
     "e2e": "bun scripts/e2e.ts"
   },
   "dependencies": {
