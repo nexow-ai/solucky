@@ -21,7 +21,7 @@ import {
 import { log, PROGRAM_ADDRESS, type SoluckyClient } from './lib';
 
 /** A round needs work until its winner is paid and its fee collected. */
-function needsWork(round: Round) {
+export function needsWork(round: Round) {
   return round.status !== RoundStatus.Settled || !round.feeCollected;
 }
 
