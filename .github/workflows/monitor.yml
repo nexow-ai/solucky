@@ -1,0 +1,37 @@
+# Checks that yesterday's round was settled and that the crank still has SOL.
+# A failed run means the crank needs attention; GitHub emails the people who
+# watch failed workflow runs, and ALERT_WEBHOOK_URL (Slack or Discord) gets a
+# message too.
+#
+# Turn it on with the repository variable SOLUCKY_MONITOR_ENABLED=true, then set:
+#   variable SOLANA_RPC_URL       RPC endpoint of the cluster the program runs on
+#   variable SOLUCKY_CRANK        address of the crank's keypair (optional)
+#   secret   ALERT_WEBHOOK_URL    Slack or Discord incoming webhook (optional)
+name: Monitor
+
+on:
+  schedule:
+    - cron: '45 0 * * *'
+    - cron: '45 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    if: vars.SOLUCKY_MONITOR_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.21
+
+      - run: bun install --frozen-lockfile --production --ignore-scripts
+
+      - name: Check the lottery
+        run: bun run monitor ${SOLUCKY_CRANK:+--crank "$SOLUCKY_CRANK"}
+        env:
+          SOLANA_RPC_URL: ${{ vars.SOLANA_RPC_URL }}
+          SOLUCKY_CRANK: ${{ vars.SOLUCKY_CRANK }}
+          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}

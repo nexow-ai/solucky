@@ -1,0 +1,70 @@
+# Builds the program in Anchor's pinned Docker image, so anyone can reproduce
+# the exact bytes, and attaches the binary, its SHA-256 and the IDL to the
+# GitHub release of the tag. Deploy that binary, then anyone can check the
+# deployment against this repository (see "Verifiable builds" in the README).
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  ANCHOR_VERSION: 1.2.1
+
+jobs:
+  verifiable-build:
+    name: Verifiable program build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Anchor
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL -o "$HOME/.local/bin/anchor" \
+            "https://github.com/otter-sec/anchor/releases/download/v${ANCHOR_VERSION}/anchor-${ANCHOR_VERSION}-x86_64-unknown-linux-gnu"
+          chmod +x "$HOME/.local/bin/anchor"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Build in Docker
+        run: anchor build --verifiable --ignore-keys
+
+      - name: The committed IDL matches the program
+        run: diff target/idl/solucky.json idl/solucky.json
+
+      - name: Hash
+        # The program hash ignores trailing zero bytes, like the bytes stored
+        # on-chain; it is what `solana-verify get-program-hash` prints.
+        run: |
+          cp idl/solucky.json target/verifiable/solucky.json
+          cd target/verifiable
+          sha256sum solucky.so > solucky.so.sha256
+          program_hash=$(python3 -c "import hashlib; print(hashlib.sha256(open('solucky.so','rb').read().rstrip(b'\\0')).hexdigest())")
+          echo "$program_hash" > solucky.program-hash
+          {
+            echo "### Verifiable build"
+            echo "- Program hash (\`solana-verify get-program-hash\`): \`$program_hash\`"
+            echo "- File SHA-256: \`$(cut -d' ' -f1 solucky.so.sha256)\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: solucky-verifiable
+          path: target/verifiable/
+
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release view "$TAG" > /dev/null 2>&1 \
+            || gh release create "$TAG" --verify-tag --generate-notes --title "S☉Lucky $TAG"
+          gh release upload "$TAG" --clobber \
+            target/verifiable/solucky.so target/verifiable/solucky.so.sha256 \
+            target/verifiable/solucky.program-hash target/verifiable/solucky.json

@@ -13,6 +13,7 @@ env:
   BUN_VERSION: 1.2.21
   ANCHOR_VERSION: 1.2.1
   SOLANA_VERSION: 4.3.2
+  SURFPOOL_VERSION: 1.6.1
 
 jobs:
   program:
@@ -54,6 +55,56 @@ jobs:
 
       - name: Test
         run: cargo test -p solucky
+
+      - name: Keep the program for the end-to-end job
+        uses: actions/upload-artifact@v7
+        with:
+          name: program
+          path: target/deploy/solucky.so
+          retention-days: 7
+
+  e2e:
+    name: End to end on Surfpool
+    needs: program
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: program
+          path: target/deploy
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Start Surfpool
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL "https://github.com/txtx/surfpool/releases/download/v${SURFPOOL_VERSION}/surfpool-linux-x64.tar.gz" \
+            | tar xz -C "$HOME/.local/bin"
+          nohup "$HOME/.local/bin/surfpool" start --offline --no-deploy --no-tui --no-studio --ci > surfpool.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:8899 -H 'content-type: application/json' \
+              -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}' && exit 0
+            sleep 1
+          done
+          cat surfpool.log
+          exit 1
+
+      - name: Play a full round
+        # No keypair: the script loads the program with a throwaway authority.
+        run: bun run e2e
+        env:
+          SOLANA_RPC_URL: http://127.0.0.1:8899
+
+      - name: Surfpool log
+        if: failure()
+        run: cat surfpool.log
 
   app:
     name: Client and app (types, lint, test, build)
