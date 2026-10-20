@@ -36,12 +36,13 @@ function check(condition: unknown, message: string): asserts condition {
 }
 
 assertLocalRpc();
-const admin = clientFor(await localOperator());
+const operator = await localOperator();
+const admin = clientFor(operator);
 const balance = async (address: Address) => (await admin.rpc.getBalance(address).send()).value;
 
 // 1. The program and its config are in place.
-const config = await prepareLocalnet(admin.payer);
-check(config.exists, 'program and config are set up');
+const config = await prepareLocalnet(operator);
+check(config.data.ticketPrice > 0n, 'program and config are set up');
 const { ticketPrice, treasury } = config.data;
 
 // 2. Three players buy four tickets in the cluster's current day.
