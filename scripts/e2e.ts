@@ -113,7 +113,13 @@ const purchases: [number, number, string | null][] = [
 ];
 for (const [player, number, country] of purchases) {
   await clientFor(players[player]!)
-    .solucky.instructions.buyTicket({ buyer: players[player]!, day, number, country: countryToBytes(country) })
+    .solucky.instructions.buyTicket({
+      buyer: players[player]!,
+      day,
+      number,
+      country: countryToBytes(country),
+      maxPrice: ticketPrice,
+    })
     .sendTransaction();
 }
 const round = await admin.solucky.accounts.round.fetch(roundAddress);
@@ -121,7 +127,13 @@ check(round.data.ticketCount === soldBefore + 4, 'four tickets were added to the
 check(round.data.pot === round.data.ticketPrice * BigInt(round.data.ticketCount), 'the pot holds every ticket price');
 
 const duplicate = await clientFor(players[1]!)
-  .solucky.instructions.buyTicket({ buyer: players[1]!, day, number: base + 7, country: countryToBytes('FR') })
+  .solucky.instructions.buyTicket({
+    buyer: players[1]!,
+    day,
+    number: base + 7,
+    country: countryToBytes('FR'),
+    maxPrice: ticketPrice,
+  })
   .sendTransaction()
   .then(
     () => null,
