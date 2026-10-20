@@ -76,8 +76,9 @@ scripts/            Operator scripts: admin (config), crank (settle rounds), e2e
 ## Requirements
 
 - [Bun](https://bun.sh) 1.2 or later, and Node.js 22.22 or later
-- To build and deploy the program: [Rust](https://rustup.rs) (the pinned toolchain installs itself), the [Solana CLI](https://docs.anza.xyz/cli/install) (Agave) **4.x** (tested with 4.3.2; older CLIs cannot deploy SBPF v3 programs), and [Anchor](https://www.anchor-lang.com/docs/installation) 1.2.1 (`avm install 1.2.1 && avm use 1.2.1`)
-- For local end-to-end runs: [Surfpool](https://github.com/txtx/surfpool), whose clock can jump past midnight
+- To build the program: [Rust](https://rustup.rs) (the pinned toolchain installs itself), [Anchor](https://www.anchor-lang.com/docs/installation) 1.2.1 (`avm install 1.2.1 && avm use 1.2.1`) and the [Solana CLI](https://docs.anza.xyz/cli/install) (Agave) for `cargo build-sbf`
+- To deploy to devnet or mainnet: the Solana CLI **4.x** (tested with 4.3.2; older CLIs cannot deploy SBPF v3 programs)
+- To run everything locally: [Surfpool](https://github.com/txtx/surfpool) 1.6 or later. Its cheatcodes load the program without the Solana CLI or a deploy keypair, and move the clock past midnight
 
 ## Quick start
 
@@ -91,23 +92,26 @@ The app talks to the program on the cluster set in `app/.env` (see [`app/.env.ex
 ### Run the whole stack locally
 
 ```bash
-bun run program:build                       # anchor build, copy the IDL, regenerate the client
-surfpool start --offline --no-deploy --airdrop "$(solana address)"
-solana program deploy -u localhost --use-rpc \
-  --program-id target/deploy/solucky-keypair.json target/deploy/solucky.so
-SOLANA_RPC_URL=http://127.0.0.1:8899 bun run admin init --treasury <ADDRESS>
-SOLANA_RPC_URL=http://127.0.0.1:8899 bun run e2e      # optional: buy, jump past midnight, settle, verify
+bun run program:build        # anchor build, copy the IDL, regenerate the client
+surfpool start --offline --no-deploy
+
+# in another terminal
+export SOLANA_RPC_URL=http://127.0.0.1:8899
+bun run localnet --fund <YOUR WALLET ADDRESS>   # load the program, create the config, send you ◎10
+bun run e2e                                     # optional: play a full round and check every payout
 NUXT_PUBLIC_CLUSTER=localnet bun run dev
 ```
+
+`localnet` and `e2e` only run against a local RPC. They load `target/deploy/solucky.so` at the program address with your keypair (or a throwaway one) as upgrade authority, and create a config with ◎0.1 tickets and a 5% fee. Point your wallet at `http://127.0.0.1:8899` to play.
 
 The program address in the code, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`, belongs to a keypair that Nexow keeps out of the repository. On a fresh clone, `anchor build` creates a new `target/deploy/solucky-keypair.json`; run `anchor keys sync` and `bun run program:build` once to switch the code, IDL and client to your own address. Keep that keypair backed up and never commit it.
 
 ## Deploying
 
-1. **Program.** Build, then deploy with the wallet that should be the upgrade authority:
+1. **Program.** Make a [verifiable build](#verifiable-builds), then deploy it with the wallet that should be the upgrade authority:
    ```bash
-   bun run program:build
-   solana program deploy -u devnet --program-id target/deploy/solucky-keypair.json target/deploy/solucky.so
+   bun run program:build:verifiable
+   solana program deploy -u devnet --program-id target/deploy/solucky-keypair.json target/verifiable/solucky.so
    ```
 2. **Config.** As the upgrade authority, create the config (tickets cost at least ◎0.001). Fund the treasury with at least ◎0.001 first, so it can receive small fees:
    ```bash
@@ -117,6 +121,22 @@ The program address in the code, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`,
    Later changes: `bun run admin set --price 0.2`, `--fee-bps 300`, `--treasury <ADDRESS>`, `--authority <ADDRESS>`, `--pause`, `--resume`.
 3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc). Set the cluster, and preferably a dedicated RPC endpoint, as `NUXT_PUBLIC_*` variables there. `bun run build` produces a Node server in `app/.output` instead.
 4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so rounds are drawn within seconds of midnight. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON`. Use a dedicated, lightly funded keypair: the crank never needs authority.
+
+## Verifiable builds
+
+`bun run program:build:verifiable` builds the program inside Anchor's pinned Docker image (`quay.io/ottersec/anchor:v1.2.1`), so the same commit always produces the same bytes, whoever builds it. Deploy `target/verifiable/solucky.so`, not the regular build, so the program on-chain can be traced back to this source.
+
+Every `v*` tag runs the [Release workflow](.github/workflows/release.yml), which makes the same build and attaches `solucky.so`, its SHA-256, its program hash and the IDL to the GitHub release. The program hash ignores the file's trailing zero bytes, as the chain does, so it is the value to compare with a deployment.
+
+To check a deployed program against a commit, rebuild that commit (or download the release's `solucky.so`) and compare hashes with [`solana-verify`](https://github.com/Ellipsis-Labs/solana-verifiable-build):
+
+```bash
+git checkout <COMMIT> && bun run program:build:verifiable
+solana-verify get-executable-hash target/verifiable/solucky.so
+solana-verify get-program-hash -u devnet 8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2   # must print the same hash
+```
+
+To show the program as verified in Solana explorers, the upgrade authority can publish the check with `solana-verify verify-from-repo --remote`, passing `--base-image quay.io/ottersec/anchor:v1.2.1` so it builds exactly like `program:build:verifiable`.
 
 ## Configuration
 
@@ -128,10 +148,10 @@ The program address in the code, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`,
 | `NUXT_PUBLIC_RPC_URL` | public endpoint | RPC endpoint. Use a provider in production: public endpoints are rate-limited |
 | `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different |
 | `NUXT_PUBLIC_PROGRAM_ID` | from the IDL | Program address |
-| `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, set at build time for absolute social-card links |
+| `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
 | `NUXT_PUBLIC_TWITTER_URL`, `NUXT_PUBLIC_DISCORD_URL` | empty | Footer links, hidden when empty |
 
-**Scripts** (`admin`, `crank`, `e2e`):
+**Scripts** (`admin`, `crank`, `localnet`, `e2e`):
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
@@ -163,14 +183,16 @@ bun run test:js        # client and app unit tests
 bun run typecheck
 bun run lint           # ESLint, and Clippy with warnings as errors
 bun run format         # Prettier and rustfmt
-bun run check          # everything CI runs, except the program build
+bun run check          # everything CI runs, except the program build and the e2e
 ```
 
-After changing the program, run `bun run program:build`: it rebuilds the program, copies the IDL to `idl/` and regenerates `clients/js/src/generated`. Never edit generated files by hand. CI fails if the committed IDL or client is stale.
+After changing the program, run `bun run program:build`: it rebuilds the program, copies the IDL to `idl/` and regenerates `clients/js/src/generated`. Never edit generated files by hand.
+
+CI runs three jobs on every push: the program (format, build, Clippy, tests, and a check that the committed IDL matches), the client and app (stale generated code, format, types, lint, tests, Node and Cloudflare builds), and an end-to-end round on Surfpool with the program binary the first job built.
 
 ## Security
 
-Report vulnerabilities privately; see [SECURITY.md](SECURITY.md). Before version 1.0.0 this repository contained credentials and a keypair in plain text. They are gone from the code but remain in the git history of this public repository, so treat all of them as compromised.
+Report vulnerabilities privately; see [SECURITY.md](SECURITY.md). Production builds of the app send a strict set of security headers (CSP with no third-party scripts, `frame-ancestors 'none'`, HSTS, and others), defined in [`app/nuxt.config.ts`](app/nuxt.config.ts); on Cloudflare, Nitro writes them to `_headers` so static files carry them too. Before version 1.0.0 this repository contained credentials and a keypair in plain text. They are gone from the code but remain in the git history of this public repository, so treat all of them as compromised.
 
 ## Legal
 

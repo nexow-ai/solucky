@@ -14,8 +14,10 @@ A rewrite of the 2022 prototype into a self-contained, verifiable product. Nothi
 - Unit tests and LiteSVM integration tests for every instruction and failure path.
 - `@solucky/client`, a Codama-generated `@solana/kit` client with query, time, country, error and draw-verification helpers.
 - Nuxt 4 + Nuxt UI app with a landing page, the three-panel game, round pages with an in-browser draw check, Wallet Standard support, live updates, dark and light themes, sounds, and `/api/price` and `/api/geo` routes. Deploys to Cloudflare Workers or Node.
-- Operator scripts: `admin` (init, status, config changes), `crank` (settles finished rounds) and `e2e` (full local round on Surfpool).
-- CI for the program, client and app, and an optional scheduled crank workflow.
+- Operator scripts: `admin` (init, status, config changes), `crank` (settles finished rounds), `localnet` (loads the program into a local Surfpool, no CLI or deploy keypair needed) and `e2e` (full local round).
+- CI for the program, client and app, an end-to-end round on Surfpool, Dependabot, and an optional scheduled crank workflow.
+- Verifiable builds in Anchor's pinned Docker image (`bun run program:build:verifiable`), and a Release workflow that attaches the binary, its hash and the IDL to each `v*` release.
+- Production security headers for the app (CSP, frame blocking, HSTS and more), also written to Cloudflare's `_headers`.
 - README, security policy, contributing guide and MIT license.
 
 ### Changed

@@ -10,14 +10,15 @@ S☉Lucky, a daily lottery on Solana by Nexow, Inc. (nexow.studio). Monorepo wit
 - `idl/solucky.json`: committed IDL, source of the generated client.
 - `clients/js`: `@solucky/client`. `src/generated` is Codama output (never edit); the other files in `src` are hand-written.
 - `app`: Nuxt 4 + Nuxt UI 4 + Tailwind 4. Kit client and wallet in `app/app/composables/useSolana.ts` and `useWallet.ts`; game state in `useLottery.ts`.
-- `scripts`: bun scripts `admin`, `crank`, `e2e` sharing `lib.ts` and `settle.ts`.
+- `scripts`: bun scripts `admin`, `crank`, `localnet`, `e2e` sharing `lib.ts`, `settle.ts` and `surfnet.ts` (Surfpool cheatcodes, local only).
 
 ## Commands
 
 - `bun install`; `bun run dev` (app on devnet)
 - `bun run program:build` (anchor build + IDL copy + codegen), `bun run program:test`
 - `bun run test:js`, `bun run typecheck`, `bun run lint`, `bun run format`
-- `bun run check` runs what CI runs, except the program build
+- `bun run check` runs what CI runs, except the program build and the e2e
+- Local chain: `surfpool start --offline --no-deploy`, then `SOLANA_RPC_URL=http://127.0.0.1:8899 bun run localnet` and `bun run e2e`
 
 ## Rules
 
