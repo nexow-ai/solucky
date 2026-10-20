@@ -17,10 +17,13 @@ export default defineNuxtConfig({
         },
         { name: 'theme-color', content: '#0f172a' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:title', content: 'S☉Lucky: the daily lottery on Solana' },
-        { property: 'og:image', content: '/logo.png' },
+        { property: 'og:site_name', content: 'S☉Lucky' },
+        { name: 'twitter:card', content: 'summary_large_image' },
       ],
-      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+      ],
     },
   },
 
@@ -42,7 +45,8 @@ export default defineNuxtConfig({
       rpcWsUrl: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
-      siteUrl: 'https://dailywin.sol',
+      /** Public URL of the site, for absolute links in social cards (set at build time). */
+      siteUrl: '',
       twitterUrl: '',
       discordUrl: '',
       githubUrl: 'https://github.com/nexow-ai/solucky',
