@@ -53,6 +53,7 @@ async function reclaimAll() {
         <UButton
           v-if="connected"
           label="Settle"
+          :aria-label="`Settle ${formatDay(round.data.day)}`"
           icon="i-lucide-gavel"
           size="sm"
           color="primary"

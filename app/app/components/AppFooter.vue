@@ -12,12 +12,20 @@ const links = computed(() =>
 </script>
 
 <template>
-  <UFooter>
+  <UFooter
+    class="relative bg-default/60 backdrop-blur-sm before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-secondary/50 before:to-transparent"
+  >
     <template #left>
       <div class="space-y-1 text-sm text-muted">
         <p>
           © 2022–{{ new Date().getFullYear() }}
-          <ULink to="https://nexow.studio" target="_blank" class="text-default hover:text-primary">Nexow, Inc.</ULink>
+          <ULink
+            to="https://nexow.studio"
+            target="_blank"
+            class="text-default underline decoration-primary/50 underline-offset-4 hover:text-primary"
+          >
+            Nexow, Inc.
+          </ULink>
           · MIT License
         </p>
         <p>

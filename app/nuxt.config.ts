@@ -45,7 +45,7 @@ export default defineNuxtConfig({
           content:
             'Pick a number, buy a ticket, and win the whole pot at midnight UTC. Every ticket, pot and draw lives on Solana and can be checked by anyone.',
         },
-        { name: 'theme-color', content: '#0f172a' },
+        { name: 'theme-color', content: '#0c0716' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'S☉Lucky' },
         { name: 'twitter:card', content: 'summary_large_image' },
@@ -97,8 +97,29 @@ export default defineNuxtConfig({
     clientBundle: { scan: true },
   },
 
+  // Only generate CSS for the Nuxt UI components the app uses.
+  ui: {
+    experimental: { componentDetection: true },
+  },
+
+  // Serve gzip and brotli copies of static files from the Node server
+  // (Cloudflare compresses on its own).
+  nitro: {
+    compressPublicAssets: true,
+  },
+
+  // The night palette is the house style; the toggle in the header still switches to light.
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
+  },
+
   fonts: {
-    families: [{ name: 'Space Grotesk', provider: 'google', weights: [400, 500, 600, 700] }],
+    families: [
+      { name: 'Space Grotesk', provider: 'google', weights: [400, 500, 600, 700] },
+      { name: 'Orbitron', provider: 'google', weights: [700, 900] },
+      { name: 'JetBrains Mono', provider: 'google', weights: [400, 600] },
+    ],
   },
 
   vite: {

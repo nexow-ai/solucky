@@ -14,12 +14,22 @@ const items = computed<NavigationMenuItem[]>(() => [
 </script>
 
 <template>
-  <UHeader to="/" title="S☉Lucky">
+  <UHeader
+    to="/"
+    title="S☉Lucky"
+    :ui="{
+      root: 'border-b-0 bg-default/60 backdrop-blur-md after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-linear-to-r after:from-transparent after:via-primary/70 after:to-transparent',
+    }"
+  >
     <template #title>
       <AppLogo />
     </template>
 
-    <UNavigationMenu :items="items" variant="link" />
+    <UNavigationMenu
+      :items="items"
+      variant="link"
+      :ui="{ link: 'font-mono text-xs tracking-[0.16em] uppercase', linkLeadingIcon: 'size-4' }"
+    />
 
     <template #right>
       <UBadge v-if="!isMainnet" :label="clusterLabel" color="warning" variant="subtle" class="hidden sm:inline-flex" />
@@ -34,7 +44,7 @@ const items = computed<NavigationMenuItem[]>(() => [
       </UTooltip>
       <UColorModeButton />
       <ClientOnly>
-        <WalletButton class="hidden sm:inline-flex" />
+        <LazyWalletButton class="hidden sm:inline-flex" />
         <template #fallback>
           <USkeleton class="hidden h-8 w-36 sm:block" />
         </template>
@@ -44,7 +54,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     <template #body>
       <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
       <ClientOnly>
-        <WalletButton block class="mt-4" />
+        <LazyWalletButton block class="mt-4" />
       </ClientOnly>
     </template>
   </UHeader>

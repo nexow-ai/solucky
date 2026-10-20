@@ -5,6 +5,6 @@ defineProps<{ label: string; value: string | number }>();
 <template>
   <div class="text-center">
     <p class="kicker text-[0.65rem]">{{ label }}</p>
-    <p class="mt-1 text-xl font-bold tabular-nums text-highlighted">{{ value }}</p>
+    <p class="mt-1 font-display text-lg font-bold tabular-nums text-highlighted">{{ value }}</p>
   </div>
 </template>
