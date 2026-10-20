@@ -1,5 +1,64 @@
 {
+  "name": "solucky",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "S☉Lucky: a daily, verifiable lottery on Solana. Built by Nexow, Inc.",
+  "license": "MIT",
+  "author": {
+    "name": "Nexow, Inc.",
+    "email": "admin@nexow.ai",
+    "url": "https://nexow.studio"
+  },
+  "homepage": "https://nexow.studio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nexow-ai/solucky.git"
+  },
+  "engines": {
+    "node": ">=22.22.3",
+    "bun": ">=1.2.0"
+  },
+  "workspaces": [
+    "app",
+    "clients/js"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd app dev",
+    "build": "bun run --cwd app build",
+    "build:cloudflare": "bun run --cwd app build:cloudflare",
+    "deploy": "bun run --cwd app deploy",
+    "preview": "bun run --cwd app preview",
+    "program:build": "anchor build && cp target/idl/solucky.json idl/solucky.json && bun run codegen",
+    "program:test": "cargo test -p solucky",
+    "codegen": "bun scripts/codegen.ts",
+    "test": "bun run program:test && bun run test:js",
+    "test:js": "bun run --cwd clients/js test && bun run --cwd app test",
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p clients/js && bun run --cwd app typecheck",
+    "lint": "bun run --cwd app lint && cargo clippy -p solucky --all-targets -- -D warnings",
+    "format": "prettier --write . && cargo fmt",
+    "format:check": "prettier --check . && cargo fmt --check",
+    "check": "bun run format:check && bun run lint && bun run typecheck && bun run test && bun run build",
+    "admin": "bun scripts/admin.ts",
+    "crank": "bun scripts/crank.ts",
+    "e2e": "bun scripts/e2e.ts"
+  },
   "dependencies": {
-    "unoverlay-vue": "^0.2.2"
-  }
+    "@solana/kit": "8.5.0",
+    "@solana/kit-plugin-rpc": "0.22.0",
+    "@solana/kit-plugin-signer": "0.19.0",
+    "@solana/sysvars": "8.5.0",
+    "@solucky/client": "workspace:*"
+  },
+  "devDependencies": {
+    "@codama/nodes-from-anchor": "1.5.6",
+    "@codama/renderers-js": "2.8.0",
+    "@types/bun": "1.4.3",
+    "codama": "1.11.0",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3"
+  },
+  "trustedDependencies": [
+    "@solucky/app"
+  ]
 }
