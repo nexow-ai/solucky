@@ -64,10 +64,10 @@ jobs:
           retention-days: 7
 
   e2e:
-    name: End to end on Surfpool
+    name: End to end on Surfpool (scripts and browser)
     needs: program
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
 
@@ -101,6 +101,23 @@ jobs:
         run: bun run e2e
         env:
           SOLANA_RPC_URL: http://127.0.0.1:8899
+
+      - name: Browser tests
+        # The production build, so the security headers are on too.
+        run: |
+          bun run build
+          cd app && bunx playwright install --with-deps chromium
+          bun run test:browser
+        env:
+          SOLANA_RPC_URL: http://127.0.0.1:8899
+
+      - name: Keep the browser traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-traces
+          path: app/test-results/
+          retention-days: 7
 
       - name: Surfpool log
         if: failure()
