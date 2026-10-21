@@ -14,7 +14,13 @@ const links = computed(() =>
 <template>
   <UFooter
     class="relative bg-default/60 backdrop-blur-sm before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-secondary/50 before:to-transparent"
+    :ui="{ top: 'p-0' }"
   >
+    <!-- The neon city from the original landing hero, at the foot of every page. -->
+    <template #top>
+      <CitySkyline />
+    </template>
+
     <template #left>
       <div class="space-y-1 text-sm text-muted">
         <p>
