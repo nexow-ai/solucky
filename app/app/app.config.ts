@@ -2,10 +2,11 @@ export default defineAppConfig({
   ui: {
     colors: {
       primary: 'fuchsia',
-      secondary: 'cyan',
+      // Phosphor green, for the dial's readouts and the draw.
+      secondary: 'lime',
       neutral: 'mauve',
     },
-    // Panels float over the backdrop's grid with a faint neon edge.
+    // Panels sit over the backdrop with a faint glowing edge.
     card: {
       variants: {
         variant: {
@@ -14,13 +15,13 @@ export default defineAppConfig({
       },
     },
     pageHero: {
-      slots: { title: 'font-display leading-[1.08]' },
+      slots: { title: 'tracking-tighter leading-[0.95]' },
     },
     pageSection: {
-      slots: { title: 'font-display', headline: 'flex justify-center' },
+      slots: { container: 'py-16 sm:py-20 lg:py-24', title: 'tracking-tighter', headline: 'flex justify-center' },
     },
     pageCTA: {
-      slots: { title: 'font-display' },
+      slots: { title: 'tracking-tighter' },
     },
   },
 });

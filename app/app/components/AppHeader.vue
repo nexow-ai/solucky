@@ -109,7 +109,7 @@ async function airdropSol() {
           color="primary"
           variant="subtle"
           size="sm"
-          class="font-mono uppercase tracking-wider"
+          class="hidden font-mono tracking-wider uppercase sm:inline-flex"
         />
       </span>
     </template>
@@ -125,7 +125,9 @@ async function airdropSol() {
       <UTooltip v-if="!isMainnet" text="Provisional beta faucet: get free test SOL to play">
         <UButton
           label="Get SOL"
+          aria-label="Get SOL"
           icon="i-lucide-droplets"
+          :ui="{ label: 'hidden sm:inline' }"
           size="xs"
           color="success"
           variant="soft"

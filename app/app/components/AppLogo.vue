@@ -7,7 +7,7 @@
       width="38"
       height="32"
     />
-    <span class="font-display text-lg font-bold tracking-[0.2em] text-highlighted">
+    <span class="text-lg font-bold tracking-[0.2em] text-highlighted">
       S<span class="text-lucky glow-primary inline-block animate-flicker">☉</span>LUCKY
     </span>
   </span>
