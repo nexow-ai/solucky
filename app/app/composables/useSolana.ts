@@ -45,6 +45,13 @@ export type SoluckyClient = ReturnType<typeof createSoluckyClient>;
 
 let client: SoluckyClient | undefined;
 
+if (import.meta.hot) {
+  // Drop the singleton on HMR so plugin changes (wallet send path, etc.) apply.
+  import.meta.hot.dispose(() => {
+    client = undefined;
+  });
+}
+
 /** The Solana client shared by the whole app, with the wallet and the program plugin. */
 export function useSolana() {
   const config = useRuntimeConfig().public;

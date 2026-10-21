@@ -1,26 +1,28 @@
 /**
- * Prefer the wallet's `solana:signAndSendTransaction` when available.
+ * Send transactions through the wallet's `signAndSendTransaction` when the
+ * connected payer exposes it.
  *
- * Kit's default RPC executor always uses `signTransaction` then submits via
- * the app RPC. Phantom often fails that path on Devnet with a generic
- * "Unexpected error"; signing and sending inside the wallet is more reliable.
+ * Kit's default executor always calls `signTransaction` then submits via the
+ * app RPC. Phantom frequently fails that path on Devnet with a generic
+ * "Unexpected error". Asking the wallet to sign and send in one step avoids it.
  */
 import { transactionPlanSendingExecutor } from '@solana/kit-plugin-instruction-plan';
 import {
   assertIsTransactionWithBlockhashLifetime,
+  compileTransaction,
   createTransactionPlanExecutor,
   estimateAndSetResourceLimitsFactory,
   estimateResourceLimitsFactory,
   getBase58Decoder,
   getSignatureFromTransaction,
-  isTransactionMessageWithSingleSendingSigner,
+  isTransactionSendingSigner,
   pipe,
   sendAndConfirmTransactionFactory,
   setTransactionMessageLifetimeUsingBlockhash,
-  signAndSendTransactionMessageWithSigners,
   signature,
   signTransactionMessageWithSigners,
   type Signature,
+  type TransactionSigner,
 } from '@solana/kit';
 
 async function confirmSignature(
@@ -42,18 +44,31 @@ async function confirmSignature(
   throw new Error('The wallet sent the transaction, but confirmation timed out. Check the explorer.');
 }
 
+function payerOf(client: object): TransactionSigner | null {
+  try {
+    const payer = (client as { payer?: TransactionSigner }).payer;
+    return payer ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /** Replaces `client.sendTransaction` with a wallet-aware sender. */
 export function walletAwareSend() {
   return <T extends object>(client: T): T => {
     const c = client as T & {
       rpc: {
         getLatestBlockhash: () => {
-          send: (config?: { abortSignal?: AbortSignal }) => Promise<{ value: Parameters<typeof setTransactionMessageLifetimeUsingBlockhash>[0] }>;
+          send: (config?: { abortSignal?: AbortSignal }) => Promise<{
+            value: Parameters<typeof setTransactionMessageLifetimeUsingBlockhash>[0];
+          }>;
         };
         getSignatureStatuses: (
           signatures: Signature[],
         ) => {
-          send: (config?: { abortSignal?: AbortSignal }) => Promise<{ value: ({ confirmationStatus?: string | null } | null)[] }>;
+          send: (config?: { abortSignal?: AbortSignal }) => Promise<{
+            value: ({ confirmationStatus?: string | null } | null)[];
+          }>;
         };
       };
       rpcSubscriptions: Parameters<typeof sendAndConfirmTransactionFactory>[0]['rpcSubscriptions'];
@@ -81,8 +96,10 @@ export function walletAwareSend() {
         );
         Object.assign(context, { message: prepared });
 
-        if (isTransactionMessageWithSingleSendingSigner(prepared)) {
-          const signatureBytes = await signAndSendTransactionMessageWithSigners(prepared, executorConfig);
+        const payer = payerOf(client);
+        if (payer && isTransactionSendingSigner(payer)) {
+          const compiled = compileTransaction(prepared);
+          const [signatureBytes] = await payer.signAndSendTransactions([compiled], executorConfig);
           const sig = signature(getBase58Decoder().decode(signatureBytes));
           Object.assign(context, { signature: sig });
           await confirmSignature(c.rpc, sig, executorConfig?.abortSignal);
