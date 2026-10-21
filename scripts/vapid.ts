@@ -25,3 +25,5 @@ NUXT_PUSH_SECRET=${secret}
 # Crank (.env): the site's URL, and the same secret
 SOLUCKY_APP_URL=
 SOLUCKY_PUSH_SECRET=${secret}`);
+
+export {};

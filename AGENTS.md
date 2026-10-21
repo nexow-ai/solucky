@@ -9,8 +9,8 @@ S☉Lucky, lottery games on Solana by Nexow, Inc. (nexow.studio): a daily lotter
 - `programs/solucky`: Anchor 1.2.1 program (Rust). Host toolchain pinned in `rust-toolchain.toml`; SBF builds use Anchor's platform-tools and SBPF v3.
 - `idl/solucky.json`: committed IDL, source of the generated client.
 - `clients/js`: `@solucky/client`. `src/generated` is Codama output (never edit); the other files in `src` are hand-written.
-- `app`: Nuxt 4 + Nuxt UI 4 + Tailwind 4. Kit client and wallet in `app/app/composables/useSolana.ts` and `useWallet.ts`; game state in `useLottery.ts` (one state per game; `useGame()` reads the game from the route). 20 languages with @nuxtjs/i18n: the list in `app/i18n/languages.ts`, the words in `app/i18n/locales/` (`en.ts` is the source and the type).
-- `scripts`: bun scripts `admin`, `crank`, `monitor`, `localnet`, `e2e` sharing `lib.ts`, `settle.ts` and `surfnet.ts` (Surfpool cheatcodes, local only).
+- `app`: Nuxt 4 + Nuxt UI 4 + Tailwind 4. Kit client and wallet in `app/app/composables/useSolana.ts` and `useWallet.ts`; game state in `useLottery.ts` (one state per game; `useGame()` reads the game from the route). 20 languages with @nuxtjs/i18n: the list in `app/i18n/languages.ts`, the words in `app/i18n/locales/` (`en.ts` is the source and the type). Installable PWA: `app/public/manifest.webmanifest`, `app/public/sw.js` (the build writes its id in; see `nuxt.config.ts`) and `app/app/plugins/pwa.client.ts`. Draw notifications: `app/server/api/push/`, `app/server/utils/push.ts` and `webpush.ts` (Web Push on WebCrypto); the crank reports draws with `reportDraw` in `scripts/lib.ts`.
+- `scripts`: bun scripts `admin`, `crank`, `monitor`, `localnet`, `e2e`, `vapid` (push keys) and `screenshots` (the manifest's) sharing `lib.ts`, `settle.ts` and `surfnet.ts` (Surfpool cheatcodes, local only).
 
 ## Commands
 

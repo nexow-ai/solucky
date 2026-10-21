@@ -134,8 +134,9 @@ The program address in the code, `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` 
    bun run admin status
    ```
    Later changes: `bun run admin game <daily|hourly|guess> --price <SOL> --fee-bps <n>`, and `bun run admin set --max-number <n>`, `--treasury <ADDRESS>`, `--authority <ADDRESS>`, `--pause`, `--resume`.
-3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc). Set the cluster, and preferably a dedicated RPC endpoint, as `NUXT_PUBLIC_*` variables there. `bun run build` produces a Node server in `app/.output` instead. The app installs as a PWA and updates itself: a page left open offers each deploy within ten minutes and loads it on its next page change, and an installed app gets it on its next launch.
-4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so lottery rounds are drawn within seconds of their end and Guess players get their check within seconds; it polls every 3 seconds while guesses wait. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON`. Use a dedicated, lightly funded keypair: the crank never needs authority.
+3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc). Set the cluster, and preferably a dedicated RPC endpoint, as `NUXT_PUBLIC_*` variables there. `bun run build` produces a Node server in `app/.output` instead. The app installs as a PWA and updates itself: a page left open offers each deploy within ten minutes and loads it on its next page change, and an installed app gets it on its next launch. Its install screenshots come from the play page: retake them with `bun run screenshots <site URL>` when the page changes.
+   **Draw notifications** are optional. `bun run vapid` prints new keys: set `NUXT_PUBLIC_VAPID_KEY` in `vars`, the private key and the push secret with `wrangler secret put NUXT_VAPID_PRIVATE_KEY` and `wrangler secret put NUXT_PUSH_SECRET`, and give the crank the site's URL and the same secret (below). The first deploy creates the `PUSH` KV namespace for the subscriptions and writes its id into `app/wrangler.jsonc`: commit it. On Node, subscriptions are files in `.data/push` under the working directory. Without a VAPID key, the bell on the play page stays hidden.
+4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so lottery rounds are drawn within seconds of their end and Guess players get their check within seconds; it polls every 3 seconds while guesses wait. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON` (and, for notifications, the variable `SOLUCKY_APP_URL` and the secret `SOLUCKY_PUSH_SECRET`). Each crank reports the draws it makes to the app, which notifies the players who asked. Use a dedicated, lightly funded keypair: the crank never needs authority.
 5. **Monitoring.** `bun run monitor --crank <CRANK ADDRESS>` exits with an error when a finished lottery round is still unsettled 15 minutes after it ended, when a Guess winner is still unpaid, or when the crank holds less than ◎0.05; with `ALERT_WEBHOOK_URL` set it also posts to a Slack or Discord webhook. [`.github/workflows/monitor.yml`](.github/workflows/monitor.yml) runs it twice a day once the repository variable `SOLUCKY_MONITOR_ENABLED=true` is set (with the variables `SOLANA_RPC_URL` and `SOLUCKY_CRANK`, and the secret `ALERT_WEBHOOK_URL`); GitHub also emails you when a run fails.
 
 ## Verifiable builds
@@ -168,6 +169,14 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
 | `NUXT_PUBLIC_I18N_BASE_URL` | empty | The same URL again, for the hreflang and canonical links of every language |
 | `NUXT_PUBLIC_TWITTER_URL`, `NUXT_PUBLIC_DISCORD_URL` | empty | Footer links, hidden when empty |
+| `NUXT_PUBLIC_VAPID_KEY` | empty | Public key for draw notifications (`bun run vapid`); empty turns them off |
+
+**App secrets** (server only; `wrangler secret put` on Cloudflare):
+
+| Variable | Meaning |
+| --- | --- |
+| `NUXT_VAPID_PRIVATE_KEY` | The private half of `NUXT_PUBLIC_VAPID_KEY`, which signs every notification |
+| `NUXT_PUSH_SECRET` | What the crank must send to report a draw (`/api/push/draw`) |
 
 **Scripts** (`admin`, `crank`, `monitor`, `localnet`, `e2e`; a `.env` at the root, see [`.env.example`](.env.example)):
 
@@ -179,6 +188,7 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `SOLUCKY_PROGRAM_ID` | from the IDL | Program address |
 | `SOLUCKY_MAX_NUMBER` | `21000000` | Highest ticket number in every game, written to the config by `admin init` and `localnet` |
 | `ALERT_WEBHOOK_URL` | — | `monitor` only: Slack or Discord webhook for alerts |
+| `SOLUCKY_APP_URL`, `SOLUCKY_PUSH_SECRET` | — | `crank` only: the site, and its `NUXT_PUSH_SECRET`, to report each draw for the notifications |
 
 ## Languages
 
