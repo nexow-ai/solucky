@@ -143,18 +143,25 @@ onBeforeUnmount(() => {
   transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
+/* Sized so the whole disc fits the band above the floor at every width. */
 .sun-wrap {
   position: absolute;
-  bottom: calc(var(--floor) + 1.5rem);
+  bottom: calc(var(--floor) + 0.5rem);
   left: 50%;
-  width: min(22rem, 70vw);
+  width: min(9.5rem, 44vw);
   translate: -50% 0;
+}
+
+@media (min-width: 640px) {
+  .sun-wrap {
+    width: 13rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .sun-wrap {
     left: 64%;
-    width: 26rem;
+    width: 15rem;
   }
 }
 
