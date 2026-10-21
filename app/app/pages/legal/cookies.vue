@@ -57,8 +57,8 @@ const keys = [
     <h2 id="storage">What the app keeps in your browser</h2>
     <p>
       The app saves a few settings in your browser's local storage, so they are still there next time. They stay on your
-      device: the app never sends them to our server. The flag you pick only leaves your browser when you choose to: on
-      a ticket you buy, and on the Play page's live table.
+      device, with one exception: the flag you pick goes on the tickets you buy, and is shown on the Play page's live
+      table while you are there.
     </p>
     <table>
       <thead>
