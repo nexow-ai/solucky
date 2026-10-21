@@ -3,6 +3,8 @@ import { solanaRpc } from '@solana/kit-plugin-rpc';
 import { walletSigner } from '@solana/kit-plugin-wallet';
 import { SOLUCKY_PROGRAM_ADDRESS, soluckyProgram } from '@solucky/client';
 
+import { walletAwareSend } from '../utils/walletSend';
+
 export type Cluster = 'mainnet' | 'devnet' | 'testnet' | 'localnet';
 
 const CLUSTERS: Record<Cluster, { rpcUrl: string; label: string; explorerQuery: string }> = {
@@ -33,6 +35,9 @@ function createSoluckyClient(options: {
         transactionConfig: { version: 0 },
       }),
     )
+    // Phantom and similar wallets are more reliable when they sign and send
+    // themselves than when the app asks them only to sign.
+    .use(walletAwareSend())
     .use(soluckyProgram({ programAddress: options.programAddress }));
 }
 

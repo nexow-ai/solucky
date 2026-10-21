@@ -46,8 +46,16 @@ export function describeError(error: unknown): string {
       return SYSTEM_ERRORS[1]!;
     }
   }
+  for (const cause of causes(error)) {
+    const message = cause instanceof Error ? cause.message : String(cause);
+    if (/already in use/i.test(message)) return SYSTEM_ERRORS[0]!;
+    if (/insufficient (funds|lamports)/i.test(message)) return SYSTEM_ERRORS[1]!;
+    // Phantom hides the real cause behind this when the extension is on the
+    // wrong cluster (e.g. Mainnet while the app is on Devnet).
+    if (/unexpected error/i.test(message)) {
+      return 'Your wallet could not sign. In Phantom: Settings → Developer Settings → enable Testnet Mode → select Devnet, then reconnect and try again.';
+    }
+  }
   const message = error instanceof Error ? error.message : String(error);
-  if (/already in use/i.test(message)) return SYSTEM_ERRORS[0]!;
-  if (/insufficient (funds|lamports)/i.test(message)) return SYSTEM_ERRORS[1]!;
   return message || 'Something went wrong.';
 }
