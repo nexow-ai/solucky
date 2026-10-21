@@ -89,7 +89,12 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    /** Draw notifications (`bun run vapid`): the VAPID private key, and the secret the crank reports draws with. */
+    vapidPrivateKey: '',
+    pushSecret: '',
     public: {
+      /** VAPID public key; empty hides draw notifications. */
+      vapidKey: '',
       /** devnet, testnet, mainnet or localnet. */
       cluster: 'devnet',
       /** RPC endpoint. Defaults to the public endpoint of the cluster. */
@@ -142,10 +147,17 @@ export default defineNuxtConfig({
 
   // Serve gzip and brotli copies of static files from the Node server
   // (Cloudflare compresses on its own). WebSockets carry the play page's live
-  // table (server/routes/_live.ts).
+  // table (server/routes/_live.ts). Draw notification subscriptions
+  // (server/utils/push.ts) live in the PUSH KV namespace on Cloudflare
+  // (wrangler.jsonc), and in .data/push under the working directory on Node.
   nitro: {
     compressPublicAssets: true,
     experimental: { websocket: true },
+    storage: {
+      push: process.env.NITRO_PRESET?.startsWith('cloudflare')
+        ? { driver: 'cloudflare-kv-binding', binding: 'PUSH' }
+        : { driver: 'fs', base: './.data/push' },
+    },
   },
 
   // The night palette is the house style; the toggle in the header still switches to light.

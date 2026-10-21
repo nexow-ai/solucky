@@ -3,7 +3,8 @@
  * registers it). Pages go to the network first and fall back to the copy of
  * the last visit when offline; the build's /_nuxt/ and /_fonts/ files are
  * named by their content, so they come from the cache. Everything else (RPC,
- * API, the live table, the build check) goes straight to the network.
+ * API, the live table, the build check) goes straight to the network. It also
+ * shows the draw notifications a player turned on.
  *
  * The build writes its id below (nuxt.config.ts), so a deploy installs a new
  * worker, which takes over at once and deletes the previous build's cache.
@@ -51,4 +52,18 @@ self.addEventListener('fetch', (event) => {
   } else if (/^\/_(nuxt|fonts)\//.test(pathname) && !pathname.startsWith('/_nuxt/builds/')) {
     event.respondWith(caches.match(request).then((copy) => copy ?? fetch(request).then((r) => keep(event, r))));
   }
+});
+
+// Draw notifications (server/api/push/draw.post.ts): the result, in the
+// language the browser subscribed in, and the round's page to open.
+self.addEventListener('push', (event) => {
+  const { title, body, url, tag } = event.data.json();
+  event.waitUntil(
+    self.registration.showNotification(title, { body, tag, renotify: true, icon: '/favicon.png', data: { url } }),
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(self.clients.openWindow(event.notification.data.url));
 });

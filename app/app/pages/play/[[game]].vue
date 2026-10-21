@@ -76,6 +76,7 @@ const testFunds = computed(() =>
           :variant="kind === game ? 'soft' : 'ghost'"
           size="lg"
         />
+        <LotteryNotifyButton />
       </nav>
 
       <LotteryLiveBar :feed="feed" />

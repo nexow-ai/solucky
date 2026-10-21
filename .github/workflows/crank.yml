@@ -8,6 +8,9 @@
 # Turn it on with the repository variable SOLUCKY_CRANK_ENABLED=true, then set:
 #   secret   SOLANA_KEYPAIR_JSON  byte array of a funded keypair (not the upgrade authority)
 #   variable SOLANA_RPC_URL       RPC endpoint of the cluster the program runs on
+# and, for draw notifications (`bun run vapid`):
+#   variable SOLUCKY_APP_URL      the site's URL
+#   secret   SOLUCKY_PUSH_SECRET  the app's NUXT_PUSH_SECRET
 name: Crank
 
 on:
@@ -38,3 +41,5 @@ jobs:
         env:
           SOLANA_RPC_URL: ${{ vars.SOLANA_RPC_URL }}
           SOLANA_KEYPAIR_JSON: ${{ secrets.SOLANA_KEYPAIR_JSON }}
+          SOLUCKY_APP_URL: ${{ vars.SOLUCKY_APP_URL }}
+          SOLUCKY_PUSH_SECRET: ${{ secrets.SOLUCKY_PUSH_SECRET }}

@@ -20,7 +20,7 @@ import {
   RoundStatus,
 } from '@solucky/client';
 
-import { gamePda, log, PROGRAM_ADDRESS, roundLabel, type SoluckyClient } from './lib';
+import { gamePda, log, PROGRAM_ADDRESS, reportDraw, roundLabel, type SoluckyClient } from './lib';
 
 /** A round needs work until its winner is paid and its fee collected. */
 export function needsWork(round: Round) {
@@ -67,6 +67,7 @@ async function step(client: SoluckyClient, round: Account<Round>, slot: bigint, 
       await ix.drawRound({ round: round.address, game: await gamePda(kind) }).sendTransaction();
       const drawn = await client.solucky.accounts.round.fetch(round.address);
       if (drawn.data.status === RoundStatus.Open) return `${label}: no guess found the number`;
+      await reportDraw(drawn.data);
       return isLottery(kind)
         ? `${label}: drew ${drawn.data.drawnNumber}, closest number ${drawn.data.winningNumber}`
         : `${label}: guess #${drawn.data.winningIndex} found the number`;

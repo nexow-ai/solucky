@@ -45,7 +45,9 @@
     "crank": "bun scripts/crank.ts",
     "monitor": "bun scripts/monitor.ts",
     "localnet": "bun scripts/localnet.ts",
-    "e2e": "bun scripts/e2e.ts"
+    "e2e": "bun scripts/e2e.ts",
+    "vapid": "bun scripts/vapid.ts",
+    "screenshots": "bun scripts/screenshots.ts"
   },
   "dependencies": {
     "@solana/kit": "8.5.0",

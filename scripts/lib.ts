@@ -9,6 +9,8 @@
  *   SOLUCKY_PROGRAM_ID   program address (default: the address in the IDL)
  *   SOLUCKY_MAX_NUMBER   highest ticket number in every game, for `admin init` and `localnet`
  *                        (default: 21000000)
+ *   SOLUCKY_APP_URL      the site, and SOLUCKY_PUSH_SECRET its push secret: the crank reports
+ *                        each draw there for the draw notifications (`bun run vapid`)
  *
  * Bun reads a `.env` file in the working directory; see `.env.example`.
  */
@@ -122,4 +124,29 @@ export async function initialize(
 
 export function log(message: string): void {
   console.log(`${new Date().toISOString()}  ${message}`);
+}
+
+/**
+ * Tells the app a round was won, so it notifies the players who follow the
+ * game (app/server/api/push/draw.post.ts). Needs SOLUCKY_APP_URL and
+ * SOLUCKY_PUSH_SECRET; without them, or if the app does not answer, the
+ * draw goes on without notifications.
+ */
+export async function reportDraw(round: Round): Promise<void> {
+  const app = process.env.SOLUCKY_APP_URL;
+  const secret = process.env.SOLUCKY_PUSH_SECRET;
+  if (!app || !secret) return;
+  const { kind, period, drawnNumber, winningNumber, payout } = round;
+  try {
+    const response = await fetch(`${app.replace(/\/$/, '')}/api/push/draw`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${secret}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ kind, period, drawnNumber, winningNumber, payout: String(payout) }),
+      signal: AbortSignal.timeout(30_000),
+    });
+    const result = response.ok ? JSON.stringify(await response.json()) : `HTTP ${response.status}`;
+    log(`${roundLabel(round)}: notifications ${result}`);
+  } catch (error) {
+    log(`${roundLabel(round)}: notifications failed, ${error instanceof Error ? error.message : error}`);
+  }
 }
