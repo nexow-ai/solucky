@@ -36,10 +36,13 @@ import {
 } from '@solana/kit/program-client-core';
 import {
   getConfigCodec,
+  getGameCodec,
   getRoundCodec,
   getTicketCodec,
   type Config,
   type ConfigArgs,
+  type Game,
+  type GameArgs,
   type Round,
   type RoundArgs,
   type Ticket,
@@ -53,6 +56,7 @@ import {
   getCollectFeeInstructionAsync,
   getDrawRoundInstruction,
   getInitializeInstructionAsync,
+  getSetGameInstructionAsync,
   getUpdateConfigInstructionAsync,
   parseBuyTicketInstruction,
   parseClaimPrizeInstruction,
@@ -61,6 +65,7 @@ import {
   parseCollectFeeInstruction,
   parseDrawRoundInstruction,
   parseInitializeInstruction,
+  parseSetGameInstruction,
   parseUpdateConfigInstruction,
   type BuyTicketAsyncInput,
   type ClaimPrizeInput,
@@ -76,16 +81,19 @@ import {
   type ParsedCollectFeeInstruction,
   type ParsedDrawRoundInstruction,
   type ParsedInitializeInstruction,
+  type ParsedSetGameInstruction,
   type ParsedUpdateConfigInstruction,
+  type SetGameAsyncInput,
   type UpdateConfigAsyncInput,
 } from '../instructions';
-import { findConfigPda, findRoundPda, findTicketPda } from '../pdas';
+import { findConfigPda, findGamePda, findRoundPda, findTicketPda } from '../pdas';
 
 export const SOLUCKY_PROGRAM_ADDRESS =
-  '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2' as Address<'8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'>;
+  'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>;
 
 export enum SoluckyAccount {
   Config,
+  Game,
   Round,
   Ticket,
 }
@@ -100,6 +108,15 @@ export function identifySoluckyAccount(account: { data: ReadonlyUint8Array } | R
     )
   ) {
     return SoluckyAccount.Config;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([27, 90, 166, 125, 74, 100, 121, 18])),
+      0,
+    )
+  ) {
+    return SoluckyAccount.Game;
   }
   if (
     containsBytes(
@@ -128,6 +145,7 @@ export function identifySoluckyAccount(account: { data: ReadonlyUint8Array } | R
 export enum SoluckyEvent {
   ConfigUpdated,
   FeeCollected,
+  GameUpdated,
   PrizeClaimed,
   RoundClosed,
   RoundDrawn,
@@ -153,6 +171,15 @@ export function identifySoluckyEvent(event: { data: ReadonlyUint8Array } | Reado
     )
   ) {
     return SoluckyEvent.FeeCollected;
+  }
+  if (
+    containsBytes(
+      data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([100, 97, 130, 101, 84, 101, 4, 15])),
+      0,
+    )
+  ) {
+    return SoluckyEvent.GameUpdated;
   }
   if (
     containsBytes(
@@ -201,6 +228,7 @@ export enum SoluckyInstruction {
   CollectFee,
   DrawRound,
   Initialize,
+  SetGame,
   UpdateConfig,
 }
 
@@ -274,6 +302,15 @@ export function identifySoluckyInstruction(
   if (
     containsBytes(
       data,
+      fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([116, 255, 77, 15, 136, 149, 15, 175])),
+      0,
+    )
+  ) {
+    return SoluckyInstruction.SetGame;
+  }
+  if (
+    containsBytes(
+      data,
       fixEncoderSize(getBytesEncoder(), 8).encode(new Uint8Array([29, 158, 252, 191, 10, 83, 219, 99])),
       0,
     )
@@ -286,7 +323,7 @@ export function identifySoluckyInstruction(
   });
 }
 
-export type ParsedSoluckyInstruction<TProgram extends string = '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'> =
+export type ParsedSoluckyInstruction<TProgram extends string = 'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'> =
   | ({ instructionType: SoluckyInstruction.BuyTicket } & ParsedBuyTicketInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.ClaimPrize } & ParsedClaimPrizeInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.CloseRound } & ParsedCloseRoundInstruction<TProgram>)
@@ -294,6 +331,7 @@ export type ParsedSoluckyInstruction<TProgram extends string = '8uiVKnUeC7L4KG93
   | ({ instructionType: SoluckyInstruction.CollectFee } & ParsedCollectFeeInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.DrawRound } & ParsedDrawRoundInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.Initialize } & ParsedInitializeInstruction<TProgram>)
+  | ({ instructionType: SoluckyInstruction.SetGame } & ParsedSetGameInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.UpdateConfig } & ParsedUpdateConfigInstruction<TProgram>);
 
 export function parseSoluckyInstruction<TProgram extends string>(
@@ -329,6 +367,10 @@ export function parseSoluckyInstruction<TProgram extends string>(
       assertIsInstructionWithAccounts(instruction);
       return { instructionType: SoluckyInstruction.Initialize, ...parseInitializeInstruction(instruction) };
     }
+    case SoluckyInstruction.SetGame: {
+      assertIsInstructionWithAccounts(instruction);
+      return { instructionType: SoluckyInstruction.SetGame, ...parseSetGameInstruction(instruction) };
+    }
     case SoluckyInstruction.UpdateConfig: {
       assertIsInstructionWithAccounts(instruction);
       return { instructionType: SoluckyInstruction.UpdateConfig, ...parseUpdateConfigInstruction(instruction) };
@@ -352,6 +394,7 @@ export type SoluckyPlugin = {
 
 export type SoluckyPluginAccounts = {
   config: ReturnType<typeof getConfigCodec> & SelfFetchFunctions<ConfigArgs, Config>;
+  game: ReturnType<typeof getGameCodec> & SelfFetchFunctions<GameArgs, Game>;
   round: ReturnType<typeof getRoundCodec> & SelfFetchFunctions<RoundArgs, Round>;
   ticket: ReturnType<typeof getTicketCodec> & SelfFetchFunctions<TicketArgs, Ticket>;
 };
@@ -385,6 +428,10 @@ export type SoluckyPluginInstructions = {
     input: InitializeAsyncInput,
     config?: { programAddress?: Address | HasAddress },
   ) => ReturnType<typeof getInitializeInstructionAsync> & SelfPlanAndSendFunctions;
+  setGame: (
+    input: SetGameAsyncInput,
+    config?: { programAddress?: Address | HasAddress },
+  ) => ReturnType<typeof getSetGameInstructionAsync> & SelfPlanAndSendFunctions;
   updateConfig: (
     input: UpdateConfigAsyncInput,
     config?: { programAddress?: Address | HasAddress },
@@ -393,6 +440,7 @@ export type SoluckyPluginInstructions = {
 
 export type SoluckyPluginPdas = {
   config: typeof findConfigPda;
+  game: typeof findGamePda;
   round: typeof findRoundPda;
   ticket: typeof findTicketPda;
 };
@@ -407,6 +455,7 @@ export function soluckyProgram(config: { programAddress?: Address | HasAddress }
       solucky: <SoluckyPlugin>{
         accounts: {
           config: addSelfFetchFunctions(client, getConfigCodec()),
+          game: addSelfFetchFunctions(client, getGameCodec()),
           round: addSelfFetchFunctions(client, getRoundCodec()),
           ticket: addSelfFetchFunctions(client, getTicketCodec()),
         },
@@ -460,6 +509,13 @@ export function soluckyProgram(config: { programAddress?: Address | HasAddress }
                 programAddress: instructionConfig?.programAddress ?? config.programAddress,
               }),
             ),
+          setGame: (input, instructionConfig) =>
+            addSelfPlanAndSendFunctions(
+              client,
+              getSetGameInstructionAsync(input, {
+                programAddress: instructionConfig?.programAddress ?? config.programAddress,
+              }),
+            ),
           updateConfig: (input, instructionConfig) =>
             addSelfPlanAndSendFunctions(
               client,
@@ -470,6 +526,8 @@ export function soluckyProgram(config: { programAddress?: Address | HasAddress }
         },
         pdas: {
           config: (pdaConfig) => findConfigPda({ programAddress: pdaConfig?.programAddress ?? config.programAddress }),
+          game: (seeds, pdaConfig) =>
+            findGamePda(seeds, { programAddress: pdaConfig?.programAddress ?? config.programAddress }),
           round: (seeds, pdaConfig) =>
             findRoundPda(seeds, { programAddress: pdaConfig?.programAddress ?? config.programAddress }),
           ticket: (seeds, pdaConfig) =>

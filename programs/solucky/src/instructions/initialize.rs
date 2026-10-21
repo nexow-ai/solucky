@@ -1,10 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    constants::{CONFIG_SEED, MAX_FEE_BPS, MIN_TICKET_PRICE},
-    error::SoluckyError,
-    events::ConfigUpdated,
-    program::Solucky,
+    constants::CONFIG_SEED, error::SoluckyError, events::ConfigUpdated, program::Solucky,
     state::Config,
 };
 
@@ -31,25 +28,13 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handle_initialize(
-    ctx: Context<Initialize>,
-    ticket_price: u64,
-    fee_bps: u16,
-    max_number: u32,
-) -> Result<()> {
-    require!(
-        ticket_price >= MIN_TICKET_PRICE,
-        SoluckyError::InvalidTicketPrice
-    );
-    require!(fee_bps <= MAX_FEE_BPS, SoluckyError::FeeTooHigh);
+pub fn handle_initialize(ctx: Context<Initialize>, max_number: u32) -> Result<()> {
     require!(max_number > 0, SoluckyError::InvalidMaxNumber);
 
     let config = &mut ctx.accounts.config;
     config.set_inner(Config {
         authority: ctx.accounts.authority.key(),
         treasury: ctx.accounts.treasury.key(),
-        ticket_price,
-        fee_bps,
         max_number,
         paused: false,
         bump: ctx.bumps.config,
@@ -58,8 +43,6 @@ pub fn handle_initialize(
     emit!(ConfigUpdated {
         authority: config.authority,
         treasury: config.treasury,
-        ticket_price,
-        fee_bps,
         max_number,
         paused: false,
     });

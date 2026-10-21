@@ -5,6 +5,7 @@ pub mod close_ticket;
 pub mod collect_fee;
 pub mod draw_round;
 pub mod initialize;
+pub mod set_game;
 pub mod update_config;
 
 pub use buy_ticket::*;
@@ -14,4 +15,5 @@ pub use close_ticket::*;
 pub use collect_fee::*;
 pub use draw_round::*;
 pub use initialize::*;
+pub use set_game::*;
 pub use update_config::*;

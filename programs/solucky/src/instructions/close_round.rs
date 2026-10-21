@@ -8,12 +8,17 @@ use crate::{
     utils::slot_hash_expired,
 };
 
-/// Anyone can close a round once its day is over. Closing pins a slot a few
+/// Anyone can close a lottery round once its period is over, or seal the
+/// unchecked guesses of a Guess round at any time. Closing pins a slot a few
 /// slots ahead; that slot's hash, unknown to everyone at this point, will
 /// seed the draw.
 #[derive(Accounts)]
 pub struct CloseRound<'info> {
-    #[account(mut, seeds = [ROUND_SEED, &round.day.to_le_bytes()], bump = round.bump)]
+    #[account(
+        mut,
+        seeds = [ROUND_SEED, &round.kind.to_le_bytes(), &round.period.to_le_bytes()],
+        bump = round.bump
+    )]
     pub round: Account<'info, Round>,
     /// CHECK: the SlotHashes sysvar, read by hand to prove a pinned slot expired.
     #[account(address = SLOT_HASHES_ID)]
@@ -23,15 +28,21 @@ pub struct CloseRound<'info> {
 pub fn handle_close_round(ctx: Context<CloseRound>) -> Result<()> {
     let clock = Clock::get()?;
     let round = &mut ctx.accounts.round;
-    require!(
-        clock.unix_timestamp >= round.ends_at(),
-        SoluckyError::RoundNotOver
-    );
+    if let Some(ends_at) = round.ends_at() {
+        require!(clock.unix_timestamp >= ends_at, SoluckyError::RoundNotOver);
+    }
 
     match round.status {
-        RoundStatus::Open => {}
+        RoundStatus::Open => {
+            require!(
+                round.ticket_count > round.checked,
+                SoluckyError::NothingToCheck
+            );
+            round.sealed_count = round.ticket_count;
+        }
         // A new slot can only be pinned once SlotHashes proves the old one can
-        // never be drawn, so a known result cannot be thrown away early.
+        // never be drawn, so a known result cannot be thrown away early. The
+        // sealed tickets stay the same.
         RoundStatus::Closed => {
             let data = ctx.accounts.slot_hashes.try_borrow_data()?;
             require!(
@@ -49,8 +60,9 @@ pub fn handle_close_round(ctx: Context<CloseRound>) -> Result<()> {
         .ok_or(SoluckyError::Overflow)?;
 
     emit!(RoundClosed {
-        day: round.day,
-        ticket_count: round.ticket_count,
+        kind: round.kind,
+        period: round.period,
+        ticket_count: round.sealed_count - round.checked,
         pot: round.pot,
         target_slot: round.target_slot,
     });

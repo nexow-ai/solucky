@@ -13,4 +13,5 @@ export * from './closeTicket';
 export * from './collectFee';
 export * from './drawRound';
 export * from './initialize';
+export * from './setGame';
 export * from './updateConfig';

@@ -13,7 +13,11 @@ use crate::{
 pub struct CollectFee<'info> {
     #[account(seeds = [CONFIG_SEED], bump = config.bump)]
     pub config: Account<'info, Config>,
-    #[account(mut, seeds = [ROUND_SEED, &round.day.to_le_bytes()], bump = round.bump)]
+    #[account(
+        mut,
+        seeds = [ROUND_SEED, &round.kind.to_le_bytes(), &round.period.to_le_bytes()],
+        bump = round.bump
+    )]
     pub round: Account<'info, Round>,
     /// CHECK: must be the treasury in the config.
     #[account(mut, address = config.treasury)]
@@ -34,7 +38,8 @@ pub fn handle_collect_fee(ctx: Context<CollectFee>) -> Result<()> {
     ctx.accounts.round.fee_collected = true;
 
     emit!(FeeCollected {
-        day: ctx.accounts.round.day,
+        kind: ctx.accounts.round.kind,
+        period: ctx.accounts.round.period,
         treasury: ctx.accounts.treasury.key(),
         fee,
     });

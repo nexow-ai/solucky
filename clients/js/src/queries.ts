@@ -21,6 +21,7 @@ import {
   SOLUCKY_PROGRAM_ADDRESS,
   type Ticket,
 } from './generated';
+import type { GameKind } from './time';
 
 /** Byte offsets of `Ticket` fields, after the 8-byte discriminator. */
 export const TICKET_OFFSETS = { round: 8, owner: 40, number: 72, index: 76 } as const;
@@ -44,9 +45,11 @@ async function programAccounts<T extends object>(
   filters: Filter[],
   decode: (account: EncodedAccount) => Account<T>,
   programAddress: Address,
+  length?: number,
 ): Promise<Account<T>[]> {
+  const dataSlice = length === undefined ? undefined : { offset: 0, length };
   const accounts = await rpc
-    .getProgramAccounts(programAddress, { encoding: 'base64', filters, withContext: false })
+    .getProgramAccounts(programAddress, { encoding: 'base64', filters, dataSlice, withContext: false })
     .send();
   return accounts.map(({ pubkey, account }) => decode(parseBase64RpcAccount(pubkey, account)));
 }
@@ -95,16 +98,26 @@ export async function fetchTicketByIndex(
   return ticket ?? null;
 }
 
-/** Every round ever played, newest first. */
+/**
+ * Every round ever played, of one game or of all, newest first. Lottery
+ * rounds store their numbers after their fields, which can weigh megabytes,
+ * so only the fields are downloaded; see `roundNumbers`.
+ */
 export async function fetchRounds(
   rpc: ProgramAccountsRpc,
+  kind?: GameKind,
   programAddress: Address = SOLUCKY_PROGRAM_ADDRESS,
 ): Promise<Account<Round>[]> {
-  const rounds = await programAccounts(
-    rpc,
-    [{ dataSize: BigInt(getRoundSize()) }, memcmp(0, getRoundDiscriminatorBytes())],
-    decodeRound,
-    programAddress,
-  );
-  return rounds.sort((a, b) => b.data.day - a.data.day);
+  const filters = [memcmp(0, getRoundDiscriminatorBytes())];
+  if (kind !== undefined) filters.push(memcmp(8, Uint8Array.of(kind)));
+  const rounds = await programAccounts(rpc, filters, decodeRound, programAddress, getRoundSize());
+  return rounds.sort((a, b) => b.data.period - a.data.period);
+}
+
+/** The sorted numbers a lottery round stores after its fields, from the account's full data. */
+export function roundNumbers(data: ReadonlyUint8Array): number[] {
+  const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+  const numbers: number[] = [];
+  for (let at = getRoundSize(); at + 4 <= data.byteLength; at += 4) numbers.push(view.getUint32(at, true));
+  return numbers;
 }

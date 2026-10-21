@@ -23,12 +23,8 @@ import {
   getBytesEncoder,
   getStructDecoder,
   getStructEncoder,
-  getU16Decoder,
-  getU16Encoder,
   getU32Decoder,
   getU32Encoder,
-  getU64Decoder,
-  getU64Encoder,
   getU8Decoder,
   getU8Encoder,
   transformEncoder,
@@ -58,13 +54,12 @@ export function getConfigDiscriminatorBytes(): ReadonlyUint8Array {
 export type Config = {
   discriminator: ReadonlyUint8Array;
   authority: Address;
-  /** Receives the house fee through `collect_fee`. */
+  /** Receives the house fees through `collect_fee`. */
   treasury: Address;
-  /** Price of one ticket, in lamports. */
-  ticketPrice: bigint;
-  /** House fee, in basis points of the pot. Capped at `MAX_FEE_BPS`. */
-  feeBps: number;
-  /** Highest number a ticket can carry (inclusive). */
+  /**
+   * Highest number a ticket can carry (inclusive), in every game. Changes
+   * only apply to rounds opened afterwards.
+   */
   maxNumber: number;
   /**
    * Blocks new tickets. Closing, drawing and claiming always stay open,
@@ -76,13 +71,12 @@ export type Config = {
 
 export type ConfigArgs = {
   authority: Address | HasAddress;
-  /** Receives the house fee through `collect_fee`. */
+  /** Receives the house fees through `collect_fee`. */
   treasury: Address | HasAddress;
-  /** Price of one ticket, in lamports. */
-  ticketPrice: number | bigint;
-  /** House fee, in basis points of the pot. Capped at `MAX_FEE_BPS`. */
-  feeBps: number;
-  /** Highest number a ticket can carry (inclusive). */
+  /**
+   * Highest number a ticket can carry (inclusive), in every game. Changes
+   * only apply to rounds opened afterwards.
+   */
   maxNumber: number;
   /**
    * Blocks new tickets. Closing, drawing and claiming always stay open,
@@ -99,8 +93,6 @@ export function getConfigEncoder(): FixedSizeEncoder<ConfigArgs> {
       ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
       ['authority', getAddressEncoder()],
       ['treasury', getAddressEncoder()],
-      ['ticketPrice', getU64Encoder()],
-      ['feeBps', getU16Encoder()],
       ['maxNumber', getU32Encoder()],
       ['paused', getBooleanEncoder()],
       ['bump', getU8Encoder()],
@@ -115,8 +107,6 @@ export function getConfigDecoder(): FixedSizeDecoder<Config> {
     ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
     ['authority', getAddressDecoder()],
     ['treasury', getAddressDecoder()],
-    ['ticketPrice', getU64Decoder()],
-    ['feeBps', getU16Decoder()],
     ['maxNumber', getU32Decoder()],
     ['paused', getBooleanDecoder()],
     ['bump', getU8Decoder()],
@@ -187,5 +177,5 @@ export async function fetchAllMaybeConfig(
 }
 
 export function getConfigSize(): number {
-  return 88;
+  return 78;
 }

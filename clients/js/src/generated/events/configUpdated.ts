@@ -21,12 +21,8 @@ import {
   getHiddenPrefixEncoder,
   getStructDecoder,
   getStructEncoder,
-  getU16Decoder,
-  getU16Encoder,
   getU32Decoder,
   getU32Encoder,
-  getU64Decoder,
-  getU64Encoder,
   type Address,
   type FixedSizeCodec,
   type FixedSizeDecoder,
@@ -43,20 +39,11 @@ export function getConfigUpdatedEventDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(CONFIG_UPDATED_EVENT_DISCRIMINATOR);
 }
 
-export type ConfigUpdatedEvent = {
-  authority: Address;
-  treasury: Address;
-  ticketPrice: bigint;
-  feeBps: number;
-  maxNumber: number;
-  paused: boolean;
-};
+export type ConfigUpdatedEvent = { authority: Address; treasury: Address; maxNumber: number; paused: boolean };
 
 export type ConfigUpdatedEventArgs = {
   authority: Address | HasAddress;
   treasury: Address | HasAddress;
-  ticketPrice: number | bigint;
-  feeBps: number;
   maxNumber: number;
   paused: boolean;
 };
@@ -67,8 +54,6 @@ export function getConfigUpdatedEventEncoder(): FixedSizeEncoder<ConfigUpdatedEv
     getStructEncoder([
       ['authority', getAddressEncoder()],
       ['treasury', getAddressEncoder()],
-      ['ticketPrice', getU64Encoder()],
-      ['feeBps', getU16Encoder()],
       ['maxNumber', getU32Encoder()],
       ['paused', getBooleanEncoder()],
     ]),
@@ -82,8 +67,6 @@ export function getConfigUpdatedEventDecoder(): FixedSizeDecoder<ConfigUpdatedEv
     getStructDecoder([
       ['authority', getAddressDecoder()],
       ['treasury', getAddressDecoder()],
-      ['ticketPrice', getU64Decoder()],
-      ['feeBps', getU16Decoder()],
       ['maxNumber', getU32Decoder()],
       ['paused', getBooleanDecoder()],
     ]),

@@ -23,6 +23,8 @@ import {
   getU32Encoder,
   getU64Decoder,
   getU64Encoder,
+  getU8Decoder,
+  getU8Encoder,
   type Address,
   type FixedSizeCodec,
   type FixedSizeDecoder,
@@ -37,15 +39,21 @@ export function getFeeCollectedEventDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(FEE_COLLECTED_EVENT_DISCRIMINATOR);
 }
 
-export type FeeCollectedEvent = { day: number; treasury: Address; fee: bigint };
+export type FeeCollectedEvent = { kind: number; period: number; treasury: Address; fee: bigint };
 
-export type FeeCollectedEventArgs = { day: number; treasury: Address | HasAddress; fee: number | bigint };
+export type FeeCollectedEventArgs = {
+  kind: number;
+  period: number;
+  treasury: Address | HasAddress;
+  fee: number | bigint;
+};
 
 /** Gets the encoder for {@link FeeCollectedEventArgs} event data. */
 export function getFeeCollectedEventEncoder(): FixedSizeEncoder<FeeCollectedEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ['day', getU32Encoder()],
+      ['kind', getU8Encoder()],
+      ['period', getU32Encoder()],
       ['treasury', getAddressEncoder()],
       ['fee', getU64Encoder()],
     ]),
@@ -57,7 +65,8 @@ export function getFeeCollectedEventEncoder(): FixedSizeEncoder<FeeCollectedEven
 export function getFeeCollectedEventDecoder(): FixedSizeDecoder<FeeCollectedEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ['day', getU32Decoder()],
+      ['kind', getU8Decoder()],
+      ['period', getU32Decoder()],
       ['treasury', getAddressDecoder()],
       ['fee', getU64Decoder()],
     ]),

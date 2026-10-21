@@ -25,6 +25,8 @@ import {
   getU32Encoder,
   getU64Decoder,
   getU64Encoder,
+  getU8Decoder,
+  getU8Encoder,
   type Address,
   type FixedSizeCodec,
   type FixedSizeDecoder,
@@ -42,7 +44,8 @@ export function getTicketPurchasedEventDiscriminatorBytes(): ReadonlyUint8Array 
 }
 
 export type TicketPurchasedEvent = {
-  day: number;
+  kind: number;
+  period: number;
   owner: Address;
   number: number;
   index: number;
@@ -51,7 +54,8 @@ export type TicketPurchasedEvent = {
 };
 
 export type TicketPurchasedEventArgs = {
-  day: number;
+  kind: number;
+  period: number;
   owner: Address | HasAddress;
   number: number;
   index: number;
@@ -63,7 +67,8 @@ export type TicketPurchasedEventArgs = {
 export function getTicketPurchasedEventEncoder(): FixedSizeEncoder<TicketPurchasedEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ['day', getU32Encoder()],
+      ['kind', getU8Encoder()],
+      ['period', getU32Encoder()],
       ['owner', getAddressEncoder()],
       ['number', getU32Encoder()],
       ['index', getU32Encoder()],
@@ -78,7 +83,8 @@ export function getTicketPurchasedEventEncoder(): FixedSizeEncoder<TicketPurchas
 export function getTicketPurchasedEventDecoder(): FixedSizeDecoder<TicketPurchasedEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ['day', getU32Decoder()],
+      ['kind', getU8Decoder()],
+      ['period', getU32Decoder()],
       ['owner', getAddressDecoder()],
       ['number', getU32Decoder()],
       ['index', getU32Decoder()],

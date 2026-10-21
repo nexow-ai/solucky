@@ -4,24 +4,55 @@ use anchor_lang::prelude::*;
 pub const CONFIG_SEED: &[u8] = b"config";
 
 #[constant]
+pub const GAME_SEED: &[u8] = b"game";
+
+#[constant]
 pub const ROUND_SEED: &[u8] = b"round";
 
 #[constant]
 pub const TICKET_SEED: &[u8] = b"ticket";
 
-/// A round lasts one UTC day: round `d` is open from `d * 86_400` to
-/// `(d + 1) * 86_400` seconds after the Unix epoch.
+/// Daily lottery: round `d` is open from `d * 86_400` to `(d + 1) * 86_400`
+/// seconds after the Unix epoch.
 #[constant]
-pub const ROUND_DURATION: i64 = 86_400;
+pub const DAILY: u8 = 0;
 
-/// Lowest ticket price: 0.001 SOL. With the 10% fee cap, a prize is always
-/// above the rent-exempt minimum of an empty wallet, so it can always be paid.
+/// Hourly lottery: round `h` is open from `h * 3_600` to `(h + 1) * 3_600`.
 #[constant]
-pub const MIN_TICKET_PRICE: u64 = 1_000_000;
+pub const HOURLY: u8 = 1;
 
-/// Highest house fee the authority can ever set: 10%.
+/// Guess the number: rounds are numbered from 0 and stay open until a guess
+/// finds the number.
 #[constant]
-pub const MAX_FEE_BPS: u16 = 1_000;
+pub const GUESS: u8 = 2;
+
+#[constant]
+pub const DAY_SECONDS: i64 = 86_400;
+
+#[constant]
+pub const HOUR_SECONDS: i64 = 3_600;
+
+/// Share of the pot paid to the winner: 80%. The house fee comes out of the
+/// other 20%, and what is left carries over to the game's next round.
+#[constant]
+pub const WINNER_SHARE_BPS: u16 = 8_000;
+
+/// Lowest ticket price: 0.002 SOL. The winner's 80% of the smallest pot is
+/// then above the rent-exempt minimum of an empty wallet, so it can always be
+/// paid.
+#[constant]
+pub const MIN_TICKET_PRICE: u64 = 2_000_000;
+
+/// Highest house fee the authority can ever set: 20%, the part of the pot
+/// that does not go to the winner.
+#[constant]
+pub const MAX_FEE_BPS: u16 = 2_000;
+
+/// Most tickets in one lottery round. Each one adds 4 bytes to the round's
+/// sorted list of numbers.
+// ponytail: keeps a buy near 100K CU at the cap; raise with measured CU.
+#[constant]
+pub const MAX_LOTTERY_TICKETS: u32 = 1_000_000;
 
 /// Slots between closing a round and the slot whose hash seeds its draw.
 /// Nobody knows that hash when the round closes.

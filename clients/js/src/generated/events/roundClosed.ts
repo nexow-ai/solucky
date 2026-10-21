@@ -21,6 +21,8 @@ import {
   getU32Encoder,
   getU64Decoder,
   getU64Encoder,
+  getU8Decoder,
+  getU8Encoder,
   type FixedSizeCodec,
   type FixedSizeDecoder,
   type FixedSizeEncoder,
@@ -35,10 +37,19 @@ export function getRoundClosedEventDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(ROUND_CLOSED_EVENT_DISCRIMINATOR);
 }
 
-export type RoundClosedEvent = { day: number; ticketCount: number; pot: bigint; targetSlot: bigint };
+export type RoundClosedEvent = {
+  kind: number;
+  period: number;
+  /** Lotteries: every ticket. Guess: the guesses sealed for the next check. */
+  ticketCount: number;
+  pot: bigint;
+  targetSlot: bigint;
+};
 
 export type RoundClosedEventArgs = {
-  day: number;
+  kind: number;
+  period: number;
+  /** Lotteries: every ticket. Guess: the guesses sealed for the next check. */
   ticketCount: number;
   pot: number | bigint;
   targetSlot: number | bigint;
@@ -48,7 +59,8 @@ export type RoundClosedEventArgs = {
 export function getRoundClosedEventEncoder(): FixedSizeEncoder<RoundClosedEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ['day', getU32Encoder()],
+      ['kind', getU8Encoder()],
+      ['period', getU32Encoder()],
       ['ticketCount', getU32Encoder()],
       ['pot', getU64Encoder()],
       ['targetSlot', getU64Encoder()],
@@ -61,7 +73,8 @@ export function getRoundClosedEventEncoder(): FixedSizeEncoder<RoundClosedEventA
 export function getRoundClosedEventDecoder(): FixedSizeDecoder<RoundClosedEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ['day', getU32Decoder()],
+      ['kind', getU8Decoder()],
+      ['period', getU32Decoder()],
       ['ticketCount', getU32Decoder()],
       ['pot', getU64Decoder()],
       ['targetSlot', getU64Decoder()],

@@ -5,16 +5,19 @@ use crate::{
     error::SoluckyError,
     events::PrizeClaimed,
     state::{Round, RoundStatus, Ticket},
-    utils::fee_for,
 };
 
-/// Pays a drawn round's winner: the pot minus the house fee goes to the
-/// winning ticket's owner. Anyone can send it, and the prize can only go to
-/// that owner. The fee stays in the round until `collect_fee`, so nothing the
-/// treasury does can hold up a winner.
+/// Pays a drawn round's winner the payout set by the draw. Anyone can send
+/// it, and the prize can only go to the winning ticket's owner. The fee stays
+/// in the round until `collect_fee`, so nothing the treasury does can hold up
+/// a winner.
 #[derive(Accounts)]
 pub struct ClaimPrize<'info> {
-    #[account(mut, seeds = [ROUND_SEED, &round.day.to_le_bytes()], bump = round.bump)]
+    #[account(
+        mut,
+        seeds = [ROUND_SEED, &round.kind.to_le_bytes(), &round.period.to_le_bytes()],
+        bump = round.bump
+    )]
     pub round: Account<'info, Round>,
     #[account(
         seeds = [TICKET_SEED, round.key().as_ref(), &ticket.number.to_le_bytes()],
@@ -35,13 +38,15 @@ pub fn handle_claim_prize(ctx: Context<ClaimPrize>) -> Result<()> {
         round.status == RoundStatus::Drawn,
         SoluckyError::RoundNotDrawn
     );
-    require!(
-        ticket.index == round.winning_index,
-        SoluckyError::NotWinningTicket
-    );
+    let wins = if round.is_lottery() {
+        ticket.number == round.winning_number
+    } else {
+        ticket.index == round.winning_index
+    };
+    require!(wins, SoluckyError::NotWinningTicket);
 
-    let fee = fee_for(round.pot, round.fee_bps);
-    let payout = round.pot - fee;
+    let payout = round.payout;
+    let fee = round.fee;
 
     ctx.accounts.round.sub_lamports(payout)?;
     ctx.accounts.owner.add_lamports(payout)?;
@@ -51,14 +56,14 @@ pub fn handle_claim_prize(ctx: Context<ClaimPrize>) -> Result<()> {
     round.status = RoundStatus::Settled;
     round.winner = ticket.owner;
     round.winning_number = ticket.number;
+    round.winning_index = ticket.index;
     round.winner_country = ticket.country;
-    round.payout = payout;
-    round.fee = fee;
     // Nothing to collect on a fee-free round.
     round.fee_collected = fee == 0;
 
     emit!(PrizeClaimed {
-        day: round.day,
+        kind: round.kind,
+        period: round.period,
         winner: ticket.owner,
         number: ticket.number,
         payout,
