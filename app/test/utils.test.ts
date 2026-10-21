@@ -22,14 +22,14 @@ function programError(code: number) {
 
 describe('format', () => {
   it('groups digits with spaces', () => {
-    expect(formatNumber(777777777)).toBe('777 777 777');
+    expect(formatNumber(777777777)).toBe('777\u00a0777\u00a0777');
     expect(formatNumber(0)).toBe('0');
   });
 
   it('shows lamports as SOL', () => {
     expect(formatSol(1_500_000_000n)).toBe('1.5');
     expect(formatSol(123_456_789n, 2)).toBe('0.12');
-    expect(formatSol(1_234_000_000_000n)).toBe('1 234');
+    expect(formatSol(1_234_000_000_000n)).toBe('1\u00a0234');
   });
 
   it('converts to dollars once the price is known', () => {
@@ -58,7 +58,7 @@ describe('format', () => {
   });
 
   it('keeps lottery numbers and SOL in one style for every language', () => {
-    expect(formatNumber(1_000_000_000)).toBe('1 000 000 000');
+    expect(formatNumber(1_000_000_000)).toBe('1\u00a0000\u00a0000\u00a0000');
     expect(formatSol(1_500_000_000n)).toBe('1.5');
   });
 });

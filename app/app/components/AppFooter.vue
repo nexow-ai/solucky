@@ -29,7 +29,7 @@ const links = computed(() =>
     <template #left>
       <div class="space-y-1 text-sm text-muted">
         <p>
-          © 2022–{{ new Date().getFullYear() }}
+          © <span dir="ltr">2022–{{ new Date().getFullYear() }}</span>
           <ULink
             to="https://nexow.studio"
             target="_blank"

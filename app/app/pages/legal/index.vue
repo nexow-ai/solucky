@@ -80,7 +80,9 @@ const documents = LEGAL_PAGES.filter((page) => page.key !== 'notice');
       <template #repository>
         <a :href="config.githubUrl" target="_blank" rel="noopener">{{ t('legal.repository') }}</a>
       </template>
-      <template #years>2022–{{ new Date().getFullYear() }}</template>
+      <template #years
+        ><span dir="ltr">2022–{{ new Date().getFullYear() }}</span></template
+      >
       <template #operator>{{ OPERATOR.name }}</template>
       <template #terms>
         <NuxtLink :to="localePath('/legal/terms')">{{ t('legal.pages.terms.label') }}</NuxtLink>

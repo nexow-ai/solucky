@@ -21,9 +21,16 @@ function numberFormat(locale: string, options: Intl.NumberFormatOptions): Intl.N
 // digits grouped by spaces, a point before decimals. Dollars, percentages and
 // units follow the page's language (`locale` is an Intl tag, see i18n/languages.ts).
 
+/**
+ * Digits are grouped by a no-break space: a number never wraps across lines,
+ * and Arabic and Hebrew text keep it whole (a plain space would let the
+ * groups swap places in right-to-left text).
+ */
+const GROUP = '\u00a0';
+
 /** `1234567` → `1 234 567`, the way S☉Lucky has always shown numbers. */
 export function formatNumber(value: number | bigint): string {
-  return integers.format(value).replaceAll(',', ' ');
+  return integers.format(value).replaceAll(',', GROUP);
 }
 
 /** Lamports → `12.5`, trimmed to at most `digits` decimals. */
@@ -33,7 +40,7 @@ export function formatSol(lamports: bigint | number, digits = 4): string {
     format = new Intl.NumberFormat('en-US', { maximumFractionDigits: digits });
     sol.set(digits, format);
   }
-  return format.format(lamportsToSol(lamports)).replaceAll(',', ' ');
+  return format.format(lamportsToSol(lamports)).replaceAll(',', GROUP);
 }
 
 /** A SOL amount in US dollars, or an em dash while the price is unknown. */

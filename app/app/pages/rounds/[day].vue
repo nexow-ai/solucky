@@ -264,7 +264,9 @@ const facts = computed(() => {
               round.address
             }}</ULink>
           </template>
-          <template #day>{{ formatDay(round.data.day) }}</template>
+          <template #day>
+            <span dir="ltr">{{ formatDay(round.data.day) }}</span>
+          </template>
         </i18n-t>
       </template>
     </template>

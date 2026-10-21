@@ -10,7 +10,9 @@ const cells = computed(() =>
   formatNumber(props.value)
     .split('')
     .map((char, i) =>
-      char === ' ' ? { gap: true as const, key: `g${i}` } : { gap: false as const, digit: Number(char), key: `d${i}` },
+      /\s/.test(char)
+        ? { gap: true as const, key: `g${i}` }
+        : { gap: false as const, digit: Number(char), key: `d${i}` },
     ),
 );
 const STRIP = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
