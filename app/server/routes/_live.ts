@@ -4,10 +4,14 @@
  * On Cloudflare the `cloudflare_durable` preset sends every connection to one
  * Durable Object, so all players share one table. That object can hibernate
  * between messages, which empties each connection's memory: the client's
- * heartbeat puts the country back, and only its first, `fresh` hello is
+ * heartbeat puts the flag back, and only its first, `fresh` hello is
  * announced, so a wake-up never replays joins.
+ *
+ * The flag is only ever the one the player's own picker holds (useCountry),
+ * the same one their tickets show: null when they keep it private. The
+ * server never reads location headers here.
  */
-import { allow, countryFromHeaders, LIVE_TOPIC, parseClientMessage, type ServerMessage } from '../utils/live';
+import { allow, LIVE_TOPIC, parseClientMessage, type ServerMessage } from '../utils/live';
 
 type Hooks = NonNullable<Parameters<typeof defineWebSocketHandler>[0]>;
 type Peer = Parameters<NonNullable<Hooks['open']>>[0];
@@ -29,19 +33,9 @@ const others = (peer: Peer) => [...peer.peers].filter((p) => p.id !== peer.id);
 const send = (peer: Peer, message: ServerMessage) => peer.send(JSON.stringify(message));
 const publish = (peer: Peer, message: ServerMessage) => peer.publish(LIVE_TOPIC, JSON.stringify(message));
 
-function header(peer: Peer, name: string): string | null {
-  const headers = peer.request?.headers as Headers | Record<string, string> | undefined;
-  if (!headers) return null;
-  return typeof (headers as Headers).get === 'function'
-    ? (headers as Headers).get(name)
-    : ((headers as Record<string, string>)[name] ?? null);
-}
-
 export default defineWebSocketHandler({
   open(peer) {
     peer.subscribe(LIVE_TOPIC);
-    const state = stateOf(peer);
-    state.cc = countryFromHeaders((name) => header(peer, name));
     send(peer, {
       t: 'hello',
       id: peer.id,
@@ -57,7 +51,7 @@ export default defineWebSocketHandler({
     if (!message) return;
 
     if (message.t === 'hi') {
-      const cc = message.cc ?? state.cc;
+      const cc = message.cc;
       const changed = cc !== state.cc;
       state.cc = cc;
       if (message.fresh && !state.announced) {
