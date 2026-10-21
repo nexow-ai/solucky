@@ -9,7 +9,7 @@ S☉Lucky, a daily lottery on Solana by Nexow, Inc. (nexow.studio). Monorepo wit
 - `programs/solucky`: Anchor 1.2.1 program (Rust). Host toolchain pinned in `rust-toolchain.toml`; SBF builds use Anchor's platform-tools and SBPF v3.
 - `idl/solucky.json`: committed IDL, source of the generated client.
 - `clients/js`: `@solucky/client`. `src/generated` is Codama output (never edit); the other files in `src` are hand-written.
-- `app`: Nuxt 4 + Nuxt UI 4 + Tailwind 4. Kit client and wallet in `app/app/composables/useSolana.ts` and `useWallet.ts`; game state in `useLottery.ts`.
+- `app`: Nuxt 4 + Nuxt UI 4 + Tailwind 4. Kit client and wallet in `app/app/composables/useSolana.ts` and `useWallet.ts`; game state in `useLottery.ts`. 20 languages with @nuxtjs/i18n: the list in `app/i18n/languages.ts`, the words in `app/i18n/locales/` (`en.ts` is the source and the type).
 - `scripts`: bun scripts `admin`, `crank`, `monitor`, `localnet`, `e2e` sharing `lib.ts`, `settle.ts` and `surfnet.ts` (Surfpool cheatcodes, local only).
 
 ## Commands
@@ -23,6 +23,7 @@ S☉Lucky, a daily lottery on Solana by Nexow, Inc. (nexow.studio). Monorepo wit
 ## Rules
 
 - Program changes need tests, then `bun run program:build`; commit the IDL and generated client with them.
+- User-facing text goes in `app/i18n/locales/en.ts` and every other dictionary, never in a component; `bun run test:js` checks they match. English stays the default at the root (the Playwright tests read English). Use logical classes (`ps-`, `text-end`) so right-to-left pages mirror.
 - Use Nuxt UI components and semantic colors (`text-muted`, `bg-elevated`…), never raw Tailwind palette colors. The brand gradient is the `text-lucky` / `bg-lucky` utilities in `main.css`.
 - Kit transactions use version 0 (`transactionConfig: { version: 0 }`): many wallets cannot sign version 1 yet.
 - Time on-chain is the cluster clock: scripts read the Clock sysvar, the app syncs `useNow` with it.

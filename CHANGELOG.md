@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- The app in 20 languages: English, Spanish, French, German, Italian, Portuguese (Brazil), Dutch, Turkish, Russian, Ukrainian, Arabic, Hebrew, Hindi, Thai, Vietnamese, Indonesian, Chinese (Simplified and Traditional), Japanese and Korean. Every page, toast, error and legal page is translated, under `/<code>/` paths with `hreflang` alternates. The header has a language menu, the footer links every language, and a visitor whose browser prefers another language is offered it once. Arabic and Hebrew are laid out right to left.
+- Dollars, percentages, durations, dates and country names follow the page's language; program errors are explained in it.
+- A test that checks every dictionary against English: keys, placeholders, plural forms, message syntax.
+
+### Changed
+
+- The Cookies & storage page and the Privacy Policy list a fifth local-storage setting, `solucky:lang`, the language the visitor chose. Still no cookies.
+
 ## [1.0.0] - 2026-10-20
 
 A rewrite of the 2022 prototype into a self-contained, verifiable product. Nothing is shared with the old deployment: it uses a new program address and a new client.

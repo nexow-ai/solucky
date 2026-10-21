@@ -17,6 +17,12 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `type(scope): 
 - Scopes: `program`, `client`, `app`, `scripts`, `deps`, `ci`, `docs`.
 - Dependency updates go in their own `build(deps): …` commit, with the lockfile. Versions are pinned exactly.
 
+## App copy and languages
+
+- Every word on the page comes from `app/i18n/locales/`, never written into a component. Change `en.ts` and every other language with it: `bun run test:js` fails until they match. A translation says the same thing as the English, no more and no less. See [Languages](README.md#languages).
+- Use logical classes (`ps-`, `ms-`, `start-`, `text-end`) for anything that follows the line of reading, so Arabic and Hebrew mirror. Clocks, numbers and addresses stay left to right (`dir="ltr"`).
+- Before a pull request that touches the app, look at a right-to-left page (`/ar/` or `/he/`) and a CJK one (`/ja/`).
+
 ## Program changes
 
 - Every new rule needs a test in `programs/solucky/tests`.
