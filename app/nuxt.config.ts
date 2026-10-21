@@ -50,7 +50,9 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      // The title, description, lang and dir come from the page's language (app.vue).
+      // The title, description, lang and dir come from the page's language (app.vue);
+      // this title only stays on the shell of the browser-only pages until they load.
+      title: 'S☉Lucky',
       meta: [
         { name: 'theme-color', content: '#0c0716' },
         { property: 'og:type', content: 'website' },
@@ -67,7 +69,12 @@ export default defineNuxtConfig({
   // The landing and legal pages are rendered per request, so runtime settings
   // such as the cluster always apply (a prerendered page would keep the
   // build's values).
-  routeRules: browserOnly,
+  // English lives at the root: /en/… addresses go there.
+  routeRules: {
+    ...browserOnly,
+    '/en': { redirect: { to: '/', statusCode: 301 } },
+    '/en/**': { redirect: { to: '/**', statusCode: 301 } },
+  },
 
   // Dev and HMR stay header-free; production responses carry the headers.
   $production: {
