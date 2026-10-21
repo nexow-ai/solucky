@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { drawMessage, parseDraw, parseGames, parseSubscription, sameSecret } from '../server/utils/push';
 import { encryptPayload, fromBase64Url, p256Jwk, toBase64Url, vapidAuthorization } from '../server/utils/webpush';
 
 /** RFC 8291, section 5 and appendix A. */
@@ -20,9 +21,13 @@ describe('web push', () => {
     const algorithm = { name: 'ECDH', namedCurve: 'P-256' };
     const local = {
       publicKey: await crypto.subtle.importKey('raw', fromBase64Url(RFC.asPublic), algorithm, true, []),
-      privateKey: await crypto.subtle.importKey('jwk', p256Jwk(fromBase64Url(RFC.asPublic), RFC.asPrivate), algorithm, false, [
-        'deriveBits',
-      ]),
+      privateKey: await crypto.subtle.importKey(
+        'jwk',
+        p256Jwk(fromBase64Url(RFC.asPublic), RFC.asPrivate),
+        algorithm,
+        false,
+        ['deriveBits'],
+      ),
     };
     const body = await encryptPayload(
       fromBase64Url(RFC.plaintext),
@@ -58,5 +63,55 @@ describe('web push', () => {
       new TextEncoder().encode(`${head}.${claims}`),
     );
     expect(valid).toBe(true);
+  });
+});
+
+describe('draw notifications', () => {
+  const keys = { p256dh: RFC.uaPublic, auth: RFC.auth };
+
+  it('only keeps subscriptions to the browsers’ push services', () => {
+    const fcm = { endpoint: 'https://fcm.googleapis.com/fcm/send/abc', keys };
+    expect(parseSubscription(fcm)).toEqual(fcm);
+    expect(parseSubscription({ ...fcm, endpoint: 'https://web.push.apple.com/QGuQ' })).not.toBeNull();
+    expect(parseSubscription({ ...fcm, endpoint: 'https://wns2-par02p.notify.windows.com/w/?token=x' })).not.toBeNull();
+    // Anything else could point our server at another host.
+    expect(parseSubscription({ ...fcm, endpoint: 'https://example.com/fcm.googleapis.com' })).toBeNull();
+    expect(parseSubscription({ ...fcm, endpoint: 'http://fcm.googleapis.com/fcm/send/abc' })).toBeNull();
+    expect(parseSubscription({ ...fcm, endpoint: 'https://fcm.googleapis.com.evil.io/x' })).toBeNull();
+    expect(parseSubscription({ ...fcm, keys: { ...keys, auth: 'c2hvcnQ' } })).toBeNull();
+    expect(parseSubscription(null)).toBeNull();
+  });
+
+  it('reads games and draws strictly', () => {
+    expect(parseGames([2, 0, 2])).toEqual([0, 2]);
+    expect(parseGames([])).toEqual([]);
+    expect(parseGames([3])).toBeNull();
+    expect(parseGames('0')).toBeNull();
+    const draw = { kind: 0, period: 20_382, drawnNumber: 1_234_567, winningNumber: 1_234_500, payout: '80000000' };
+    expect(parseDraw(draw)).toEqual({ ...draw, payout: 80_000_000n });
+    expect(parseDraw({ ...draw, payout: 80_000_000 })).toBeNull();
+    expect(parseDraw({ ...draw, kind: 7 })).toBeNull();
+    expect(parseDraw({ ...draw, period: -1 })).toBeNull();
+  });
+
+  it('checks the crank’s secret', async () => {
+    expect(await sameSecret('Bearer s3cret', 'Bearer s3cret')).toBe(true);
+    expect(await sameSecret('Bearer s3cre', 'Bearer s3cret')).toBe(false);
+    expect(await sameSecret(undefined, 'Bearer s3cret')).toBe(false);
+  });
+
+  it('tells each browser the result in its language', async () => {
+    const draw = { kind: 0, period: 20_382, drawnNumber: 1_234_567, winningNumber: 1_234_500, payout: 80_000_000n };
+    expect(await drawMessage(draw, 'en')).toEqual({
+      title: 'Daily lottery',
+      body: 'Round 2025-10-21: 1\u00a0234\u00a0567 was drawn. The closest ticket, 1\u00a0234\u00a0500, wins ◎0.08.',
+      url: '/rounds/daily/2025-10-21',
+      tag: 'draw-0',
+    });
+    const guess = await drawMessage({ ...draw, kind: 2, period: 3 }, 'fr');
+    expect(guess.url).toBe('/fr/rounds/guess/3');
+    expect(guess.body).toContain('#3');
+    // Right to left: every value is isolated, as on the site.
+    expect((await drawMessage(draw, 'ar')).body).toContain('\u20681\u00a0234\u00a0567\u2069');
   });
 });
