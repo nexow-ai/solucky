@@ -103,9 +103,11 @@ export default defineNuxtConfig({
   },
 
   // Serve gzip and brotli copies of static files from the Node server
-  // (Cloudflare compresses on its own).
+  // (Cloudflare compresses on its own). WebSockets carry the play page's live
+  // table (server/routes/_live.ts).
   nitro: {
     compressPublicAssets: true,
+    experimental: { websocket: true },
   },
 
   // The night palette is the house style; the toggle in the header still switches to light.
@@ -117,8 +119,7 @@ export default defineNuxtConfig({
   fonts: {
     families: [
       { name: 'Space Grotesk', provider: 'google', weights: [400, 500, 600, 700] },
-      { name: 'Orbitron', provider: 'google', weights: [700, 900] },
-      { name: 'JetBrains Mono', provider: 'google', weights: [400, 600] },
+      { name: 'JetBrains Mono', provider: 'google', weights: [400, 600, 800] },
     ],
   },
 

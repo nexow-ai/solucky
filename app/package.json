@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
-    "build:cloudflare": "nuxt build --preset cloudflare_module",
+    "build:cloudflare": "nuxt build --preset cloudflare_durable",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -17,7 +17,7 @@
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
     "test:browser": "playwright test",
-    "deploy": "nuxt build --preset cloudflare_module && wrangler deploy"
+    "deploy": "nuxt build --preset cloudflare_durable && wrangler deploy"
   },
   "dependencies": {
     "@iconify-json/lucide": "1.2.147",
