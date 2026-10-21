@@ -22,5 +22,7 @@
   "vars": {
     "NUXT_PUBLIC_CLUSTER": "devnet",
     "NUXT_PUBLIC_SITE_URL": "https://solucky.me",
+    // The same URL, so every language's hreflang and canonical links are absolute.
+    "NUXT_PUBLIC_I18N_BASE_URL": "https://solucky.me",
   },
 }
