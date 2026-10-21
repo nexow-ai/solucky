@@ -13,8 +13,14 @@
     "bindings": [{ "name": "$DurableObject", "class_name": "$DurableObject" }],
   },
   "migrations": [{ "tag": "v1-live-table", "new_sqlite_classes": ["$DurableObject"] }],
+  // Apex + www; Cloudflare manages DNS and certificates for these.
+  "routes": [
+    { "pattern": "solucky.me", "custom_domain": true },
+    { "pattern": "www.solucky.me", "custom_domain": true },
+  ],
   // Public settings read by the app at runtime (see app/.env.example).
   "vars": {
     "NUXT_PUBLIC_CLUSTER": "devnet",
+    "NUXT_PUBLIC_SITE_URL": "https://solucky.me",
   },
 }
