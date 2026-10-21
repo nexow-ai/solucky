@@ -1,6 +1,8 @@
-# Backup crank: settles yesterday's round after midnight UTC (close, draw, pay
-# the winner, collect the fee). Scheduled Actions often start minutes late, so
-# run `bun run crank --watch` as a service for the main crank; see README.
+# Backup crank: every hour, settles the lottery rounds that ended (close, draw,
+# pay the winner, collect the fee) and checks waiting Guess guesses. Scheduled
+# Actions often start minutes late, and Guess players expect a check within
+# seconds, so run `bun run crank --watch` as a service for the main crank; see
+# README.
 # Every step is permissionless, so the crank keypair only pays network fees.
 #
 # Turn it on with the repository variable SOLUCKY_CRANK_ENABLED=true, then set:
@@ -10,7 +12,7 @@ name: Crank
 
 on:
   schedule:
-    - cron: '2,12,32 0 * * *'
+    - cron: '2,32 * * * *'
   workflow_dispatch:
 
 concurrency:

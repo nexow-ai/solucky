@@ -1,7 +1,8 @@
 /**
- * Health check for operators. Fails when a finished round is still not settled
- * some time after midnight UTC (usually a stopped crank), or when the crank's
- * wallet runs low. Read-only: it needs no keypair.
+ * Health check for operators. Fails when a finished lottery round is still not
+ * settled some time after it ended, or a Guess winner is still unpaid (usually
+ * a stopped crank), or when the crank's wallet runs low. Read-only: it needs
+ * no keypair.
  *
  *   bun run monitor
  *   bun run monitor --grace 15 --crank <crank address> --min-balance 0.05
@@ -14,18 +15,17 @@ import { parseArgs } from 'node:util';
 import { address, createSolanaRpc } from '@solana/kit';
 import { fetchSysvarClock } from '@solana/sysvars';
 import {
-  dayEnd,
-  dayOf,
   fetchMaybeConfig,
   fetchRounds,
   findConfigPda,
-  formatDay,
+  isLottery,
   lamportsToSol,
+  periodEnd,
   RoundStatus,
 } from '@solucky/client';
 
-import { log, PROGRAM_ADDRESS, RPC_URL } from './lib';
-import { needsWork } from './settle';
+import { log, PROGRAM_ADDRESS, roundLabel, RPC_URL } from './lib';
+import { isDue } from './settle';
 
 const { values: args } = parseArgs({
   options: {
@@ -49,11 +49,10 @@ const problems: string[] = [];
 const [configAddress] = await findConfigPda({ programAddress: PROGRAM_ADDRESS });
 const [clock, rounds, config] = await Promise.all([
   fetchSysvarClock(rpc, { commitment: 'confirmed' }),
-  fetchRounds(rpc, PROGRAM_ADDRESS),
+  fetchRounds(rpc, undefined, PROGRAM_ADDRESS),
   fetchMaybeConfig(rpc, configAddress),
 ]);
 const now = Number(clock.unixTimestamp) * 1000;
-const today = dayOf(now);
 
 if (!config.exists) {
   problems.push(`the program ${PROGRAM_ADDRESS} has no config on this cluster`);
@@ -61,14 +60,20 @@ if (!config.exists) {
   log('note: ticket sales are paused');
 }
 
-for (const round of rounds) {
-  if (round.data.day >= today || !needsWork(round.data)) continue;
-  const late = now - dayEnd(round.data.day).getTime();
-  if (late > graceMs) {
-    problems.push(
-      `${formatDay(round.data.day)}: ${WAITING_FOR[round.data.status]} ${Math.round(late / 60_000)} min after midnight ` +
-        `(pot ◎${lamportsToSol(round.data.pot)})`,
-    );
+for (const { data: round } of rounds) {
+  if (!isDue(round, now)) continue;
+  const pot = `pot ◎${lamportsToSol(round.pot)}`;
+  if (isLottery(round.kind)) {
+    const late = now - periodEnd(round.kind, round.period).getTime();
+    if (late > graceMs) {
+      problems.push(
+        `${roundLabel(round)}: ${WAITING_FOR[round.status]} ${Math.round(late / 60_000)} min after it ended (${pot})`,
+      );
+    }
+  } else if (round.status === RoundStatus.Drawn || round.status === RoundStatus.Settled) {
+    // Guess rounds have no end time, but the crank pays a winner seconds
+    // after the draw. ponytail: a check that lands mid-crank alerts once.
+    problems.push(`${roundLabel(round)}: ${WAITING_FOR[round.status]} (${pot})`);
   }
 }
 
@@ -79,11 +84,7 @@ if (args.crank) {
   }
 }
 
-const todayRound = rounds.find((r) => r.data.day === today);
-log(
-  `${RPC_URL}: ${rounds.length} round(s) on-chain; today ${formatDay(today)} has ` +
-    `${todayRound?.data.ticketCount ?? 0} ticket(s), ◎${lamportsToSol(todayRound?.data.pot ?? 0n)} pot`,
-);
+log(`${RPC_URL}: ${rounds.length} round(s) on-chain`);
 
 if (problems.length === 0) {
   log('all good');

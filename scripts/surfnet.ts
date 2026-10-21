@@ -3,22 +3,22 @@
  * load the program without a deploy keypair and move the clock forward.
  * Everything here refuses to run against a remote cluster.
  */
-import {
-  type Account,
-  type Address,
-  generateKeyPairSigner,
-  getAddressEncoder,
-  getProgramDerivedAddress,
-  type KeyPairSigner,
-  lamports,
-} from '@solana/kit';
+import { type Account, type Address, generateKeyPairSigner, type KeyPairSigner, lamports } from '@solana/kit';
 import { type Config, findConfigPda } from '@solucky/client';
 
-import { clientFor, loadSigner, log, PROGRAM_ADDRESS, RPC_URL, type SoluckyClient } from './lib';
+import {
+  clientFor,
+  initialize,
+  loadSigner,
+  log,
+  MAX_NUMBER,
+  PROGRAM_ADDRESS,
+  RPC_URL,
+  type SoluckyClient,
+} from './lib';
 
 export const SOL = 1_000_000_000n;
 const PROGRAM_PATH = new URL('../target/deploy/solucky.so', import.meta.url).pathname;
-const BPF_LOADER_UPGRADEABLE = 'BPFLoaderUpgradeab1e11111111111111111111111' as Address;
 /** Program bytes per `surfnet_writeProgram` call, well under the RPC size limit. */
 const CHUNK = 256 * 1024;
 
@@ -65,7 +65,8 @@ export async function localOperator(): Promise<KeyPairSigner> {
 
 /**
  * Gets a local Surfpool ready to play: the program from `target/deploy` (with
- * `operator` as upgrade authority) and a config with a funded treasury.
+ * `operator` as upgrade authority), a config with a funded treasury, and the
+ * three games.
  */
 export async function prepareLocalnet(operator: KeyPairSigner): Promise<Account<Config>> {
   const client = clientFor(operator);
@@ -89,20 +90,7 @@ export async function prepareLocalnet(operator: KeyPairSigner): Promise<Account<
 
   const treasury = await generateKeyPairSigner();
   await fund(client, treasury.address, SOL);
-  const [programData] = await getProgramDerivedAddress({
-    programAddress: BPF_LOADER_UPGRADEABLE,
-    seeds: [getAddressEncoder().encode(PROGRAM_ADDRESS)],
-  });
-  await client.solucky.instructions
-    .initialize({
-      authority: operator,
-      treasury: treasury.address,
-      programData,
-      ticketPrice: SOL / 10n,
-      feeBps: 500,
-      maxNumber: 1_000_000_000,
-    })
-    .sendTransaction();
-  log(`initialized the config: ◎0.1 tickets, 5% fee, treasury ${treasury.address}`);
+  await initialize(client, { treasury: treasury.address, maxNumber: MAX_NUMBER, ticketPrice: SOL / 10n, feeBps: 500 });
+  log(`opened the three games: ◎0.1 tickets, 5% fee, numbers 0 to ${MAX_NUMBER}, treasury ${treasury.address}`);
   return client.solucky.accounts.config.fetch(configAddress);
 }
