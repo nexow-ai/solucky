@@ -68,23 +68,14 @@ export function useTableFeed() {
       });
 
       // Tickets: everything already in the round when the page loads is the
-      // baseline; anything after that just happened.
-      const seen = new Set<string>();
-      let baselineDay: number | null = null;
+      // baseline; anything after that just happened (utils/feed.ts).
+      const freshTickets = ticketWatcher();
       let lastTicketToast = 0;
       watch(
         [tickets, today, loading],
         ([list, day, isLoading]) => {
           if (isLoading) return;
-          if (baselineDay !== day) {
-            baselineDay = day;
-            seen.clear();
-            for (const t of list) seen.add(t.address);
-            return;
-          }
-          const fresh = list.filter((t) => !seen.has(t.address));
-          for (const t of fresh) seen.add(t.address);
-          for (const t of fresh) {
+          for (const t of freshTickets(list, day)) {
             const cc = countryFromBytes(t.data.country);
             const mine = t.data.owner === address.value;
             push({
