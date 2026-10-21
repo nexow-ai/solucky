@@ -13,5 +13,41 @@
     { "src": "/favicon.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
     { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Daily lottery",
+      "short_name": "Daily",
+      "url": "/play/daily",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Hourly lottery",
+      "short_name": "Hourly",
+      "url": "/play/hourly",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Guess the number",
+      "short_name": "Guess",
+      "url": "/play/guess",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/play-wide.jpg",
+      "sizes": "1280x800",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "The daily lottery's play page"
+    },
+    {
+      "src": "/screenshots/play-narrow.jpg",
+      "sizes": "780x1688",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "The daily lottery's play page"
+    }
   ]
 }
