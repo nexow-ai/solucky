@@ -18,6 +18,8 @@ import {
   getU32Encoder,
   getU64Decoder,
   getU64Encoder,
+  getU8Decoder,
+  getU8Encoder,
   SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
   SolanaError,
   transformEncoder,
@@ -45,7 +47,7 @@ import {
   type ResolvedInstructionAccount,
   type ResolvedInstructionAccountMeta,
 } from '@solana/kit/program-client-core';
-import { findConfigPda, findRoundPda, findTicketPda } from '../pdas';
+import { findConfigPda, findGamePda, findRoundPda, findTicketPda } from '../pdas';
 import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
 export const BUY_TICKET_DISCRIMINATOR: ReadonlyUint8Array = new Uint8Array([11, 24, 17, 193, 168, 116, 164, 169]);
@@ -58,6 +60,7 @@ export type BuyTicketInstruction<
   TProgram extends string = typeof SOLUCKY_PROGRAM_ADDRESS,
   TAccountBuyer extends string | AccountMeta<string> = string,
   TAccountConfig extends string | AccountMeta<string> = string,
+  TAccountGame extends string | AccountMeta<string> = string,
   TAccountRound extends string | AccountMeta<string> = string,
   TAccountTicket extends string | AccountMeta<string> = string,
   TAccountSystemProgram extends string | AccountMeta<string> = '11111111111111111111111111111111',
@@ -70,6 +73,7 @@ export type BuyTicketInstruction<
         ? WritableSignerAccount<TAccountBuyer> & AccountSignerMeta<TAccountBuyer>
         : TAccountBuyer,
       TAccountConfig extends string ? ReadonlyAccount<TAccountConfig> : TAccountConfig,
+      TAccountGame extends string ? ReadonlyAccount<TAccountGame> : TAccountGame,
       TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound,
       TAccountTicket extends string ? WritableAccount<TAccountTicket> : TAccountTicket,
       TAccountSystemProgram extends string ? ReadonlyAccount<TAccountSystemProgram> : TAccountSystemProgram,
@@ -79,14 +83,16 @@ export type BuyTicketInstruction<
 
 export type BuyTicketInstructionData = {
   discriminator: ReadonlyUint8Array;
-  day: number;
+  kind: number;
+  period: number;
   number: number;
   country: ReadonlyUint8Array;
   maxPrice: bigint;
 };
 
 export type BuyTicketInstructionDataArgs = {
-  day: number;
+  kind: number;
+  period: number;
   number: number;
   country: ReadonlyUint8Array;
   maxPrice: number | bigint;
@@ -96,7 +102,8 @@ export function getBuyTicketInstructionDataEncoder(): FixedSizeEncoder<BuyTicket
   return transformEncoder(
     getStructEncoder([
       ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
-      ['day', getU32Encoder()],
+      ['kind', getU8Encoder()],
+      ['period', getU32Encoder()],
       ['number', getU32Encoder()],
       ['country', fixEncoderSize(getBytesEncoder(), 2)],
       ['maxPrice', getU64Encoder()],
@@ -108,7 +115,8 @@ export function getBuyTicketInstructionDataEncoder(): FixedSizeEncoder<BuyTicket
 export function getBuyTicketInstructionDataDecoder(): FixedSizeDecoder<BuyTicketInstructionData> {
   return getStructDecoder([
     ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
-    ['day', getU32Decoder()],
+    ['kind', getU8Decoder()],
+    ['period', getU32Decoder()],
     ['number', getU32Decoder()],
     ['country', fixDecoderSize(getBytesDecoder(), 2)],
     ['maxPrice', getU64Decoder()],
@@ -125,18 +133,25 @@ export function getBuyTicketInstructionDataCodec(): FixedSizeCodec<
 export type BuyTicketAsyncInput<
   TAccountBuyer extends InstructionSignerInput = InstructionSignerInput,
   TAccountConfig extends InstructionAccountInput = InstructionAccountInput,
+  TAccountGame extends InstructionAccountInput = InstructionAccountInput,
   TAccountRound extends InstructionAccountInput = InstructionAccountInput,
   TAccountTicket extends InstructionAccountInput = InstructionAccountInput,
   TAccountSystemProgram extends InstructionAccountInput = InstructionAccountInput,
 > = {
   buyer: TAccountBuyer;
   config?: TAccountConfig;
-  /** Opened by the day's first buyer. */
+  game?: TAccountGame;
+  /**
+   * Opened by the round's first buyer. A lottery round grows by 4 bytes a
+   * ticket, and `init_if_needed` wants an existing account's size to match
+   * `space`, hence the `max`.
+   */
   round?: TAccountRound;
-  /** Fails with "already in use" if someone holds this number today. */
+  /** Fails with "already in use" if someone holds this number in the round. */
   ticket?: TAccountTicket;
   systemProgram?: TAccountSystemProgram;
-  day: BuyTicketInstructionDataArgs['day'];
+  kind: BuyTicketInstructionDataArgs['kind'];
+  period: BuyTicketInstructionDataArgs['period'];
   number: BuyTicketInstructionDataArgs['number'];
   country: BuyTicketInstructionDataArgs['country'];
   maxPrice: BuyTicketInstructionDataArgs['maxPrice'];
@@ -145,18 +160,27 @@ export type BuyTicketAsyncInput<
 export async function getBuyTicketInstructionAsync<
   TAccountBuyer extends InstructionSignerInput,
   TAccountConfig extends InstructionAccountInput,
+  TAccountGame extends InstructionAccountInput,
   TAccountRound extends InstructionAccountInput,
   TAccountTicket extends InstructionAccountInput,
   TAccountSystemProgram extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: BuyTicketAsyncInput<TAccountBuyer, TAccountConfig, TAccountRound, TAccountTicket, TAccountSystemProgram>,
+  input: BuyTicketAsyncInput<
+    TAccountBuyer,
+    TAccountConfig,
+    TAccountGame,
+    TAccountRound,
+    TAccountTicket,
+    TAccountSystemProgram
+  >,
   config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): Promise<
   BuyTicketInstruction<
     TProgramAddress,
     ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
     ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountGame, InstructionAccountInputAddress<TAccountGame>>,
     ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
     ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
     ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
@@ -173,6 +197,7 @@ export async function getBuyTicketInstructionAsync<
   const originalAccounts = {
     buyer: { value: input.buyer ?? null, isSigner: true, isWritable: true },
     config: { value: input.config ?? null, isSigner: false, isWritable: false },
+    game: { value: input.game ?? null, isSigner: false, isWritable: false },
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
     ticket: { value: input.ticket ?? null, isSigner: false, isWritable: true },
     systemProgram: { value: input.systemProgram ?? null, isSigner: false, isWritable: false },
@@ -186,9 +211,18 @@ export async function getBuyTicketInstructionAsync<
   if (!accounts.config.value) {
     accounts.config.value = await findConfigPda({ programAddress });
   }
+  if (!accounts.game.value) {
+    accounts.game.value = await findGamePda(
+      { kind: getNonNullResolvedInstructionInput('kind', args.kind) },
+      { programAddress },
+    );
+  }
   if (!accounts.round.value) {
     accounts.round.value = await findRoundPda(
-      { day: getNonNullResolvedInstructionInput('day', args.day) },
+      {
+        kind: getNonNullResolvedInstructionInput('kind', args.kind),
+        period: getNonNullResolvedInstructionInput('period', args.period),
+      },
       { programAddress },
     );
   }
@@ -209,6 +243,7 @@ export async function getBuyTicketInstructionAsync<
     accounts: [
       getAccountMeta('buyer', accounts.buyer),
       getAccountMeta('config', accounts.config),
+      getAccountMeta('game', accounts.game),
       getAccountMeta('round', accounts.round),
       getAccountMeta('ticket', accounts.ticket),
       getAccountMeta('systemProgram', accounts.systemProgram),
@@ -219,6 +254,7 @@ export async function getBuyTicketInstructionAsync<
     TProgramAddress,
     ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
     ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountGame, InstructionAccountInputAddress<TAccountGame>>,
     ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
     ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
     ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
@@ -228,18 +264,25 @@ export async function getBuyTicketInstructionAsync<
 export type BuyTicketInput<
   TAccountBuyer extends InstructionSignerInput = InstructionSignerInput,
   TAccountConfig extends InstructionAccountInput = InstructionAccountInput,
+  TAccountGame extends InstructionAccountInput = InstructionAccountInput,
   TAccountRound extends InstructionAccountInput = InstructionAccountInput,
   TAccountTicket extends InstructionAccountInput = InstructionAccountInput,
   TAccountSystemProgram extends InstructionAccountInput = InstructionAccountInput,
 > = {
   buyer: TAccountBuyer;
   config: TAccountConfig;
-  /** Opened by the day's first buyer. */
+  game: TAccountGame;
+  /**
+   * Opened by the round's first buyer. A lottery round grows by 4 bytes a
+   * ticket, and `init_if_needed` wants an existing account's size to match
+   * `space`, hence the `max`.
+   */
   round: TAccountRound;
-  /** Fails with "already in use" if someone holds this number today. */
+  /** Fails with "already in use" if someone holds this number in the round. */
   ticket: TAccountTicket;
   systemProgram?: TAccountSystemProgram;
-  day: BuyTicketInstructionDataArgs['day'];
+  kind: BuyTicketInstructionDataArgs['kind'];
+  period: BuyTicketInstructionDataArgs['period'];
   number: BuyTicketInstructionDataArgs['number'];
   country: BuyTicketInstructionDataArgs['country'];
   maxPrice: BuyTicketInstructionDataArgs['maxPrice'];
@@ -248,17 +291,26 @@ export type BuyTicketInput<
 export function getBuyTicketInstruction<
   TAccountBuyer extends InstructionSignerInput,
   TAccountConfig extends InstructionAccountInput,
+  TAccountGame extends InstructionAccountInput,
   TAccountRound extends InstructionAccountInput,
   TAccountTicket extends InstructionAccountInput,
   TAccountSystemProgram extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: BuyTicketInput<TAccountBuyer, TAccountConfig, TAccountRound, TAccountTicket, TAccountSystemProgram>,
+  input: BuyTicketInput<
+    TAccountBuyer,
+    TAccountConfig,
+    TAccountGame,
+    TAccountRound,
+    TAccountTicket,
+    TAccountSystemProgram
+  >,
   config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): BuyTicketInstruction<
   TProgramAddress,
   ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
   ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+  ResolvedInstructionAccountMeta<TAccountGame, InstructionAccountInputAddress<TAccountGame>>,
   ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
   ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
   ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
@@ -274,6 +326,7 @@ export function getBuyTicketInstruction<
   const originalAccounts = {
     buyer: { value: input.buyer ?? null, isSigner: true, isWritable: true },
     config: { value: input.config ?? null, isSigner: false, isWritable: false },
+    game: { value: input.game ?? null, isSigner: false, isWritable: false },
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
     ticket: { value: input.ticket ?? null, isSigner: false, isWritable: true },
     systemProgram: { value: input.systemProgram ?? null, isSigner: false, isWritable: false },
@@ -292,6 +345,7 @@ export function getBuyTicketInstruction<
     accounts: [
       getAccountMeta('buyer', accounts.buyer),
       getAccountMeta('config', accounts.config),
+      getAccountMeta('game', accounts.game),
       getAccountMeta('round', accounts.round),
       getAccountMeta('ticket', accounts.ticket),
       getAccountMeta('systemProgram', accounts.systemProgram),
@@ -302,6 +356,7 @@ export function getBuyTicketInstruction<
     TProgramAddress,
     ResolvedInstructionAccountMeta<TAccountBuyer, InstructionAccountInputAddress<TAccountBuyer>>,
     ResolvedInstructionAccountMeta<TAccountConfig, InstructionAccountInputAddress<TAccountConfig>>,
+    ResolvedInstructionAccountMeta<TAccountGame, InstructionAccountInputAddress<TAccountGame>>,
     ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
     ResolvedInstructionAccountMeta<TAccountTicket, InstructionAccountInputAddress<TAccountTicket>>,
     ResolvedInstructionAccountMeta<TAccountSystemProgram, InstructionAccountInputAddress<TAccountSystemProgram>>
@@ -316,11 +371,16 @@ export type ParsedBuyTicketInstruction<
   accounts: {
     buyer: TAccountMetas[0];
     config: TAccountMetas[1];
-    /** Opened by the day's first buyer. */
-    round: TAccountMetas[2];
-    /** Fails with "already in use" if someone holds this number today. */
-    ticket: TAccountMetas[3];
-    systemProgram: TAccountMetas[4];
+    game: TAccountMetas[2];
+    /**
+     * Opened by the round's first buyer. A lottery round grows by 4 bytes a
+     * ticket, and `init_if_needed` wants an existing account's size to match
+     * `space`, hence the `max`.
+     */
+    round: TAccountMetas[3];
+    /** Fails with "already in use" if someone holds this number in the round. */
+    ticket: TAccountMetas[4];
+    systemProgram: TAccountMetas[5];
   };
   data: BuyTicketInstructionData;
 };
@@ -328,10 +388,10 @@ export type ParsedBuyTicketInstruction<
 export function parseBuyTicketInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
   instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedBuyTicketInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 5) {
+  if (instruction.accounts.length < 6) {
     throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
       actualAccountMetas: instruction.accounts.length,
-      expectedAccountMetas: 5,
+      expectedAccountMetas: 6,
     });
   }
   let accountIndex = 0;
@@ -345,6 +405,7 @@ export function parseBuyTicketInstruction<TProgram extends string, TAccountMetas
     accounts: {
       buyer: getNextAccount(),
       config: getNextAccount(),
+      game: getNextAccount(),
       round: getNextAccount(),
       ticket: getNextAccount(),
       systemProgram: getNextAccount(),

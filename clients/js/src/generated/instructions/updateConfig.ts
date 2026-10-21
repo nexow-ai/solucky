@@ -20,12 +20,8 @@ import {
   getOptionEncoder,
   getStructDecoder,
   getStructEncoder,
-  getU16Decoder,
-  getU16Encoder,
   getU32Decoder,
   getU32Encoder,
-  getU64Decoder,
-  getU64Encoder,
   SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
   SolanaError,
   transformEncoder,
@@ -83,8 +79,6 @@ export type UpdateConfigInstructionData = {
   discriminator: ReadonlyUint8Array;
   authority: Option<Address>;
   treasury: Option<Address>;
-  ticketPrice: Option<bigint>;
-  feeBps: Option<number>;
   maxNumber: Option<number>;
   paused: Option<boolean>;
 };
@@ -92,8 +86,6 @@ export type UpdateConfigInstructionData = {
 export type UpdateConfigInstructionDataArgs = {
   authority: OptionOrNullable<Address | HasAddress>;
   treasury: OptionOrNullable<Address | HasAddress>;
-  ticketPrice: OptionOrNullable<number | bigint>;
-  feeBps: OptionOrNullable<number>;
   maxNumber: OptionOrNullable<number>;
   paused: OptionOrNullable<boolean>;
 };
@@ -104,8 +96,6 @@ export function getUpdateConfigInstructionDataEncoder(): Encoder<UpdateConfigIns
       ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
       ['authority', getOptionEncoder(getAddressEncoder())],
       ['treasury', getOptionEncoder(getAddressEncoder())],
-      ['ticketPrice', getOptionEncoder(getU64Encoder())],
-      ['feeBps', getOptionEncoder(getU16Encoder())],
       ['maxNumber', getOptionEncoder(getU32Encoder())],
       ['paused', getOptionEncoder(getBooleanEncoder())],
     ]),
@@ -118,8 +108,6 @@ export function getUpdateConfigInstructionDataDecoder(): Decoder<UpdateConfigIns
     ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
     ['authority', getOptionDecoder(getAddressDecoder())],
     ['treasury', getOptionDecoder(getAddressDecoder())],
-    ['ticketPrice', getOptionDecoder(getU64Decoder())],
-    ['feeBps', getOptionDecoder(getU16Decoder())],
     ['maxNumber', getOptionDecoder(getU32Decoder())],
     ['paused', getOptionDecoder(getBooleanDecoder())],
   ]);
@@ -140,8 +128,6 @@ export type UpdateConfigAsyncInput<
   config?: TAccountConfig;
   authorityArg: UpdateConfigInstructionDataArgs['authority'];
   treasury: UpdateConfigInstructionDataArgs['treasury'];
-  ticketPrice: UpdateConfigInstructionDataArgs['ticketPrice'];
-  feeBps: UpdateConfigInstructionDataArgs['feeBps'];
   maxNumber: UpdateConfigInstructionDataArgs['maxNumber'];
   paused: UpdateConfigInstructionDataArgs['paused'];
 };
@@ -201,8 +187,6 @@ export type UpdateConfigInput<
   config: TAccountConfig;
   authorityArg: UpdateConfigInstructionDataArgs['authority'];
   treasury: UpdateConfigInstructionDataArgs['treasury'];
-  ticketPrice: UpdateConfigInstructionDataArgs['ticketPrice'];
-  feeBps: UpdateConfigInstructionDataArgs['feeBps'];
   maxNumber: UpdateConfigInstructionDataArgs['maxNumber'];
   paused: UpdateConfigInstructionDataArgs['paused'];
 };

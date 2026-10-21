@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const pt: Dict = {
   meta: {
-    title: 'S☉Lucky: a loteria diária na Solana',
+    title: 'S☉Lucky: jogos de loteria na Solana',
     description:
-      'Escolha um número, compre um bilhete e ganhe o pote inteiro à meia-noite UTC. Cada bilhete, cada pote e cada sorteio fica na Solana e pode ser conferido por qualquer pessoa.',
-    ogImageAlt: 'S☉Lucky, a loteria diária na Solana',
+      'Escolha um número na loteria diária ou na horária, ou descubra o número escondido. O vencedor leva 80% do pote. Cada bilhete, cada pote e cada sorteio fica na Solana e pode ser conferido por qualquer pessoa.',
+    ogImageAlt: 'S☉Lucky, jogos de loteria na Solana',
   },
 
   nav: {
@@ -19,6 +19,30 @@ const pt: Dict = {
   lang: {
     label: 'Idioma',
     choose: 'Idioma: {name}',
+  },
+
+  update: {
+    title: 'Uma nova versão está pronta',
+    hint: 'Recarregue para usá-la agora. Ela também carrega sozinha na próxima troca de página.',
+    reload: 'Recarregar',
+  },
+
+  install: {
+    label: 'Instalar o app',
+    ios: 'Para instalar o S☉Lucky, abra o menu Compartilhar do seu navegador e escolha Adicionar à Tela de Início.',
+  },
+
+  push: {
+    on: 'Avise-me quando uma rodada deste jogo for ganha',
+    off: 'Desativar as notificações deste jogo',
+    enabled: 'Notificações ativadas',
+    enabledHint: '{game}: você vai receber uma notificação sempre que uma rodada for ganha.',
+    disabled: 'Notificações desativadas',
+    blocked:
+      'As notificações estão bloqueadas para este site. Permita-as nas configurações do seu navegador e tente de novo.',
+    failed: 'Não foi possível alterar as notificações. Tente de novo.',
+    lottery: 'Rodada {round}: saiu o {drawn}. O bilhete mais próximo, {winning}, ganha ◎{prize}.',
+    guess: 'Rodada {round}: o número era {winning}. O palpite que o encontrou ganha ◎{prize}.',
   },
 
   header: {
@@ -53,10 +77,10 @@ const pt: Dict = {
   },
 
   home: {
-    kicker: 'Loteria diária na Solana',
+    kicker: 'Jogos de loteria na Solana',
     title: 'Escolha um número.',
-    titleEnd: 'Ganhe o pote à meia-noite.',
-    lead: 'Um sorteio por dia, um vencedor, o pote inteiro. Cada bilhete, cada lamport e cada sorteio fica na Solana, onde qualquer pessoa pode conferir.',
+    titleEnd: 'Ganhe à meia-noite.',
+    lead: 'Um sorteio todo dia, um sorteio toda hora e um número escondido para descobrir. O vencedor leva 80% do pote, e o resto passa para a próxima rodada. Cada bilhete, cada lamport e cada sorteio fica na Solana, onde qualquer pessoa pode conferir.',
     playNow: 'Jogar agora',
     howItWorks: 'Como funciona',
     program: 'Programa',
@@ -95,7 +119,7 @@ const pt: Dict = {
         win: {
           title: 'Ganhe à meia-noite UTC',
           description:
-            'Um bilhete leva o pote inteiro, menos uma pequena taxa da casa. Mais bilhetes, mais chances: cada bilhete conta uma vez.',
+            'Um número aleatório é sorteado, e o bilhete mais próximo dele leva 80% do pote. A taxa da casa sai do restante, e o que sobra passa para o dia seguinte.',
           when: 'Logo após a meia-noite UTC',
         },
       },
@@ -110,12 +134,12 @@ const pt: Dict = {
         locked: {
           title: 'O pote fica travado no programa',
           description:
-            'O dinheiro dos bilhetes vai direto para a conta da rodada. O programa só o paga ao dono do bilhete vencedor, e a taxa à tesouraria. O operador não pode sacá-lo.',
+            'O dinheiro dos bilhetes vai direto para a conta da rodada. O programa só paga 80% dele ao dono do bilhete vencedor, a taxa à tesouraria e o resto à próxima rodada do jogo. O operador não pode sacá-lo.',
         },
         draw: {
           title: 'Um sorteio que ninguém pode prever',
           description:
-            'Cada compra é misturada à entropia da rodada. Quando o dia termina, a rodada fixa um slot alguns segundos no futuro; o hash desse slot, desconhecido por todos até então, escolhe o vencedor.',
+            'Cada compra é misturada à entropia da rodada. Quando uma rodada termina, ela fixa um slot alguns segundos no futuro; o hash desse slot, desconhecido por todos até então, escolhe o número com o qual os bilhetes são comparados.',
         },
         anyone: {
           title: 'Qualquer pessoa pode executar',
@@ -125,12 +149,12 @@ const pt: Dict = {
         browser: {
           title: 'Conferível no seu navegador',
           description:
-            'A página de cada rodada recalcula o sorteio a partir de dados públicos: a entropia, o hash do slot e o índice vencedor. Mesmas entradas, mesmo vencedor.',
+            'A página de cada rodada recalcula o sorteio a partir de dados públicos: a entropia, o hash do slot, o número sorteado e o bilhete mais próximo. Mesmas entradas, mesmo vencedor.',
         },
         limits: {
           title: 'Limites rígidos para a casa',
           description:
-            'O programa limita a taxa a 10%. Mudanças de preço e de taxa só valem para a rodada do dia seguinte, e um comprador nunca paga mais do que o preço que lhe foi mostrado.',
+            'O programa sempre paga 80% do pote ao vencedor e limita a taxa a 20%. Mudanças de preço e de taxa só valem para as rodadas abertas depois, e um comprador nunca paga mais do que o preço que lhe foi mostrado.',
         },
         open: {
           title: 'Código aberto',
@@ -151,15 +175,15 @@ const pt: Dict = {
         },
         price: {
           q: 'Quanto custa um bilhete?',
-          a: 'O preço é definido on-chain e mostrado na página Jogar. Além do preço, a conta de um bilhete guarda um pequeno depósito de aluguel, que você recebe de volta ao fechar o bilhete depois que a rodada for paga. O primeiro bilhete do dia também paga o aluguel da conta da rodada, que fica on-chain como registro público dela.',
+          a: 'O preço de cada jogo é definido on-chain e mostrado na página Jogar dele. Além do preço, a conta de um bilhete guarda um pequeno depósito de aluguel, que você recebe de volta ao fechar o bilhete depois que a rodada for paga. O primeiro bilhete de uma rodada também paga o aluguel da conta da rodada, que fica on-chain como registro público dela; nas loterias, cada bilhete também paga pelos 4 bytes que o número dele ocupa ali.',
         },
         odds: {
           q: 'Como são calculadas minhas chances?',
-          a: 'Todo bilhete tem a mesma chance: seus bilhetes divididos por todos os bilhetes vendidos naquele dia. O número que você escolhe é o seu rótulo no quadro; ele não muda suas chances.',
+          a: 'Nas loterias, vence o bilhete mais próximo do número sorteado, então sua chance é a parte do intervalo de números que fica mais perto dos seus números do que dos de qualquer outra pessoa: um número longe dos outros bilhetes cobre uma parte maior. No Adivinhe o número, cada verificação encontra o número com chance igual aos novos palpites divididos pelos números ainda não tentados.',
         },
         draw: {
           q: 'E se ninguém sortear a rodada?',
-          a: 'Um pequeno bot (o crank) fecha, sorteia e paga cada rodada segundos depois da meia-noite, e qualquer pessoa pode fazer o mesmo pelo painel Histórico. Se o slot fixado ficar antigo demais para ser lido (cerca de três minutos), a rodada pode ser fechada de novo para fixar um novo; o programa só permite isso quando o slot antigo está comprovadamente fora de alcance.',
+          a: 'Um pequeno bot (o crank) fecha, sorteia e paga cada rodada de loteria segundos depois do fim dela, e verifica os novos palpites a cada poucos segundos. Qualquer pessoa pode fazer o mesmo pela página Jogar. Se o slot fixado ficar antigo demais para ser lido (cerca de três minutos), a rodada pode ser fechada de novo para fixar um novo; o programa só permite isso quando o slot antigo está comprovadamente fora de alcance.',
         },
         country: {
           q: 'Por que meu país aparece?',
@@ -195,9 +219,12 @@ const pt: Dict = {
     newTicket: 'Novo bilhete',
     rules: {
       daily: 'Nova rodada todo dia às 00:00 UTC',
-      pot: 'Um bilhete leva o pote',
+      hourly: 'E outra a cada hora',
+      pot: 'O número mais próximo leva 80% do pote',
+      carry: 'O resto passa para a próxima rodada',
+      guess: 'Adivinhe o número: sem prazo, até alguém acertar',
       numbers: 'Números de 0 a {max}',
-      fee: 'Taxa da casa limitada a 10% pelo programa',
+      fee: 'Taxa da casa limitada a 20% pelo programa',
       anyone: 'Qualquer pessoa pode fechar, sortear e pagar uma rodada',
       check: 'Recalcule cada sorteio no seu navegador',
       open: 'Código aberto',
@@ -214,16 +241,16 @@ const pt: Dict = {
     entropy: 'Entropia',
     slotHash: 'Hash do slot · slot {slot}',
     formula: 'sha256(entropia ‖ hash do slot ‖ slot ‖ rodada) =',
-    mod: 'primeiros 8 bytes como u64 mod {count} = {ticket}',
-    ticketCount: 'bilhetes',
-    ticket: 'bilhete #{index}',
+    mod: 'primeiros 8 bytes como u64 mod {count} = {drawn}',
+    ticketCount: 'números',
+    closest: 'bilhete mais próximo: {number}',
     number: 'Número',
     paidTo: 'Pago a',
     payout: 'Pagamento',
     check: 'Conferir este sorteio',
     roundPage: 'Página da rodada',
     nextDraw: 'Próximo sorteio depois das 00:00 UTC',
-    ok: 'Recalculado no seu navegador: mesmo hash, o bilhete #{index} vence.',
+    ok: 'Recalculado no seu navegador: mesmo hash, o número {number} vence.',
     mismatch: 'O hash recalculado no seu navegador não confere com esta rodada.',
   },
 
@@ -236,7 +263,10 @@ const pt: Dict = {
     yourTickets: 'Seus bilhetes',
     winChance: 'Chance de ganhar',
     chance: 'Chance',
-    todaysPot: 'Pote de hoje',
+    todaysPot: 'Pote',
+    checked: 'Verificados',
+    waiting: 'Aguardando',
+    numbersLeft: 'Números restantes',
     winners: 'Vencedores',
     averagePot: 'Pote médio',
     biggestPot: 'Maior pote',
@@ -251,7 +281,8 @@ const pt: Dict = {
 
   play: {
     title: 'Jogar',
-    description: 'Escolha o número de hoje e veja o pote crescer ao vivo na Solana.',
+    description:
+      'Escolha um número na loteria diária ou na horária, ou descubra o número escondido, e veja o pote crescer ao vivo na Solana.',
     testMoney: 'Você está jogando na Solana {cluster}: os bilhetes custam SOL de teste, sem valor real.',
     localFunds: 'Aponte sua carteira para {url} e depois abasteça-a com: {command}',
     phantomFunds:
@@ -267,7 +298,7 @@ const pt: Dict = {
     title: 'Número',
     win: 'Ganhe',
     in: 'em',
-    taken: 'Já escolhido hoje',
+    taken: 'Já escolhido nesta rodada',
     range: 'De 0 a {max}, um bilhete por número',
     pad: 'Teclado numérico',
     reset: 'Zerar',
@@ -275,10 +306,10 @@ const pt: Dict = {
     dip: 'Surpresinha',
     searchCountry: 'Buscar um país',
     country: 'País exibido com seu bilhete',
-    notSetUp: 'A loteria ainda não está configurada neste cluster.',
+    notSetUp: 'Este jogo ainda não está configurado neste cluster.',
     paused: 'A venda de bilhetes está pausada.',
     buy: 'Comprar o {number} por ◎{price}',
-    takenToday: 'O {number} já foi escolhido hoje',
+    takenToday: 'O {number} já foi escolhido',
     outOfRange: 'Número fora do intervalo',
     notEnough: 'SOL insuficiente',
     keys: 'Teclas 0–9 digitam, ⌫ apaga, Enter compra.',
@@ -287,12 +318,54 @@ const pt: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Hoje',
     title: 'SOLPOT',
     closesIn: '{day} · fecha em',
+    carried: 'Inclui ◎{carry} que vieram da rodada anterior',
+    split: '80% para o vencedor · {fee} de taxa da casa · o resto para a próxima rodada',
     inPlay: 'Números em jogo',
     empty: 'Nenhum bilhete ainda',
-    beFirst: 'Escolha o primeiro número de hoje.',
+    beFirst: 'Escolha o primeiro número desta rodada.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Jogos',
+    title: 'Três jeitos de jogar',
+    description:
+      'Os mesmos números, de 0 a {max}. O vencedor leva 80% do pote; a taxa da casa sai do restante, e o que sobra passa para a próxima rodada.',
+    play: 'Jogar',
+    daily: {
+      name: 'Loteria diária',
+      short: 'Diária',
+      description: 'Um sorteio todo dia depois da meia-noite UTC. Vence o bilhete mais próximo do número sorteado.',
+    },
+    hourly: {
+      name: 'Loteria horária',
+      short: 'Horária',
+      description: 'Um sorteio a cada hora, na hora cheia (UTC). Vence o bilhete mais próximo do número sorteado.',
+    },
+    guess: {
+      name: 'Adivinhe o número',
+      short: 'Adivinhe',
+      description:
+        'Sem prazo. Os novos palpites são verificados a cada poucos segundos até que um acerte o número da rodada; aí começa uma nova rodada.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Até alguém acertar',
+    odds: 'Cada verificação encontra o número com chance igual aos novos palpites divididos pelos {n} números ainda não tentados.',
+    bought: 'O palpite {number} está valendo. Ele será verificado em poucos segundos.',
+    sealing: 'Selando os últimos palpites da rodada {day}',
+    checkNow: 'Verificar agora',
+    checkHint:
+      'Um bot verifica os novos palpites a cada poucos segundos. Qualquer pessoa pode rodar a verificação; ela custa taxas de rede.',
+    missed: 'Não era o número: {numbers}',
+    left: 'O número é um dos {n} números ainda não tentados.',
+    foundByYou: 'Você acertou! O número era {number}',
+    foundByOther: 'Outro jogador acertou o número',
+    nextRound: 'Uma nova rodada com um novo número está à venda.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -310,8 +383,8 @@ const pt: Dict = {
     getBack: 'Recuperar',
     winners: 'Vencedores',
     noWinners: 'Nenhum vencedor ainda',
-    firstDraw: 'O primeiro sorteio acontece à meia-noite UTC.',
-    chart: 'Pote por dia',
+    firstDraw: 'O primeiro vencedor aparece aqui.',
+    chart: 'Pote por rodada',
     chartEmpty: 'Nenhuma rodada encerrada ainda.',
     chartLabel:
       'Pote de {n} rodada, a mais recente; a lista abaixo traz todos os valores. | Pote das últimas {n} rodadas; a lista abaixo traz todos os valores.',
@@ -321,6 +394,7 @@ const pt: Dict = {
     open: 'Aberta',
     toClose: 'Aguardando fechamento',
     toDraw: 'Aguardando sorteio',
+    checking: 'Verificando palpites',
     unpaid: 'Sorteada, não paga',
     paid: 'Paga',
   },
@@ -373,7 +447,7 @@ const pt: Dict = {
     balance: 'Saldo',
     ticketsLeft: '{n} bilhete restante | {n} bilhetes restantes',
     needMore: 'precisa de mais SOL para jogar',
-    numbers: 'Seus números de hoje',
+    numbers: 'Seus números nesta rodada',
     copy: 'Copiar endereço',
     explorer: 'Explorador',
     play: 'Jogar',
@@ -383,10 +457,11 @@ const pt: Dict = {
   round: {
     title: 'Rodada {day}',
     back: 'Voltar ao jogo',
-    notDate: 'Isto não é uma data. As rodadas são nomeadas YYYY-MM-DD.',
+    notDate:
+      'Isto não é uma rodada deste jogo. As rodadas diárias são nomeadas YYYY-MM-DD, as horárias YYYY-MM-DDTHH e as do Adivinhe o número pelo número delas.',
     kicker: 'Rodada',
-    nobody: 'Ninguém jogou neste dia',
-    beFirst: 'Compre o primeiro bilhete de hoje.',
+    nobody: 'Ninguém jogou nesta rodada',
+    beFirst: 'Compre o primeiro bilhete desta rodada.',
     onlyExists: 'Uma rodada só passa a existir quando o primeiro bilhete dela é vendido.',
     pot: 'Pote',
     usd: '{usd} na cotação de hoje',
@@ -406,10 +481,12 @@ const pt: Dict = {
     slotHash: 'Hash do slot {slot} (lido pelo programa na sysvar SlotHashes)',
     randomness: 'Aleatoriedade',
     winning: 'Bilhete vencedor',
-    winningFormula: 'primeiros 8 bytes como u64 mod {count} = compra #{index}',
+    winningFormula: 'primeiros 8 bytes como u64 mod {count} = {drawn}; o bilhete mais próximo tem o {number}',
+    guessFormula:
+      'primeiros 8 bytes como u64 mod {left} (números ainda não tentados) = {r}, abaixo de {batch} (palpites na verificação): a compra #{index} acertou o número',
     ok: 'O sorteio confere.',
     mismatch: 'Divergência: o resultado gravado não confere com as entradas.',
-    got: 'Seu navegador obteve {hash}… e o bilhete #{index}.',
+    got: 'Seu navegador obteve {hash}… e o número {number}.',
     tickets: 'Bilhetes',
     ticketsHint: 'Bilhetes fechados pelos donos depois do pagamento não aparecem mais aqui; a rodada mantém os totais.',
     noTickets: 'Não restam bilhetes abertos nesta rodada.',
@@ -422,7 +499,7 @@ const pt: Dict = {
 
   errors: {
     rejected: 'Você cancelou a solicitação na sua carteira.',
-    taken: 'Alguém já tem este número hoje. Escolha outro.',
+    taken: 'Alguém já tem este número nesta rodada. Escolha outro.',
     funds: 'Não há SOL suficiente na carteira.',
     walletCluster:
       'Sua carteira não conseguiu assinar. No Phantom: Settings → Developer Settings → ative Testnet Mode → selecione Devnet, depois reconecte e tente de novo.',
@@ -430,11 +507,11 @@ const pt: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Só a autoridade pode fazer isso.',
-      invalidTicketPrice: 'O preço do bilhete deve ser de pelo menos 0,001 SOL.',
-      feeTooHigh: 'A taxa está acima do limite de 10%.',
+      invalidTicketPrice: 'O preço do bilhete deve ser de pelo menos 0,002 SOL.',
+      feeTooHigh: 'A taxa está acima do limite de 20%.',
       invalidMaxNumber: 'O maior número deve ser maior que zero.',
       paused: 'A venda de bilhetes está pausada.',
-      wrongDay: 'Só é possível comprar bilhetes para a rodada de hoje.',
+      wrongRound: 'Só é possível comprar bilhetes para a rodada à venda.',
       numberOutOfRange: 'O número está fora do intervalo.',
       invalidCountry: 'O país deve ser um código ISO 3166-1 alpha-2 em maiúsculas.',
       roundNotOpen: 'A rodada não está aberta.',
@@ -451,6 +528,10 @@ const pt: Dict = {
       overflow: 'Overflow aritmético.',
       priceChanged: 'O preço do bilhete é maior do que o preço que você aceitou.',
       feeAlreadyCollected: 'A taxa desta rodada já foi cobrada.',
+      roundFull: 'Esta rodada já vendeu todos os bilhetes que comporta.',
+      nothingToCheck: 'Não há novos palpites para verificar.',
+      batchSealed: 'Os últimos palpites estão sendo verificados; tente de novo em alguns segundos.',
+      invalidGame: 'Jogo desconhecido.',
     },
   },
 
@@ -537,14 +618,14 @@ const pt: Dict = {
       rounds: {
         title: 'Como funciona uma rodada',
         intro: 'O programa impõe estas regras; o site só as mostra:',
-        day: 'Há uma rodada por dia UTC, das 00:00 UTC até a meia-noite seguinte.',
+        day: 'O S☉Lucky tem três jogos. Na loteria diária, há uma rodada por dia UTC, das 00:00 UTC até a meia-noite seguinte; na loteria horária, uma por hora UTC. No Adivinhe o número, uma rodada não tem horário de término: ela dura até que um palpite acerte o número dela.',
         number:
           'Um bilhete é um número, de 0 até o maior número definido na configuração do programa. Cada número só pode estar em um bilhete por rodada.',
         price:
-          'O preço do bilhete e a taxa da casa são copiados da configuração quando uma rodada abre, e ficam fixos durante essa rodada. A taxa nunca pode passar de 10% do pote. Ao comprar, você nunca paga mais do que o preço que lhe foi mostrado.',
-        pot: 'O preço de cada bilhete vai para o pote da rodada, guardado pela própria conta da rodada na Solana. Todo bilhete tem a mesma chance: a sua chance é o número de bilhetes seus dividido por todos os bilhetes vendidos naquela rodada. O número que você escolhe não a altera.',
-        draw: 'Depois da meia-noite, qualquer pessoa pode fechar a rodada, sorteá-la e pagá-la. O dono do bilhete vencedor recebe o pote menos a taxa da casa, e a taxa vai para a tesouraria.',
-        rent: 'A conta de um bilhete também guarda um pequeno depósito de aluguel, que você recebe de volta ao fechar o bilhete depois que a rodada dele for paga. O primeiro bilhete de uma rodada também paga o aluguel da conta da rodada, que fica na Solana como registro público da rodada.',
+          'Cada jogo tem seu próprio preço de bilhete e sua própria taxa da casa. Eles são copiados, junto com o maior número, quando uma rodada abre, e ficam fixos durante essa rodada. A taxa nunca pode passar de 20% do pote. Ao comprar, você nunca paga mais do que o preço que lhe foi mostrado.',
+        pot: 'O preço de cada bilhete vai para o pote da rodada, guardado pela própria conta da rodada na Solana. Nas loterias, um número aleatório de 0 até o maior número é sorteado e vence o bilhete mais próximo dele; em caso de empate, vence o número menor. No Adivinhe o número, os novos palpites são verificados em lotes: um lote contém o número com chance igual aos palpites dele divididos pelos números ainda não tentados, a mesma chance de um número escondido na abertura da rodada.',
+        draw: 'Depois que uma rodada de loteria termina, ou assim que novos palpites aguardam uma verificação, qualquer pessoa pode fechar a rodada, sorteá-la e pagá-la. O dono do bilhete vencedor recebe 80% do pote, a taxa da casa vai para a tesouraria, e o resto fica no programa para ser sorteado na próxima rodada do jogo.',
+        rent: 'A conta de um bilhete também guarda um pequeno depósito de aluguel, que você recebe de volta ao fechar o bilhete depois que a rodada dele for paga. O primeiro bilhete de uma rodada também paga o aluguel da conta da rodada, que fica na Solana como registro público da rodada. Nas loterias, cada bilhete também paga o aluguel dos 4 bytes que o número dele ocupa nessa conta, que não é devolvido.',
       },
       wallet: {
         title: 'Sua carteira e suas transações',
@@ -558,12 +639,12 @@ const pt: Dict = {
         title: 'O que o operador pode e não pode fazer',
         intro: 'A configuração do programa tem uma autoridade, que pode:',
         price:
-          'alterar o preço do bilhete (no mínimo ◎0,001) e a taxa da casa (no máximo 10%), com efeito a partir da próxima rodada que abrir;',
+          'alterar o preço do bilhete de cada jogo (no mínimo ◎0,002) e a taxa da casa dele (no máximo 20%), com efeito a partir da próxima rodada desse jogo que abrir;',
         pause:
           'pausar e retomar a venda de bilhetes. Uma pausa só impede novos bilhetes: as rodadas já jogadas ainda podem ser sorteadas e pagas;',
         other: 'alterar a tesouraria, o maior número e a própria autoridade.',
         cannot:
-          'O código do programa não permite que a autoridade, ou qualquer outra pessoa, pegue o pote de uma rodada ou o envie para outro lugar que não seja o dono do bilhete vencedor, fique com mais do que a taxa ou cobre de um comprador mais do que o preço que lhe foi mostrado.',
+          'O código do programa não permite que a autoridade, ou qualquer outra pessoa, pegue o pote de uma rodada ou o envie para outro lugar que não seja o dono do bilhete vencedor, a tesouraria (pela taxa) e a próxima rodada do jogo, fique com mais do que a taxa ou cobre de um comprador mais do que o preço que lhe foi mostrado.',
         upgrade:
           'O programa é atualizável: quem detém a autoridade de atualização dele poderia implantar um código diferente, então você está confiando em quem a detém até que o programa se torne imutável ou seja entregue a uma multisig. O código-fonte de cada versão é público, e um programa implantado pode ser conferido com ele, como explica a seção “Verifiable builds” do README.',
       },
@@ -573,7 +654,7 @@ const pt: Dict = {
         bugs: 'softwares podem ter bugs, inclusive o programa, o app e a sua carteira, e um bug pode fazer você perder seus bilhetes ou seu SOL;',
         network:
           'a Solana ou o endpoint RPC que o site usa podem ficar lentos, congestionados ou fora do ar, e uma transação pode falhar ou chegar depois que uma rodada fechar;',
-        draw: 'o sorteio usa o hash de um slot da Solana que ninguém conhece quando as vendas fecham. Os jogadores não conseguem prevê-lo, mas o validador que produz esse slot poderia enviesá-lo, e quem fecha uma rodada poderia segurar um sorteio desfavorável até que esse slot não possa mais ser lido. Não é um oráculo de aleatoriedade verificável;',
+        draw: 'o sorteio usa o hash de um slot da Solana que ninguém conhece quando uma rodada fecha ou um lote de palpites é selado. Os jogadores não conseguem prevê-lo, mas o validador que produz esse slot poderia enviesá-lo, e quem fecha uma rodada poderia segurar um sorteio desfavorável até que esse slot não possa mais ser lido. Não é um oráculo de aleatoriedade verificável;',
         site: 'o site pode ficar indisponível a qualquer momento. O programa, e os seus bilhetes, continuam funcionando sem ele;',
         law: 'as leis sobre loterias e criptoativos variam entre países e podem mudar.',
       },
@@ -635,6 +716,9 @@ const pt: Dict = {
         price: 'O preço do SOL',
         priceBody:
           'Para mostrar os potes em dólares, nosso servidor busca o preço do SOL na Coinbase, ou na CoinGecko se a Coinbase não responder, e o mantém em cache por um minuto. Essas solicitações partem do nosso servidor e não levam nada sobre você.',
+        push: 'Notificações dos sorteios',
+        pushBody:
+          'Se você ativar as notificações de um jogo, seu navegador entrega ao nosso servidor uma inscrição push: um endereço no serviço push do seu navegador (operado pelo Google, pela Mozilla, pela Apple ou pela Microsoft, conforme o navegador) e as chaves para criptografar mensagens para ele. Nós a guardamos com o seu idioma e os jogos que você escolheu, e nada mais: nenhum endereço de carteira, nenhum endereço IP. Quando uma rodada de um desses jogos é ganha, nosso servidor envia o resultado, criptografado, por esse serviço push, que o entrega ao seu navegador conforme a própria política. Desativar as notificações apaga a inscrição, e nós também a apagamos quando o serviço push nos informa que ela não existe mais.',
       },
       thirdParties: {
         title: 'Serviços que seu navegador usa',
@@ -653,6 +737,8 @@ const pt: Dict = {
       browser: {
         title: 'O que fica no seu navegador',
         body: 'O app guarda cinco configurações no armazenamento local do seu navegador: seu tema, sua última carteira, sua escolha de país, a configuração de som e seu idioma. A página {cookies} lista todas elas.',
+        cache:
+          'Para abrir sem conexão, o app também guarda cópias das páginas que você visita e dos próprios arquivos no armazenamento de cache do seu navegador. Cada nova versão do site as substitui.',
       },
       purposes: {
         title: 'Para quê, e o que nunca fazemos',
@@ -692,6 +778,8 @@ const pt: Dict = {
         holds: 'O que guarda',
         saved: 'Salvo',
         wallet: 'A extensão da sua carteira guarda os próprios dados, conforme a política do fabricante.',
+        cache:
+          'Para abrir sem conexão, o app também guarda cópias das páginas que você visita e dos próprios arquivos no armazenamento de cache do seu navegador; cada nova versão do site as substitui. Se você ativar as notificações dos sorteios, seu navegador também guarda a inscrição push até você desativá-las. Limpar os dados deste site remove tudo isso.',
       },
       keys: {
         theme: {
@@ -739,9 +827,10 @@ const pt: Dict = {
       },
       odds: {
         title: 'Conheça as chances',
-        same: 'Todo bilhete tem a mesma chance. Sua chance de ganhar uma rodada é o número de bilhetes seus dividido por todos os bilhetes vendidos nela.',
-        label: 'O número que você escolhe é o seu rótulo no quadro. Ele não muda sua chance.',
-        fee: 'O vencedor recebe o pote menos a taxa da casa, que o programa limita a 10%. Assim, considerando todos os jogadores, os bilhetes devolvem o dinheiro gasto neles menos essa taxa: em média, um bilhete retorna menos do que custa.',
+        same: 'Nas loterias, vence o bilhete mais próximo de um número aleatório: sua chance é a parte do intervalo de números que fica mais perto dos seus números do que dos de qualquer outra pessoa. No Adivinhe o número, cada verificação encontra o número com chance igual aos novos palpites divididos pelos números ainda não tentados.',
+        label:
+          'Nenhum número dá mais sorte que outro: o número sorteado tem a mesma chance de ser qualquer número do intervalo.',
+        fee: 'O vencedor recebe 80% do pote. A taxa da casa, que o programa limita a 20%, sai do restante, e o que sobra vai para a próxima rodada do jogo. Assim, considerando todos os jogadores, os bilhetes devolvem o dinheiro gasto neles menos essa taxa: em média, um bilhete retorna menos do que custa.',
         nothing: 'Nada no site muda essas chances.',
       },
       final: {

@@ -11,6 +11,8 @@ import {
   containsBytes,
   fixDecoderSize,
   fixEncoderSize,
+  getBooleanDecoder,
+  getBooleanEncoder,
   getBytesDecoder,
   getBytesEncoder,
   getConstantDecoder,
@@ -23,6 +25,8 @@ import {
   getU32Encoder,
   getU64Decoder,
   getU64Encoder,
+  getU8Decoder,
+  getU8Encoder,
   type FixedSizeCodec,
   type FixedSizeDecoder,
   type FixedSizeEncoder,
@@ -36,30 +40,56 @@ export function getRoundDrawnEventDiscriminatorBytes(): ReadonlyUint8Array {
 }
 
 export type RoundDrawnEvent = {
-  day: number;
+  kind: number;
+  period: number;
   slot: bigint;
   slotHash: ReadonlyUint8Array;
   randomness: ReadonlyUint8Array;
+  /** Guess: false when the batch missed and the round goes on. */
+  won: boolean;
+  drawnNumber: number;
   winningIndex: number;
+  winningNumber: number;
+  carryIn: bigint;
+  payout: bigint;
+  fee: bigint;
+  carryOut: bigint;
 };
 
 export type RoundDrawnEventArgs = {
-  day: number;
+  kind: number;
+  period: number;
   slot: number | bigint;
   slotHash: ReadonlyUint8Array;
   randomness: ReadonlyUint8Array;
+  /** Guess: false when the batch missed and the round goes on. */
+  won: boolean;
+  drawnNumber: number;
   winningIndex: number;
+  winningNumber: number;
+  carryIn: number | bigint;
+  payout: number | bigint;
+  fee: number | bigint;
+  carryOut: number | bigint;
 };
 
 /** Gets the encoder for {@link RoundDrawnEventArgs} event data. */
 export function getRoundDrawnEventEncoder(): FixedSizeEncoder<RoundDrawnEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ['day', getU32Encoder()],
+      ['kind', getU8Encoder()],
+      ['period', getU32Encoder()],
       ['slot', getU64Encoder()],
       ['slotHash', fixEncoderSize(getBytesEncoder(), 32)],
       ['randomness', fixEncoderSize(getBytesEncoder(), 32)],
+      ['won', getBooleanEncoder()],
+      ['drawnNumber', getU32Encoder()],
       ['winningIndex', getU32Encoder()],
+      ['winningNumber', getU32Encoder()],
+      ['carryIn', getU64Encoder()],
+      ['payout', getU64Encoder()],
+      ['fee', getU64Encoder()],
+      ['carryOut', getU64Encoder()],
     ]),
     [getConstantEncoder(ROUND_DRAWN_EVENT_DISCRIMINATOR)],
   );
@@ -69,11 +99,19 @@ export function getRoundDrawnEventEncoder(): FixedSizeEncoder<RoundDrawnEventArg
 export function getRoundDrawnEventDecoder(): FixedSizeDecoder<RoundDrawnEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ['day', getU32Decoder()],
+      ['kind', getU8Decoder()],
+      ['period', getU32Decoder()],
       ['slot', getU64Decoder()],
       ['slotHash', fixDecoderSize(getBytesDecoder(), 32)],
       ['randomness', fixDecoderSize(getBytesDecoder(), 32)],
+      ['won', getBooleanDecoder()],
+      ['drawnNumber', getU32Decoder()],
       ['winningIndex', getU32Decoder()],
+      ['winningNumber', getU32Decoder()],
+      ['carryIn', getU64Decoder()],
+      ['payout', getU64Decoder()],
+      ['fee', getU64Decoder()],
+      ['carryOut', getU64Decoder()],
     ]),
     [getConstantDecoder(ROUND_DRAWN_EVENT_DISCRIMINATOR)],
   );

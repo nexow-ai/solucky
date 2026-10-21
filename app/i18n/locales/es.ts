@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const es: Dict = {
   meta: {
-    title: 'S☉Lucky: la lotería diaria en Solana',
+    title: 'S☉Lucky: juegos de lotería en Solana',
     description:
-      'Elige un número, compra un boleto y gana todo el pozo a medianoche UTC. Cada boleto, cada pozo y cada sorteo vive en Solana, y cualquiera puede comprobarlo.',
-    ogImageAlt: 'S☉Lucky, la lotería diaria en Solana',
+      'Elige un número en la lotería diaria o en la horaria, o da con el número oculto. El ganador se lleva el 80 % del pozo. Cada boleto, cada pozo y cada sorteo vive en Solana, y cualquiera puede comprobarlo.',
+    ogImageAlt: 'S☉Lucky, juegos de lotería en Solana',
   },
 
   nav: {
@@ -19,6 +19,30 @@ const es: Dict = {
   lang: {
     label: 'Idioma',
     choose: 'Idioma: {name}',
+  },
+
+  update: {
+    title: 'Hay una nueva versión lista',
+    hint: 'Recarga para tenerla ya. También se carga sola al cambiar de página.',
+    reload: 'Recargar',
+  },
+
+  install: {
+    label: 'Instalar la app',
+    ios: 'Para instalar S☉Lucky, abre el menú Compartir de tu navegador y elige Añadir a pantalla de inicio.',
+  },
+
+  push: {
+    on: 'Avísame cuando se gane una ronda de este juego',
+    off: 'Desactivar las notificaciones de este juego',
+    enabled: 'Notificaciones activadas',
+    enabledHint: '{game}: recibirás una notificación cada vez que se gane una ronda.',
+    disabled: 'Notificaciones desactivadas',
+    blocked:
+      'Las notificaciones están bloqueadas para este sitio. Permítelas en los ajustes de tu navegador y vuelve a intentarlo.',
+    failed: 'No se pudieron cambiar las notificaciones. Vuelve a intentarlo.',
+    lottery: 'Ronda {round}: salió el {drawn}. El boleto más cercano, el {winning}, gana ◎{prize}.',
+    guess: 'Ronda {round}: el número era el {winning}. El intento que lo encontró gana ◎{prize}.',
   },
 
   header: {
@@ -53,10 +77,10 @@ const es: Dict = {
   },
 
   home: {
-    kicker: 'Lotería diaria en Solana',
+    kicker: 'Juegos de lotería en Solana',
     title: 'Elige un número.',
-    titleEnd: 'Gana el pozo a medianoche.',
-    lead: 'Un sorteo al día, un ganador, todo el pozo. Cada boleto, cada lamport y cada sorteo vive en Solana, donde cualquiera puede comprobarlo.',
+    titleEnd: 'Gana a medianoche.',
+    lead: 'Un sorteo cada día, un sorteo cada hora y un número oculto por descubrir. El ganador se lleva el 80 % del pozo, y el resto pasa a la siguiente ronda. Cada boleto, cada lamport y cada sorteo vive en Solana, donde cualquiera puede comprobarlo.',
     playNow: 'Jugar ahora',
     howItWorks: 'Cómo funciona',
     program: 'Programa',
@@ -95,7 +119,7 @@ const es: Dict = {
         win: {
           title: 'Gana a medianoche UTC',
           description:
-            'Un boleto gana todo el pozo, menos una pequeña comisión de la casa. Más boletos, más probabilidades: cada boleto cuenta una vez.',
+            'Se sortea un número al azar, y el boleto más cercano a él gana el 80 % del pozo. La comisión de la casa sale del resto, y lo que queda pasa al día siguiente.',
           when: 'Justo después de la medianoche UTC',
         },
       },
@@ -110,12 +134,12 @@ const es: Dict = {
         locked: {
           title: 'El pozo está bloqueado en el programa',
           description:
-            'El dinero de los boletos va directo a la cuenta de la ronda. El programa solo lo paga al dueño del boleto ganador, y la comisión, a la tesorería. El operador no puede retirarlo.',
+            'El dinero de los boletos va directo a la cuenta de la ronda. El programa solo paga el 80 % al dueño del boleto ganador, la comisión a la tesorería y el resto a la siguiente ronda del juego. El operador no puede retirarlo.',
         },
         draw: {
           title: 'Un sorteo que nadie puede predecir',
           description:
-            'Cada compra se mezcla en la entropía de la ronda. Cuando termina el día, la ronda fija un slot unos segundos en el futuro; el hash de ese slot, que nadie conoce hasta entonces, elige al ganador.',
+            'Cada compra se mezcla en la entropía de la ronda. Cuando termina una ronda, esta fija un slot unos segundos en el futuro; el hash de ese slot, que nadie conoce hasta entonces, elige el número con el que se miden los boletos.',
         },
         anyone: {
           title: 'Cualquiera puede ejecutarlo',
@@ -125,12 +149,12 @@ const es: Dict = {
         browser: {
           title: 'Verificable en tu navegador',
           description:
-            'La página de cada ronda recalcula el sorteo a partir de datos públicos: la entropía, el hash del slot y el índice ganador. Mismas entradas, mismo ganador.',
+            'La página de cada ronda recalcula el sorteo a partir de datos públicos: la entropía, el hash del slot, el número sorteado y el boleto más cercano. Mismas entradas, mismo ganador.',
         },
         limits: {
           title: 'Límites estrictos para la casa',
           description:
-            'El programa limita la comisión al 10 %. Los cambios de precio y de comisión solo se aplican a la ronda del día siguiente, y un comprador nunca paga más que el precio que se le mostró.',
+            'El programa siempre paga al ganador el 80 % del pozo y limita la comisión al 20 %. Los cambios de precio y de comisión solo se aplican a las rondas que se abran después, y un comprador nunca paga más que el precio que se le mostró.',
         },
         open: {
           title: 'Código abierto',
@@ -151,15 +175,15 @@ const es: Dict = {
         },
         price: {
           q: '¿Cuánto cuesta un boleto?',
-          a: 'El precio se fija on-chain y se muestra en la página Jugar. Además del precio, la cuenta de un boleto guarda un pequeño depósito de renta que recuperas al cerrar el boleto una vez pagada la ronda. El primer boleto del día también paga la renta de la cuenta de la ronda, que queda on-chain como su registro público.',
+          a: 'El precio de cada juego se fija on-chain y se muestra en su página Jugar. Además del precio, la cuenta de un boleto guarda un pequeño depósito de renta que recuperas al cerrar el boleto una vez pagada la ronda. El primer boleto de una ronda también paga la renta de la cuenta de la ronda, que queda on-chain como su registro público; en las loterías, cada boleto paga además los 4 bytes que su número ocupa allí.',
         },
         odds: {
           q: '¿Cómo se calculan mis probabilidades?',
-          a: 'Todos los boletos tienen la misma probabilidad: tus boletos divididos entre todos los boletos vendidos ese día. El número que eliges es tu etiqueta en el tablero; no cambia tus probabilidades.',
+          a: 'En las loterías gana el boleto más cercano al número sorteado, así que tu probabilidad es la parte del rango de números que queda más cerca de tus números que de los de cualquier otra persona: un número alejado de los demás boletos cubre una parte mayor. En Adivina el número, cada comprobación encuentra el número con una probabilidad igual a los nuevos intentos divididos entre los números que aún no se han probado.',
         },
         draw: {
           q: '¿Y si nadie sortea la ronda?',
-          a: 'Un pequeño bot (el crank) cierra, sortea y paga cada ronda a los pocos segundos de la medianoche, y cualquiera puede hacer lo mismo desde el panel Historial. Si el slot fijado llega a ser demasiado antiguo para leerlo (unos tres minutos), la ronda puede cerrarse de nuevo para fijar uno nuevo; el programa solo lo permite cuando se puede demostrar que el slot anterior está fuera de alcance.',
+          a: 'Un pequeño bot (el crank) cierra, sortea y paga cada ronda de lotería a los pocos segundos de que termine, y comprueba los nuevos intentos cada pocos segundos. Cualquiera puede hacer lo mismo desde la página Jugar. Si el slot fijado llega a ser demasiado antiguo para leerlo (unos tres minutos), la ronda puede cerrarse de nuevo para fijar uno nuevo; el programa solo lo permite cuando se puede demostrar que el slot anterior está fuera de alcance.',
         },
         country: {
           q: '¿Por qué se muestra mi país?',
@@ -195,9 +219,12 @@ const es: Dict = {
     newTicket: 'Nuevo boleto',
     rules: {
       daily: 'Nueva ronda cada día a las 00:00 UTC',
-      pot: 'Un boleto gana el pozo',
+      hourly: 'Y otra cada hora',
+      pot: 'El número más cercano gana el 80 % del pozo',
+      carry: 'El resto pasa a la siguiente ronda',
+      guess: 'Adivina el número: sin plazo, hasta que alguien lo encuentre',
       numbers: 'Números del 0 al {max}',
-      fee: 'Comisión de la casa limitada al 10 % por el programa',
+      fee: 'Comisión de la casa limitada al 20 % por el programa',
       anyone: 'Cualquiera puede cerrar, sortear y pagar una ronda',
       check: 'Recalcula cada sorteo en tu navegador',
       open: 'Código abierto',
@@ -214,16 +241,16 @@ const es: Dict = {
     entropy: 'Entropía',
     slotHash: 'Hash del slot · slot {slot}',
     formula: 'sha256(entropía ‖ hash del slot ‖ slot ‖ ronda) =',
-    mod: 'primeros 8 bytes como u64 mod {count} = {ticket}',
-    ticketCount: 'boletos',
-    ticket: 'boleto #{index}',
+    mod: 'primeros 8 bytes como u64 mod {count} = {drawn}',
+    ticketCount: 'números',
+    closest: 'boleto más cercano: {number}',
     number: 'Número',
     paidTo: 'Pagado a',
     payout: 'Pago',
     check: 'Verificar este sorteo',
     roundPage: 'Página de la ronda',
     nextDraw: 'Próximo sorteo después de las 00:00 UTC',
-    ok: 'Recalculado en tu navegador: mismo hash, gana el boleto #{index}.',
+    ok: 'Recalculado en tu navegador: mismo hash, gana el número {number}.',
     mismatch: 'El hash recalculado en tu navegador no coincide con esta ronda.',
   },
 
@@ -236,7 +263,10 @@ const es: Dict = {
     yourTickets: 'Tus boletos',
     winChance: 'Probabilidad',
     chance: 'Prob.',
-    todaysPot: 'Pozo de hoy',
+    todaysPot: 'Pozo',
+    checked: 'Comprobados',
+    waiting: 'En espera',
+    numbersLeft: 'Números restantes',
     winners: 'Ganadores',
     averagePot: 'Pozo medio',
     biggestPot: 'Mayor pozo',
@@ -251,7 +281,8 @@ const es: Dict = {
 
   play: {
     title: 'Jugar',
-    description: 'Elige el número de hoy y mira cómo crece el pozo en tiempo real en Solana.',
+    description:
+      'Elige un número en la lotería diaria o en la horaria, o da con el número oculto, y mira cómo crece el pozo en tiempo real en Solana.',
     testMoney: 'Estás jugando en Solana {cluster}: los boletos cuestan SOL de prueba sin valor real.',
     localFunds: 'Apunta tu billetera a {url} y luego cárgala con: {command}',
     phantomFunds:
@@ -267,7 +298,7 @@ const es: Dict = {
     title: 'Número',
     win: 'Gana',
     in: 'en',
-    taken: 'Ya ocupado hoy',
+    taken: 'Ya ocupado en esta ronda',
     range: 'Del 0 al {max}, un boleto por número',
     pad: 'Teclado numérico',
     reset: 'Reiniciar',
@@ -275,10 +306,10 @@ const es: Dict = {
     dip: 'Al azar',
     searchCountry: 'Buscar un país',
     country: 'País que se muestra con tu boleto',
-    notSetUp: 'La lotería aún no está configurada en este clúster.',
+    notSetUp: 'Este juego aún no está configurado en este clúster.',
     paused: 'La venta de boletos está en pausa.',
     buy: 'Comprar el {number} por ◎{price}',
-    takenToday: 'El {number} ya está ocupado hoy',
+    takenToday: 'El {number} ya está ocupado',
     outOfRange: 'Número fuera de rango',
     notEnough: 'SOL insuficiente',
     keys: 'Teclas 0–9 para escribir, ⌫ para borrar, Enter para comprar.',
@@ -287,12 +318,54 @@ const es: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Hoy',
     title: 'SOLPOT',
     closesIn: '{day} · cierra en',
+    carried: 'Incluye ◎{carry} que pasaron de la ronda anterior',
+    split: '80 % al ganador · {fee} de comisión de la casa · el resto a la siguiente ronda',
     inPlay: 'Números en juego',
     empty: 'Aún no hay boletos',
-    beFirst: 'Elige el primer número de hoy.',
+    beFirst: 'Elige el primer número de esta ronda.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Juegos',
+    title: 'Tres formas de jugar',
+    description:
+      'Los mismos números, del 0 al {max}. El ganador se lleva el 80 % del pozo; la comisión de la casa sale del resto, y lo que queda pasa a la siguiente ronda.',
+    play: 'Jugar',
+    daily: {
+      name: 'Lotería diaria',
+      short: 'Diaria',
+      description: 'Un sorteo cada día después de la medianoche UTC. Gana el boleto más cercano al número sorteado.',
+    },
+    hourly: {
+      name: 'Lotería horaria',
+      short: 'Horaria',
+      description: 'Un sorteo cada hora, en punto (UTC). Gana el boleto más cercano al número sorteado.',
+    },
+    guess: {
+      name: 'Adivina el número',
+      short: 'Adivina',
+      description:
+        'Sin plazo. Los nuevos intentos se comprueban cada pocos segundos hasta que uno da con el número de la ronda; entonces empieza una nueva ronda.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Hasta que alguien lo encuentre',
+    odds: 'Cada comprobación encuentra el número con una probabilidad igual a los nuevos intentos divididos entre los {n} números que aún no se han probado.',
+    bought: 'Tu intento {number} ya está dentro. Se comprueba en unos segundos.',
+    sealing: 'Sellando los últimos intentos de la ronda {day}',
+    checkNow: 'Comprobar ahora',
+    checkHint:
+      'Un bot comprueba los nuevos intentos cada pocos segundos. Cualquiera puede lanzar la comprobación; cuesta comisiones de red.',
+    missed: 'No era el número: {numbers}',
+    left: 'El número es uno de los {n} números que aún no se han probado.',
+    foundByYou: '¡Lo encontraste! El número era el {number}',
+    foundByOther: 'Otro jugador encontró el número',
+    nextRound: 'Ya está a la venta una nueva ronda con un nuevo número.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -310,8 +383,8 @@ const es: Dict = {
     getBack: 'Recuperarlo',
     winners: 'Ganadores',
     noWinners: 'Aún no hay ganadores',
-    firstDraw: 'El primer sorteo es a medianoche UTC.',
-    chart: 'Pozo por día',
+    firstDraw: 'El primer ganador aparecerá aquí.',
+    chart: 'Pozo por ronda',
     chartEmpty: 'Aún no hay rondas terminadas.',
     chartLabel:
       'Pozo de la última ronda; la lista de abajo tiene todos los valores. | Pozo de las últimas {n} rondas; la lista de abajo tiene todos los valores.',
@@ -321,6 +394,7 @@ const es: Dict = {
     open: 'Abierta',
     toClose: 'Por cerrar',
     toDraw: 'Por sortear',
+    checking: 'Comprobando intentos',
     unpaid: 'Sorteada, sin pagar',
     paid: 'Pagada',
   },
@@ -373,7 +447,7 @@ const es: Dict = {
     balance: 'Saldo',
     ticketsLeft: '{n} boleto restante | {n} boletos restantes',
     needMore: 'necesitas más SOL para jugar',
-    numbers: 'Tus números de hoy',
+    numbers: 'Tus números en esta ronda',
     copy: 'Copiar dirección',
     explorer: 'Explorador',
     play: 'Jugar',
@@ -383,10 +457,11 @@ const es: Dict = {
   round: {
     title: 'Ronda {day}',
     back: 'Volver al juego',
-    notDate: 'Esto no es una fecha. Las rondas se nombran YYYY-MM-DD.',
+    notDate:
+      'Esto no es una ronda de este juego. Las rondas diarias se nombran YYYY-MM-DD, las horarias YYYY-MM-DDTHH y las de Adivina el número por su número.',
     kicker: 'Ronda',
-    nobody: 'Nadie jugó este día',
-    beFirst: 'Compra el primer boleto de hoy.',
+    nobody: 'Nadie jugó en esta ronda',
+    beFirst: 'Compra el primer boleto de esta ronda.',
     onlyExists: 'Una ronda solo existe una vez vendido su primer boleto.',
     pot: 'Pozo',
     usd: '{usd} al precio de hoy',
@@ -406,10 +481,12 @@ const es: Dict = {
     slotHash: 'Hash del slot {slot} (leído por el programa de la sysvar SlotHashes)',
     randomness: 'Aleatoriedad',
     winning: 'Boleto ganador',
-    winningFormula: 'primeros 8 bytes como u64 mod {count} = compra #{index}',
+    winningFormula: 'primeros 8 bytes como u64 mod {count} = {drawn}; el boleto más cercano tiene el {number}',
+    guessFormula:
+      'primeros 8 bytes como u64 mod {left} (números aún no probados) = {r}, menor que {batch} (intentos de la comprobación): la compra #{index} encontró el número',
     ok: 'El sorteo es correcto.',
     mismatch: 'No coincide: el resultado guardado no corresponde a las entradas.',
-    got: 'Tu navegador obtuvo {hash}… y el boleto #{index}.',
+    got: 'Tu navegador obtuvo {hash}… y el número {number}.',
     tickets: 'Boletos',
     ticketsHint:
       'Los boletos que sus dueños cerraron después del pago ya no aparecen aquí; la ronda conserva los totales.',
@@ -423,7 +500,7 @@ const es: Dict = {
 
   errors: {
     rejected: 'Cancelaste la solicitud en tu billetera.',
-    taken: 'Alguien ya tiene este número hoy. Elige otro.',
+    taken: 'Alguien ya tiene este número en esta ronda. Elige otro.',
     funds: 'No hay suficiente SOL en la billetera.',
     walletCluster:
       'Tu billetera no pudo firmar. En Phantom: Settings → Developer Settings → activa Testnet Mode → selecciona Devnet, luego vuelve a conectarla e inténtalo de nuevo.',
@@ -431,11 +508,11 @@ const es: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Solo la autoridad puede hacer esto.',
-      invalidTicketPrice: 'El precio del boleto debe ser de al menos 0,001 SOL.',
-      feeTooHigh: 'La comisión supera el límite del 10 %.',
+      invalidTicketPrice: 'El precio del boleto debe ser de al menos 0,002 SOL.',
+      feeTooHigh: 'La comisión supera el límite del 20 %.',
       invalidMaxNumber: 'El número más alto debe ser mayor que cero.',
       paused: 'La venta de boletos está en pausa.',
-      wrongDay: 'Solo se pueden comprar boletos para la ronda de hoy.',
+      wrongRound: 'Solo se pueden comprar boletos para la ronda que está a la venta.',
       numberOutOfRange: 'El número está fuera de rango.',
       invalidCountry: 'El país debe ser un código ISO 3166-1 alpha-2 en mayúsculas.',
       roundNotOpen: 'La ronda no está abierta.',
@@ -452,6 +529,10 @@ const es: Dict = {
       overflow: 'Desbordamiento aritmético.',
       priceChanged: 'El precio del boleto es mayor que el precio que aceptaste.',
       feeAlreadyCollected: 'La comisión de esta ronda ya se cobró.',
+      roundFull: 'Esta ronda ya vendió todos los boletos que puede contener.',
+      nothingToCheck: 'No hay nuevos intentos que comprobar.',
+      batchSealed: 'Se están comprobando los últimos intentos; inténtalo de nuevo en unos segundos.',
+      invalidGame: 'Juego desconocido.',
     },
   },
 
@@ -538,14 +619,14 @@ const es: Dict = {
       rounds: {
         title: 'Cómo funciona una ronda',
         intro: 'El programa hace cumplir estas reglas; el sitio solo las muestra:',
-        day: 'Hay una ronda por día UTC, de las 00:00 UTC a la medianoche siguiente.',
+        day: 'S☉Lucky tiene tres juegos. En la lotería diaria hay una ronda por día UTC, de las 00:00 UTC a la medianoche siguiente; en la lotería horaria, una por hora UTC. En Adivina el número, una ronda no tiene hora de fin: dura hasta que un intento encuentra su número.',
         number:
           'Un boleto es un número, del 0 al número más alto fijado en la configuración del programa. Cada número solo puede tenerlo un boleto por ronda.',
         price:
-          'El precio del boleto y la comisión de la casa se copian de la configuración cuando abre una ronda, y se mantienen fijos durante esa ronda. La comisión nunca puede superar el 10 % del pozo. Al comprar, nunca pagas más que el precio que se te mostró.',
-        pot: 'El precio de cada boleto va al pozo de la ronda, que guarda la propia cuenta de la ronda en Solana. Todos los boletos tienen la misma probabilidad: tu probabilidad es tus boletos divididos entre todos los boletos vendidos en esa ronda. El número que eliges no la cambia.',
-        draw: 'Después de la medianoche, cualquiera puede cerrar la ronda, sortearla y pagarla. El dueño del boleto ganador recibe el pozo menos la comisión de la casa, y la comisión va a la tesorería.',
-        rent: 'La cuenta de un boleto también guarda un pequeño depósito de renta, que recuperas al cerrar el boleto una vez pagada su ronda. El primer boleto de una ronda también paga la renta de la cuenta de la ronda, que queda en Solana como registro público de la ronda.',
+          'Cada juego tiene su propio precio de boleto y su propia comisión de la casa. Se copian, junto con el número más alto, cuando abre una ronda, y se mantienen fijos durante esa ronda. La comisión nunca puede superar el 20 % del pozo. Al comprar, nunca pagas más que el precio que se te mostró.',
+        pot: 'El precio de cada boleto va al pozo de la ronda, que guarda la propia cuenta de la ronda en Solana. En las loterías se sortea un número al azar del 0 al número más alto y gana el boleto más cercano a él; en caso de empate, gana el número más bajo. En Adivina el número, los nuevos intentos se comprueban por lotes: un lote contiene el número con una probabilidad igual a sus intentos divididos entre los números aún no probados, la misma que tendría un número oculto al abrir la ronda.',
+        draw: 'Cuando una ronda de lotería ha terminado, o en cuanto hay nuevos intentos esperando una comprobación, cualquiera puede cerrar la ronda, sortearla y pagarla. El dueño del boleto ganador recibe el 80 % del pozo, la comisión de la casa va a la tesorería y el resto queda en el programa para sortearse en la siguiente ronda del juego.',
+        rent: 'La cuenta de un boleto también guarda un pequeño depósito de renta, que recuperas al cerrar el boleto una vez pagada su ronda. El primer boleto de una ronda también paga la renta de la cuenta de la ronda, que queda en Solana como registro público de la ronda. En las loterías, cada boleto paga además la renta de los 4 bytes que su número ocupa en esa cuenta, que no se devuelve.',
       },
       wallet: {
         title: 'Tu billetera y tus transacciones',
@@ -559,12 +640,12 @@ const es: Dict = {
         title: 'Lo que el operador puede y no puede hacer',
         intro: 'La configuración del programa tiene una autoridad, que puede:',
         price:
-          'cambiar el precio del boleto (como mínimo ◎0,001) y la comisión de la casa (como máximo el 10 %), con efecto desde la próxima ronda que se abra;',
+          'cambiar el precio del boleto de cada juego (como mínimo ◎0,002) y su comisión de la casa (como máximo el 20 %), con efecto desde la próxima ronda de ese juego que se abra;',
         pause:
           'pausar y reanudar la venta de boletos. Una pausa solo detiene los boletos nuevos: las rondas ya jugadas se pueden seguir sorteando y pagando;',
         other: 'cambiar la tesorería, el número más alto y la propia autoridad.',
         cannot:
-          'El código del programa no permite a la autoridad, ni a nadie más, tomar el pozo de una ronda ni enviarlo a otro destino que no sea el dueño del boleto ganador, quedarse con más que la comisión ni cobrar a un comprador más que el precio que se le mostró.',
+          'El código del programa no permite a la autoridad, ni a nadie más, tomar el pozo de una ronda ni enviarlo a otro destino que no sea el dueño del boleto ganador, la comisión de la tesorería y la siguiente ronda del juego, quedarse con más que la comisión ni cobrar a un comprador más que el precio que se le mostró.',
         upgrade:
           'El programa es actualizable: quien tenga su autoridad de actualización podría desplegar otro código, así que confías en quien la tenga hasta que el programa se haga inmutable o se entregue a una multisig. El código fuente de cada versión es público, y un programa desplegado se puede verificar con él, como explica la sección «Verifiable builds» del README.',
       },
@@ -574,7 +655,7 @@ const es: Dict = {
         bugs: 'el software puede tener errores, incluidos el programa, la app y tu billetera, y un error podría costarte tus boletos o tu SOL;',
         network:
           'Solana o el endpoint RPC que usa el sitio pueden ser lentos, estar congestionados o caídos, y una transacción puede fallar o llegar después de que se cierre una ronda;',
-        draw: 'el sorteo usa el hash de un slot de Solana que nadie conoce cuando se cierran las ventas. Los jugadores no pueden predecirlo, pero el validador que produce ese slot podría sesgarlo, y quien cierra una ronda podría retener un sorteo desfavorable hasta que ese slot ya no se pueda leer. No es un oráculo de aleatoriedad verificable;',
+        draw: 'el sorteo usa el hash de un slot de Solana que nadie conoce cuando se cierra una ronda o se sella un lote de intentos. Los jugadores no pueden predecirlo, pero el validador que produce ese slot podría sesgarlo, y quien cierra una ronda podría retener un sorteo desfavorable hasta que ese slot ya no se pueda leer. No es un oráculo de aleatoriedad verificable;',
         site: 'el sitio puede dejar de estar disponible en cualquier momento. El programa, y tus boletos, siguen funcionando sin él;',
         law: 'las leyes sobre loterías y criptoactivos varían entre países y pueden cambiar.',
       },
@@ -636,6 +717,9 @@ const es: Dict = {
         price: 'El precio del SOL',
         priceBody:
           'Para mostrar los pozos en dólares, nuestro servidor obtiene el precio del SOL de Coinbase, o de CoinGecko si Coinbase no responde, y lo guarda en caché durante un minuto. Estas solicitudes salen de nuestro servidor y no llevan nada sobre ti.',
+        push: 'Notificaciones de los sorteos',
+        pushBody:
+          'Si activas las notificaciones de un juego, tu navegador le da a nuestro servidor una suscripción push: una dirección en el servicio push de tu navegador (de Google, Mozilla, Apple o Microsoft, según el navegador) y las claves para cifrarle mensajes. La guardamos con tu idioma y los juegos que elegiste, y nada más: ni dirección de billetera ni dirección IP. Cuando se gana una ronda de uno de esos juegos, nuestro servidor envía el resultado, cifrado, a través de ese servicio push, que lo entrega a tu navegador según su propia política. Al desactivar las notificaciones se borra la suscripción, y también la borramos cuando el servicio push nos dice que ya no existe.',
       },
       thirdParties: {
         title: 'Servicios que usa tu navegador',
@@ -654,6 +738,8 @@ const es: Dict = {
       browser: {
         title: 'Qué se queda en tu navegador',
         body: 'La app guarda cinco ajustes en el almacenamiento local de tu navegador: tu tema, tu última billetera, tu elección de país, el ajuste de sonido y tu idioma. La página {cookies} los enumera.',
+        cache:
+          'Para abrirse sin conexión, la app también guarda copias de las páginas que visitas y de sus propios archivos en el almacenamiento de caché de tu navegador. Cada nueva versión del sitio las reemplaza.',
       },
       purposes: {
         title: 'Para qué, y lo que nunca hacemos',
@@ -693,6 +779,8 @@ const es: Dict = {
         holds: 'Qué guarda',
         saved: 'Se guarda',
         wallet: 'La extensión de tu billetera guarda sus propios datos, según la política de su fabricante.',
+        cache:
+          'Para abrirse sin conexión, la app también guarda copias de las páginas que visitas y de sus propios archivos en el almacenamiento de caché de tu navegador; cada nueva versión del sitio las reemplaza. Si activas las notificaciones de los sorteos, tu navegador también guarda la suscripción push hasta que las desactives. Borrar los datos de este sitio elimina todo esto.',
       },
       keys: {
         theme: {
@@ -741,9 +829,10 @@ const es: Dict = {
       },
       odds: {
         title: 'Conoce las probabilidades',
-        same: 'Todos los boletos tienen la misma probabilidad. Tu probabilidad de ganar una ronda es tus boletos divididos entre todos los boletos vendidos en ella.',
-        label: 'El número que eliges es tu etiqueta en el tablero. No cambia tu probabilidad.',
-        fee: 'El ganador recibe el pozo menos la comisión de la casa, que el programa limita al 10 %. Así que, tomando a todos los jugadores en conjunto, los boletos devuelven el dinero gastado en ellos menos esa comisión: en promedio, un boleto devuelve menos de lo que cuesta.',
+        same: 'En las loterías gana el boleto más cercano a un número al azar: tu probabilidad es la parte del rango de números que queda más cerca de tus números que de los de cualquier otra persona. En Adivina el número, cada comprobación encuentra el número con una probabilidad igual a los nuevos intentos divididos entre los números que aún no se han probado.',
+        label:
+          'Ningún número da más suerte que otro: el número sorteado tiene la misma probabilidad de ser cualquier número del rango.',
+        fee: 'El ganador recibe el 80 % del pozo. La comisión de la casa, que el programa limita al 20 %, sale del resto, y lo que queda va a la siguiente ronda del juego. Así que, tomando a todos los jugadores en conjunto, los boletos devuelven el dinero gastado en ellos menos esa comisión: en promedio, un boleto devuelve menos de lo que cuesta.',
         nothing: 'Nada en el sitio cambia estas probabilidades.',
       },
       final: {

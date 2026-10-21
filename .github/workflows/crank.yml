@@ -1,16 +1,21 @@
-# Backup crank: settles yesterday's round after midnight UTC (close, draw, pay
-# the winner, collect the fee). Scheduled Actions often start minutes late, so
-# run `bun run crank --watch` as a service for the main crank; see README.
+# Backup crank: every hour, settles the lottery rounds that ended (close, draw,
+# pay the winner, collect the fee) and checks waiting Guess guesses. Scheduled
+# Actions often start minutes late, and Guess players expect a check within
+# seconds, so run `bun run crank --watch` as a service for the main crank; see
+# README.
 # Every step is permissionless, so the crank keypair only pays network fees.
 #
 # Turn it on with the repository variable SOLUCKY_CRANK_ENABLED=true, then set:
 #   secret   SOLANA_KEYPAIR_JSON  byte array of a funded keypair (not the upgrade authority)
 #   variable SOLANA_RPC_URL       RPC endpoint of the cluster the program runs on
+# and, for draw notifications (`bun run vapid`):
+#   variable SOLUCKY_APP_URL      the site's URL
+#   secret   SOLUCKY_PUSH_SECRET  the app's NUXT_PUSH_SECRET
 name: Crank
 
 on:
   schedule:
-    - cron: '2,12,32 0 * * *'
+    - cron: '2,32 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -36,3 +41,5 @@ jobs:
         env:
           SOLANA_RPC_URL: ${{ vars.SOLANA_RPC_URL }}
           SOLANA_KEYPAIR_JSON: ${{ secrets.SOLANA_KEYPAIR_JSON }}
+          SOLUCKY_APP_URL: ${{ vars.SOLUCKY_APP_URL }}
+          SOLUCKY_PUSH_SECRET: ${{ secrets.SOLUCKY_PUSH_SECRET }}

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { GAME_SLUGS } from '@solucky/client';
+
 const { t } = useI18n();
 const localePath = useLocalePath();
 
@@ -10,7 +12,11 @@ useSeoMeta({
 
 const config = useRuntimeConfig().public;
 const { explorer, programAddress, clusterLabel } = useSolana();
-const max = formatNumber(1_000_000_000);
+// The on-chain config decides the range; the page renders on the server with the env's copy of it.
+const max = formatNumber(Number(config.maxNumber));
+
+// The words are under games.daily, games.hourly and games.guess.
+const GAME_ICONS = ['i-lucide-sun', 'i-lucide-clock', 'i-lucide-search'] as const;
 
 // The words are under home.how.steps, home.fairness.rules and home.faq.items.
 const steps = [
@@ -149,9 +155,26 @@ const faq = computed(() =>
       </ClientOnly>
     </div>
 
+    <UPageSection id="games" :title="t('games.title')" :description="t('games.description', { max })">
+      <template #headline>
+        <LandingSectionTag index="01" :label="t('games.tag')" />
+      </template>
+      <UPageGrid class="reveal lg:grid-cols-3">
+        <UPageCard
+          v-for="(slug, kind) in GAME_SLUGS"
+          :key="slug"
+          :icon="GAME_ICONS[kind]"
+          :title="t(`games.${slug}.name`)"
+          :description="t(`games.${slug}.description`)"
+          :to="localePath(`/play/${slug}`)"
+          spotlight
+        />
+      </UPageGrid>
+    </UPageSection>
+
     <UPageSection id="how-it-works" :title="t('home.how.title')" :description="t('home.how.description')">
       <template #headline>
-        <LandingSectionTag index="01" :label="t('home.how.tag')" />
+        <LandingSectionTag index="02" :label="t('home.how.tag')" />
       </template>
       <div class="reveal">
         <!-- The day, from the round opening to the draw. A clock: it runs left to right in every language. -->
@@ -196,7 +219,7 @@ const faq = computed(() =>
 
     <UPageSection id="fairness" :title="t('home.fairness.title')" :description="t('home.fairness.description')">
       <template #headline>
-        <LandingSectionTag index="02" :label="t('home.fairness.tag')" />
+        <LandingSectionTag index="03" :label="t('home.fairness.tag')" />
       </template>
       <div class="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-16">
         <ol class="border-t border-default">
@@ -249,7 +272,7 @@ const faq = computed(() =>
       }"
     >
       <template #headline>
-        <LandingSectionTag index="03" :label="t('home.faq.tag')" />
+        <LandingSectionTag index="04" :label="t('home.faq.tag')" />
       </template>
       <UAccordion
         :items="faq"

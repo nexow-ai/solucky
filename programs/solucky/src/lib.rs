@@ -1,9 +1,12 @@
-//! S☉Lucky: a daily lottery on Solana.
+//! S☉Lucky: three lottery games on Solana.
 //!
-//! Each UTC day is a round. Players buy numbered tickets at a fixed price; a
-//! number can only be held by one ticket per round. After midnight UTC anyone
-//! can close the round, draw it and pay the winner. The pot never leaves the
-//! round account except to the winner and, for the house fee, the treasury.
+//! Players buy numbered tickets at a fixed price; a number can only be held by
+//! one ticket per round. In the daily and hourly lotteries, once the period is
+//! over anyone can close the round and draw a random number: the closest held
+//! number wins. In Guess the number, guesses are checked in batches until one
+//! finds the round's number. The winner gets 80% of the pot, the house fee
+//! comes out of the rest, and what is left carries over to the game's next
+//! round. Every step after a purchase is permissionless.
 //!
 //! Copyright (c) 2022-2026 Nexow, Inc. (https://nexow.studio). MIT License.
 
@@ -20,45 +23,53 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2");
+declare_id!("GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux");
 
 #[program]
 pub mod solucky {
     use super::*;
 
     /// Creates the config. Only the program's upgrade authority can call it.
-    pub fn initialize(
-        ctx: Context<Initialize>,
-        ticket_price: u64,
-        fee_bps: u16,
-        max_number: u32,
-    ) -> Result<()> {
-        instructions::initialize::handle_initialize(ctx, ticket_price, fee_bps, max_number)
+    pub fn initialize(ctx: Context<Initialize>, max_number: u32) -> Result<()> {
+        instructions::initialize::handle_initialize(ctx, max_number)
     }
 
-    /// Changes the config. Price and fee changes apply to the next rounds.
+    /// Changes the config. A new `max_number` applies to the next rounds.
     pub fn update_config(ctx: Context<UpdateConfig>, update: ConfigUpdate) -> Result<()> {
         instructions::update_config::handle_update_config(ctx, update)
     }
 
-    /// Buys `number` in today's round, opening the round if needed. Fails if
-    /// the round's ticket price is above `max_price`.
+    /// Opens a game, or changes its price and fee for the next rounds.
+    pub fn set_game(
+        ctx: Context<SetGame>,
+        kind: u8,
+        ticket_price: u64,
+        fee_bps: u16,
+    ) -> Result<()> {
+        instructions::set_game::handle_set_game(ctx, kind, ticket_price, fee_bps)
+    }
+
+    /// Buys `number` in the game's round on sale, opening the round if
+    /// needed. Fails if the round's ticket price is above `max_price`.
     pub fn buy_ticket(
         ctx: Context<BuyTicket>,
-        day: u32,
+        kind: u8,
+        period: u32,
         number: u32,
         country: [u8; 2],
         max_price: u64,
     ) -> Result<()> {
-        instructions::buy_ticket::handle_buy_ticket(ctx, day, number, country, max_price)
+        instructions::buy_ticket::handle_buy_ticket(ctx, kind, period, number, country, max_price)
     }
 
-    /// Ends a finished round and pins the slot that will seed its draw.
+    /// Ends a finished lottery round, or seals a Guess round's unchecked
+    /// guesses, and pins the slot that will seed the draw.
     pub fn close_round(ctx: Context<CloseRound>) -> Result<()> {
         instructions::close_round::handle_close_round(ctx)
     }
 
-    /// Picks the winning ticket from the pinned slot's hash.
+    /// Picks the winner from the pinned slot's hash: the closest number in a
+    /// lottery, or whether a sealed batch of guesses found the number.
     pub fn draw_round(ctx: Context<DrawRound>) -> Result<()> {
         instructions::draw_round::handle_draw_round(ctx)
     }

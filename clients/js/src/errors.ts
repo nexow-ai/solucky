@@ -69,7 +69,7 @@ export function describeError(error: unknown): string {
     case 'program':
       return `${getSoluckyErrorMessage(reason.code)}.`;
     case 'number-taken':
-      return 'Someone already holds this number today. Pick another one.';
+      return 'Someone already holds this number in this round. Pick another one.';
     case 'insufficient-funds':
       return 'Not enough SOL in the wallet.';
     case 'wallet-cluster':

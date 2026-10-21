@@ -22,7 +22,11 @@ import {
   SOLUCKY_ERROR__ROUND_NOT_SETTLED,
   SOLUCKY_ERROR__TARGET_SLOT_NOT_REACHED,
   SOLUCKY_ERROR__UNAUTHORIZED,
-  SOLUCKY_ERROR__WRONG_DAY,
+  SOLUCKY_ERROR__WRONG_ROUND,
+  SOLUCKY_ERROR__ROUND_FULL,
+  SOLUCKY_ERROR__NOTHING_TO_CHECK,
+  SOLUCKY_ERROR__BATCH_SEALED,
+  SOLUCKY_ERROR__INVALID_GAME,
 } from '@solucky/client';
 
 /** The program's errors, by code, to their key under `errors.program` in the dictionaries. */
@@ -32,7 +36,7 @@ const PROGRAM_ERRORS: Record<number, string> = {
   [SOLUCKY_ERROR__FEE_TOO_HIGH]: 'feeTooHigh',
   [SOLUCKY_ERROR__INVALID_MAX_NUMBER]: 'invalidMaxNumber',
   [SOLUCKY_ERROR__PAUSED]: 'paused',
-  [SOLUCKY_ERROR__WRONG_DAY]: 'wrongDay',
+  [SOLUCKY_ERROR__WRONG_ROUND]: 'wrongRound',
   [SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE]: 'numberOutOfRange',
   [SOLUCKY_ERROR__INVALID_COUNTRY]: 'invalidCountry',
   [SOLUCKY_ERROR__ROUND_NOT_OPEN]: 'roundNotOpen',
@@ -48,6 +52,10 @@ const PROGRAM_ERRORS: Record<number, string> = {
   [SOLUCKY_ERROR__OVERFLOW]: 'overflow',
   [SOLUCKY_ERROR__PRICE_CHANGED]: 'priceChanged',
   [SOLUCKY_ERROR__FEE_ALREADY_COLLECTED]: 'feeAlreadyCollected',
+  [SOLUCKY_ERROR__ROUND_FULL]: 'roundFull',
+  [SOLUCKY_ERROR__NOTHING_TO_CHECK]: 'nothingToCheck',
+  [SOLUCKY_ERROR__BATCH_SEALED]: 'batchSealed',
+  [SOLUCKY_ERROR__INVALID_GAME]: 'invalidGame',
 };
 
 /** vue-i18n's `t`, or anything that turns a dictionary key into text. */

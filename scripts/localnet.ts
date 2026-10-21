@@ -6,8 +6,8 @@
  *   bun run localnet --fund <your wallet address>
  *   NUXT_PUBLIC_CLUSTER=localnet bun run dev
  *
- * Loads `target/deploy/solucky.so`, creates the config if needed, and funds
- * the given wallets with 10 SOL each.
+ * Loads `target/deploy/solucky.so`, creates the config and the three games if
+ * needed, and funds the given wallets with 10 SOL each.
  */
 import { parseArgs } from 'node:util';
 
@@ -28,4 +28,4 @@ for (const wallet of args.fund) {
   await fund(client, address(wallet), 10n * SOL);
   log(`funded ${wallet} with ◎10`);
 }
-log(`ready: program ${PROGRAM_ADDRESS} on ${RPC_URL}, ticket ◎${Number(config.data.ticketPrice) / 1e9}`);
+log(`ready: program ${PROGRAM_ADDRESS} on ${RPC_URL}, numbers 0 to ${config.data.maxNumber}`);

@@ -8,6 +8,7 @@
 
 export * from './configUpdated';
 export * from './feeCollected';
+export * from './gameUpdated';
 export * from './prizeClaimed';
 export * from './roundClosed';
 export * from './roundDrawn';

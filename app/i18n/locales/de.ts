@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const de: Dict = {
   meta: {
-    title: 'S☉Lucky: die tägliche Lotterie auf Solana',
+    title: 'S☉Lucky: Lotteriespiele auf Solana',
     description:
-      'Wähle eine Zahl, kauf ein Ticket und gewinne um Mitternacht UTC den ganzen Pot. Jedes Ticket, jeder Pot und jede Ziehung liegt auf Solana und kann von allen überprüft werden.',
-    ogImageAlt: 'S☉Lucky, die tägliche Lotterie auf Solana',
+      'Wähle eine Zahl in der täglichen oder stündlichen Lotterie, oder spür die versteckte Zahl auf. Der Gewinner erhält 80 % des Pots. Jedes Ticket, jeder Pot und jede Ziehung liegt auf Solana und kann von allen überprüft werden.',
+    ogImageAlt: 'S☉Lucky, Lotteriespiele auf Solana',
   },
 
   nav: {
@@ -19,6 +19,30 @@ const de: Dict = {
   lang: {
     label: 'Sprache',
     choose: 'Sprache: {name}',
+  },
+
+  update: {
+    title: 'Eine neue Version ist bereit',
+    hint: 'Neu laden, um sie sofort zu erhalten. Sie lädt sich auch beim nächsten Seitenwechsel von selbst.',
+    reload: 'Neu laden',
+  },
+
+  install: {
+    label: 'App installieren',
+    ios: 'Um S☉Lucky zu installieren, öffne das Teilen-Menü deines Browsers und wähle „Zum Home-Bildschirm“.',
+  },
+
+  push: {
+    on: 'Benachrichtige mich, wenn eine Runde dieses Spiels gewonnen wird',
+    off: 'Benachrichtigungen für dieses Spiel ausschalten',
+    enabled: 'Benachrichtigungen an',
+    enabledHint: '{game}: Du bekommst jedes Mal eine Benachrichtigung, wenn eine Runde gewonnen wird.',
+    disabled: 'Benachrichtigungen aus',
+    blocked:
+      'Benachrichtigungen sind für diese Website blockiert. Erlaube sie in den Einstellungen deines Browsers und versuch es dann noch einmal.',
+    failed: 'Benachrichtigungen konnten nicht geändert werden. Versuch es noch einmal.',
+    lottery: 'Runde {round}: Gezogen wurde {drawn}. Das nächstgelegene Ticket, {winning}, gewinnt ◎{prize}.',
+    guess: 'Runde {round}: Die Zahl war {winning}. Der Tipp, der sie gefunden hat, gewinnt ◎{prize}.',
   },
 
   header: {
@@ -53,10 +77,10 @@ const de: Dict = {
   },
 
   home: {
-    kicker: 'Tägliche Lotterie auf Solana',
+    kicker: 'Lotteriespiele auf Solana',
     title: 'Wähle eine Zahl.',
-    titleEnd: 'Gewinne den Pot um Mitternacht.',
-    lead: 'Eine Ziehung am Tag, ein Gewinner, der ganze Pot. Jedes Ticket, jeder Lamport und jede Ziehung liegt auf Solana, wo alle es überprüfen können.',
+    titleEnd: 'Gewinne um Mitternacht.',
+    lead: 'Eine Ziehung jeden Tag, eine Ziehung jede Stunde und eine versteckte Zahl zum Aufspüren. Der Gewinner erhält 80 % des Pots, und der Rest geht in die nächste Runde über. Jedes Ticket, jeder Lamport und jede Ziehung liegt auf Solana, wo alle es überprüfen können.',
     playNow: 'Jetzt spielen',
     howItWorks: 'So funktioniert’s',
     program: 'Programm',
@@ -95,7 +119,7 @@ const de: Dict = {
         win: {
           title: 'Gewinne um Mitternacht UTC',
           description:
-            'Ein Ticket gewinnt den ganzen Pot, abzüglich einer kleinen Hausgebühr. Mehr Tickets, bessere Chancen: Jedes Ticket zählt einmal.',
+            'Eine Zufallszahl wird gezogen, und das Ticket, das ihr am nächsten liegt, gewinnt 80 % des Pots. Die Hausgebühr geht vom Rest ab, und was übrig bleibt, wird auf den nächsten Tag übertragen.',
           when: 'Direkt nach Mitternacht UTC',
         },
       },
@@ -110,12 +134,12 @@ const de: Dict = {
         locked: {
           title: 'Der Pot ist im Programm eingeschlossen',
           description:
-            'Das Ticketgeld geht direkt auf das Konto der Runde. Das Programm zahlt es nur an den Besitzer des Gewinnertickets aus, und die Gebühr an die Treasury. Der Betreiber kann es nicht abheben.',
+            'Das Ticketgeld geht direkt auf das Konto der Runde. Das Programm zahlt nur 80 % davon an den Besitzer des Gewinnertickets aus, die Gebühr an die Treasury und den Rest an die nächste Runde des Spiels. Der Betreiber kann es nicht abheben.',
         },
         draw: {
           title: 'Eine Ziehung, die niemand vorhersagen kann',
           description:
-            'Jeder Kauf fließt in die Entropie der Runde ein. Wenn der Tag endet, legt die Runde einen Slot einige Sekunden in der Zukunft fest; der Hash dieses Slots, bis dahin allen unbekannt, bestimmt den Gewinner.',
+            'Jeder Kauf fließt in die Entropie der Runde ein. Wenn eine Runde endet, legt sie einen Slot einige Sekunden in der Zukunft fest; der Hash dieses Slots, bis dahin allen unbekannt, bestimmt die Zahl, an der die Tickets gemessen werden.',
         },
         anyone: {
           title: 'Alle können es ausführen',
@@ -125,12 +149,12 @@ const de: Dict = {
         browser: {
           title: 'Prüfbar in deinem Browser',
           description:
-            'Jede Rundenseite berechnet die Ziehung aus öffentlichen Daten neu: der Entropie, dem Slot-Hash und dem Gewinnerindex. Gleiche Eingaben, gleicher Gewinner.',
+            'Jede Rundenseite berechnet die Ziehung aus öffentlichen Daten neu: der Entropie, dem Slot-Hash, der gezogenen Zahl und dem nächstgelegenen Ticket. Gleiche Eingaben, gleicher Gewinner.',
         },
         limits: {
           title: 'Harte Grenzen für das Haus',
           description:
-            'Das Programm begrenzt die Gebühr auf 10 %. Preis- und Gebührenänderungen gelten erst für die Runde des nächsten Tages, und wer kauft, zahlt nie mehr als den angezeigten Preis.',
+            'Das Programm zahlt dem Gewinner immer 80 % des Pots und begrenzt die Gebühr auf 20 %. Preis- und Gebührenänderungen gelten erst für danach geöffnete Runden, und wer kauft, zahlt nie mehr als den angezeigten Preis.',
         },
         open: {
           title: 'Open Source',
@@ -151,15 +175,15 @@ const de: Dict = {
         },
         price: {
           q: 'Was kostet ein Ticket?',
-          a: 'Der Preis wird on-chain festgelegt und auf der Seite „Spielen“ angezeigt. Neben dem Preis hält ein Ticketkonto eine kleine Rent-Kaution, die du zurückbekommst, wenn du das Ticket schließt, sobald die Runde ausgezahlt ist. Das erste Ticket des Tages zahlt außerdem die Rent für das Konto der Runde, das als ihr öffentlicher Nachweis on-chain bleibt.',
+          a: 'Der Preis jedes Spiels wird on-chain festgelegt und auf seiner Seite „Spielen“ angezeigt. Neben dem Preis hält ein Ticketkonto eine kleine Rent-Kaution, die du zurückbekommst, wenn du das Ticket schließt, sobald die Runde ausgezahlt ist. Das erste Ticket einer Runde zahlt außerdem die Rent für das Konto der Runde, das als ihr öffentlicher Nachweis on-chain bleibt; in den Lotterien zahlt jedes Ticket zudem für die 4 Bytes, die seine Zahl dort belegt.',
         },
         odds: {
           q: 'Wie werden meine Chancen berechnet?',
-          a: 'Jedes Ticket hat dieselbe Chance: deine Tickets geteilt durch alle an diesem Tag verkauften Tickets. Die Zahl, die du wählst, ist deine Kennzeichnung auf der Tafel; sie ändert deine Chancen nicht.',
+          a: 'In den Lotterien gewinnt das Ticket, das der gezogenen Zahl am nächsten liegt. Deine Chance ist also der Anteil des Zahlenbereichs, der näher an deinen Zahlen liegt als an denen aller anderen: Eine Zahl weit weg von den anderen Tickets deckt mehr davon ab. Bei „Errate die Zahl“ findet jede Prüfung die Zahl mit einer Chance von neuen Tipps geteilt durch die noch nicht probierten Zahlen.',
         },
         draw: {
           q: 'Was, wenn niemand die Runde zieht?',
-          a: 'Ein kleiner Bot (der Crank) schließt, zieht und zahlt jede Runde innerhalb von Sekunden nach Mitternacht aus, und alle können dasselbe im Panel „Verlauf“ tun. Wird der festgelegte Slot jemals zu alt, um ihn zu lesen (etwa drei Minuten), kann die Runde erneut geschlossen werden, um einen neuen festzulegen; das Programm erlaubt das nur, wenn der alte Slot nachweislich außer Reichweite ist.',
+          a: 'Ein kleiner Bot (der Crank) schließt, zieht und zahlt jede Lotterierunde innerhalb von Sekunden nach ihrem Ende aus und prüft alle paar Sekunden neue Tipps. Alle können dasselbe auf der Seite „Spielen“ tun. Wird der festgelegte Slot jemals zu alt, um ihn zu lesen (etwa drei Minuten), kann die Runde erneut geschlossen werden, um einen neuen festzulegen; das Programm erlaubt das nur, wenn der alte Slot nachweislich außer Reichweite ist.',
         },
         country: {
           q: 'Warum zeigt ihr mein Land an?',
@@ -195,9 +219,12 @@ const de: Dict = {
     newTicket: 'Neues Ticket',
     rules: {
       daily: 'Jeden Tag um 00:00 UTC eine neue Runde',
-      pot: 'Ein Ticket gewinnt den Pot',
+      hourly: 'Und eine jede Stunde',
+      pot: 'Die nächstgelegene Zahl gewinnt 80 % des Pots',
+      carry: 'Der Rest geht in die nächste Runde über',
+      guess: 'Errate die Zahl: ohne Frist, bis jemand sie findet',
       numbers: 'Zahlen von 0 bis {max}',
-      fee: 'Hausgebühr vom Programm auf 10 % begrenzt',
+      fee: 'Hausgebühr vom Programm auf 20 % begrenzt',
       anyone: 'Alle können eine Runde schließen, ziehen und auszahlen',
       check: 'Rechne jede Ziehung in deinem Browser nach',
       open: 'Open Source',
@@ -214,16 +241,16 @@ const de: Dict = {
     entropy: 'Entropie',
     slotHash: 'Slot-Hash · Slot {slot}',
     formula: 'sha256(Entropie ‖ Slot-Hash ‖ Slot ‖ Runde) =',
-    mod: 'erste 8 Bytes als u64 mod {count} = {ticket}',
-    ticketCount: 'Tickets',
-    ticket: 'Ticket #{index}',
+    mod: 'erste 8 Bytes als u64 mod {count} = {drawn}',
+    ticketCount: 'Zahlen',
+    closest: 'nächstgelegenes Ticket: {number}',
     number: 'Zahl',
     paidTo: 'Ausgezahlt an',
     payout: 'Auszahlung',
     check: 'Diese Ziehung prüfen',
     roundPage: 'Rundenseite',
     nextDraw: 'Nächste Ziehung nach 00:00 UTC',
-    ok: 'In deinem Browser nachgerechnet: gleicher Hash, Ticket #{index} gewinnt.',
+    ok: 'In deinem Browser nachgerechnet: gleicher Hash, die Zahl {number} gewinnt.',
     mismatch: 'Der in deinem Browser nachgerechnete Hash passt nicht zu dieser Runde.',
   },
 
@@ -236,7 +263,10 @@ const de: Dict = {
     yourTickets: 'Deine Tickets',
     winChance: 'Gewinnchance',
     chance: 'Chance',
-    todaysPot: 'Heutiger Pot',
+    todaysPot: 'Pot',
+    checked: 'Geprüft',
+    waiting: 'Wartend',
+    numbersLeft: 'Übrige Zahlen',
     winners: 'Gewinner',
     averagePot: 'Pot im Schnitt',
     biggestPot: 'Größter Pot',
@@ -251,7 +281,8 @@ const de: Dict = {
 
   play: {
     title: 'Spielen',
-    description: 'Wähle deine Zahl für heute und sieh live auf Solana zu, wie der Pot wächst.',
+    description:
+      'Wähle eine Zahl in der täglichen oder stündlichen Lotterie, oder spür die versteckte auf, und sieh live auf Solana zu, wie der Pot wächst.',
     testMoney: 'Du spielst auf Solana {cluster}: Tickets kosten Test-SOL ohne echten Wert.',
     localFunds: 'Richte deine Wallet auf {url} aus und lade sie dann auf mit: {command}',
     phantomFunds:
@@ -267,7 +298,7 @@ const de: Dict = {
     title: 'Zahl',
     win: 'Gewinne',
     in: 'in',
-    taken: 'Heute schon vergeben',
+    taken: 'In dieser Runde schon vergeben',
     range: '0 bis {max}, ein Ticket pro Zahl',
     pad: 'Ziffernblock',
     reset: 'Zurücksetzen',
@@ -275,10 +306,10 @@ const de: Dict = {
     dip: 'Quicktipp',
     searchCountry: 'Land suchen',
     country: 'Land, das mit deinem Ticket angezeigt wird',
-    notSetUp: 'Die Lotterie ist auf diesem Cluster noch nicht eingerichtet.',
+    notSetUp: 'Dieses Spiel ist auf diesem Cluster noch nicht eingerichtet.',
     paused: 'Der Ticketverkauf ist pausiert.',
     buy: '{number} für ◎{price} kaufen',
-    takenToday: '{number} ist heute vergeben',
+    takenToday: '{number} ist vergeben',
     outOfRange: 'Zahl außerhalb des Bereichs',
     notEnough: 'Nicht genug SOL',
     keys: 'Mit 0–9 tippen, ⌫ löscht, Enter kauft.',
@@ -287,12 +318,56 @@ const de: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Heutiger',
     title: 'SOLPOT',
     closesIn: '{day} · schließt in',
+    carried: 'Enthält ◎{carry}, übertragen aus der letzten Runde',
+    split: '80 % an den Gewinner · {fee} Hausgebühr · der Rest an die nächste Runde',
     inPlay: 'Zahlen im Spiel',
     empty: 'Noch keine Tickets',
-    beFirst: 'Sei heute der Erste, der eine Zahl wählt.',
+    beFirst: 'Sei der Erste, der in dieser Runde eine Zahl wählt.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Spiele',
+    title: 'Drei Arten zu spielen',
+    description:
+      'Dieselben Zahlen, von 0 bis {max}. Der Gewinner erhält 80 % des Pots; die Hausgebühr geht vom Rest ab, und was übrig bleibt, geht in die nächste Runde über.',
+    play: 'Spielen',
+    daily: {
+      name: 'Tägliche Lotterie',
+      short: 'Täglich',
+      description:
+        'Eine Ziehung jeden Tag nach Mitternacht UTC. Das Ticket, das der gezogenen Zahl am nächsten liegt, gewinnt.',
+    },
+    hourly: {
+      name: 'Stündliche Lotterie',
+      short: 'Stündlich',
+      description:
+        'Eine Ziehung jede Stunde, zur vollen Stunde (UTC). Das Ticket, das der gezogenen Zahl am nächsten liegt, gewinnt.',
+    },
+    guess: {
+      name: 'Errate die Zahl',
+      short: 'Raten',
+      description:
+        'Ohne Frist. Neue Tipps werden alle paar Sekunden geprüft, bis einer die Zahl der Runde findet; dann beginnt eine neue Runde.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Bis jemand sie findet',
+    odds: 'Jede Prüfung findet die Zahl mit einer Chance von neuen Tipps geteilt durch die {n} noch nicht probierten Zahlen.',
+    bought: 'Tipp {number} ist drin. Er wird in ein paar Sekunden geprüft.',
+    sealing: 'Versiegelung der letzten Tipps von Runde {day}',
+    checkNow: 'Jetzt prüfen',
+    checkHint:
+      'Ein Bot prüft alle paar Sekunden neue Tipps. Alle können die Prüfung ausführen; sie kostet Netzwerkgebühren.',
+    missed: 'Nicht die Zahl: {numbers}',
+    left: 'Die Zahl ist eine der {n} noch nicht probierten Zahlen.',
+    foundByYou: 'Du hast sie gefunden! {number} war die Zahl',
+    foundByOther: 'Ein anderer Spieler hat die Zahl gefunden',
+    nextRound: 'Eine neue Runde mit einer neuen Zahl ist im Verkauf.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -310,8 +385,8 @@ const de: Dict = {
     getBack: 'Zurückholen',
     winners: 'Gewinner',
     noWinners: 'Noch keine Gewinner',
-    firstDraw: 'Die erste Ziehung findet um Mitternacht UTC statt.',
-    chart: 'Pot pro Tag',
+    firstDraw: 'Der erste Gewinner erscheint hier.',
+    chart: 'Pot pro Runde',
     chartEmpty: 'Noch keine beendeten Runden.',
     chartLabel:
       'Pot der letzten Runde; die Liste darunter enthält jeden Wert. | Pot der letzten {n} Runden; die Liste darunter enthält jeden Wert.',
@@ -321,6 +396,7 @@ const de: Dict = {
     open: 'Offen',
     toClose: 'Wartet auf Schließung',
     toDraw: 'Wartet auf Ziehung',
+    checking: 'Tipps werden geprüft',
     unpaid: 'Gezogen, unbezahlt',
     paid: 'Ausgezahlt',
   },
@@ -373,7 +449,7 @@ const de: Dict = {
     balance: 'Guthaben',
     ticketsLeft: 'noch {n} Ticket | noch {n} Tickets',
     needMore: 'mehr SOL zum Spielen nötig',
-    numbers: 'Deine Zahlen heute',
+    numbers: 'Deine Zahlen in dieser Runde',
     copy: 'Adresse kopieren',
     explorer: 'Explorer',
     play: 'Spielen',
@@ -383,10 +459,11 @@ const de: Dict = {
   round: {
     title: 'Runde {day}',
     back: 'Zurück zum Spiel',
-    notDate: 'Das ist kein Datum. Runden heißen YYYY-MM-DD.',
+    notDate:
+      'Das ist keine Runde dieses Spiels. Tägliche Runden heißen YYYY-MM-DD, stündliche YYYY-MM-DDTHH und Runden von „Errate die Zahl“ nach ihrer Nummer.',
     kicker: 'Runde',
-    nobody: 'An diesem Tag hat niemand gespielt',
-    beFirst: 'Sei heute der Erste, der ein Ticket kauft.',
+    nobody: 'In dieser Runde hat niemand gespielt',
+    beFirst: 'Sei der Erste, der in dieser Runde ein Ticket kauft.',
     onlyExists: 'Eine Runde existiert erst, wenn ihr erstes Ticket verkauft ist.',
     pot: 'Pot',
     usd: '{usd} zum heutigen Kurs',
@@ -406,10 +483,12 @@ const de: Dict = {
     slotHash: 'Slot-Hash von Slot {slot} (vom Programm aus der Sysvar SlotHashes gelesen)',
     randomness: 'Zufallswert',
     winning: 'Gewinnerticket',
-    winningFormula: 'erste 8 Bytes als u64 mod {count} = Kauf #{index}',
+    winningFormula: 'erste 8 Bytes als u64 mod {count} = {drawn}; das nächstgelegene Ticket hält {number}',
+    guessFormula:
+      'erste 8 Bytes als u64 mod {left} (noch nicht probierte Zahlen) = {r}, unter {batch} (Tipps in der Prüfung): Kauf #{index} hat die Zahl gefunden',
     ok: 'Die Ziehung stimmt.',
     mismatch: 'Abweichung: Das gespeicherte Ergebnis passt nicht zu den Eingaben.',
-    got: 'Dein Browser kam auf {hash}… und Ticket #{index}.',
+    got: 'Dein Browser kam auf {hash}… und die Zahl {number}.',
     tickets: 'Tickets',
     ticketsHint:
       'Tickets, die ihre Besitzer nach der Auszahlung geschlossen haben, erscheinen hier nicht mehr; die Runde behält die Summen.',
@@ -423,7 +502,7 @@ const de: Dict = {
 
   errors: {
     rejected: 'Du hast die Anfrage in deiner Wallet abgebrochen.',
-    taken: 'Jemand hat diese Zahl heute schon. Wähle eine andere.',
+    taken: 'Jemand hat diese Zahl in dieser Runde schon. Wähle eine andere.',
     funds: 'Nicht genug SOL in der Wallet.',
     walletCluster:
       'Deine Wallet konnte nicht signieren. In Phantom: Settings → Developer Settings → Testnet Mode aktivieren → Devnet auswählen, dann neu verbinden und es noch einmal versuchen.',
@@ -431,11 +510,11 @@ const de: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Nur die Authority kann das tun.',
-      invalidTicketPrice: 'Der Ticketpreis muss mindestens 0,001 SOL betragen.',
-      feeTooHigh: 'Die Gebühr liegt über der Obergrenze von 10 %.',
+      invalidTicketPrice: 'Der Ticketpreis muss mindestens 0,002 SOL betragen.',
+      feeTooHigh: 'Die Gebühr liegt über der Obergrenze von 20 %.',
       invalidMaxNumber: 'Die höchste Zahl muss größer als null sein.',
       paused: 'Der Ticketverkauf ist pausiert.',
-      wrongDay: 'Tickets können nur für die heutige Runde gekauft werden.',
+      wrongRound: 'Tickets können nur für die Runde im Verkauf gekauft werden.',
       numberOutOfRange: 'Die Zahl liegt außerhalb des Bereichs.',
       invalidCountry: 'Das Land muss ein Code nach ISO 3166-1 alpha-2 in Großbuchstaben sein.',
       roundNotOpen: 'Die Runde ist nicht offen.',
@@ -452,6 +531,10 @@ const de: Dict = {
       overflow: 'Arithmetischer Überlauf.',
       priceChanged: 'Der Ticketpreis ist höher als der Preis, den du akzeptiert hast.',
       feeAlreadyCollected: 'Die Gebühr dieser Runde wurde bereits eingezogen.',
+      roundFull: 'Diese Runde hat alle Tickets verkauft, die sie aufnehmen kann.',
+      nothingToCheck: 'Es gibt keine neuen Tipps zu prüfen.',
+      batchSealed: 'Die letzten Tipps werden gerade geprüft; versuch es in ein paar Sekunden noch einmal.',
+      invalidGame: 'Unbekanntes Spiel.',
     },
   },
 
@@ -540,14 +623,14 @@ const de: Dict = {
       rounds: {
         title: 'Wie eine Runde abläuft',
         intro: 'Das Programm setzt diese Regeln durch; die Website zeigt sie nur an:',
-        day: 'Pro UTC-Tag läuft eine Runde, von 00:00 UTC bis zur nächsten Mitternacht.',
+        day: 'S☉Lucky hat drei Spiele. In der täglichen Lotterie läuft pro UTC-Tag eine Runde, von 00:00 UTC bis zur nächsten Mitternacht; in der stündlichen Lotterie pro UTC-Stunde. Bei „Errate die Zahl“ hat eine Runde kein Ende: Sie läuft, bis ein Tipp ihre Zahl findet.',
         number:
           'Ein Ticket ist eine Zahl, von 0 bis zur höchsten Zahl, die in der Konfiguration des Programms festgelegt ist. Jede Zahl kann pro Runde nur von einem Ticket belegt werden.',
         price:
-          'Der Ticketpreis und die Hausgebühr werden beim Öffnen einer Runde aus der Konfiguration übernommen und bleiben für diese Runde fest. Die Gebühr kann nie mehr als 10 % des Pots betragen. Beim Kauf zahlst du nie mehr als den Preis, der dir angezeigt wurde.',
-        pot: 'Der Preis jedes Tickets fließt in den Pot der Runde, den das eigene Konto der Runde auf Solana verwahrt. Jedes Ticket hat dieselbe Chance: Deine Chance sind deine Tickets geteilt durch alle in dieser Runde verkauften Tickets. Die Zahl, die du wählst, ändert daran nichts.',
-        draw: 'Nach Mitternacht können alle die Runde schließen, ziehen und auszahlen. Der Besitzer des Gewinnertickets erhält den Pot abzüglich der Hausgebühr, und die Gebühr geht an die Treasury.',
-        rent: 'Ein Ticketkonto hält außerdem eine kleine Rent-Kaution, die du zurückbekommst, wenn du das Ticket schließt, sobald seine Runde ausgezahlt ist. Das erste Ticket einer Runde zahlt außerdem die Rent für das Konto der Runde, das als öffentlicher Nachweis der Runde auf Solana bleibt.',
+          'Jedes Spiel hat seinen eigenen Ticketpreis und seine eigene Hausgebühr. Sie werden beim Öffnen einer Runde zusammen mit der höchsten Zahl übernommen und bleiben für diese Runde fest. Die Gebühr kann nie mehr als 20 % des Pots betragen. Beim Kauf zahlst du nie mehr als den Preis, der dir angezeigt wurde.',
+        pot: 'Der Preis jedes Tickets fließt in den Pot der Runde, den das eigene Konto der Runde auf Solana verwahrt. In den Lotterien wird eine Zufallszahl von 0 bis zur höchsten Zahl gezogen, und das Ticket, das ihr am nächsten liegt, gewinnt; bei Gleichstand gewinnt die niedrigere Zahl. Bei „Errate die Zahl“ werden neue Tipps in Stapeln geprüft: Ein Stapel enthält die Zahl mit einer Chance von seinen Tipps geteilt durch die noch nicht probierten Zahlen, dieselbe Chance wie für eine Zahl, die beim Öffnen der Runde versteckt wurde.',
+        draw: 'Sobald eine Lotterierunde beendet ist oder neue Tipps auf eine Prüfung warten, können alle die Runde schließen, ziehen und auszahlen. Der Besitzer des Gewinnertickets erhält 80 % des Pots, die Hausgebühr geht an die Treasury, und der Rest bleibt im Programm für die nächste gezogene Runde des Spiels.',
+        rent: 'Ein Ticketkonto hält außerdem eine kleine Rent-Kaution, die du zurückbekommst, wenn du das Ticket schließt, sobald seine Runde ausgezahlt ist. Das erste Ticket einer Runde zahlt außerdem die Rent für das Konto der Runde, das als öffentlicher Nachweis der Runde auf Solana bleibt. In den Lotterien zahlt jedes Ticket außerdem die Rent für die 4 Bytes, die seine Zahl in diesem Konto belegt; sie wird nicht erstattet.',
       },
       wallet: {
         title: 'Deine Wallet und Transaktionen',
@@ -561,12 +644,12 @@ const de: Dict = {
         title: 'Was der Betreiber tun kann und was nicht',
         intro: 'Die Konfiguration des Programms hat eine Authority, die:',
         price:
-          'den Ticketpreis (mindestens ◎0,001) und die Hausgebühr (höchstens 10 %) ändern kann, wirksam ab der nächsten Runde, die öffnet;',
+          'den Ticketpreis (mindestens ◎0,002) und die Hausgebühr (höchstens 20 %) jedes Spiels ändern kann, wirksam ab der nächsten Runde dieses Spiels, die öffnet;',
         pause:
           'den Ticketverkauf pausieren und fortsetzen kann. Eine Pause stoppt nur neue Tickets: Bereits gespielte Runden können weiterhin gezogen und ausgezahlt werden;',
         other: 'die Treasury, die höchste Zahl und die Authority selbst ändern kann.',
         cannot:
-          'Der Code des Programms erlaubt es weder der Authority noch sonst jemandem, den Pot einer Runde zu nehmen oder ihn an jemand anderen als den Besitzer des Gewinnertickets zu senden, mehr als die Gebühr zu nehmen oder einem Käufer mehr als den ihm angezeigten Preis zu berechnen.',
+          'Der Code des Programms erlaubt es weder der Authority noch sonst jemandem, den Pot einer Runde zu nehmen oder ihn anderswohin zu senden als an den Besitzer des Gewinnertickets, als Gebühr an die Treasury und an die nächste Runde des Spiels, mehr als die Gebühr zu nehmen oder einem Käufer mehr als den ihm angezeigten Preis zu berechnen.',
         upgrade:
           'Das Programm ist upgradebar: Wer seine Upgrade-Authority hält, könnte anderen Code deployen, du vertraust dieser Person also, bis das Programm unveränderlich gemacht oder an eine Multisig übergeben wird. Der Quellcode jeder Version ist öffentlich, und ein deploytes Programm kann damit abgeglichen werden, wie es der Abschnitt „Verifiable builds“ im README erklärt.',
       },
@@ -576,7 +659,7 @@ const de: Dict = {
         bugs: 'Software Fehler haben kann, auch das Programm, die App und deine Wallet, und ein Fehler dich deine Tickets oder deine SOL kosten könnte;',
         network:
           'Solana oder der RPC-Endpunkt, den die Website nutzt, langsam, überlastet oder ausgefallen sein können und eine Transaktion fehlschlagen oder erst nach dem Schließen einer Runde ankommen kann;',
-        draw: 'die Ziehung den Hash eines Solana-Slots nutzt, den niemand kennt, wenn der Verkauf schließt. Spieler können ihn nicht vorhersagen, aber der Validator, der diesen Slot produziert, könnte ihn beeinflussen, und wer eine Runde schließt, könnte eine ungünstige Ziehung zurückhalten, bis dieser Slot nicht mehr gelesen werden kann. Sie ist kein verifizierbares Zufallsorakel;',
+        draw: 'die Ziehung den Hash eines Solana-Slots nutzt, den niemand kennt, wenn eine Runde schließt oder ein Stapel von Tipps versiegelt wird. Spieler können ihn nicht vorhersagen, aber der Validator, der diesen Slot produziert, könnte ihn beeinflussen, und wer eine Runde schließt, könnte eine ungünstige Ziehung zurückhalten, bis dieser Slot nicht mehr gelesen werden kann. Sie ist kein verifizierbares Zufallsorakel;',
         site: 'die Website jederzeit nicht verfügbar sein kann. Das Programm und deine Tickets funktionieren ohne sie weiter;',
         law: 'Gesetze zu Lotterien und Kryptowerten sich von Land zu Land unterscheiden und sich ändern können.',
       },
@@ -638,6 +721,9 @@ const de: Dict = {
         price: 'Der SOL-Kurs',
         priceBody:
           'Um Pots in Dollar anzuzeigen, ruft unser Server den SOL-Kurs bei Coinbase ab, oder bei CoinGecko, falls Coinbase nicht antwortet, und speichert ihn eine Minute lang zwischen. Diese Anfragen kommen von unserem Server und enthalten nichts über dich.',
+        push: 'Benachrichtigungen zu Ziehungen',
+        pushBody:
+          'Wenn du Benachrichtigungen für ein Spiel einschaltest, gibt dein Browser unserem Server ein Push-Abonnement: eine Adresse beim Push-Dienst deines Browsers (betrieben von Google, Mozilla, Apple oder Microsoft, je nach Browser) und die Schlüssel, um Nachrichten dafür zu verschlüsseln. Wir speichern es zusammen mit deiner Sprache und den gewählten Spielen, sonst nichts: keine Wallet-Adresse, keine IP-Adresse. Wenn eine Runde eines dieser Spiele gewonnen wird, schickt unser Server das Ergebnis verschlüsselt über diesen Push-Dienst, der es nach seiner eigenen Richtlinie an deinen Browser zustellt. Schaltest du die Benachrichtigungen aus, wird das Abonnement gelöscht; wir löschen es auch, wenn der Push-Dienst meldet, dass es nicht mehr existiert.',
       },
       thirdParties: {
         title: 'Dienste, die dein Browser nutzt',
@@ -656,6 +742,8 @@ const de: Dict = {
       browser: {
         title: 'Was in deinem Browser bleibt',
         body: 'Die App speichert fünf Einstellungen im lokalen Speicher deines Browsers: dein Farbschema, deine zuletzt genutzte Wallet, deine Länderwahl, die Sound-Einstellung und deine Sprache. Die Seite {cookies} listet sie auf.',
+        cache:
+          'Damit sie auch ohne Verbindung startet, speichert die App außerdem Kopien der besuchten Seiten und ihrer eigenen Dateien im Cache-Speicher deines Browsers. Jede neue Version der Website ersetzt sie.',
       },
       purposes: {
         title: 'Wozu, und was wir nie tun',
@@ -695,6 +783,8 @@ const de: Dict = {
         holds: 'Inhalt',
         saved: 'Gespeichert',
         wallet: 'Deine Wallet-Erweiterung speichert ihre eigenen Daten, gemäß der Richtlinie ihres Herstellers.',
+        cache:
+          'Damit sie auch ohne Verbindung startet, speichert die App außerdem Kopien der besuchten Seiten und ihrer eigenen Dateien im Cache-Speicher deines Browsers; jede neue Version der Website ersetzt sie. Wenn du Benachrichtigungen zu Ziehungen einschaltest, speichert dein Browser zusätzlich das Push-Abonnement, bis du sie ausschaltest. Das Löschen der Daten dieser Website entfernt all das.',
       },
       keys: {
         theme: {
@@ -742,9 +832,10 @@ const de: Dict = {
       },
       odds: {
         title: 'Kenne die Chancen',
-        same: 'Jedes Ticket hat dieselbe Chance. Deine Chance, eine Runde zu gewinnen, sind deine Tickets geteilt durch alle darin verkauften Tickets.',
-        label: 'Die Zahl, die du wählst, ist deine Kennzeichnung auf der Tafel. Sie ändert deine Chance nicht.',
-        fee: 'Der Gewinner erhält den Pot abzüglich der Hausgebühr, die das Programm auf 10 % begrenzt. Über alle Spieler betrachtet zahlen Tickets also das für sie ausgegebene Geld abzüglich dieser Gebühr zurück: Im Durchschnitt bringt ein Ticket weniger ein, als es kostet.',
+        same: 'In den Lotterien gewinnt das Ticket, das einer Zufallszahl am nächsten liegt: Deine Chance ist der Anteil des Zahlenbereichs, der näher an deinen Zahlen liegt als an denen aller anderen. Bei „Errate die Zahl“ findet jede Prüfung die Zahl mit einer Chance von neuen Tipps geteilt durch die noch nicht probierten Zahlen.',
+        label:
+          'Keine Zahl bringt mehr Glück als eine andere: Die gezogene Zahl ist mit gleicher Wahrscheinlichkeit jede Zahl im Bereich.',
+        fee: 'Der Gewinner erhält 80 % des Pots. Die Hausgebühr, die das Programm auf 20 % begrenzt, geht vom Rest ab, und was übrig bleibt, geht an die nächste Runde des Spiels. Über alle Spieler betrachtet zahlen Tickets also das für sie ausgegebene Geld abzüglich dieser Gebühr zurück: Im Durchschnitt bringt ein Ticket weniger ein, als es kostet.',
         nothing: 'Nichts auf der Website ändert diese Chancen.',
       },
       final: {

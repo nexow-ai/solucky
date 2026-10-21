@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const id: Dict = {
   meta: {
-    title: 'S☉Lucky: lotre harian di Solana',
+    title: 'S☉Lucky: permainan lotre di Solana',
     description:
-      'Pilih angka, beli tiket, dan menangkan seluruh pot pada tengah malam UTC. Setiap tiket, pot, dan undian ada di Solana dan bisa diperiksa siapa pun.',
-    ogImageAlt: 'S☉Lucky, lotre harian di Solana',
+      'Pilih angka di lotre harian atau lotre per jam, atau buru angka yang tersembunyi. Pemenang mendapat 80% pot. Setiap tiket, pot, dan undian ada di Solana dan bisa diperiksa siapa pun.',
+    ogImageAlt: 'S☉Lucky, permainan lotre di Solana',
   },
 
   nav: {
@@ -19,6 +19,29 @@ const id: Dict = {
   lang: {
     label: 'Bahasa',
     choose: 'Bahasa: {name}',
+  },
+
+  update: {
+    title: 'Versi baru sudah siap',
+    hint: 'Muat ulang untuk langsung memakainya. Versi baru juga dimuat otomatis saat kamu pindah halaman berikutnya.',
+    reload: 'Muat ulang',
+  },
+
+  install: {
+    label: 'Pasang aplikasi',
+    ios: 'Untuk memasang S☉Lucky, buka menu Bagikan di browser-mu lalu pilih Tambah ke Layar Utama.',
+  },
+
+  push: {
+    on: 'Beri tahu aku saat ronde permainan ini dimenangkan',
+    off: 'Matikan notifikasi permainan ini',
+    enabled: 'Notifikasi aktif',
+    enabledHint: '{game}: kamu akan mendapat notifikasi setiap kali sebuah ronde dimenangkan.',
+    disabled: 'Notifikasi nonaktif',
+    blocked: 'Notifikasi diblokir untuk situs ini. Izinkan di pengaturan browser-mu, lalu coba lagi.',
+    failed: 'Notifikasi tidak bisa diubah. Coba lagi.',
+    lottery: 'Ronde {round}: angka {drawn} terundi. Tiket terdekat, {winning}, memenangkan ◎{prize}.',
+    guess: 'Ronde {round}: angkanya {winning}. Tebakan yang menemukannya memenangkan ◎{prize}.',
   },
 
   header: {
@@ -53,10 +76,10 @@ const id: Dict = {
   },
 
   home: {
-    kicker: 'Lotre harian di Solana',
+    kicker: 'Permainan lotre di Solana',
     title: 'Pilih angka.',
-    titleEnd: 'Menangkan pot saat tengah malam.',
-    lead: 'Satu undian sehari, satu pemenang, seluruh pot. Setiap tiket, setiap lamport, dan setiap undian ada di Solana, tempat siapa pun bisa memeriksanya.',
+    titleEnd: 'Menang saat tengah malam.',
+    lead: 'Undian setiap hari, undian setiap jam, dan angka tersembunyi untuk diburu. Pemenang mendapat 80% pot, dan sisanya dibawa ke ronde berikutnya. Setiap tiket, setiap lamport, dan setiap undian ada di Solana, tempat siapa pun bisa memeriksanya.',
     playNow: 'Main sekarang',
     howItWorks: 'Cara kerja',
     program: 'Program',
@@ -95,7 +118,7 @@ const id: Dict = {
         win: {
           title: 'Menang saat tengah malam UTC',
           description:
-            'Satu tiket memenangkan seluruh pot, dikurangi biaya pengelola yang kecil. Makin banyak tiket, makin besar peluang: setiap tiket dihitung sekali.',
+            'Sebuah angka acak diundi, dan tiket yang paling dekat dengannya memenangkan 80% pot. Biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke hari berikutnya.',
           when: 'Tepat setelah tengah malam UTC',
         },
       },
@@ -110,12 +133,12 @@ const id: Dict = {
         locked: {
           title: 'Pot terkunci di dalam program',
           description:
-            'Uang tiket langsung masuk ke akun ronde. Program hanya membayarkannya kepada pemilik tiket pemenang, dan biayanya ke treasury. Operator tidak bisa menariknya.',
+            'Uang tiket langsung masuk ke akun ronde. Program hanya membayarkan 80% darinya kepada pemilik tiket pemenang, biayanya ke treasury, dan sisanya ke ronde berikutnya dari permainan itu. Operator tidak bisa menariknya.',
         },
         draw: {
           title: 'Undian yang tak bisa ditebak siapa pun',
           description:
-            'Setiap pembelian dicampurkan ke dalam entropi ronde. Saat hari berakhir, ronde menetapkan sebuah slot beberapa detik ke depan; hash slot itu, yang tidak diketahui siapa pun sampai saat itu, memilih pemenangnya.',
+            'Setiap pembelian dicampurkan ke dalam entropi ronde. Saat sebuah ronde berakhir, ronde itu menetapkan sebuah slot beberapa detik ke depan; hash slot itu, yang tidak diketahui siapa pun sampai saat itu, memilih angka yang menjadi patokan semua tiket.',
         },
         anyone: {
           title: 'Siapa pun bisa menjalankannya',
@@ -125,12 +148,12 @@ const id: Dict = {
         browser: {
           title: 'Bisa diperiksa di browser-mu',
           description:
-            'Setiap halaman ronde menghitung ulang undian dari data publik: entropi, hash slot, dan indeks pemenang. Input sama, pemenang sama.',
+            'Setiap halaman ronde menghitung ulang undian dari data publik: entropi, hash slot, angka yang diundi, dan tiket terdekat. Input sama, pemenang sama.',
         },
         limits: {
           title: 'Batas tegas bagi pengelola',
           description:
-            'Program membatasi biaya maksimal 10%. Perubahan harga dan biaya hanya berlaku untuk ronde hari berikutnya, dan pembeli tidak pernah membayar lebih dari harga yang ditampilkan kepadanya.',
+            'Program selalu membayar pemenang 80% pot dan membatasi biaya maksimal 20%. Perubahan harga dan biaya hanya berlaku untuk ronde yang dibuka sesudahnya, dan pembeli tidak pernah membayar lebih dari harga yang ditampilkan kepadanya.',
         },
         open: {
           title: 'Sumber terbuka',
@@ -151,15 +174,15 @@ const id: Dict = {
         },
         price: {
           q: 'Berapa harga satu tiket?',
-          a: 'Harganya ditetapkan on-chain dan ditampilkan di halaman Main. Selain harga, akun tiket menyimpan deposit sewa kecil yang kamu dapatkan kembali dengan menutup tiket setelah ronde dibayar. Tiket pertama hari itu juga membayar sewa akun ronde, yang tetap on-chain sebagai catatan publiknya.',
+          a: 'Harga setiap permainan ditetapkan on-chain dan ditampilkan di halaman Main-nya. Selain harga, akun tiket menyimpan deposit sewa kecil yang kamu dapatkan kembali dengan menutup tiket setelah ronde dibayar. Tiket pertama sebuah ronde juga membayar sewa akun ronde, yang tetap on-chain sebagai catatan publiknya; di lotre, setiap tiket juga membayar 4 byte yang dipakai angkanya di sana.',
         },
         odds: {
           q: 'Bagaimana peluangku dihitung?',
-          a: 'Setiap tiket punya peluang yang sama: jumlah tiketmu dibagi semua tiket yang terjual hari itu. Angka yang kamu pilih adalah labelmu di papan; angka itu tidak mengubah peluangmu.',
+          a: 'Di lotre, tiket yang paling dekat dengan angka yang diundi akan menang, jadi peluangmu adalah bagian rentang angka yang lebih dekat ke angkamu daripada ke angka orang lain: angka yang jauh dari tiket lain mencakup bagian yang lebih besar. Di Tebak Angka, setiap pemeriksaan menemukan angkanya dengan peluang sebesar jumlah tebakan baru dibagi angka yang belum dicoba.',
         },
         draw: {
           q: 'Bagaimana jika tidak ada yang mengundi ronde?',
-          a: 'Sebuah bot kecil (crank) menutup, mengundi, dan membayar setiap ronde dalam hitungan detik setelah tengah malam, dan siapa pun bisa melakukan hal yang sama dari panel Riwayat. Jika slot yang ditetapkan suatu saat menjadi terlalu lama untuk dibaca (sekitar tiga menit), ronde bisa ditutup lagi untuk menetapkan slot baru; program hanya mengizinkannya setelah slot lama terbukti sudah tidak terjangkau.',
+          a: 'Sebuah bot kecil (crank) menutup, mengundi, dan membayar setiap ronde lotre dalam hitungan detik setelah ronde itu berakhir, dan memeriksa tebakan baru setiap beberapa detik. Siapa pun bisa melakukan hal yang sama dari halaman Main. Jika slot yang ditetapkan suatu saat menjadi terlalu lama untuk dibaca (sekitar tiga menit), ronde bisa ditutup lagi untuk menetapkan slot baru; program hanya mengizinkannya setelah slot lama terbukti sudah tidak terjangkau.',
         },
         country: {
           q: 'Kenapa negaraku ditampilkan?',
@@ -195,9 +218,12 @@ const id: Dict = {
     newTicket: 'Tiket baru',
     rules: {
       daily: 'Ronde baru setiap hari pukul 00:00 UTC',
-      pot: 'Satu tiket memenangkan pot',
+      hourly: 'Dan satu setiap jam',
+      pot: 'Angka terdekat memenangkan 80% pot',
+      carry: 'Sisanya dibawa ke ronde berikutnya',
+      guess: 'Tebak Angka: tanpa batas waktu, sampai ada yang menemukannya',
       numbers: 'Angka dari 0 sampai {max}',
-      fee: 'Biaya pengelola dibatasi maksimal 10% oleh program',
+      fee: 'Biaya pengelola dibatasi maksimal 20% oleh program',
       anyone: 'Siapa pun bisa menutup, mengundi, dan membayar ronde',
       check: 'Hitung ulang setiap undian di browser-mu',
       open: 'Sumber terbuka',
@@ -214,16 +240,16 @@ const id: Dict = {
     entropy: 'Entropi',
     slotHash: 'Hash slot · slot {slot}',
     formula: 'sha256(entropi ‖ hash slot ‖ slot ‖ ronde) =',
-    mod: '8 byte pertama sebagai u64 mod {count} = {ticket}',
-    ticketCount: 'tiket',
-    ticket: 'tiket #{index}',
+    mod: '8 byte pertama sebagai u64 mod {count} = {drawn}',
+    ticketCount: 'angka',
+    closest: 'tiket terdekat: {number}',
     number: 'Angka',
     paidTo: 'Dibayar ke',
     payout: 'Pembayaran',
     check: 'Periksa undian ini',
     roundPage: 'Halaman ronde',
     nextDraw: 'Undian berikutnya setelah 00:00 UTC',
-    ok: 'Dihitung ulang di browser-mu: hash sama, tiket #{index} menang.',
+    ok: 'Dihitung ulang di browser-mu: hash sama, angka {number} menang.',
     mismatch: 'Hash yang dihitung ulang di browser-mu tidak cocok dengan ronde ini.',
   },
 
@@ -236,7 +262,10 @@ const id: Dict = {
     yourTickets: 'Tiketmu',
     winChance: 'Peluang menang',
     chance: 'Peluang',
-    todaysPot: 'Pot hari ini',
+    todaysPot: 'Pot',
+    checked: 'Diperiksa',
+    waiting: 'Menunggu',
+    numbersLeft: 'Angka tersisa',
     winners: 'Pemenang',
     averagePot: 'Rata-rata pot',
     biggestPot: 'Pot terbesar',
@@ -251,7 +280,8 @@ const id: Dict = {
 
   play: {
     title: 'Main',
-    description: 'Pilih angka hari ini dan saksikan pot bertambah secara langsung di Solana.',
+    description:
+      'Pilih angka di lotre harian atau lotre per jam, atau buru angka yang tersembunyi, dan saksikan pot bertambah secara langsung di Solana.',
     testMoney: 'Kamu bermain di Solana {cluster}: tiket dibayar dengan SOL uji coba yang tidak punya nilai sungguhan.',
     localFunds: 'Arahkan dompetmu ke {url}, lalu isi saldonya dengan: {command}',
     phantomFunds:
@@ -267,7 +297,7 @@ const id: Dict = {
     title: 'Angka',
     win: 'Menangkan',
     in: 'dalam',
-    taken: 'Sudah diambil hari ini',
+    taken: 'Sudah diambil di ronde ini',
     range: '0 sampai {max}, satu tiket per angka',
     pad: 'Papan angka',
     reset: 'Atur ulang',
@@ -275,10 +305,10 @@ const id: Dict = {
     dip: 'Pilih acak',
     searchCountry: 'Cari negara',
     country: 'Negara yang ditampilkan bersama tiketmu',
-    notSetUp: 'Lotre belum disiapkan di jaringan ini.',
+    notSetUp: 'Permainan ini belum disiapkan di jaringan ini.',
     paused: 'Penjualan tiket sedang dijeda.',
     buy: 'Beli {number} seharga ◎{price}',
-    takenToday: '{number} sudah diambil hari ini',
+    takenToday: '{number} sudah diambil',
     outOfRange: 'Angka di luar rentang',
     notEnough: 'SOL tidak cukup',
     keys: 'Tombol 0–9 untuk mengetik, ⌫ untuk menghapus, Enter untuk membeli.',
@@ -287,12 +317,56 @@ const id: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Hari ini',
     title: 'SOLPOT',
     closesIn: '{day} · tutup dalam',
+    carried: 'Termasuk ◎{carry} yang dibawa dari ronde sebelumnya',
+    split: '80% untuk pemenang · {fee} biaya pengelola · sisanya ke ronde berikutnya',
     inPlay: 'Angka yang dimainkan',
     empty: 'Belum ada tiket',
-    beFirst: 'Jadilah yang pertama memilih angka hari ini.',
+    beFirst: 'Jadilah yang pertama memilih angka di ronde ini.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Permainan',
+    title: 'Tiga cara bermain',
+    description:
+      'Angka yang sama, dari 0 sampai {max}. Pemenang mendapat 80% pot; biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke ronde berikutnya.',
+    play: 'Main',
+    daily: {
+      name: 'Lotre harian',
+      short: 'Harian',
+      description:
+        'Undian setiap hari setelah tengah malam UTC. Tiket yang paling dekat dengan angka yang diundi akan menang.',
+    },
+    hourly: {
+      name: 'Lotre per jam',
+      short: 'Per jam',
+      description:
+        'Undian setiap jam, tepat di awal jam (UTC). Tiket yang paling dekat dengan angka yang diundi akan menang.',
+    },
+    guess: {
+      name: 'Tebak Angka',
+      short: 'Tebak',
+      description:
+        'Tanpa batas waktu. Tebakan baru diperiksa setiap beberapa detik sampai salah satunya menemukan angka ronde; lalu ronde baru dimulai.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Sampai ada yang menemukannya',
+    odds: 'Setiap pemeriksaan menemukan angkanya dengan peluang sebesar jumlah tebakan baru dibagi {n} angka yang belum dicoba.',
+    bought: 'Tebakan {number} sudah masuk. Tebakan itu diperiksa dalam beberapa detik.',
+    sealing: 'Mengunci tebakan terbaru ronde {day}',
+    checkNow: 'Periksa sekarang',
+    checkHint:
+      'Sebuah bot memeriksa tebakan baru setiap beberapa detik. Siapa pun bisa menjalankan pemeriksaan; biayanya hanya biaya jaringan.',
+    missed: 'Bukan angkanya: {numbers}',
+    left: 'Angkanya adalah salah satu dari {n} angka yang belum dicoba.',
+    foundByYou: 'Kamu menemukannya! Angkanya {number}',
+    foundByOther: 'Pemain lain menemukan angkanya',
+    nextRound: 'Ronde baru dengan angka baru sedang dijual.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -310,8 +384,8 @@ const id: Dict = {
     getBack: 'Ambil kembali',
     winners: 'Pemenang',
     noWinners: 'Belum ada pemenang',
-    firstDraw: 'Undian pertama berlangsung pada tengah malam UTC.',
-    chart: 'Pot per hari',
+    firstDraw: 'Pemenang pertama akan muncul di sini.',
+    chart: 'Pot per ronde',
     chartEmpty: 'Belum ada ronde yang selesai.',
     chartLabel: 'Pot dari {n} ronde terakhir; daftar di bawah memuat setiap nilainya.',
   },
@@ -320,6 +394,7 @@ const id: Dict = {
     open: 'Terbuka',
     toClose: 'Menunggu ditutup',
     toDraw: 'Menunggu undian',
+    checking: 'Memeriksa tebakan',
     unpaid: 'Diundi, belum dibayar',
     paid: 'Dibayar',
   },
@@ -372,7 +447,7 @@ const id: Dict = {
     balance: 'Saldo',
     ticketsLeft: 'cukup untuk {n} tiket',
     needMore: 'perlu lebih banyak SOL untuk bermain',
-    numbers: 'Angkamu hari ini',
+    numbers: 'Angkamu di ronde ini',
     copy: 'Salin alamat',
     explorer: 'Explorer',
     play: 'Main',
@@ -382,10 +457,11 @@ const id: Dict = {
   round: {
     title: 'Ronde {day}',
     back: 'Kembali ke permainan',
-    notDate: 'Ini bukan tanggal. Ronde diberi nama YYYY-MM-DD.',
+    notDate:
+      'Ini bukan ronde dari permainan ini. Ronde harian diberi nama YYYY-MM-DD, ronde per jam YYYY-MM-DDTHH, dan ronde Tebak Angka dengan nomornya.',
     kicker: 'Ronde',
-    nobody: 'Tidak ada yang bermain hari itu',
-    beFirst: 'Jadilah yang pertama membeli tiket hari ini.',
+    nobody: 'Tidak ada yang bermain di ronde ini',
+    beFirst: 'Jadilah yang pertama membeli tiket di ronde ini.',
     onlyExists: 'Ronde baru ada setelah tiket pertamanya terjual.',
     pot: 'Pot',
     usd: '{usd} dengan harga hari ini',
@@ -405,10 +481,12 @@ const id: Dict = {
     slotHash: 'Hash slot dari slot {slot} (dibaca program dari sysvar SlotHashes)',
     randomness: 'Keacakan',
     winning: 'Tiket pemenang',
-    winningFormula: '8 byte pertama sebagai u64 mod {count} = pembelian #{index}',
+    winningFormula: '8 byte pertama sebagai u64 mod {count} = {drawn}; tiket terdekat memegang {number}',
+    guessFormula:
+      '8 byte pertama sebagai u64 mod {left} (angka yang belum dicoba) = {r}, di bawah {batch} (tebakan dalam pemeriksaan): pembelian #{index} menemukan angkanya',
     ok: 'Undiannya terbukti benar.',
     mismatch: 'Tidak cocok: hasil yang tersimpan tidak sesuai dengan inputnya.',
-    got: 'Browser-mu mendapatkan {hash}… dan tiket #{index}.',
+    got: 'Browser-mu mendapatkan {hash}… dan angka {number}.',
     tickets: 'Tiket',
     ticketsHint:
       'Tiket yang ditutup pemiliknya setelah pembayaran tidak lagi tampil di sini; ronde tetap menyimpan totalnya.',
@@ -422,7 +500,7 @@ const id: Dict = {
 
   errors: {
     rejected: 'Kamu membatalkan permintaan di dompetmu.',
-    taken: 'Seseorang sudah memegang angka ini hari ini. Pilih angka lain.',
+    taken: 'Seseorang sudah memegang angka ini di ronde ini. Pilih angka lain.',
     funds: 'SOL di dompet tidak cukup.',
     walletCluster:
       'Dompetmu tidak dapat menandatangani. Di Phantom: Settings → Developer Settings → aktifkan Testnet Mode → pilih Devnet, lalu hubungkan ulang dan coba lagi.',
@@ -430,11 +508,11 @@ const id: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Hanya otoritas yang dapat melakukan ini.',
-      invalidTicketPrice: 'Harga tiket minimal 0,001 SOL.',
-      feeTooHigh: 'Biaya melebihi batas 10%.',
+      invalidTicketPrice: 'Harga tiket minimal 0,002 SOL.',
+      feeTooHigh: 'Biaya melebihi batas 20%.',
       invalidMaxNumber: 'Angka tertinggi harus lebih besar dari nol.',
       paused: 'Penjualan tiket sedang dijeda.',
-      wrongDay: 'Tiket hanya bisa dibeli untuk ronde hari ini.',
+      wrongRound: 'Tiket hanya bisa dibeli untuk ronde yang sedang dijual.',
       numberOutOfRange: 'Angka di luar rentang.',
       invalidCountry: 'Negara harus berupa kode ISO 3166-1 alpha-2 dengan huruf kapital.',
       roundNotOpen: 'Ronde tidak terbuka.',
@@ -451,6 +529,10 @@ const id: Dict = {
       overflow: 'Overflow aritmetika.',
       priceChanged: 'Harga tiket lebih tinggi daripada harga yang kamu setujui.',
       feeAlreadyCollected: 'Biaya ronde ini sudah ditarik.',
+      roundFull: 'Ronde ini sudah menjual semua tiket yang bisa ditampungnya.',
+      nothingToCheck: 'Tidak ada tebakan baru untuk diperiksa.',
+      batchSealed: 'Tebakan terbaru sedang diperiksa; coba lagi dalam beberapa detik.',
+      invalidGame: 'Permainan tidak dikenal.',
     },
   },
 
@@ -541,14 +623,14 @@ const id: Dict = {
       rounds: {
         title: 'Cara kerja ronde',
         intro: 'Program menegakkan aturan-aturan ini; situs hanya menampilkannya:',
-        day: 'Satu ronde berjalan setiap hari UTC, dari pukul 00:00 UTC hingga tengah malam berikutnya.',
+        day: 'S☉Lucky punya tiga permainan. Di lotre harian, satu ronde berjalan setiap hari UTC, dari pukul 00:00 UTC hingga tengah malam berikutnya; di lotre per jam, setiap jam UTC. Di Tebak Angka, ronde tidak punya waktu berakhir: ronde berjalan sampai sebuah tebakan menemukan angkanya.',
         number:
           'Satu tiket adalah satu angka, dari 0 hingga angka tertinggi yang ditetapkan dalam konfigurasi program. Setiap angka hanya bisa dipegang satu tiket per ronde.',
         price:
-          'Harga tiket dan biaya pengelola disalin dari konfigurasi saat ronde dibuka, dan tetap sama selama ronde itu. Biaya tidak pernah bisa lebih dari 10% pot. Saat membeli, kamu tidak pernah membayar lebih dari harga yang ditampilkan kepadamu.',
-        pot: 'Harga setiap tiket masuk ke pot ronde, yang disimpan di akun milik ronde itu sendiri di Solana. Setiap tiket punya peluang yang sama: peluangmu adalah jumlah tiketmu dibagi semua tiket yang terjual di ronde itu. Angka yang kamu pilih tidak mengubahnya.',
-        draw: 'Setelah tengah malam, siapa pun bisa menutup ronde, mengundinya, dan membayarnya. Pemilik tiket pemenang menerima pot dikurangi biaya pengelola, dan biaya itu masuk ke treasury.',
-        rent: 'Akun tiket juga menyimpan deposit sewa kecil, yang kamu dapatkan kembali dengan menutup tiket setelah rondenya dibayar. Tiket pertama dalam sebuah ronde juga membayar sewa akun ronde, yang tetap ada di Solana sebagai catatan publik ronde itu.',
+          'Setiap permainan punya harga tiket dan biaya pengelolanya sendiri. Keduanya disalin, bersama angka tertinggi, saat ronde dibuka, dan tetap sama selama ronde itu. Biaya tidak pernah bisa lebih dari 20% pot. Saat membeli, kamu tidak pernah membayar lebih dari harga yang ditampilkan kepadamu.',
+        pot: 'Harga setiap tiket masuk ke pot ronde, yang disimpan di akun milik ronde itu sendiri di Solana. Di lotre, sebuah angka acak dari 0 sampai angka tertinggi diundi dan tiket yang paling dekat dengannya menang; jika seri, angka yang lebih kecil yang menang. Di Tebak Angka, tebakan baru diperiksa per kelompok: sebuah kelompok memuat angkanya dengan peluang sebesar jumlah tebakannya dibagi angka yang belum dicoba, peluang yang sama seperti untuk angka yang disembunyikan saat ronde dibuka.',
+        draw: 'Setelah sebuah ronde lotre berakhir, atau begitu ada tebakan baru yang menunggu pemeriksaan, siapa pun bisa menutup ronde, mengundinya, dan membayarnya. Pemilik tiket pemenang menerima 80% pot, biaya pengelola masuk ke treasury, dan sisanya tetap di program untuk ronde berikutnya dari permainan itu yang akan diundi.',
+        rent: 'Akun tiket juga menyimpan deposit sewa kecil, yang kamu dapatkan kembali dengan menutup tiket setelah rondenya dibayar. Tiket pertama dalam sebuah ronde juga membayar sewa akun ronde, yang tetap ada di Solana sebagai catatan publik ronde itu. Di lotre, setiap tiket juga membayar sewa untuk 4 byte yang dipakai angkanya di akun itu, dan sewa ini tidak dikembalikan.',
       },
       wallet: {
         title: 'Dompet dan transaksimu',
@@ -562,12 +644,12 @@ const id: Dict = {
         title: 'Apa yang bisa dan tidak bisa dilakukan operator',
         intro: 'Konfigurasi program memiliki otoritas, yang dapat:',
         price:
-          'mengubah harga tiket (minimal ◎0,001) dan biaya pengelola (maksimal 10%), berlaku mulai ronde berikutnya yang dibuka;',
+          'mengubah harga tiket (minimal ◎0,002) dan biaya pengelola (maksimal 20%) setiap permainan, berlaku mulai ronde berikutnya dari permainan itu yang dibuka;',
         pause:
           'menjeda dan melanjutkan penjualan tiket. Jeda hanya menghentikan tiket baru: ronde yang sudah dimainkan tetap bisa diundi dan dibayar;',
         other: 'mengubah treasury, angka tertinggi, dan otoritas itu sendiri.',
         cannot:
-          'Kode program tidak mengizinkan otoritas, atau siapa pun, mengambil pot sebuah ronde atau mengirimkannya ke mana pun selain kepada pemilik tiket pemenang, mengambil lebih dari biaya, atau menagih pembeli lebih dari harga yang ditampilkan kepadanya.',
+          'Kode program tidak mengizinkan otoritas, atau siapa pun, mengambil pot sebuah ronde atau mengirimkannya ke mana pun selain kepada pemilik tiket pemenang, biaya ke treasury, dan ronde berikutnya dari permainan itu, mengambil lebih dari biaya, atau menagih pembeli lebih dari harga yang ditampilkan kepadanya.',
         upgrade:
           'Program ini dapat di-upgrade: siapa pun yang memegang otoritas upgrade-nya bisa men-deploy kode yang berbeda, jadi kamu memercayai mereka sampai program dibuat tidak dapat diubah atau diserahkan ke multisig. Kode sumber setiap versi bersifat publik, dan program yang sudah di-deploy dapat dicocokkan dengannya seperti dijelaskan di bagian “Verifiable builds” pada README.',
       },
@@ -577,7 +659,7 @@ const id: Dict = {
         bugs: 'perangkat lunak bisa memiliki bug, termasuk program, aplikasi, dan dompetmu, dan sebuah bug bisa membuatmu kehilangan tiket atau SOL;',
         network:
           'Solana atau endpoint RPC yang digunakan situs bisa lambat, padat, atau mati, dan sebuah transaksi bisa gagal atau baru tiba setelah ronde ditutup;',
-        draw: 'undian menggunakan hash dari sebuah slot Solana yang tidak diketahui siapa pun saat penjualan ditutup. Pemain tidak bisa menebaknya, tetapi validator yang menghasilkan slot itu bisa memengaruhinya, dan siapa pun yang menutup ronde bisa menahan hasil undian yang tidak menguntungkan sampai slot itu tidak bisa dibaca lagi. Ini bukan oracle keacakan yang dapat diverifikasi;',
+        draw: 'undian menggunakan hash dari sebuah slot Solana yang tidak diketahui siapa pun saat sebuah ronde ditutup atau sekelompok tebakan dikunci. Pemain tidak bisa menebaknya, tetapi validator yang menghasilkan slot itu bisa memengaruhinya, dan siapa pun yang menutup ronde bisa menahan hasil undian yang tidak menguntungkan sampai slot itu tidak bisa dibaca lagi. Ini bukan oracle keacakan yang dapat diverifikasi;',
         site: 'situs bisa tidak tersedia kapan saja. Program, dan tiketmu, tetap berfungsi tanpanya;',
         law: 'hukum tentang lotre dan aset kripto berbeda di setiap negara dan bisa berubah.',
       },
@@ -639,6 +721,9 @@ const id: Dict = {
         price: 'Harga SOL',
         priceBody:
           'Untuk menampilkan pot dalam dolar, server kami mengambil harga SOL dari Coinbase, atau dari CoinGecko jika Coinbase tidak menjawab, lalu menyimpannya di cache selama satu menit. Permintaan ini berasal dari server kami dan tidak membawa apa pun tentang dirimu.',
+        push: 'Notifikasi undian',
+        pushBody:
+          'Jika kamu mengaktifkan notifikasi untuk sebuah permainan, browser-mu memberi server kami sebuah langganan push: alamat di layanan push browser-mu (dijalankan oleh Google, Mozilla, Apple, atau Microsoft, tergantung browser-nya) dan kunci untuk mengenkripsi pesan ke sana. Kami menyimpannya bersama bahasamu dan permainan yang kamu pilih, dan tidak ada yang lain: tanpa alamat dompet, tanpa alamat IP. Saat ronde salah satu permainan itu dimenangkan, server kami mengirim hasilnya, terenkripsi, lewat layanan push itu, yang mengantarkannya ke browser-mu sesuai kebijakannya sendiri. Mematikan notifikasi menghapus langganan itu, dan kami juga menghapusnya saat layanan push memberi tahu bahwa langganan itu sudah tidak ada.',
       },
       thirdParties: {
         title: 'Layanan yang digunakan browser-mu',
@@ -657,6 +742,8 @@ const id: Dict = {
       browser: {
         title: 'Apa yang tetap ada di browser-mu',
         body: 'Aplikasi menyimpan lima pengaturan di penyimpanan lokal browser-mu: tema, dompet terakhir, pilihan negara, pengaturan suara, dan bahasamu. Halaman {cookies} mencantumkannya.',
+        cache:
+          'Agar bisa dibuka tanpa koneksi, aplikasi juga menyimpan salinan halaman yang kamu kunjungi dan file-filenya sendiri di penyimpanan cache browser-mu. Setiap versi baru situs menggantikannya.',
       },
       purposes: {
         title: 'Untuk apa, dan apa yang tidak pernah kami lakukan',
@@ -696,6 +783,8 @@ const id: Dict = {
         holds: 'Isinya',
         saved: 'Disimpan',
         wallet: 'Ekstensi dompetmu menyimpan datanya sendiri, sesuai kebijakan pembuatnya.',
+        cache:
+          'Agar bisa dibuka tanpa koneksi, aplikasi juga menyimpan salinan halaman yang kamu kunjungi dan file-filenya sendiri di penyimpanan cache browser-mu; setiap versi baru situs menggantikannya. Jika kamu mengaktifkan notifikasi undian, browser-mu juga menyimpan langganan push sampai kamu mematikannya. Menghapus data situs ini menghapus semuanya.',
       },
       keys: {
         theme: {
@@ -744,9 +833,10 @@ const id: Dict = {
       },
       odds: {
         title: 'Ketahui peluangnya',
-        same: 'Setiap tiket punya peluang yang sama. Peluangmu memenangkan sebuah ronde adalah jumlah tiketmu dibagi semua tiket yang terjual di ronde itu.',
-        label: 'Angka yang kamu pilih adalah labelmu di papan. Angka itu tidak mengubah peluangmu.',
-        fee: 'Pemenang menerima pot dikurangi biaya pengelola, yang dibatasi program maksimal 10%. Jadi, jika dihitung untuk semua pemain, tiket mengembalikan uang yang dibelanjakan untuknya dikurangi biaya itu: rata-rata, sebuah tiket menghasilkan kembali lebih sedikit daripada harganya.',
+        same: 'Di lotre, tiket yang paling dekat dengan sebuah angka acak akan menang: peluangmu adalah bagian rentang angka yang lebih dekat ke angkamu daripada ke angka orang lain. Di Tebak Angka, setiap pemeriksaan menemukan angkanya dengan peluang sebesar jumlah tebakan baru dibagi angka yang belum dicoba.',
+        label:
+          'Tidak ada angka yang lebih beruntung daripada yang lain: angka yang diundi berpeluang sama untuk menjadi angka mana pun dalam rentang.',
+        fee: 'Pemenang menerima 80% pot. Biaya pengelola, yang dibatasi program maksimal 20%, diambil dari sisanya, dan yang tersisa masuk ke ronde berikutnya dari permainan itu. Jadi, jika dihitung untuk semua pemain, tiket mengembalikan uang yang dibelanjakan untuknya dikurangi biaya itu: rata-rata, sebuah tiket menghasilkan kembali lebih sedikit daripada harganya.',
         nothing: 'Tidak ada apa pun di situs ini yang mengubah peluang tersebut.',
       },
       final: {

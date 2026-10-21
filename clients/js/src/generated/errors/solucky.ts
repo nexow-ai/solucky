@@ -17,16 +17,16 @@ import { SOLUCKY_PROGRAM_ADDRESS } from '../programs';
 
 /** Unauthorized: Only the authority can do this */
 export const SOLUCKY_ERROR__UNAUTHORIZED = 0x1770; // 6000
-/** InvalidTicketPrice: The ticket price must be at least 0.001 SOL */
+/** InvalidTicketPrice: The ticket price must be at least 0.002 SOL */
 export const SOLUCKY_ERROR__INVALID_TICKET_PRICE = 0x1771; // 6001
-/** FeeTooHigh: The fee is above the 10% cap */
+/** FeeTooHigh: The fee is above the 20% cap */
 export const SOLUCKY_ERROR__FEE_TOO_HIGH = 0x1772; // 6002
 /** InvalidMaxNumber: The highest number must be greater than zero */
 export const SOLUCKY_ERROR__INVALID_MAX_NUMBER = 0x1773; // 6003
 /** Paused: Ticket sales are paused */
 export const SOLUCKY_ERROR__PAUSED = 0x1774; // 6004
-/** WrongDay: Tickets can only be bought for today's round */
-export const SOLUCKY_ERROR__WRONG_DAY = 0x1775; // 6005
+/** WrongRound: Tickets can only be bought for the round on sale */
+export const SOLUCKY_ERROR__WRONG_ROUND = 0x1775; // 6005
 /** NumberOutOfRange: The number is out of range */
 export const SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE = 0x1776; // 6006
 /** InvalidCountry: The country must be an uppercase ISO 3166-1 alpha-2 code */
@@ -57,14 +57,25 @@ export const SOLUCKY_ERROR__OVERFLOW = 0x1782; // 6018
 export const SOLUCKY_ERROR__PRICE_CHANGED = 0x1783; // 6019
 /** FeeAlreadyCollected: The fee of this round was already collected */
 export const SOLUCKY_ERROR__FEE_ALREADY_COLLECTED = 0x1784; // 6020
+/** RoundFull: This round has sold all the tickets it can hold */
+export const SOLUCKY_ERROR__ROUND_FULL = 0x1785; // 6021
+/** NothingToCheck: There are no new guesses to check */
+export const SOLUCKY_ERROR__NOTHING_TO_CHECK = 0x1786; // 6022
+/** BatchSealed: The latest guesses are being checked; try again in a few seconds */
+export const SOLUCKY_ERROR__BATCH_SEALED = 0x1787; // 6023
+/** InvalidGame: Unknown game */
+export const SOLUCKY_ERROR__INVALID_GAME = 0x1788; // 6024
 
 export type SoluckyError =
+  | typeof SOLUCKY_ERROR__BATCH_SEALED
   | typeof SOLUCKY_ERROR__DRAW_STILL_POSSIBLE
   | typeof SOLUCKY_ERROR__FEE_ALREADY_COLLECTED
   | typeof SOLUCKY_ERROR__FEE_TOO_HIGH
   | typeof SOLUCKY_ERROR__INVALID_COUNTRY
+  | typeof SOLUCKY_ERROR__INVALID_GAME
   | typeof SOLUCKY_ERROR__INVALID_MAX_NUMBER
   | typeof SOLUCKY_ERROR__INVALID_TICKET_PRICE
+  | typeof SOLUCKY_ERROR__NOTHING_TO_CHECK
   | typeof SOLUCKY_ERROR__NOT_WINNING_TICKET
   | typeof SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE
   | typeof SOLUCKY_ERROR__OVERFLOW
@@ -72,6 +83,7 @@ export type SoluckyError =
   | typeof SOLUCKY_ERROR__PRICE_CHANGED
   | typeof SOLUCKY_ERROR__RANDOMNESS_UNAVAILABLE
   | typeof SOLUCKY_ERROR__ROUND_ALREADY_DRAWN
+  | typeof SOLUCKY_ERROR__ROUND_FULL
   | typeof SOLUCKY_ERROR__ROUND_NOT_CLOSED
   | typeof SOLUCKY_ERROR__ROUND_NOT_DRAWN
   | typeof SOLUCKY_ERROR__ROUND_NOT_OPEN
@@ -79,17 +91,20 @@ export type SoluckyError =
   | typeof SOLUCKY_ERROR__ROUND_NOT_SETTLED
   | typeof SOLUCKY_ERROR__TARGET_SLOT_NOT_REACHED
   | typeof SOLUCKY_ERROR__UNAUTHORIZED
-  | typeof SOLUCKY_ERROR__WRONG_DAY;
+  | typeof SOLUCKY_ERROR__WRONG_ROUND;
 
 let soluckyErrorMessages: Record<SoluckyError, string> | undefined;
 if (process.env['NODE_ENV'] !== 'production') {
   soluckyErrorMessages = {
+    [SOLUCKY_ERROR__BATCH_SEALED]: `The latest guesses are being checked; try again in a few seconds`,
     [SOLUCKY_ERROR__DRAW_STILL_POSSIBLE]: `The pinned slot can still be drawn`,
     [SOLUCKY_ERROR__FEE_ALREADY_COLLECTED]: `The fee of this round was already collected`,
-    [SOLUCKY_ERROR__FEE_TOO_HIGH]: `The fee is above the 10% cap`,
+    [SOLUCKY_ERROR__FEE_TOO_HIGH]: `The fee is above the 20% cap`,
     [SOLUCKY_ERROR__INVALID_COUNTRY]: `The country must be an uppercase ISO 3166-1 alpha-2 code`,
+    [SOLUCKY_ERROR__INVALID_GAME]: `Unknown game`,
     [SOLUCKY_ERROR__INVALID_MAX_NUMBER]: `The highest number must be greater than zero`,
-    [SOLUCKY_ERROR__INVALID_TICKET_PRICE]: `The ticket price must be at least 0.001 SOL`,
+    [SOLUCKY_ERROR__INVALID_TICKET_PRICE]: `The ticket price must be at least 0.002 SOL`,
+    [SOLUCKY_ERROR__NOTHING_TO_CHECK]: `There are no new guesses to check`,
     [SOLUCKY_ERROR__NOT_WINNING_TICKET]: `This is not the winning ticket`,
     [SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE]: `The number is out of range`,
     [SOLUCKY_ERROR__OVERFLOW]: `Arithmetic overflow`,
@@ -97,6 +112,7 @@ if (process.env['NODE_ENV'] !== 'production') {
     [SOLUCKY_ERROR__PRICE_CHANGED]: `The ticket price is higher than the price you accepted`,
     [SOLUCKY_ERROR__RANDOMNESS_UNAVAILABLE]: `The pinned slot's hash is not readable yet; try again shortly, or close the round again once it expired`,
     [SOLUCKY_ERROR__ROUND_ALREADY_DRAWN]: `The round was already drawn`,
+    [SOLUCKY_ERROR__ROUND_FULL]: `This round has sold all the tickets it can hold`,
     [SOLUCKY_ERROR__ROUND_NOT_CLOSED]: `The round is not closed`,
     [SOLUCKY_ERROR__ROUND_NOT_DRAWN]: `The round has not been drawn`,
     [SOLUCKY_ERROR__ROUND_NOT_OPEN]: `The round is not open`,
@@ -104,7 +120,7 @@ if (process.env['NODE_ENV'] !== 'production') {
     [SOLUCKY_ERROR__ROUND_NOT_SETTLED]: `The round has not been settled`,
     [SOLUCKY_ERROR__TARGET_SLOT_NOT_REACHED]: `The pinned slot has not been reached yet`,
     [SOLUCKY_ERROR__UNAUTHORIZED]: `Only the authority can do this`,
-    [SOLUCKY_ERROR__WRONG_DAY]: `Tickets can only be bought for today's round`,
+    [SOLUCKY_ERROR__WRONG_ROUND]: `Tickets can only be bought for the round on sale`,
   };
 }
 

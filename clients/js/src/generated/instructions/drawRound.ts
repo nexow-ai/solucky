@@ -47,6 +47,7 @@ export function getDrawRoundDiscriminatorBytes(): ReadonlyUint8Array {
 export type DrawRoundInstruction<
   TProgram extends string = typeof SOLUCKY_PROGRAM_ADDRESS,
   TAccountRound extends string | AccountMeta<string> = string,
+  TAccountGame extends string | AccountMeta<string> = string,
   TAccountSlotHashes extends string | AccountMeta<string> = 'SysvarS1otHashes111111111111111111111111111',
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
@@ -54,6 +55,7 @@ export type DrawRoundInstruction<
   InstructionWithAccounts<
     [
       TAccountRound extends string ? WritableAccount<TAccountRound> : TAccountRound,
+      TAccountGame extends string ? WritableAccount<TAccountGame> : TAccountGame,
       TAccountSlotHashes extends string ? ReadonlyAccount<TAccountSlotHashes> : TAccountSlotHashes,
       ...TRemainingAccounts,
     ]
@@ -83,23 +85,31 @@ export function getDrawRoundInstructionDataCodec(): FixedSizeCodec<
 
 export type DrawRoundInput<
   TAccountRound extends InstructionAccountInput = InstructionAccountInput,
+  TAccountGame extends InstructionAccountInput = InstructionAccountInput,
   TAccountSlotHashes extends InstructionAccountInput = InstructionAccountInput,
 > = {
   round: TAccountRound;
+  /**
+   * Hands its carry to the round when a winner is found, and keeps what
+   * the winner and the fee leave of the pot.
+   */
+  game: TAccountGame;
   /** deserialize on-chain. */
   slotHashes?: TAccountSlotHashes;
 };
 
 export function getDrawRoundInstruction<
   TAccountRound extends InstructionAccountInput,
+  TAccountGame extends InstructionAccountInput,
   TAccountSlotHashes extends InstructionAccountInput,
   TProgramAddress extends Address = typeof SOLUCKY_PROGRAM_ADDRESS,
 >(
-  input: DrawRoundInput<TAccountRound, TAccountSlotHashes>,
+  input: DrawRoundInput<TAccountRound, TAccountGame, TAccountSlotHashes>,
   config?: { programAddress?: TProgramAddress | { readonly address: TProgramAddress } },
 ): DrawRoundInstruction<
   TProgramAddress,
   ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+  ResolvedInstructionAccountMeta<TAccountGame, InstructionAccountInputAddress<TAccountGame>>,
   ResolvedInstructionAccountMeta<TAccountSlotHashes, InstructionAccountInputAddress<TAccountSlotHashes>>
 > {
   // Program address.
@@ -112,6 +122,7 @@ export function getDrawRoundInstruction<
   // Original accounts.
   const originalAccounts = {
     round: { value: input.round ?? null, isSigner: false, isWritable: true },
+    game: { value: input.game ?? null, isSigner: false, isWritable: true },
     slotHashes: { value: input.slotHashes ?? null, isSigner: false, isWritable: false },
   };
   const accounts = originalAccounts as Record<keyof typeof originalAccounts, ResolvedInstructionAccount>;
@@ -123,12 +134,17 @@ export function getDrawRoundInstruction<
   }
 
   return Object.freeze({
-    accounts: [getAccountMeta('round', accounts.round), getAccountMeta('slotHashes', accounts.slotHashes)],
+    accounts: [
+      getAccountMeta('round', accounts.round),
+      getAccountMeta('game', accounts.game),
+      getAccountMeta('slotHashes', accounts.slotHashes),
+    ],
     data: getDrawRoundInstructionDataEncoder().encode({}),
     programAddress,
   } as DrawRoundInstruction<
     TProgramAddress,
     ResolvedInstructionAccountMeta<TAccountRound, InstructionAccountInputAddress<TAccountRound>>,
+    ResolvedInstructionAccountMeta<TAccountGame, InstructionAccountInputAddress<TAccountGame>>,
     ResolvedInstructionAccountMeta<TAccountSlotHashes, InstructionAccountInputAddress<TAccountSlotHashes>>
   >);
 }
@@ -140,8 +156,13 @@ export type ParsedDrawRoundInstruction<
   programAddress: Address<TProgram>;
   accounts: {
     round: TAccountMetas[0];
+    /**
+     * Hands its carry to the round when a winner is found, and keeps what
+     * the winner and the fee leave of the pot.
+     */
+    game: TAccountMetas[1];
     /** deserialize on-chain. */
-    slotHashes: TAccountMetas[1];
+    slotHashes: TAccountMetas[2];
   };
   data: DrawRoundInstructionData;
 };
@@ -149,10 +170,10 @@ export type ParsedDrawRoundInstruction<
 export function parseDrawRoundInstruction<TProgram extends string, TAccountMetas extends readonly AccountMeta[]>(
   instruction: Instruction<TProgram> & InstructionWithAccounts<TAccountMetas> & InstructionWithData<ReadonlyUint8Array>,
 ): ParsedDrawRoundInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 2) {
+  if (instruction.accounts.length < 3) {
     throw new SolanaError(SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS, {
       actualAccountMetas: instruction.accounts.length,
-      expectedAccountMetas: 2,
+      expectedAccountMetas: 3,
     });
   }
   let accountIndex = 0;
@@ -163,7 +184,7 @@ export function parseDrawRoundInstruction<TProgram extends string, TAccountMetas
   };
   return {
     programAddress: instruction.programAddress,
-    accounts: { round: getNextAccount(), slotHashes: getNextAccount() },
+    accounts: { round: getNextAccount(), game: getNextAccount(), slotHashes: getNextAccount() },
     data: getDrawRoundInstructionDataDecoder().decode(instruction.data),
   };
 }

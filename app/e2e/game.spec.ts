@@ -16,12 +16,12 @@ async function connect(page: Page, wallet: TestWallet) {
   await expect(page.getByRole('banner').getByText(wallet.address.slice(0, 4))).toBeVisible();
 }
 
-// One player goes through a whole day: buy a ticket, settle the round after
-// midnight, and check the draw in the browser.
+// One player goes through a whole day of the daily lottery: buy a ticket,
+// settle the round after midnight, and check the draw in the browser.
 test.describe.serial('a day of S☉Lucky', () => {
   let wallet: TestWallet;
   let day: number;
-  const number = 100_000_000 + Math.floor(Math.random() * 800_000_000);
+  const number = 100_000 + Math.floor(Math.random() * 20_000_000);
 
   test.beforeAll(async () => {
     wallet = createTestWallet();
@@ -53,7 +53,7 @@ test.describe.serial('a day of S☉Lucky', () => {
     await buy.click();
 
     await expect(page.getByText(`Number ${spaced(number)} is yours. Good luck!`)).toBeVisible();
-    await expect(page.getByRole('button', { name: `${spaced(number)} is taken today` })).toBeDisabled();
+    await expect(page.getByRole('button', { name: `${spaced(number)} is taken` })).toBeDisabled();
     await expect(page.getByRole('list').getByText(spaced(number), { exact: true })).toBeVisible();
     expect(errors).toEqual([]);
   });
@@ -75,7 +75,7 @@ test.describe.serial('a day of S☉Lucky', () => {
   test('the round page recomputes the draw', async ({ page }) => {
     const errors = watchForPageErrors(page);
     const label = new Date(day * 86_400_000).toISOString().slice(0, 10);
-    await page.goto(`/rounds/${label}`);
+    await page.goto(`/rounds/daily/${label}`);
 
     await expect(page.getByRole('heading', { name: label })).toBeVisible();
     await expect(page.getByText(spaced(number)).first()).toBeVisible();
@@ -83,4 +83,24 @@ test.describe.serial('a day of S☉Lucky', () => {
     await expect(page.getByText('The draw checks out.')).toBeVisible();
     expect(errors).toEqual([]);
   });
+});
+
+// Guess the number: a guess is bought, then checked on demand (the crank does
+// it on its own; there is none here). With 21 million numbers, it misses.
+test('a player buys a guess and checks it', async ({ page }) => {
+  const errors = watchForPageErrors(page);
+  const wallet = createTestWallet();
+  await airdrop(wallet.address, 2_000_000_000);
+  const guess = 100_000 + Math.floor(Math.random() * 20_000_000);
+  await installTestWallet(page, wallet);
+  await page.goto('/play/guess');
+  await connect(page, wallet);
+
+  await page.keyboard.type(String(guess));
+  await page.getByRole('button', { name: `Buy ${spaced(guess)} for ◎0.1` }).click();
+  await expect(page.getByText(`Guess ${spaced(guess)} is in.`)).toBeVisible();
+
+  await page.getByRole('button', { name: 'Check now' }).click();
+  await expect(page.getByText(`Not the number: ${spaced(guess)}`, { exact: true })).toBeVisible({ timeout: 60_000 });
+  expect(errors).toEqual([]);
 });

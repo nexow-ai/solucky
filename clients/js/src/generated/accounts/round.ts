@@ -58,30 +58,50 @@ export function getRoundDiscriminatorBytes(): ReadonlyUint8Array {
 
 export type Round = {
   discriminator: ReadonlyUint8Array;
-  /** Days since the Unix epoch (UTC). */
-  day: number;
+  kind: number;
+  /**
+   * Days (`DAILY`) or hours (`HOURLY`) since the Unix epoch, or the round
+   * number (`GUESS`).
+   */
+  period: number;
   status: RoundStatus;
-  /** Ticket price and fee copied from `Config` when the round opened. */
+  /** Ticket price, fee and highest number copied when the round opened. */
   ticketPrice: bigint;
   feeBps: number;
+  maxNumber: number;
   ticketCount: number;
-  /** Lamports collected from tickets, held by this account. */
+  /** Lamports collected from tickets, plus the carry joined at the draw. */
   pot: bigint;
-  /** Rolling SHA-256 of every purchase in the round. */
+  /**
+   * Rolling SHA-256 of every purchase in the round (for `GUESS`, of every
+   * purchase made while no guesses were waiting for a check).
+   */
   entropy: ReadonlyUint8Array;
   /** Slot pinned by `close_round`; the draw uses it or the next produced slot. */
   targetSlot: bigint;
+  /**
+   * Guess only: guesses checked by earlier draws, and guesses sealed for
+   * the pending one. Purchases are numbered in order, so these are counts
+   * of the first tickets.
+   */
+  checked: number;
+  sealedCount: number;
   /** Slot whose hash the draw used, and that hash, as read from SlotHashes. */
   drawSlot: bigint;
   slotHash: ReadonlyUint8Array;
   /** `sha256(entropy || slot_hash || draw_slot || round)`. */
   randomness: ReadonlyUint8Array;
-  /** Purchase index of the winning ticket: `randomness[..8] % ticket_count`. */
+  /** Lotteries only: `randomness[..8] % (max_number + 1)`. */
+  drawnNumber: number;
+  /** The winning ticket's purchase index and number. */
   winningIndex: number;
   winningNumber: number;
   winner: Address;
   winnerCountry: ReadonlyUint8Array;
-  /** Lamports paid to the winner, and the house fee for the treasury. */
+  /**
+   * Set by the draw: the winner's 80% and the house fee. The rest of the
+   * pot went to the game's carry.
+   */
   payout: bigint;
   fee: bigint;
   feeCollected: boolean;
@@ -89,30 +109,50 @@ export type Round = {
 };
 
 export type RoundArgs = {
-  /** Days since the Unix epoch (UTC). */
-  day: number;
+  kind: number;
+  /**
+   * Days (`DAILY`) or hours (`HOURLY`) since the Unix epoch, or the round
+   * number (`GUESS`).
+   */
+  period: number;
   status: RoundStatusArgs;
-  /** Ticket price and fee copied from `Config` when the round opened. */
+  /** Ticket price, fee and highest number copied when the round opened. */
   ticketPrice: number | bigint;
   feeBps: number;
+  maxNumber: number;
   ticketCount: number;
-  /** Lamports collected from tickets, held by this account. */
+  /** Lamports collected from tickets, plus the carry joined at the draw. */
   pot: number | bigint;
-  /** Rolling SHA-256 of every purchase in the round. */
+  /**
+   * Rolling SHA-256 of every purchase in the round (for `GUESS`, of every
+   * purchase made while no guesses were waiting for a check).
+   */
   entropy: ReadonlyUint8Array;
   /** Slot pinned by `close_round`; the draw uses it or the next produced slot. */
   targetSlot: number | bigint;
+  /**
+   * Guess only: guesses checked by earlier draws, and guesses sealed for
+   * the pending one. Purchases are numbered in order, so these are counts
+   * of the first tickets.
+   */
+  checked: number;
+  sealedCount: number;
   /** Slot whose hash the draw used, and that hash, as read from SlotHashes. */
   drawSlot: number | bigint;
   slotHash: ReadonlyUint8Array;
   /** `sha256(entropy || slot_hash || draw_slot || round)`. */
   randomness: ReadonlyUint8Array;
-  /** Purchase index of the winning ticket: `randomness[..8] % ticket_count`. */
+  /** Lotteries only: `randomness[..8] % (max_number + 1)`. */
+  drawnNumber: number;
+  /** The winning ticket's purchase index and number. */
   winningIndex: number;
   winningNumber: number;
   winner: Address | HasAddress;
   winnerCountry: ReadonlyUint8Array;
-  /** Lamports paid to the winner, and the house fee for the treasury. */
+  /**
+   * Set by the draw: the winner's 80% and the house fee. The rest of the
+   * pot went to the game's carry.
+   */
   payout: number | bigint;
   fee: number | bigint;
   feeCollected: boolean;
@@ -124,17 +164,22 @@ export function getRoundEncoder(): FixedSizeEncoder<RoundArgs> {
   return transformEncoder(
     getStructEncoder([
       ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
-      ['day', getU32Encoder()],
+      ['kind', getU8Encoder()],
+      ['period', getU32Encoder()],
       ['status', getRoundStatusEncoder()],
       ['ticketPrice', getU64Encoder()],
       ['feeBps', getU16Encoder()],
+      ['maxNumber', getU32Encoder()],
       ['ticketCount', getU32Encoder()],
       ['pot', getU64Encoder()],
       ['entropy', fixEncoderSize(getBytesEncoder(), 32)],
       ['targetSlot', getU64Encoder()],
+      ['checked', getU32Encoder()],
+      ['sealedCount', getU32Encoder()],
       ['drawSlot', getU64Encoder()],
       ['slotHash', fixEncoderSize(getBytesEncoder(), 32)],
       ['randomness', fixEncoderSize(getBytesEncoder(), 32)],
+      ['drawnNumber', getU32Encoder()],
       ['winningIndex', getU32Encoder()],
       ['winningNumber', getU32Encoder()],
       ['winner', getAddressEncoder()],
@@ -152,17 +197,22 @@ export function getRoundEncoder(): FixedSizeEncoder<RoundArgs> {
 export function getRoundDecoder(): FixedSizeDecoder<Round> {
   return getStructDecoder([
     ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
-    ['day', getU32Decoder()],
+    ['kind', getU8Decoder()],
+    ['period', getU32Decoder()],
     ['status', getRoundStatusDecoder()],
     ['ticketPrice', getU64Decoder()],
     ['feeBps', getU16Decoder()],
+    ['maxNumber', getU32Decoder()],
     ['ticketCount', getU32Decoder()],
     ['pot', getU64Decoder()],
     ['entropy', fixDecoderSize(getBytesDecoder(), 32)],
     ['targetSlot', getU64Decoder()],
+    ['checked', getU32Decoder()],
+    ['sealedCount', getU32Decoder()],
     ['drawSlot', getU64Decoder()],
     ['slotHash', fixDecoderSize(getBytesDecoder(), 32)],
     ['randomness', fixDecoderSize(getBytesDecoder(), 32)],
+    ['drawnNumber', getU32Decoder()],
     ['winningIndex', getU32Decoder()],
     ['winningNumber', getU32Decoder()],
     ['winner', getAddressDecoder()],
@@ -238,5 +288,5 @@ export async function fetchAllMaybeRound(
 }
 
 export function getRoundSize(): number {
-  return 207;
+  return 224;
 }

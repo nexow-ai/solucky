@@ -10,16 +10,30 @@ import type { ReadonlyUint8Array } from '@solana/kit';
 
 export const CONFIG_SEED: ReadonlyUint8Array = new Uint8Array([99, 111, 110, 102, 105, 103]);
 
+export const D_A_I_L_Y: number = 0;
+
+export const DAY_SECONDS: bigint = 86400n;
+
 export const DRAW_DELAY_SLOTS: bigint = 8n;
 
 export const DRAW_WINDOW_SLOTS: bigint = 500n;
 
-export const MAX_FEE_BPS: number = 1000;
+export const GAME_SEED: ReadonlyUint8Array = new Uint8Array([103, 97, 109, 101]);
 
-export const MIN_TICKET_PRICE: bigint = 1000000n;
+export const G_U_E_S_S: number = 2;
 
-export const ROUND_DURATION: bigint = 86400n;
+export const H_O_U_R_L_Y: number = 1;
+
+export const HOUR_SECONDS: bigint = 3600n;
+
+export const MAX_FEE_BPS: number = 2000;
+
+export const MAX_LOTTERY_TICKETS: number = 1000000;
+
+export const MIN_TICKET_PRICE: bigint = 2000000n;
 
 export const ROUND_SEED: ReadonlyUint8Array = new Uint8Array([114, 111, 117, 110, 100]);
 
 export const TICKET_SEED: ReadonlyUint8Array = new Uint8Array([116, 105, 99, 107, 101, 116]);
+
+export const WINNER_SHARE_BPS: number = 8000;

@@ -143,6 +143,9 @@ async function airdropSol() {
           @click="airdropSol()"
         />
       </UTooltip>
+      <ClientOnly>
+        <AppInstall />
+      </ClientOnly>
       <UTooltip :text="sound.enabled.value ? t('header.mute') : t('header.unmute')">
         <UButton
           :icon="sound.enabled.value ? 'i-lucide-volume-2' : 'i-lucide-volume-x'"

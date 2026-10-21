@@ -4,13 +4,13 @@ Guidance for AI coding agents working in this repository. Humans: see [README.md
 
 ## Project
 
-S☉Lucky, a daily lottery on Solana by Nexow, Inc. (nexow.studio). Monorepo with bun workspaces:
+S☉Lucky, lottery games on Solana by Nexow, Inc. (nexow.studio): a daily lottery, an hourly lottery and Guess the number. Monorepo with bun workspaces:
 
 - `programs/solucky`: Anchor 1.2.1 program (Rust). Host toolchain pinned in `rust-toolchain.toml`; SBF builds use Anchor's platform-tools and SBPF v3.
 - `idl/solucky.json`: committed IDL, source of the generated client.
 - `clients/js`: `@solucky/client`. `src/generated` is Codama output (never edit); the other files in `src` are hand-written.
-- `app`: Nuxt 4 + Nuxt UI 4 + Tailwind 4. Kit client and wallet in `app/app/composables/useSolana.ts` and `useWallet.ts`; game state in `useLottery.ts`. 20 languages with @nuxtjs/i18n: the list in `app/i18n/languages.ts`, the words in `app/i18n/locales/` (`en.ts` is the source and the type).
-- `scripts`: bun scripts `admin`, `crank`, `monitor`, `localnet`, `e2e` sharing `lib.ts`, `settle.ts` and `surfnet.ts` (Surfpool cheatcodes, local only).
+- `app`: Nuxt 4 + Nuxt UI 4 + Tailwind 4. Kit client and wallet in `app/app/composables/useSolana.ts` and `useWallet.ts`; game state in `useLottery.ts` (one state per game; `useGame()` reads the game from the route). 20 languages with @nuxtjs/i18n: the list in `app/i18n/languages.ts`, the words in `app/i18n/locales/` (`en.ts` is the source and the type). Installable PWA: `app/public/manifest.webmanifest`, `app/public/sw.js` (the build writes its id in; see `nuxt.config.ts`) and `app/app/plugins/pwa.client.ts`. Draw notifications: `app/server/api/push/`, `app/server/utils/push.ts` and `webpush.ts` (Web Push on WebCrypto); the crank reports draws with `reportDraw` in `scripts/lib.ts`.
+- `scripts`: bun scripts `admin`, `crank`, `monitor`, `localnet`, `e2e`, `vapid` (push keys) and `screenshots` (the manifest's) sharing `lib.ts`, `settle.ts` and `surfnet.ts` (Surfpool cheatcodes, local only).
 
 ## Commands
 
@@ -27,6 +27,8 @@ S☉Lucky, a daily lottery on Solana by Nexow, Inc. (nexow.studio). Monorepo wit
 - Use Nuxt UI components and semantic colors (`text-muted`, `bg-elevated`…), never raw Tailwind palette colors. The brand gradient is the `text-lucky` / `bg-lucky` utilities in `main.css`.
 - Kit transactions use version 0 (`transactionConfig: { version: 0 }`): many wallets cannot sign version 1 yet.
 - Time on-chain is the cluster clock: scripts read the Clock sysvar, the app syncs `useNow` with it.
+- Games are `kind: u8` (0 daily, 1 hourly, 2 guess; `GameKind` in the client). Lottery rounds are keyed by UTC day or hour, Guess rounds by `Game.current_round`. Use `periodOf`, `formatPeriod` and `roundTitle`/`roundPath`, never day math by hand. A lottery `Round` account is followed by its sorted numbers, so query rounds with `fetchRounds` (it slices them off).
+- The highest number is `SOLUCKY_MAX_NUMBER` (scripts) and `NUXT_PUBLIC_MAX_NUMBER` (app fallback); the on-chain config is the source of truth.
 - Never commit keypairs, `.env` files or RPC keys. Everything under `NUXT_PUBLIC_*` reaches the browser.
 - Facts only in user-facing copy: no invented numbers, partners or guarantees beyond what the program enforces.
 - Conventional Commits; no co-author trailers or agent attributions in commits or pull requests. Do not commit or open pull requests unless asked.

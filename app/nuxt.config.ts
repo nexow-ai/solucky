@@ -1,3 +1,6 @@
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { DEFAULT_LOCALE, LOCALES } from './i18n/languages';
 
 /**
@@ -36,6 +39,7 @@ const browserOnly = Object.fromEntries(
     const prefix = code === DEFAULT_LOCALE ? '' : `/${code}`;
     return [
       [`${prefix}/play`, { ssr: false }],
+      [`${prefix}/play/**`, { ssr: false }],
       [`${prefix}/rounds/**`, { ssr: false }],
     ];
   }),
@@ -62,6 +66,7 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon.png' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/manifest.webmanifest' },
       ],
     },
   },
@@ -84,7 +89,12 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    /** Draw notifications (`bun run vapid`): the VAPID private key, and the secret the crank reports draws with. */
+    vapidPrivateKey: '',
+    pushSecret: '',
     public: {
+      /** VAPID public key; empty hides draw notifications. */
+      vapidKey: '',
       /** devnet, testnet, mainnet or localnet. */
       cluster: 'devnet',
       /** RPC endpoint. Defaults to the public endpoint of the cluster. */
@@ -93,6 +103,8 @@ export default defineNuxtConfig({
       rpcWsUrl: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
+      /** Highest ticket number, shown until the on-chain config loads. */
+      maxNumber: 21_000_000,
       /** Public URL of the site, for absolute links in social cards. */
       siteUrl: '',
       twitterUrl: '',
@@ -135,10 +147,17 @@ export default defineNuxtConfig({
 
   // Serve gzip and brotli copies of static files from the Node server
   // (Cloudflare compresses on its own). WebSockets carry the play page's live
-  // table (server/routes/_live.ts).
+  // table (server/routes/_live.ts). Draw notification subscriptions
+  // (server/utils/push.ts) live in the PUSH KV namespace on Cloudflare
+  // (wrangler.jsonc), and in .data/push under the working directory on Node.
   nitro: {
     compressPublicAssets: true,
     experimental: { websocket: true },
+    storage: {
+      push: process.env.NITRO_PRESET?.startsWith('cloudflare')
+        ? { driver: 'cloudflare-kv-binding', binding: 'PUSH' }
+        : { driver: 'fs', base: './.data/push' },
+    },
   },
 
   // The night palette is the house style; the toggle in the header still switches to light.
@@ -152,6 +171,22 @@ export default defineNuxtConfig({
       { name: 'Space Grotesk', provider: 'google', weights: [400, 500, 600, 700] },
       { name: 'JetBrains Mono', provider: 'google', weights: [400, 600, 800] },
     ],
+  },
+
+  // How often an open page asks for the latest build (app/plugins/pwa.client.ts).
+  experimental: {
+    checkOutdatedBuildInterval: 10 * 60_000,
+  },
+
+  hooks: {
+    // The service worker carries the build id, so every deploy changes its
+    // bytes and browsers install it. Nitro has compressed it already: drop
+    // those copies rather than serve the placeholder.
+    'nitro:build:public-assets'(nitro) {
+      const sw = join(nitro.options.output.publicDir, 'sw.js');
+      writeFileSync(sw, readFileSync(sw, 'utf8').replace('__BUILD_ID__', nitro.options.runtimeConfig.app.buildId));
+      for (const copy of [`${sw}.br`, `${sw}.gz`]) rmSync(copy, { force: true });
+    },
   },
 
   vite: {

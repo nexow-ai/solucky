@@ -7,10 +7,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-solucky = "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2"
+solucky = "GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux"
 
 [programs.localnet]
-solucky = "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2"
+solucky = "GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux"
 
 [provider]
 cluster = "devnet"

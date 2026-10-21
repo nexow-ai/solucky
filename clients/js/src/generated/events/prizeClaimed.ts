@@ -23,6 +23,8 @@ import {
   getU32Encoder,
   getU64Decoder,
   getU64Encoder,
+  getU8Decoder,
+  getU8Encoder,
   type Address,
   type FixedSizeCodec,
   type FixedSizeDecoder,
@@ -39,10 +41,18 @@ export function getPrizeClaimedEventDiscriminatorBytes(): ReadonlyUint8Array {
   return fixEncoderSize(getBytesEncoder(), 8).encode(PRIZE_CLAIMED_EVENT_DISCRIMINATOR);
 }
 
-export type PrizeClaimedEvent = { day: number; winner: Address; number: number; payout: bigint; fee: bigint };
+export type PrizeClaimedEvent = {
+  kind: number;
+  period: number;
+  winner: Address;
+  number: number;
+  payout: bigint;
+  fee: bigint;
+};
 
 export type PrizeClaimedEventArgs = {
-  day: number;
+  kind: number;
+  period: number;
   winner: Address | HasAddress;
   number: number;
   payout: number | bigint;
@@ -53,7 +63,8 @@ export type PrizeClaimedEventArgs = {
 export function getPrizeClaimedEventEncoder(): FixedSizeEncoder<PrizeClaimedEventArgs> {
   return getHiddenPrefixEncoder(
     getStructEncoder([
-      ['day', getU32Encoder()],
+      ['kind', getU8Encoder()],
+      ['period', getU32Encoder()],
       ['winner', getAddressEncoder()],
       ['number', getU32Encoder()],
       ['payout', getU64Encoder()],
@@ -67,7 +78,8 @@ export function getPrizeClaimedEventEncoder(): FixedSizeEncoder<PrizeClaimedEven
 export function getPrizeClaimedEventDecoder(): FixedSizeDecoder<PrizeClaimedEvent> {
   return getHiddenPrefixDecoder(
     getStructDecoder([
-      ['day', getU32Decoder()],
+      ['kind', getU8Decoder()],
+      ['period', getU32Decoder()],
       ['winner', getAddressDecoder()],
       ['number', getU32Decoder()],
       ['payout', getU64Decoder()],

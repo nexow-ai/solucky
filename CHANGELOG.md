@@ -4,15 +4,32 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+Three games instead of one. Every account layout changes, so this version needs a new deployment and a new `initialize`; rounds and tickets of 1.0 are not readable by it.
+
 ### Added
+
+- Three games, each with its own ticket price and house fee (`Game` accounts, `set_game`): the **daily lottery**, an **hourly lottery**, and **Guess the number**, whose rounds have no end time and last until a guess finds the round's number.
+- Guess the number is provably fair: nobody holds the number. New guesses are sealed into a batch and checked by `draw_round` a few seconds later; a batch of `k` guesses with `R` numbers not tried yet holds the number with odds `k/R`, the same as a number hidden when the round opened. Sales stop once the batch's pinned slot exists, sealed guesses keep the entropy they were sealed with, and a re-pinned check keeps the same guesses.
+- The highest ticket number is a setting: `SOLUCKY_MAX_NUMBER` (scripts, written to the config by `admin init` and `localnet`) and `NUXT_PUBLIC_MAX_NUMBER` (app, until the config loads), both 21 000 000 by default. A root `.env.example` lists the scripts' settings.
+- `bun run admin game <daily|hourly|guess> --price --fee-bps`, and `admin status` shows every game.
+- The play page has a game switcher (`/play/daily`, `/play/hourly`, `/play/guess`), the landing page a Games section, and round pages live at `/rounds/<game>/<round>`. Guess shows the numbers not tried yet, the guesses waiting for a check, a "Check now" button, and a toast when your guess is checked.
+- The win chance shown in the lotteries is the share of the number range closer to your numbers than to anyone else's (`winShare` in the client).
 
 - The app in 20 languages: English, Spanish, French, German, Italian, Portuguese (Brazil), Dutch, Turkish, Russian, Ukrainian, Arabic, Hebrew, Hindi, Thai, Vietnamese, Indonesian, Chinese (Simplified and Traditional), Japanese and Korean. Every page, toast, error and legal page is translated, under `/<code>/` paths with `hreflang` alternates. The header has a language menu, the footer links every language, and a visitor whose browser prefers another language is offered it once. Arabic and Hebrew are laid out right to left.
 - Dollars, percentages, durations, dates and country names follow the page's language; program errors are explained in it.
 - A test that checks every dictionary against English: keys, placeholders, plural forms, message syntax.
+- **An installable app (PWA).** A manifest with the three games as shortcuts and screenshots of the play page (`bun run screenshots` retakes them), and a service worker that opens the last pages visited without a connection. Each build writes its id into the worker, so browsers install every deploy; a page left open checks for a new build every ten minutes, offers to reload, and loads it on its next page change. The header has an Install button where the browser offers installing, and the steps to add the site to the home screen on iPhone and iPad.
+- **Draw notifications.** A bell on the play page turns on Web Push notifications for that game, in the page's language: the drawn number, the closest ticket and the prize, or the number a guess found, linking to the round's page. The crank reports each draw to the app (`SOLUCKY_APP_URL`, `SOLUCKY_PUSH_SECRET`), which sends them, encrypted, through each browser's push service. Off unless configured: `bun run vapid` makes the keys, and subscriptions live in the `PUSH` KV namespace on Cloudflare or `.data/push` on Node. The server keeps only the subscription, its language and its games, and only posts to the push services of Google, Mozilla, Apple and Microsoft.
 
 ### Changed
 
+- **The winner is the closest number.** A lottery draw picks a random number from 0 to the highest number, and the ticket closest to it wins (a tie goes to the lower number), instead of a random ticket. Lottery rounds keep their numbers sorted in the round account, so the program finds the winner by binary search and the browser can recheck it.
+- **80% to the winner, the rest carries over.** The winner gets 80% of the pot; the house fee comes out of the other 20% (capped at 20% instead of 10%) and what is left joins the pot of the game's next round drawn. `draw_round` splits the pot; `claim_prize` pays the stored payout.
+- Tickets cost at least ◎0.002 (was ◎0.001), so 80% of the smallest pot can always be paid.
+- `Round` is `["round", kind, period]`: `day` becomes `period` (days, hours or the Guess round number) and the round copies the highest number when it opens. `initialize` only takes the highest number; price and fee moved to `set_game`. `WrongDay` is now `WrongRound`, and `RoundFull`, `NothingToCheck`, `BatchSealed` and `InvalidGame` are new errors.
+- The crank and the monitor handle every game, oldest round first, and the backup crank workflow runs every half hour.
 - The Cookies & storage page and the Privacy Policy list a fifth local-storage setting, `solucky:lang`, the language the visitor chose. Still no cookies.
+- The Privacy Policy explains draw notifications (what the push subscription is, what the server keeps, when it is deleted), and it and the Cookies & storage page mention the pages and files kept for offline use.
 
 ## [1.0.0] - 2026-10-20
 

@@ -1,10 +1,27 @@
 <script setup lang="ts">
-import { flagEmoji, getTicketSize, msUntilClose } from '@solucky/client';
+import { flagEmoji, getTicketSize, type LotteryKind, msUntilClose, prizeFor } from '@solucky/client';
 
 const { t } = useI18n();
 const intl = useIntlLocale();
 const lottery = useLottery();
-const { today, prize, myTickets, tickets, ticketPrice, takenNumbers, config, configMissing, busy } = lottery;
+const {
+  kind,
+  lottery: isLottery,
+  period,
+  pot,
+  round,
+  myTickets,
+  myChance: chance,
+  ticketPrice,
+  takenNumbers,
+  maxNumber,
+  checked,
+  unchecked,
+  numbersLeft,
+  config,
+  configMissing,
+  busy,
+} = lottery;
 const { connected, balance } = useWallet();
 const { country, set: setCountry } = useCountry();
 const live = useLive();
@@ -13,19 +30,15 @@ const now = useNow();
 
 const digits = ref('0');
 const number = computed(() => Number(digits.value));
-const maxNumber = computed(() => config.value?.data.maxNumber ?? 1_000_000_000);
 const maxDigits = computed(() => String(maxNumber.value).length);
 const taken = computed(() => takenNumbers.value.has(number.value));
 const tooBig = computed(() => number.value > maxNumber.value);
-const left = computed(() => msUntilClose(today.value, now.value));
+const left = computed(() =>
+  isLottery.value && period.value !== null ? msUntilClose(kind.value as LotteryKind, period.value, now.value) : 0,
+);
 
-const chance = computed(() => (myTickets.value.length ? myTickets.value.length / tickets.value.length : null));
 // If you buy this ticket, the pot grows by one more ticket.
-const prizeIfYouWin = computed(() => {
-  const fee = config.value?.data.feeBps ?? 0;
-  const next = prize.value + ((ticketPrice.value ?? 0n) * BigInt(10_000 - fee)) / 10_000n;
-  return next;
-});
+const prizeIfYouWin = computed(() => prizeFor(pot.value + (ticketPrice.value ?? 0n)));
 const prizeShown = useTween(() => Number(prizeIfYouWin.value));
 
 const notEnoughSol = computed(
@@ -86,7 +99,7 @@ function reset() {
   digits.value = '0';
 }
 
-/** Spins the reels and lands on a random number nobody holds yet today. */
+/** Spins the reels and lands on a random number nobody holds yet in this round. */
 async function luckyDip() {
   if (spinning.value) return;
   live.touchKeypad();
@@ -146,16 +159,40 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
             ◎{{ formatSol(Math.round(prizeShown), 3) }}
           </span>
         </p>
-        <div class="mt-3 flex items-center justify-center gap-3">
+        <div v-if="isLottery" class="mt-3 flex items-center justify-center gap-3">
           <span class="kicker text-sm">{{ t('pick.in') }}</span>
           <LotteryCountdown :ms="left" />
         </div>
+        <p v-else class="kicker mt-3 text-sm">{{ t('guess.noDeadline') }}</p>
       </header>
 
       <div class="tray grid grid-cols-3 gap-2 px-2 py-3">
         <LotteryStat :label="t('stat.yourTickets')" :value="`×${myTickets.length}`" />
         <LotteryStat :label="t('stat.winChance')" :value="formatPercent(chance, intl)" />
         <LotteryStat :label="t('stat.ticket')" :value="ticketPrice === null ? '—' : `◎${formatSol(ticketPrice)}`" />
+        <template v-if="!isLottery">
+          <LotteryStat :label="t('stat.checked')" :value="formatNumber(checked)" />
+          <LotteryStat :label="t('stat.waiting')" :value="formatNumber(unchecked)" />
+          <LotteryStat :label="t('stat.numbersLeft')" :value="formatNumber(numbersLeft)" />
+        </template>
+      </div>
+      <div v-if="!isLottery" class="space-y-2 text-center text-xs text-muted">
+        <p>{{ t('guess.odds', { n: formatNumber(numbersLeft) }) }}</p>
+        <div v-if="unchecked > 0 && round" class="flex flex-wrap items-center justify-center gap-2">
+          <span>{{ t('guess.checkHint') }}</span>
+          <ClientOnly>
+            <UButton
+              v-if="connected"
+              :label="t('guess.checkNow')"
+              icon="i-lucide-scan-search"
+              size="xs"
+              color="secondary"
+              variant="soft"
+              :loading="busy"
+              @click="lottery.settle(round)"
+            />
+          </ClientOnly>
+        </div>
       </div>
 
       <div>

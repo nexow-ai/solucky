@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const fr: Dict = {
   meta: {
-    title: 'S☉Lucky : la loterie quotidienne sur Solana',
+    title: 'S☉Lucky : des jeux de loterie sur Solana',
     description:
-      'Choisis un numéro, achète un ticket et remporte toute la cagnotte à minuit UTC. Chaque ticket, chaque cagnotte et chaque tirage vivent sur Solana et peuvent être vérifiés par n’importe qui.',
-    ogImageAlt: 'S☉Lucky, la loterie quotidienne sur Solana',
+      'Choisis un numéro à la loterie quotidienne ou horaire, ou traque le numéro caché. Le gagnant remporte 80 % de la cagnotte. Chaque ticket, chaque cagnotte et chaque tirage vivent sur Solana et peuvent être vérifiés par n’importe qui.',
+    ogImageAlt: 'S☉Lucky, des jeux de loterie sur Solana',
   },
 
   nav: {
@@ -19,6 +19,30 @@ const fr: Dict = {
   lang: {
     label: 'Langue',
     choose: 'Langue : {name}',
+  },
+
+  update: {
+    title: 'Une nouvelle version est prête',
+    hint: 'Recharge pour l’avoir tout de suite. Elle se charge aussi d’elle-même au prochain changement de page.',
+    reload: 'Recharger',
+  },
+
+  install: {
+    label: 'Installer l’appli',
+    ios: 'Pour installer S☉Lucky, ouvre le menu Partager de ton navigateur et choisis Sur l’écran d’accueil.',
+  },
+
+  push: {
+    on: 'Me prévenir quand une manche de ce jeu est gagnée',
+    off: 'Couper les notifications de ce jeu',
+    enabled: 'Notifications activées',
+    enabledHint: '{game} : tu recevras une notification chaque fois qu’une manche est gagnée.',
+    disabled: 'Notifications désactivées',
+    blocked:
+      'Les notifications sont bloquées pour ce site. Autorise-les dans les réglages de ton navigateur, puis réessaie.',
+    failed: 'Impossible de modifier les notifications. Réessaie.',
+    lottery: 'Manche {round} : le {drawn} a été tiré. Le ticket le plus proche, le {winning}, gagne ◎{prize}.',
+    guess: 'Manche {round} : le numéro était le {winning}. La proposition qui l’a trouvé gagne ◎{prize}.',
   },
 
   header: {
@@ -53,10 +77,10 @@ const fr: Dict = {
   },
 
   home: {
-    kicker: 'Loterie quotidienne sur Solana',
+    kicker: 'Jeux de loterie sur Solana',
     title: 'Choisis un numéro.',
-    titleEnd: 'Remporte la cagnotte à minuit.',
-    lead: 'Un tirage par jour, un gagnant, toute la cagnotte. Chaque ticket, chaque lamport et chaque tirage vivent sur Solana, où n’importe qui peut les vérifier.',
+    titleEnd: 'Gagne à minuit.',
+    lead: 'Un tirage chaque jour, un tirage chaque heure, et un numéro caché à débusquer. Le gagnant remporte 80 % de la cagnotte, et le reste est reporté sur la manche suivante. Chaque ticket, chaque lamport et chaque tirage vivent sur Solana, où n’importe qui peut les vérifier.',
     playNow: 'Jouer maintenant',
     howItWorks: 'Comment ça marche',
     program: 'Programme',
@@ -95,7 +119,7 @@ const fr: Dict = {
         win: {
           title: 'Gagne à minuit UTC',
           description:
-            'Un ticket remporte toute la cagnotte, moins une petite commission de la maison. Plus de tickets, plus de chances : chaque ticket compte une fois.',
+            'Un numéro est tiré au hasard, et le ticket le plus proche remporte 80 % de la cagnotte. La commission de la maison est prélevée sur le reste, et le solde est reporté sur le lendemain.',
           when: 'Juste après minuit UTC',
         },
       },
@@ -110,12 +134,12 @@ const fr: Dict = {
         locked: {
           title: 'La cagnotte est verrouillée dans le programme',
           description:
-            'L’argent des tickets va directement sur le compte de la manche. Le programme ne le verse qu’au propriétaire du ticket gagnant, et la commission qu’à la trésorerie. L’opérateur ne peut pas le retirer.',
+            'L’argent des tickets va directement sur le compte de la manche. Le programme n’en verse jamais que 80 % au propriétaire du ticket gagnant, la commission à la trésorerie et le reste à la manche suivante du jeu. L’opérateur ne peut pas le retirer.',
         },
         draw: {
           title: 'Un tirage que personne ne peut prédire',
           description:
-            'Chaque achat est mélangé à l’entropie de la manche. À la fin de la journée, la manche fixe un slot quelques secondes dans le futur ; le hash de ce slot, inconnu de tous jusque-là, désigne le gagnant.',
+            'Chaque achat est mélangé à l’entropie de la manche. À la fin d’une manche, celle-ci fixe un slot quelques secondes dans le futur ; le hash de ce slot, inconnu de tous jusque-là, désigne le numéro auquel les tickets sont comparés.',
         },
         anyone: {
           title: 'Tout le monde peut s’en charger',
@@ -125,12 +149,12 @@ const fr: Dict = {
         browser: {
           title: 'Vérifiable dans ton navigateur',
           description:
-            'Chaque page de manche recalcule le tirage à partir des données publiques : l’entropie, le hash du slot et l’indice gagnant. Mêmes entrées, même gagnant.',
+            'Chaque page de manche recalcule le tirage à partir des données publiques : l’entropie, le hash du slot, le numéro tiré et le ticket le plus proche. Mêmes entrées, même gagnant.',
         },
         limits: {
           title: 'Des limites strictes pour la maison',
           description:
-            'Le programme plafonne la commission à 10 %. Les changements de prix et de commission ne s’appliquent qu’à la manche du lendemain, et un acheteur ne paie jamais plus que le prix qui lui a été affiché.',
+            'Le programme verse toujours 80 % de la cagnotte au gagnant et plafonne la commission à 20 %. Les changements de prix et de commission ne s’appliquent qu’aux manches ouvertes ensuite, et un acheteur ne paie jamais plus que le prix qui lui a été affiché.',
         },
         open: {
           title: 'Open source',
@@ -152,15 +176,15 @@ const fr: Dict = {
         },
         price: {
           q: 'Combien coûte un ticket ?',
-          a: 'Le prix est fixé on-chain et affiché sur la page Jouer. En plus du prix, un compte de ticket contient un petit dépôt de loyer, que tu récupères en fermant le ticket une fois la manche payée. Le premier ticket du jour paie aussi le loyer du compte de la manche, qui reste on-chain comme son registre public.',
+          a: 'Le prix de chaque jeu est fixé on-chain et affiché sur sa page Jouer. En plus du prix, un compte de ticket contient un petit dépôt de loyer, que tu récupères en fermant le ticket une fois la manche payée. Le premier ticket d’une manche paie aussi le loyer du compte de la manche, qui reste on-chain comme son registre public ; dans les loteries, chaque ticket paie aussi les 4 octets que son numéro y occupe.',
         },
         odds: {
           q: 'Comment mes chances sont-elles calculées ?',
-          a: 'Chaque ticket a la même chance : tes tickets divisés par tous les tickets vendus ce jour-là. Le numéro que tu choisis est ton étiquette sur le tableau ; il ne change pas tes chances.',
+          a: 'Dans les loteries, le ticket le plus proche du numéro tiré gagne : ta chance est donc la part de la plage de numéros plus proche de tes numéros que de ceux de n’importe qui d’autre. Un numéro éloigné des autres tickets en couvre une plus grande part. Dans Devine le numéro, chaque vérification trouve le numéro avec une probabilité égale aux nouvelles propositions divisées par les numéros pas encore essayés.',
         },
         draw: {
           q: 'Et si personne ne tire la manche ?',
-          a: 'Un petit bot (le crank) clôture, tire et paie chaque manche dans les secondes qui suivent minuit, et n’importe qui peut faire de même depuis le panneau Historique. Si le slot fixé devient un jour trop ancien pour être lu (environ trois minutes), la manche peut être clôturée à nouveau pour en fixer un nouveau ; le programme ne le permet qu’une fois qu’il est prouvé que l’ancien slot est hors d’atteinte.',
+          a: 'Un petit bot (le crank) clôture, tire et paie chaque manche de loterie dans les secondes qui suivent sa fin, et vérifie les nouvelles propositions toutes les quelques secondes. N’importe qui peut faire de même depuis la page Jouer. Si le slot fixé devient un jour trop ancien pour être lu (environ trois minutes), la manche peut être clôturée à nouveau pour en fixer un nouveau ; le programme ne le permet qu’une fois qu’il est prouvé que l’ancien slot est hors d’atteinte.',
         },
         country: {
           q: 'Pourquoi affichez-vous mon pays ?',
@@ -196,9 +220,12 @@ const fr: Dict = {
     newTicket: 'Nouveau ticket',
     rules: {
       daily: 'Nouvelle manche chaque jour à 00:00 UTC',
-      pot: 'Un ticket remporte la cagnotte',
+      hourly: 'Et une chaque heure',
+      pot: 'Le numéro le plus proche remporte 80 % de la cagnotte',
+      carry: 'Le reste est reporté sur la manche suivante',
+      guess: 'Devine le numéro : sans échéance, jusqu’à ce que quelqu’un le trouve',
       numbers: 'Numéros de 0 à {max}',
-      fee: 'Commission de la maison plafonnée à 10 % par le programme',
+      fee: 'Commission de la maison plafonnée à 20 % par le programme',
       anyone: 'N’importe qui peut clôturer, tirer et payer une manche',
       check: 'Recalcule chaque tirage dans ton navigateur',
       open: 'Open source',
@@ -215,16 +242,16 @@ const fr: Dict = {
     entropy: 'Entropie',
     slotHash: 'Hash du slot · slot {slot}',
     formula: 'sha256(entropie ‖ hash du slot ‖ slot ‖ manche) =',
-    mod: 'les 8 premiers octets en u64 mod {count} = {ticket}',
-    ticketCount: 'tickets',
-    ticket: 'ticket #{index}',
+    mod: 'les 8 premiers octets en u64 mod {count} = {drawn}',
+    ticketCount: 'numéros',
+    closest: 'ticket le plus proche : {number}',
     number: 'Numéro',
     paidTo: 'Payé à',
     payout: 'Gain',
     check: 'Vérifier ce tirage',
     roundPage: 'Page de la manche',
     nextDraw: 'Prochain tirage après 00:00 UTC',
-    ok: 'Recalculé dans ton navigateur : même hash, le ticket #{index} gagne.',
+    ok: 'Recalculé dans ton navigateur : même hash, le numéro {number} gagne.',
     mismatch: 'Le hash recalculé dans ton navigateur ne correspond pas à cette manche.',
   },
 
@@ -237,7 +264,10 @@ const fr: Dict = {
     yourTickets: 'Tes tickets',
     winChance: 'Chance de gain',
     chance: 'Chance',
-    todaysPot: 'Cagnotte du jour',
+    todaysPot: 'Cagnotte',
+    checked: 'Vérifiées',
+    waiting: 'En attente',
+    numbersLeft: 'Numéros restants',
     winners: 'Gagnants',
     averagePot: 'Cagnotte moyenne',
     biggestPot: 'Plus grosse cagnotte',
@@ -252,7 +282,8 @@ const fr: Dict = {
 
   play: {
     title: 'Jouer',
-    description: 'Choisis le numéro du jour et regarde la cagnotte grossir en direct sur Solana.',
+    description:
+      'Choisis un numéro à la loterie quotidienne ou horaire, ou traque le numéro caché, et regarde la cagnotte grossir en direct sur Solana.',
     testMoney: 'Tu joues sur Solana {cluster} : les tickets coûtent du SOL de test sans valeur réelle.',
     localFunds: 'Fais pointer ton portefeuille vers {url}, puis approvisionne-le avec : {command}',
     phantomFunds:
@@ -268,7 +299,7 @@ const fr: Dict = {
     title: 'Numéro',
     win: 'Gagne',
     in: 'dans',
-    taken: 'Déjà pris aujourd’hui',
+    taken: 'Déjà pris dans cette manche',
     range: 'De 0 à {max}, un ticket par numéro',
     pad: 'Pavé numérique',
     reset: 'Réinitialiser',
@@ -276,10 +307,10 @@ const fr: Dict = {
     dip: 'Au hasard',
     searchCountry: 'Rechercher un pays',
     country: 'Pays affiché avec ton ticket',
-    notSetUp: 'La loterie n’est pas encore configurée sur ce cluster.',
+    notSetUp: 'Ce jeu n’est pas encore configuré sur ce cluster.',
     paused: 'Les ventes de tickets sont en pause.',
     buy: 'Acheter le {number} pour ◎{price}',
-    takenToday: 'Le {number} est pris aujourd’hui',
+    takenToday: 'Le {number} est pris',
     outOfRange: 'Numéro hors limites',
     notEnough: 'Pas assez de SOL',
     keys: 'Touches 0–9 pour saisir, ⌫ pour effacer, Entrée pour acheter.',
@@ -288,12 +319,54 @@ const fr: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Aujourd’hui',
     title: 'SOLPOT',
     closesIn: '{day} · clôture dans',
+    carried: 'Dont ◎{carry} reportés de la manche précédente',
+    split: '80 % au gagnant · {fee} de commission de la maison · le reste à la manche suivante',
     inPlay: 'Numéros en jeu',
     empty: 'Aucun ticket pour l’instant',
-    beFirst: 'Sois la première personne à choisir un numéro aujourd’hui.',
+    beFirst: 'Sois la première personne à choisir un numéro dans cette manche.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Jeux',
+    title: 'Trois façons de jouer',
+    description:
+      'Les mêmes numéros, de 0 à {max}. Le gagnant remporte 80 % de la cagnotte ; la commission de la maison est prélevée sur le reste, et le solde est reporté sur la manche suivante.',
+    play: 'Jouer',
+    daily: {
+      name: 'Loterie quotidienne',
+      short: 'Quotidienne',
+      description: 'Un tirage chaque jour après minuit UTC. Le ticket le plus proche du numéro tiré gagne.',
+    },
+    hourly: {
+      name: 'Loterie horaire',
+      short: 'Horaire',
+      description: 'Un tirage chaque heure, à l’heure pile (UTC). Le ticket le plus proche du numéro tiré gagne.',
+    },
+    guess: {
+      name: 'Devine le numéro',
+      short: 'Devine',
+      description:
+        'Sans échéance. Les nouvelles propositions sont vérifiées toutes les quelques secondes jusqu’à ce que l’une d’elles trouve le numéro de la manche ; une nouvelle manche commence alors.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Jusqu’à ce que quelqu’un le trouve',
+    odds: 'Chaque vérification trouve le numéro avec une probabilité égale aux nouvelles propositions divisées par les {n} numéros pas encore essayés.',
+    bought: 'La proposition {number} est enregistrée. Elle sera vérifiée dans quelques secondes.',
+    sealing: 'Scellement des dernières propositions de la manche {day}',
+    checkNow: 'Vérifier maintenant',
+    checkHint:
+      'Un bot vérifie les nouvelles propositions toutes les quelques secondes. N’importe qui peut lancer la vérification ; cela coûte des frais de réseau.',
+    missed: 'Ce n’est pas le numéro : {numbers}',
+    left: 'Le numéro fait partie des {n} numéros pas encore essayés.',
+    foundByYou: 'Tu l’as trouvé ! Le numéro était le {number}',
+    foundByOther: 'Un autre joueur a trouvé le numéro',
+    nextRound: 'Une nouvelle manche avec un nouveau numéro est en vente.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -311,8 +384,8 @@ const fr: Dict = {
     getBack: 'Le récupérer',
     winners: 'Gagnants',
     noWinners: 'Pas encore de gagnant',
-    firstDraw: 'Le premier tirage a lieu à minuit UTC.',
-    chart: 'Cagnotte par jour',
+    firstDraw: 'Le premier gagnant apparaîtra ici.',
+    chart: 'Cagnotte par manche',
     chartEmpty: 'Aucune manche terminée pour l’instant.',
     chartLabel:
       'Cagnotte de {n} manche, la plus récente ; la liste ci-dessous donne chaque valeur. | Cagnotte des {n} dernières manches ; la liste ci-dessous donne chaque valeur.',
@@ -322,6 +395,7 @@ const fr: Dict = {
     open: 'Ouverte',
     toClose: 'En attente de clôture',
     toDraw: 'En attente du tirage',
+    checking: 'Vérification des propositions',
     unpaid: 'Tirée, non payée',
     paid: 'Payée',
   },
@@ -375,7 +449,7 @@ const fr: Dict = {
     balance: 'Solde',
     ticketsLeft: '{n} ticket restant | {n} tickets restants',
     needMore: 'il faut plus de SOL pour jouer',
-    numbers: 'Tes numéros du jour',
+    numbers: 'Tes numéros dans cette manche',
     copy: 'Copier l’adresse',
     explorer: 'Explorateur',
     play: 'Jouer',
@@ -385,10 +459,11 @@ const fr: Dict = {
   round: {
     title: 'Manche du {day}',
     back: 'Retour au jeu',
-    notDate: 'Ce n’est pas une date. Les manches sont nommées YYYY-MM-DD.',
+    notDate:
+      'Ce n’est pas une manche de ce jeu. Les manches quotidiennes sont nommées YYYY-MM-DD, les manches horaires YYYY-MM-DDTHH, et celles de Devine le numéro par leur numéro.',
     kicker: 'Manche',
-    nobody: 'Personne n’a joué ce jour-là',
-    beFirst: 'Sois la première personne à acheter un ticket aujourd’hui.',
+    nobody: 'Personne n’a joué dans cette manche',
+    beFirst: 'Sois la première personne à acheter un ticket dans cette manche.',
     onlyExists: 'Une manche n’existe qu’une fois son premier ticket vendu.',
     pot: 'Cagnotte',
     usd: '{usd} au cours du jour',
@@ -408,10 +483,12 @@ const fr: Dict = {
     slotHash: 'Hash du slot {slot} (lu par le programme dans la sysvar SlotHashes)',
     randomness: 'Aléa',
     winning: 'Ticket gagnant',
-    winningFormula: 'les 8 premiers octets en u64 mod {count} = achat #{index}',
+    winningFormula: 'les 8 premiers octets en u64 mod {count} = {drawn} ; le ticket le plus proche détient le {number}',
+    guessFormula:
+      'les 8 premiers octets en u64 mod {left} (numéros pas encore essayés) = {r}, inférieur à {batch} (propositions de la vérification) : l’achat #{index} a trouvé le numéro',
     ok: 'Le tirage est conforme.',
     mismatch: 'Incohérence : le résultat enregistré ne correspond pas aux entrées.',
-    got: 'Ton navigateur a obtenu {hash}… et le ticket #{index}.',
+    got: 'Ton navigateur a obtenu {hash}… et le numéro {number}.',
     tickets: 'Tickets',
     ticketsHint:
       'Les tickets fermés par leurs propriétaires après le paiement n’apparaissent plus ici ; la manche garde les totaux.',
@@ -425,7 +502,7 @@ const fr: Dict = {
 
   errors: {
     rejected: 'Tu as annulé la demande dans ton portefeuille.',
-    taken: 'Quelqu’un détient déjà ce numéro aujourd’hui. Choisis-en un autre.',
+    taken: 'Quelqu’un détient déjà ce numéro dans cette manche. Choisis-en un autre.',
     funds: 'Pas assez de SOL dans le portefeuille.',
     walletCluster:
       'Ton portefeuille n’a pas pu signer. Dans Phantom : Settings → Developer Settings → active Testnet Mode → sélectionne Devnet, puis reconnecte-toi et réessaie.',
@@ -433,11 +510,11 @@ const fr: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Seule l’autorité peut faire cela.',
-      invalidTicketPrice: 'Le prix du ticket doit être d’au moins 0,001 SOL.',
-      feeTooHigh: 'La commission dépasse le plafond de 10 %.',
+      invalidTicketPrice: 'Le prix du ticket doit être d’au moins 0,002 SOL.',
+      feeTooHigh: 'La commission dépasse le plafond de 20 %.',
       invalidMaxNumber: 'Le numéro le plus élevé doit être supérieur à zéro.',
       paused: 'Les ventes de tickets sont en pause.',
-      wrongDay: 'Les tickets ne peuvent être achetés que pour la manche du jour.',
+      wrongRound: 'Les tickets ne peuvent être achetés que pour la manche en vente.',
       numberOutOfRange: 'Le numéro est hors limites.',
       invalidCountry: 'Le pays doit être un code ISO 3166-1 alpha-2 en majuscules.',
       roundNotOpen: 'La manche n’est pas ouverte.',
@@ -454,6 +531,10 @@ const fr: Dict = {
       overflow: 'Dépassement arithmétique.',
       priceChanged: 'Le prix du ticket est plus élevé que le prix que tu as accepté.',
       feeAlreadyCollected: 'La commission de cette manche a déjà été perçue.',
+      roundFull: 'Cette manche a vendu tous les tickets qu’elle peut contenir.',
+      nothingToCheck: 'Il n’y a aucune nouvelle proposition à vérifier.',
+      batchSealed: 'Les dernières propositions sont en cours de vérification ; réessaie dans quelques secondes.',
+      invalidGame: 'Jeu inconnu.',
     },
   },
 
@@ -541,14 +622,14 @@ const fr: Dict = {
       rounds: {
         title: 'Comment fonctionne une manche',
         intro: 'Le programme applique ces règles ; le site ne fait que les afficher :',
-        day: 'Une manche a lieu par jour UTC, de 00:00 UTC au minuit suivant.',
+        day: 'S☉Lucky propose trois jeux. Dans la loterie quotidienne, une manche a lieu par jour UTC, de 00:00 UTC au minuit suivant ; dans la loterie horaire, par heure UTC. Dans Devine le numéro, une manche n’a pas d’heure de fin : elle dure jusqu’à ce qu’une proposition trouve son numéro.',
         number:
           'Un ticket correspond à un numéro, de 0 au numéro le plus élevé fixé dans la configuration du programme. Chaque numéro ne peut être détenu que par un seul ticket par manche.',
         price:
-          'Le prix du ticket et la commission de la maison sont copiés depuis la configuration à l’ouverture d’une manche, et restent fixes pour cette manche. La commission ne peut jamais dépasser 10 % de la cagnotte. Quand tu achètes, tu ne paies jamais plus que le prix qui t’a été affiché.',
-        pot: 'Le prix de chaque ticket va dans la cagnotte de la manche, détenue par le compte propre de la manche sur Solana. Chaque ticket a la même chance : ta chance correspond à tes tickets divisés par tous les tickets vendus dans cette manche. Le numéro que tu choisis ne la change pas.',
-        draw: 'Après minuit, n’importe qui peut clôturer la manche, la tirer et la payer. Le propriétaire du ticket gagnant reçoit la cagnotte moins la commission de la maison, et la commission va à la trésorerie.',
-        rent: 'Un compte de ticket contient aussi un petit dépôt de loyer, que tu récupères en fermant le ticket une fois sa manche payée. Le premier ticket d’une manche paie aussi le loyer du compte de la manche, qui reste sur Solana comme registre public de la manche.',
+          'Chaque jeu a son propre prix de ticket et sa propre commission de la maison. Ils sont copiés, avec le numéro le plus élevé, à l’ouverture d’une manche, et restent fixes pour cette manche. La commission ne peut jamais dépasser 20 % de la cagnotte. Quand tu achètes, tu ne paies jamais plus que le prix qui t’a été affiché.',
+        pot: 'Le prix de chaque ticket va dans la cagnotte de la manche, détenue par le compte propre de la manche sur Solana. Dans les loteries, un numéro aléatoire entre 0 et le numéro le plus élevé est tiré, et le ticket le plus proche gagne ; en cas d’égalité, le numéro le plus bas l’emporte. Dans Devine le numéro, les nouvelles propositions sont vérifiées par lots : un lot contient le numéro avec une probabilité égale à ses propositions divisées par les numéros pas encore essayés, la même que pour un numéro caché à l’ouverture de la manche.',
+        draw: 'Une fois qu’une manche de loterie est terminée, ou dès que de nouvelles propositions attendent une vérification, n’importe qui peut clôturer la manche, la tirer et la payer. Le propriétaire du ticket gagnant reçoit 80 % de la cagnotte, la commission de la maison va à la trésorerie, et le reste demeure dans le programme pour être tiré lors de la manche suivante du jeu.',
+        rent: 'Un compte de ticket contient aussi un petit dépôt de loyer, que tu récupères en fermant le ticket une fois sa manche payée. Le premier ticket d’une manche paie aussi le loyer du compte de la manche, qui reste sur Solana comme registre public de la manche. Dans les loteries, chaque ticket paie aussi le loyer des 4 octets que son numéro occupe dans ce compte, qui n’est pas restitué.',
       },
       wallet: {
         title: 'Ton portefeuille et tes transactions',
@@ -562,12 +643,12 @@ const fr: Dict = {
         title: 'Ce que l’opérateur peut et ne peut pas faire',
         intro: 'La configuration du programme a une autorité, qui peut :',
         price:
-          'modifier le prix du ticket (au moins ◎0,001) et la commission de la maison (au plus 10 %), avec effet à partir de la prochaine manche qui s’ouvre ;',
+          'modifier le prix du ticket de chaque jeu (au moins ◎0,002) et sa commission de la maison (au plus 20 %), avec effet à partir de la prochaine manche de ce jeu qui s’ouvre ;',
         pause:
           'suspendre et reprendre la vente de tickets. Une pause n’arrête que les nouveaux tickets : les manches déjà jouées peuvent toujours être tirées et payées ;',
         other: 'changer la trésorerie, le numéro le plus élevé, et l’autorité elle-même.',
         cannot:
-          'Le code du programme ne permet ni à l’autorité ni à personne d’autre de prendre la cagnotte d’une manche ou de l’envoyer ailleurs qu’au propriétaire du ticket gagnant, de prélever plus que la commission, ou de faire payer à un acheteur plus que le prix qui lui a été affiché.',
+          'Le code du programme ne permet ni à l’autorité ni à personne d’autre de prendre la cagnotte d’une manche ou de l’envoyer ailleurs qu’au propriétaire du ticket gagnant, à la trésorerie pour la commission et à la manche suivante du jeu, de prélever plus que la commission, ou de faire payer à un acheteur plus que le prix qui lui a été affiché.',
         upgrade:
           'Le programme peut être mis à niveau : quiconque détient son autorité de mise à niveau pourrait déployer un code différent, tu fais donc confiance à cette personne jusqu’à ce que le programme soit rendu immuable ou confié à un multisig. Le code source de chaque version est public, et un programme déployé peut être vérifié par rapport à lui, comme l’explique la section « Verifiable builds » du README.',
       },
@@ -577,7 +658,7 @@ const fr: Dict = {
         bugs: 'les logiciels peuvent avoir des bugs, y compris le programme, l’appli et ton portefeuille, et un bug pourrait te coûter tes tickets ou ton SOL ;',
         network:
           'Solana ou l’endpoint RPC qu’utilise le site peuvent être lents, congestionnés ou hors service, et une transaction peut échouer ou arriver après la clôture d’une manche ;',
-        draw: 'le tirage utilise le hash d’un slot Solana que personne ne connaît à la clôture des ventes. Les joueurs ne peuvent pas le prédire, mais le validateur qui produit ce slot pourrait l’influencer, et quiconque clôture une manche pourrait retenir un tirage défavorable jusqu’à ce que ce slot ne puisse plus être lu. Ce n’est pas un oracle d’aléa vérifiable ;',
+        draw: 'le tirage utilise le hash d’un slot Solana que personne ne connaît à la clôture d’une manche ou au scellement d’un lot de propositions. Les joueurs ne peuvent pas le prédire, mais le validateur qui produit ce slot pourrait l’influencer, et quiconque clôture une manche pourrait retenir un tirage défavorable jusqu’à ce que ce slot ne puisse plus être lu. Ce n’est pas un oracle d’aléa vérifiable ;',
         site: 'le site peut être indisponible à tout moment. Le programme, et tes tickets, continuent de fonctionner sans lui ;',
         law: 'les lois sur les loteries et les crypto-actifs diffèrent d’un pays à l’autre et peuvent changer.',
       },
@@ -641,6 +722,9 @@ const fr: Dict = {
         price: 'Le prix du SOL',
         priceBody:
           'Pour afficher les cagnottes en dollars, notre serveur récupère le prix du SOL auprès de Coinbase, ou de CoinGecko si Coinbase ne répond pas, et le met en cache pendant une minute. Ces requêtes partent de notre serveur et ne contiennent rien sur toi.',
+        push: 'Notifications des tirages',
+        pushBody:
+          'Si tu actives les notifications d’un jeu, ton navigateur donne à notre serveur un abonnement push : une adresse auprès du service push de ton navigateur (géré par Google, Mozilla, Apple ou Microsoft, selon le navigateur) et les clés pour lui chiffrer des messages. Nous le gardons avec ta langue et les jeux choisis, et rien d’autre : ni adresse de portefeuille, ni adresse IP. Quand une manche de l’un de ces jeux est gagnée, notre serveur envoie le résultat, chiffré, via ce service push, qui le remet à ton navigateur selon sa propre politique. Couper les notifications supprime l’abonnement, et nous le supprimons aussi quand le service push nous indique qu’il n’existe plus.',
       },
       thirdParties: {
         title: 'Services qu’utilise ton navigateur',
@@ -659,6 +743,8 @@ const fr: Dict = {
       browser: {
         title: 'Ce qui reste dans ton navigateur',
         body: 'L’appli garde cinq réglages dans le stockage local de ton navigateur : ton thème, ton dernier portefeuille, ton choix de pays, le réglage du son et ta langue. La page {cookies} les liste.',
+        cache:
+          'Pour s’ouvrir sans connexion, l’appli garde aussi des copies des pages que tu visites et de ses propres fichiers dans le stockage de cache de ton navigateur. Chaque nouvelle version du site les remplace.',
       },
       purposes: {
         title: 'Pourquoi, et ce que nous ne faisons jamais',
@@ -698,6 +784,8 @@ const fr: Dict = {
         holds: 'Contenu',
         saved: 'Enregistré',
         wallet: 'L’extension de ton portefeuille garde ses propres données, selon la politique de son éditeur.',
+        cache:
+          'Pour s’ouvrir sans connexion, l’appli garde aussi des copies des pages que tu visites et de ses propres fichiers dans le stockage de cache de ton navigateur ; chaque nouvelle version du site les remplace. Si tu actives les notifications des tirages, ton navigateur garde aussi l’abonnement push jusqu’à ce que tu les coupes. Effacer les données de ce site supprime le tout.',
       },
       keys: {
         theme: {
@@ -746,9 +834,10 @@ const fr: Dict = {
       },
       odds: {
         title: 'Connais tes chances',
-        same: 'Chaque ticket a la même chance. Ta chance de gagner une manche correspond à tes tickets divisés par tous les tickets vendus dans cette manche.',
-        label: 'Le numéro que tu choisis est ton étiquette sur le tableau. Il ne change pas ta chance.',
-        fee: 'Le gagnant reçoit la cagnotte moins la commission de la maison, que le programme plafonne à 10 %. Donc, sur l’ensemble des joueurs, les tickets rendent l’argent dépensé pour les acheter moins cette commission : en moyenne, un ticket rapporte moins qu’il ne coûte.',
+        same: 'Dans les loteries, le ticket le plus proche d’un numéro aléatoire gagne : ta chance est la part de la plage de numéros plus proche de tes numéros que de ceux de n’importe qui d’autre. Dans Devine le numéro, chaque vérification trouve le numéro avec une probabilité égale aux nouvelles propositions divisées par les numéros pas encore essayés.',
+        label:
+          'Aucun numéro ne porte plus chance qu’un autre : le numéro tiré a autant de chances d’être n’importe quel numéro de la plage.',
+        fee: 'Le gagnant reçoit 80 % de la cagnotte. La commission de la maison, que le programme plafonne à 20 %, est prélevée sur le reste, et le solde va à la manche suivante du jeu. Donc, sur l’ensemble des joueurs, les tickets rendent l’argent dépensé pour les acheter moins cette commission : en moyenne, un ticket rapporte moins qu’il ne coûte.',
         nothing: 'Rien sur le site ne change ces chances.',
       },
       final: {

@@ -10,13 +10,15 @@ import {
   getBytesEncoder,
   getProgramDerivedAddress,
   getU32Encoder,
+  getU8Encoder,
   type Address,
   type HasAddress,
   type ProgramDerivedAddress,
 } from '@solana/kit';
 
 export type RoundSeeds = {
-  day: number;
+  kind: number;
+  period: number;
 };
 
 export async function findRoundPda(
@@ -25,11 +27,15 @@ export async function findRoundPda(
 ): Promise<ProgramDerivedAddress> {
   const {
     programAddress:
-      programAddressInput = '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2' as Address<'8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'>,
+      programAddressInput = 'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>,
   } = config;
   const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
   return await getProgramDerivedAddress({
     programAddress,
-    seeds: [getBytesEncoder().encode(new Uint8Array([114, 111, 117, 110, 100])), getU32Encoder().encode(seeds.day)],
+    seeds: [
+      getBytesEncoder().encode(new Uint8Array([114, 111, 117, 110, 100])),
+      getU8Encoder().encode(seeds.kind),
+      getU32Encoder().encode(seeds.period),
+    ],
   });
 }

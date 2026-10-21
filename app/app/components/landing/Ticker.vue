@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { Account } from '@solana/kit';
-import { countryFromBytes, flagEmoji, type Ticket } from '@solucky/client';
+import { countryFromBytes, flagEmoji, GameKind, type Ticket } from '@solucky/client';
 
 /** A neon news band: today's newest tickets, between the rules every round runs by. */
 const props = defineProps<{ tickets?: readonly Account<Ticket>[] }>();
 
 const { t } = useI18n();
-const RULES = ['daily', 'pot', 'numbers', 'fee', 'anyone', 'check', 'open'] as const;
-const max = formatNumber(1_000_000_000);
+const RULES = ['daily', 'hourly', 'pot', 'carry', 'guess', 'numbers', 'fee', 'anyone', 'check', 'open'] as const;
+const { maxNumber } = useLottery(GameKind.Daily);
+const max = computed(() => formatNumber(maxNumber.value));
 
 const latest = computed(() => [...(props.tickets ?? [])].reverse().slice(0, 12));
 </script>

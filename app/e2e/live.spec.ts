@@ -8,7 +8,7 @@ import { airdrop, createTestWallet, installTestWallet, spaced, watchForPageError
 test('a player at the table sees another join and buy, live', async ({ browser }) => {
   const player = createTestWallet();
   await airdrop(player.address, 2_000_000_000);
-  const number = 100_000_000 + Math.floor(Math.random() * 800_000_000);
+  const number = 100_000 + Math.floor(Math.random() * 20_000_000);
 
   const watcher = await (await browser.newContext()).newPage();
   const watcherErrors = watchForPageErrors(watcher);

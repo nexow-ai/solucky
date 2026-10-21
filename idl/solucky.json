@@ -1,18 +1,18 @@
 {
-  "address": "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2",
+  "address": "GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux",
   "metadata": {
     "name": "solucky",
     "version": "1.0.0",
     "spec": "0.1.0",
-    "description": "S☉Lucky: a daily, verifiable lottery on Solana.",
+    "description": "S☉Lucky: verifiable lottery games on Solana: daily, hourly and guess the number.",
     "repository": "https://github.com/nexow-ai/solucky"
   },
   "instructions": [
     {
       "name": "buy_ticket",
       "docs": [
-        "Buys `number` in today's round, opening the round if needed. Fails if",
-        "the round's ticket price is above `max_price`."
+        "Buys `number` in the game's round on sale, opening the round if",
+        "needed. Fails if the round's ticket price is above `max_price`."
       ],
       "discriminator": [
         11,
@@ -49,9 +49,31 @@
           }
         },
         {
+          "name": "game",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  97,
+                  109,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "kind"
+              }
+            ]
+          }
+        },
+        {
           "name": "round",
           "docs": [
-            "Opened by the day's first buyer."
+            "Opened by the round's first buyer. A lottery round grows by 4 bytes a",
+            "ticket, and `init_if_needed` wants an existing account's size to match",
+            "`space`, hence the `max`."
           ],
           "writable": true,
           "pda": {
@@ -68,7 +90,11 @@
               },
               {
                 "kind": "arg",
-                "path": "day"
+                "path": "kind"
+              },
+              {
+                "kind": "arg",
+                "path": "period"
               }
             ]
           }
@@ -76,7 +102,7 @@
         {
           "name": "ticket",
           "docs": [
-            "Fails with \"already in use\" if someone holds this number today."
+            "Fails with \"already in use\" if someone holds this number in the round."
           ],
           "writable": true,
           "pda": {
@@ -110,7 +136,11 @@
       ],
       "args": [
         {
-          "name": "day",
+          "name": "kind",
+          "type": "u8"
+        },
+        {
+          "name": "period",
           "type": "u32"
         },
         {
@@ -165,7 +195,12 @@
               },
               {
                 "kind": "account",
-                "path": "round.day",
+                "path": "round.kind",
+                "account": "Round"
+              },
+              {
+                "kind": "account",
+                "path": "round.period",
                 "account": "Round"
               }
             ]
@@ -214,7 +249,8 @@
     {
       "name": "close_round",
       "docs": [
-        "Ends a finished round and pins the slot that will seed its draw."
+        "Ends a finished lottery round, or seals a Guess round's unchecked",
+        "guesses, and pins the slot that will seed the draw."
       ],
       "discriminator": [
         149,
@@ -244,7 +280,12 @@
               },
               {
                 "kind": "account",
-                "path": "round.day",
+                "path": "round.kind",
+                "account": "Round"
+              },
+              {
+                "kind": "account",
+                "path": "round.period",
                 "account": "Round"
               }
             ]
@@ -297,7 +338,12 @@
               },
               {
                 "kind": "account",
-                "path": "round.day",
+                "path": "round.kind",
+                "account": "Round"
+              },
+              {
+                "kind": "account",
+                "path": "round.period",
                 "account": "Round"
               }
             ]
@@ -388,7 +434,12 @@
               },
               {
                 "kind": "account",
-                "path": "round.day",
+                "path": "round.kind",
+                "account": "Round"
+              },
+              {
+                "kind": "account",
+                "path": "round.period",
                 "account": "Round"
               }
             ]
@@ -404,7 +455,8 @@
     {
       "name": "draw_round",
       "docs": [
-        "Picks the winning ticket from the pinned slot's hash."
+        "Picks the winner from the pinned slot's hash: the closest number in a",
+        "lottery, or whether a sealed batch of guesses found the number."
       ],
       "discriminator": [
         193,
@@ -434,7 +486,38 @@
               },
               {
                 "kind": "account",
-                "path": "round.day",
+                "path": "round.kind",
+                "account": "Round"
+              },
+              {
+                "kind": "account",
+                "path": "round.period",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "game",
+          "docs": [
+            "Hands its carry to the round when a winner is found, and keeps what",
+            "the winner and the fee leave of the pot."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  97,
+                  109,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.kind",
                 "account": "Round"
               }
             ]
@@ -499,7 +582,7 @@
         },
         {
           "name": "program",
-          "address": "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2"
+          "address": "GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux"
         },
         {
           "name": "program_data"
@@ -511,23 +594,98 @@
       ],
       "args": [
         {
-          "name": "ticket_price",
-          "type": "u64"
-        },
-        {
-          "name": "fee_bps",
-          "type": "u16"
-        },
-        {
           "name": "max_number",
           "type": "u32"
         }
       ]
     },
     {
+      "name": "set_game",
+      "docs": [
+        "Opens a game, or changes its price and fee for the next rounds."
+      ],
+      "discriminator": [
+        116,
+        255,
+        77,
+        15,
+        136,
+        149,
+        15,
+        175
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "game",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  97,
+                  109,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "kind"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "kind",
+          "type": "u8"
+        },
+        {
+          "name": "ticket_price",
+          "type": "u64"
+        },
+        {
+          "name": "fee_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
       "name": "update_config",
       "docs": [
-        "Changes the config. Price and fee changes apply to the next rounds."
+        "Changes the config. A new `max_number` applies to the next rounds."
       ],
       "discriminator": [
         29,
@@ -594,6 +752,19 @@
       ]
     },
     {
+      "name": "Game",
+      "discriminator": [
+        27,
+        90,
+        166,
+        125,
+        74,
+        100,
+        121,
+        18
+      ]
+    },
+    {
       "name": "Round",
       "discriminator": [
         87,
@@ -645,6 +816,19 @@
         36,
         8,
         73
+      ]
+    },
+    {
+      "name": "GameUpdated",
+      "discriminator": [
+        100,
+        97,
+        130,
+        101,
+        84,
+        101,
+        4,
+        15
       ]
     },
     {
@@ -709,12 +893,12 @@
     {
       "code": 6001,
       "name": "InvalidTicketPrice",
-      "msg": "The ticket price must be at least 0.001 SOL"
+      "msg": "The ticket price must be at least 0.002 SOL"
     },
     {
       "code": 6002,
       "name": "FeeTooHigh",
-      "msg": "The fee is above the 10% cap"
+      "msg": "The fee is above the 20% cap"
     },
     {
       "code": 6003,
@@ -728,8 +912,8 @@
     },
     {
       "code": 6005,
-      "name": "WrongDay",
-      "msg": "Tickets can only be bought for today's round"
+      "name": "WrongRound",
+      "msg": "Tickets can only be bought for the round on sale"
     },
     {
       "code": 6006,
@@ -805,14 +989,33 @@
       "code": 6020,
       "name": "FeeAlreadyCollected",
       "msg": "The fee of this round was already collected"
+    },
+    {
+      "code": 6021,
+      "name": "RoundFull",
+      "msg": "This round has sold all the tickets it can hold"
+    },
+    {
+      "code": 6022,
+      "name": "NothingToCheck",
+      "msg": "There are no new guesses to check"
+    },
+    {
+      "code": 6023,
+      "name": "BatchSealed",
+      "msg": "The latest guesses are being checked; try again in a few seconds"
+    },
+    {
+      "code": 6024,
+      "name": "InvalidGame",
+      "msg": "Unknown game"
     }
   ],
   "types": [
     {
       "name": "Config",
       "docs": [
-        "Global settings. Only `authority` can change them, and changes to the",
-        "price or fee only apply to rounds opened afterwards."
+        "Global settings. Only `authority` can change them."
       ],
       "type": {
         "kind": "struct",
@@ -824,28 +1027,15 @@
           {
             "name": "treasury",
             "docs": [
-              "Receives the house fee through `collect_fee`."
+              "Receives the house fees through `collect_fee`."
             ],
             "type": "pubkey"
           },
           {
-            "name": "ticket_price",
-            "docs": [
-              "Price of one ticket, in lamports."
-            ],
-            "type": "u64"
-          },
-          {
-            "name": "fee_bps",
-            "docs": [
-              "House fee, in basis points of the pot. Capped at `MAX_FEE_BPS`."
-            ],
-            "type": "u16"
-          },
-          {
             "name": "max_number",
             "docs": [
-              "Highest number a ticket can carry (inclusive)."
+              "Highest number a ticket can carry (inclusive), in every game. Changes",
+              "only apply to rounds opened afterwards."
             ],
             "type": "u32"
           },
@@ -885,18 +1075,6 @@
             }
           },
           {
-            "name": "ticket_price",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "fee_bps",
-            "type": {
-              "option": "u16"
-            }
-          },
-          {
             "name": "max_number",
             "type": {
               "option": "u32"
@@ -925,14 +1103,6 @@
             "type": "pubkey"
           },
           {
-            "name": "ticket_price",
-            "type": "u64"
-          },
-          {
-            "name": "fee_bps",
-            "type": "u16"
-          },
-          {
             "name": "max_number",
             "type": "u32"
           },
@@ -949,7 +1119,11 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "day",
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "period",
             "type": "u32"
           },
           {
@@ -964,12 +1138,85 @@
       }
     },
     {
+      "name": "Game",
+      "docs": [
+        "One of the three games: `DAILY`, `HOURLY` or `GUESS`. Price and fee",
+        "changes only apply to rounds opened afterwards."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "ticket_price",
+            "docs": [
+              "Price of one ticket, in lamports."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "fee_bps",
+            "docs": [
+              "House fee, in basis points of the pot. Capped at `MAX_FEE_BPS`."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "carry",
+            "docs": [
+              "Lamports left over by the last draw, held by this account on top of",
+              "its rent. They join the pot of the next round drawn."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "current_round",
+            "docs": [
+              "Guess only: the number of the round on sale."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "ticket_price",
+            "type": "u64"
+          },
+          {
+            "name": "fee_bps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
       "name": "PrizeClaimed",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "day",
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "period",
             "type": "u32"
           },
           {
@@ -994,16 +1241,25 @@
     {
       "name": "Round",
       "docs": [
-        "One UTC day of play. The account holds the pot itself, on top of its",
-        "rent-exempt balance, and stays on-chain as the round's public record."
+        "One round of a game. The account holds the pot itself, on top of its",
+        "rent-exempt balance, and stays on-chain as the round's public record.",
+        "",
+        "Lottery rounds (`DAILY`, `HOURLY`) are followed in the same account by the",
+        "sorted list of their numbers, 4 bytes (u32 LE) each, so the draw can find",
+        "the closest one."
       ],
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "day",
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "period",
             "docs": [
-              "Days since the Unix epoch (UTC)."
+              "Days (`DAILY`) or hours (`HOURLY`) since the Unix epoch, or the round",
+              "number (`GUESS`)."
             ],
             "type": "u32"
           },
@@ -1018,7 +1274,7 @@
           {
             "name": "ticket_price",
             "docs": [
-              "Ticket price and fee copied from `Config` when the round opened."
+              "Ticket price, fee and highest number copied when the round opened."
             ],
             "type": "u64"
           },
@@ -1027,20 +1283,25 @@
             "type": "u16"
           },
           {
+            "name": "max_number",
+            "type": "u32"
+          },
+          {
             "name": "ticket_count",
             "type": "u32"
           },
           {
             "name": "pot",
             "docs": [
-              "Lamports collected from tickets, held by this account."
+              "Lamports collected from tickets, plus the carry joined at the draw."
             ],
             "type": "u64"
           },
           {
             "name": "entropy",
             "docs": [
-              "Rolling SHA-256 of every purchase in the round."
+              "Rolling SHA-256 of every purchase in the round (for `GUESS`, of every",
+              "purchase made while no guesses were waiting for a check)."
             ],
             "type": {
               "array": [
@@ -1055,6 +1316,19 @@
               "Slot pinned by `close_round`; the draw uses it or the next produced slot."
             ],
             "type": "u64"
+          },
+          {
+            "name": "checked",
+            "docs": [
+              "Guess only: guesses checked by earlier draws, and guesses sealed for",
+              "the pending one. Purchases are numbered in order, so these are counts",
+              "of the first tickets."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "sealed_count",
+            "type": "u32"
           },
           {
             "name": "draw_slot",
@@ -1085,9 +1359,16 @@
             }
           },
           {
+            "name": "drawn_number",
+            "docs": [
+              "Lotteries only: `randomness[..8] % (max_number + 1)`."
+            ],
+            "type": "u32"
+          },
+          {
             "name": "winning_index",
             "docs": [
-              "Purchase index of the winning ticket: `randomness[..8] % ticket_count`."
+              "The winning ticket's purchase index and number."
             ],
             "type": "u32"
           },
@@ -1111,7 +1392,8 @@
           {
             "name": "payout",
             "docs": [
-              "Lamports paid to the winner, and the house fee for the treasury."
+              "Set by the draw: the winner's 80% and the house fee. The rest of the",
+              "pot went to the game's carry."
             ],
             "type": "u64"
           },
@@ -1136,11 +1418,18 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "day",
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "period",
             "type": "u32"
           },
           {
             "name": "ticket_count",
+            "docs": [
+              "Lotteries: every ticket. Guess: the guesses sealed for the next check."
+            ],
             "type": "u32"
           },
           {
@@ -1160,7 +1449,11 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "day",
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "period",
             "type": "u32"
           },
           {
@@ -1186,8 +1479,39 @@
             }
           },
           {
+            "name": "won",
+            "docs": [
+              "Guess: false when the batch missed and the round goes on."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "drawn_number",
+            "type": "u32"
+          },
+          {
             "name": "winning_index",
             "type": "u32"
+          },
+          {
+            "name": "winning_number",
+            "type": "u32"
+          },
+          {
+            "name": "carry_in",
+            "type": "u64"
+          },
+          {
+            "name": "payout",
+            "type": "u64"
+          },
+          {
+            "name": "fee",
+            "type": "u64"
+          },
+          {
+            "name": "carry_out",
+            "type": "u64"
           }
         ]
       }
@@ -1216,7 +1540,7 @@
       "name": "Ticket",
       "docs": [
         "A number held by one player in one round. Its address is derived from the",
-        "round and the number, so each number can only be sold once per day."
+        "round and the number, so each number can only be sold once per round."
       ],
       "type": {
         "kind": "struct",
@@ -1269,7 +1593,11 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "day",
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "period",
             "type": "u32"
           },
           {
@@ -1308,6 +1636,20 @@
       "value": "[99, 111, 110, 102, 105, 103]"
     },
     {
+      "name": "DAILY",
+      "docs": [
+        "Daily lottery: round `d` is open from `d * 86_400` to `(d + 1) * 86_400`",
+        "seconds after the Unix epoch."
+      ],
+      "type": "u8",
+      "value": "0"
+    },
+    {
+      "name": "DAY_SECONDS",
+      "type": "i64",
+      "value": "86400"
+    },
+    {
       "name": "DRAW_DELAY_SLOTS",
       "docs": [
         "Slots between closing a round and the slot whose hash seeds its draw.",
@@ -1327,30 +1669,59 @@
       "value": "500"
     },
     {
+      "name": "GAME_SEED",
+      "type": "bytes",
+      "value": "[103, 97, 109, 101]"
+    },
+    {
+      "name": "GUESS",
+      "docs": [
+        "Guess the number: rounds are numbered from 0 and stay open until a guess",
+        "finds the number."
+      ],
+      "type": "u8",
+      "value": "2"
+    },
+    {
+      "name": "HOURLY",
+      "docs": [
+        "Hourly lottery: round `h` is open from `h * 3_600` to `(h + 1) * 3_600`."
+      ],
+      "type": "u8",
+      "value": "1"
+    },
+    {
+      "name": "HOUR_SECONDS",
+      "type": "i64",
+      "value": "3600"
+    },
+    {
       "name": "MAX_FEE_BPS",
       "docs": [
-        "Highest house fee the authority can ever set: 10%."
+        "Highest house fee the authority can ever set: 20%, the part of the pot",
+        "that does not go to the winner."
       ],
       "type": "u16",
-      "value": "1000"
+      "value": "2000"
+    },
+    {
+      "name": "MAX_LOTTERY_TICKETS",
+      "docs": [
+        "Most tickets in one lottery round. Each one adds 4 bytes to the round's",
+        "sorted list of numbers."
+      ],
+      "type": "u32",
+      "value": "1000000"
     },
     {
       "name": "MIN_TICKET_PRICE",
       "docs": [
-        "Lowest ticket price: 0.001 SOL. With the 10% fee cap, a prize is always",
-        "above the rent-exempt minimum of an empty wallet, so it can always be paid."
+        "Lowest ticket price: 0.002 SOL. The winner's 80% of the smallest pot is",
+        "then above the rent-exempt minimum of an empty wallet, so it can always be",
+        "paid."
       ],
       "type": "u64",
-      "value": "1000000"
-    },
-    {
-      "name": "ROUND_DURATION",
-      "docs": [
-        "A round lasts one UTC day: round `d` is open from `d * 86_400` to",
-        "`(d + 1) * 86_400` seconds after the Unix epoch."
-      ],
-      "type": "i64",
-      "value": "86400"
+      "value": "2000000"
     },
     {
       "name": "ROUND_SEED",
@@ -1361,6 +1732,15 @@
       "name": "TICKET_SEED",
       "type": "bytes",
       "value": "[116, 105, 99, 107, 101, 116]"
+    },
+    {
+      "name": "WINNER_SHARE_BPS",
+      "docs": [
+        "Share of the pot paid to the winner: 80%. The house fee comes out of the",
+        "other 20%, and what is left carries over to the game's next round."
+      ],
+      "type": "u16",
+      "value": "8000"
     }
   ]
 }

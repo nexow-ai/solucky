@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { Account } from '@solana/kit';
-import { countryFromBytes, flagEmoji, formatDay, type Ticket } from '@solucky/client';
+import { countryFromBytes, flagEmoji, GameKind, type Ticket } from '@solucky/client';
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const { settled, pending, totals, busy, settle, reclaimable, reclaim, loading } = useLottery();
+const { lottery, settled, pending, totals, busy, settle, reclaimable, reclaim, loading } = useLottery();
 const { connected, address } = useWallet();
 
 const leftovers = ref<Account<Ticket>[]>([]);
@@ -12,6 +12,13 @@ async function loadLeftovers() {
   leftovers.value = connected.value ? await reclaimable().catch(() => []) : [];
 }
 watch([address, () => settled.value.length], loadLeftovers, { immediate: true });
+
+/** A round's name, short enough for the winners list: `26-10-21`, `10-21 14:00`, `#3`. */
+function shortTitle(kind: number, period: number) {
+  const title = roundTitle(kind, period);
+  if (kind === GameKind.Daily) return title.slice(2);
+  return kind === GameKind.Hourly ? title.slice(5, 16) : title;
+}
 
 async function reclaimAll() {
   await reclaim(leftovers.value);
@@ -51,16 +58,20 @@ async function reclaimAll() {
           class="pending flex items-center justify-between gap-2 px-3 py-2 text-sm"
         >
           <div class="min-w-0">
-            <ULink :to="localePath(`/rounds/${formatDay(round.data.day)}`)" class="font-semibold hover:text-primary">
-              {{ formatDay(round.data.day) }}
+            <ULink
+              :to="localePath(roundPath(round.data.kind, round.data.period))"
+              class="font-semibold hover:text-primary"
+              dir="ltr"
+            >
+              {{ roundTitle(round.data.kind, round.data.period) }}
             </ULink>
             <span class="ms-2 font-mono text-muted tabular-nums">◎{{ formatSol(round.data.pot, 3) }}</span>
-            <div class="mt-1"><LotteryStatusBadge :status="round.data.status" /></div>
+            <div class="mt-1"><LotteryStatusBadge :status="round.data.status" :lottery="lottery" /></div>
           </div>
           <UButton
             v-if="connected"
             :label="t('history.settle')"
-            :aria-label="t('history.settleDay', { day: formatDay(round.data.day) })"
+            :aria-label="t('history.settleDay', { day: roundTitle(round.data.kind, round.data.period) })"
             icon="i-lucide-gavel"
             size="sm"
             color="primary"
@@ -117,11 +128,13 @@ async function reclaimAll() {
           <ol v-else class="space-y-0.5 text-xs">
             <li v-for="round in settled" :key="round.address">
               <NuxtLink
-                :to="localePath(`/rounds/${formatDay(round.data.day)}`)"
+                :to="localePath(roundPath(round.data.kind, round.data.period))"
                 class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
                 :class="round.data.winner === address ? 'mine font-semibold text-primary' : 'text-toned'"
               >
-                <span class="col-span-3 font-mono text-muted">{{ formatDay(round.data.day).slice(2) }}</span>
+                <span class="col-span-3 truncate font-mono text-muted" dir="ltr">{{
+                  shortTitle(round.data.kind, round.data.period)
+                }}</span>
                 <span class="col-span-2 font-mono font-semibold text-secondary"
                   >◎{{ formatSol(round.data.pot, 2) }}</span
                 >

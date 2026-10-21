@@ -13,6 +13,9 @@
     "bindings": [{ "name": "$DurableObject", "class_name": "$DurableObject" }],
   },
   "migrations": [{ "tag": "v1-live-table", "new_sqlite_classes": ["$DurableObject"] }],
+  // Draw notification subscriptions (server/utils/push.ts). The first deploy
+  // creates the namespace and writes its id here: commit it.
+  "kv_namespaces": [{ "binding": "PUSH" }],
   // Apex + www; Cloudflare manages DNS and certificates for these.
   "routes": [
     { "pattern": "solucky.me", "custom_domain": true },

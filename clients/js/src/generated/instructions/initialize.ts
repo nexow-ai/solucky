@@ -14,12 +14,8 @@ import {
   getBytesEncoder,
   getStructDecoder,
   getStructEncoder,
-  getU16Decoder,
-  getU16Encoder,
   getU32Decoder,
   getU32Encoder,
-  getU64Decoder,
-  getU64Encoder,
   SOLANA_ERROR__PROGRAM_CLIENTS__INSUFFICIENT_ACCOUNT_METAS,
   SolanaError,
   transformEncoder,
@@ -59,7 +55,7 @@ export type InitializeInstruction<
   TAccountAuthority extends string | AccountMeta<string> = string,
   TAccountConfig extends string | AccountMeta<string> = string,
   TAccountTreasury extends string | AccountMeta<string> = string,
-  TAccountProgram extends string | AccountMeta<string> = '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2',
+  TAccountProgram extends string | AccountMeta<string> = 'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux',
   TAccountProgramData extends string | AccountMeta<string> = string,
   TAccountSystemProgram extends string | AccountMeta<string> = '11111111111111111111111111111111',
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
@@ -79,21 +75,14 @@ export type InitializeInstruction<
     ]
   >;
 
-export type InitializeInstructionData = {
-  discriminator: ReadonlyUint8Array;
-  ticketPrice: bigint;
-  feeBps: number;
-  maxNumber: number;
-};
+export type InitializeInstructionData = { discriminator: ReadonlyUint8Array; maxNumber: number };
 
-export type InitializeInstructionDataArgs = { ticketPrice: number | bigint; feeBps: number; maxNumber: number };
+export type InitializeInstructionDataArgs = { maxNumber: number };
 
 export function getInitializeInstructionDataEncoder(): FixedSizeEncoder<InitializeInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
       ['discriminator', fixEncoderSize(getBytesEncoder(), 8)],
-      ['ticketPrice', getU64Encoder()],
-      ['feeBps', getU16Encoder()],
       ['maxNumber', getU32Encoder()],
     ]),
     (value) => ({ ...value, discriminator: INITIALIZE_DISCRIMINATOR }),
@@ -103,8 +92,6 @@ export function getInitializeInstructionDataEncoder(): FixedSizeEncoder<Initiali
 export function getInitializeInstructionDataDecoder(): FixedSizeDecoder<InitializeInstructionData> {
   return getStructDecoder([
     ['discriminator', fixDecoderSize(getBytesDecoder(), 8)],
-    ['ticketPrice', getU64Decoder()],
-    ['feeBps', getU16Decoder()],
     ['maxNumber', getU32Decoder()],
   ]);
 }
@@ -134,8 +121,6 @@ export type InitializeAsyncInput<
   program?: TAccountProgram;
   programData: TAccountProgramData;
   systemProgram?: TAccountSystemProgram;
-  ticketPrice: InitializeInstructionDataArgs['ticketPrice'];
-  feeBps: InitializeInstructionDataArgs['feeBps'];
   maxNumber: InitializeInstructionDataArgs['maxNumber'];
 };
 
@@ -195,7 +180,7 @@ export async function getInitializeInstructionAsync<
   }
   if (!accounts.program.value) {
     accounts.program.value =
-      '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2' as Address<'8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'>;
+      'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value = '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
@@ -241,8 +226,6 @@ export type InitializeInput<
   program?: TAccountProgram;
   programData: TAccountProgramData;
   systemProgram?: TAccountSystemProgram;
-  ticketPrice: InitializeInstructionDataArgs['ticketPrice'];
-  feeBps: InitializeInstructionDataArgs['feeBps'];
   maxNumber: InitializeInstructionDataArgs['maxNumber'];
 };
 
@@ -297,7 +280,7 @@ export function getInitializeInstruction<
   // Resolve default values.
   if (!accounts.program.value) {
     accounts.program.value =
-      '8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2' as Address<'8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2'>;
+      'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value = '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;

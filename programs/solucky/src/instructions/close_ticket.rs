@@ -12,7 +12,10 @@ use crate::{
 pub struct CloseTicket<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
-    #[account(seeds = [ROUND_SEED, &round.day.to_le_bytes()], bump = round.bump)]
+    #[account(
+        seeds = [ROUND_SEED, &round.kind.to_le_bytes(), &round.period.to_le_bytes()],
+        bump = round.bump
+    )]
     pub round: Account<'info, Round>,
     #[account(
         mut,

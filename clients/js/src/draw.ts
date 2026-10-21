@@ -34,11 +34,59 @@ export async function computeRandomness(input: {
   return new Uint8Array(await crypto.subtle.digest('SHA-256', data));
 }
 
-/** Purchase index of the winning ticket: the first 8 bytes as a u64 LE, modulo the ticket count. */
-export function winningIndex(randomness: ReadonlyUint8Array, ticketCount: number): number {
-  if (ticketCount <= 0) throw new RangeError('A round needs at least one ticket');
-  const view = new DataView(randomness.buffer, randomness.byteOffset, 8);
-  return Number(view.getBigUint64(0, true) % BigInt(ticketCount));
+function firstU64(randomness: ReadonlyUint8Array): bigint {
+  return new DataView(randomness.buffer, randomness.byteOffset, 8).getBigUint64(0, true);
+}
+
+/** A lottery's random number: the first 8 bytes as a u64 LE, modulo `maxNumber + 1`. */
+export function drawnNumber(randomness: ReadonlyUint8Array, maxNumber: number): number {
+  return Number(firstU64(randomness) % BigInt(maxNumber + 1));
+}
+
+/** The lottery winner: the number closest to `target`; a tie goes to the lower number. */
+export function closestNumber(numbers: readonly number[], target: number): number | null {
+  let best: number | null = null;
+  for (const n of numbers) {
+    const d = Math.abs(n - target);
+    const bestD = best === null ? Infinity : Math.abs(best - target);
+    if (d < bestD || (d === bestD && n < best!)) best = n;
+  }
+  return best;
+}
+
+/**
+ * Chance that a lottery's draw lands closest to one of `mine`: the share of
+ * the numbers 0 to `maxNumber` that are closer to them than to any other
+ * ticket (a tie goes to the lower number, like the program).
+ */
+export function winShare(numbers: readonly number[], mine: ReadonlySet<number>, maxNumber: number): number {
+  const sorted = [...numbers].sort((a, b) => a - b);
+  let owned = 0;
+  sorted.forEach((n, i) => {
+    if (!mine.has(n)) return;
+    const prev = sorted[i - 1];
+    const next = sorted[i + 1];
+    const lo = prev === undefined ? 0 : Math.floor((prev + n) / 2) + 1;
+    const hi = next === undefined ? maxNumber : Math.floor((n + next) / 2);
+    owned += hi - lo + 1;
+  });
+  return owned / (maxNumber + 1);
+}
+
+/**
+ * Checks a sealed batch of Guess tickets like `draw_round`: `checked` guesses
+ * were already wrong, so the number is one of the `maxNumber + 1 - checked`
+ * numbers left. Returns the purchase index of the guess that found it, or
+ * `null` when the batch missed.
+ */
+export function guessOutcome(
+  randomness: ReadonlyUint8Array,
+  checked: number,
+  sealedCount: number,
+  maxNumber: number,
+): number | null {
+  const r = firstU64(randomness) % BigInt(maxNumber + 1 - checked);
+  return r < BigInt(sealedCount - checked) ? checked + Number(r) : null;
 }
 
 /**

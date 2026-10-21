@@ -64,6 +64,8 @@ const sections = computed(() =>
     <p>{{ t('legal.privacy.servers.liveBody') }}</p>
     <h3>{{ t('legal.privacy.servers.price') }}</h3>
     <p>{{ t('legal.privacy.servers.priceBody') }}</p>
+    <h3>{{ t('legal.privacy.servers.push') }}</h3>
+    <p>{{ t('legal.privacy.servers.pushBody') }}</p>
 
     <h2 id="third-parties">{{ t('legal.privacy.thirdParties.title') }}</h2>
     <ul>
@@ -99,6 +101,7 @@ const sections = computed(() =>
         <NuxtLink :to="localePath('/legal/cookies')">{{ t('legal.pages.cookies.label') }}</NuxtLink>
       </template>
     </i18n-t>
+    <p>{{ t('legal.privacy.browser.cache') }}</p>
 
     <h2 id="purposes">{{ t('legal.privacy.purposes.title') }}</h2>
     <p>{{ t('legal.privacy.purposes.body') }}</p>

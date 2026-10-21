@@ -4,16 +4,16 @@ use anchor_lang::prelude::*;
 pub enum SoluckyError {
     #[msg("Only the authority can do this")]
     Unauthorized,
-    #[msg("The ticket price must be at least 0.001 SOL")]
+    #[msg("The ticket price must be at least 0.002 SOL")]
     InvalidTicketPrice,
-    #[msg("The fee is above the 10% cap")]
+    #[msg("The fee is above the 20% cap")]
     FeeTooHigh,
     #[msg("The highest number must be greater than zero")]
     InvalidMaxNumber,
     #[msg("Ticket sales are paused")]
     Paused,
-    #[msg("Tickets can only be bought for today's round")]
-    WrongDay,
+    #[msg("Tickets can only be bought for the round on sale")]
+    WrongRound,
     #[msg("The number is out of range")]
     NumberOutOfRange,
     #[msg("The country must be an uppercase ISO 3166-1 alpha-2 code")]
@@ -44,4 +44,12 @@ pub enum SoluckyError {
     PriceChanged,
     #[msg("The fee of this round was already collected")]
     FeeAlreadyCollected,
+    #[msg("This round has sold all the tickets it can hold")]
+    RoundFull,
+    #[msg("There are no new guesses to check")]
+    NothingToCheck,
+    #[msg("The latest guesses are being checked; try again in a few seconds")]
+    BatchSealed,
+    #[msg("Unknown game")]
+    InvalidGame,
 }

@@ -25,3 +25,13 @@ export function lamportsToSol(lamports: bigint | number): number {
 export function feeFor(pot: bigint, feeBps: number): bigint {
   return (pot * BigInt(feeBps)) / 10_000n;
 }
+
+/** The winner's 80% of a pot, rounded down like the program. */
+export function prizeFor(pot: bigint): bigint {
+  return (pot * 8_000n) / 10_000n;
+}
+
+/** What a pot leaves for the game's next round: the 20% minus the house fee. */
+export function carryFor(pot: bigint, feeBps: number): bigint {
+  return pot - prizeFor(pot) - feeFor(pot, feeBps);
+}

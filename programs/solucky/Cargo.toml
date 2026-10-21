@@ -1,7 +1,7 @@
 [package]
 name = "solucky"
 version = "1.0.0"
-description = "S☉Lucky: a daily, verifiable lottery on Solana."
+description = "S☉Lucky: verifiable lottery games on Solana: daily, hourly and guess the number."
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
