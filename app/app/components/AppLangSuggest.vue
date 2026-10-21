@@ -21,9 +21,10 @@ onMounted(() => {
   if (wanted && wanted !== locale.value) timer = setTimeout(() => (offer.value = wanted), 1_200);
 });
 onBeforeUnmount(() => clearTimeout(timer));
-// Gone once the page is in that language, however the visitor got there.
-watch(locale, (code) => {
-  if (code === offer.value) offer.value = null;
+// Gone as soon as the visitor changes language, through the offer or not.
+watch(locale, () => {
+  clearTimeout(timer);
+  offer.value = null;
 });
 
 function decide(code: string) {
