@@ -1,3 +1,5 @@
+import type { InstallPrompt } from '~/composables/useInstallPrompt';
+
 /**
  * The installable app: public/manifest.webmanifest and the service worker
  * (public/sw.js), which the browser replaces after each deploy on its own.
@@ -13,6 +15,15 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   onNuxtReady(() => navigator.serviceWorker?.register('/sw.js').catch(() => {}));
+
+  // Chromium offers installing through this event; the header's install button
+  // (components/AppInstall.vue) shows it instead of the browser's own banner.
+  const install = useInstallPrompt();
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    install.value = markRaw(event as InstallPrompt);
+  });
+  window.addEventListener('appinstalled', () => (install.value = null));
 
   const toast = useToast();
   nuxtApp.hook('app:manifest:update', () => {
