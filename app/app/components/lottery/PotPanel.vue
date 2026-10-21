@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { countryFromBytes, flagEmoji, formatDay, msUntilClose } from '@solucky/client';
 
+const { t } = useI18n();
+const intl = useIntlLocale();
 const { today, pot, tickets, players, countries, loading } = useLottery();
 const { address } = useWallet();
 const { explorer } = useSolana();
@@ -26,8 +28,8 @@ watch(pot, (to, from) => {
   <LotteryGlass>
     <div class="space-y-6 p-5 sm:p-6">
       <header class="text-center">
-        <p class="kicker">Today's</p>
-        <h2 class="text-3xl font-semibold tracking-[0.28em] text-muted">SOLPOT</h2>
+        <p class="kicker">{{ t('pot.kicker') }}</p>
+        <h2 class="text-3xl font-semibold tracking-[0.28em] text-muted">{{ t('pot.title') }}</h2>
         <div class="jackpot relative mt-4">
           <p class="text-lucky glow-primary led font-mono text-5xl font-semibold tabular-nums [--led-pitch:0.07em]">
             ◎{{ formatSol(Math.round(potShown), 3) }}
@@ -41,23 +43,23 @@ watch(pot, (to, from) => {
             +◎{{ formatSol(g.amount, 3) }}
           </span>
         </div>
-        <p class="mt-1 font-mono text-lg font-semibold text-toned tabular-nums">{{ formatUsd(pot, price) }}</p>
-        <p class="kicker mt-4 text-sm">{{ formatDay(today) }} · closes in</p>
+        <p class="mt-1 font-mono text-lg font-semibold text-toned tabular-nums">{{ formatUsd(pot, price, intl) }}</p>
+        <p class="kicker mt-4 text-sm">{{ t('pot.closesIn', { day: formatDay(today) }) }}</p>
         <div class="mt-2 flex justify-center">
           <LotteryCountdown :ms="left" />
         </div>
       </header>
 
       <div class="tray grid grid-cols-3 gap-2 px-2 py-3">
-        <LotteryStat label="Tickets" :value="tickets.length" />
-        <LotteryStat label="Players" :value="players" />
-        <LotteryStat label="Countries" :value="countries" />
+        <LotteryStat :label="t('stat.tickets')" :value="tickets.length" />
+        <LotteryStat :label="t('stat.players')" :value="players" />
+        <LotteryStat :label="t('stat.countries')" :value="countries" />
       </div>
 
       <div>
         <p class="kicker mb-3 flex items-center justify-center gap-2">
           <span class="live-dot" aria-hidden="true" />
-          Numbers in play
+          {{ t('pot.inPlay') }}
         </p>
         <div class="well h-80 overflow-y-auto p-2">
           <div v-if="loading" class="space-y-2 p-1">
@@ -66,8 +68,8 @@ watch(pot, (to, from) => {
           <UEmpty
             v-else-if="!tickets.length"
             icon="i-lucide-ticket"
-            title="No tickets yet"
-            description="Be the first to pick a number today."
+            :title="t('pot.empty')"
+            :description="t('pot.beFirst')"
             variant="naked"
             class="h-full"
           />
@@ -84,13 +86,17 @@ watch(pot, (to, from) => {
                 target="_blank"
                 class="col-span-4 font-mono hover:text-primary"
                 :title="ticket.data.owner"
+                dir="ltr"
               >
                 {{ shortAddress(ticket.data.owner, 5) }}
               </ULink>
-              <span class="col-span-1 text-center" :title="countryName(countryFromBytes(ticket.data.country))">
+              <span
+                class="col-span-1 text-center"
+                :title="countryName(countryFromBytes(ticket.data.country), intl, t('country.private'))"
+              >
                 {{ flagEmoji(countryFromBytes(ticket.data.country)) }}
               </span>
-              <span class="col-span-4 text-right font-mono font-semibold">{{ formatNumber(ticket.data.number) }}</span>
+              <span class="col-span-4 text-end font-mono font-semibold">{{ formatNumber(ticket.data.number) }}</span>
             </li>
           </TransitionGroup>
         </div>
@@ -129,6 +135,10 @@ watch(pot, (to, from) => {
 .row.mine {
   background: color-mix(in oklab, var(--ui-primary) 12%, transparent);
   box-shadow: inset 2px 0 0 var(--ui-primary);
+}
+
+.row.mine:dir(rtl) {
+  box-shadow: inset -2px 0 0 var(--ui-primary);
 }
 
 /* A new ticket drops in at the top with a flash. */

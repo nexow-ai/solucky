@@ -8,9 +8,13 @@ import type { FeedItem } from '~/composables/useTableFeed';
  */
 const props = defineProps<{ feed: readonly FeedItem[] }>();
 
+const { t, localeProperties } = useI18n();
+const intl = useIntlLocale();
 const { status, online, others, picking } = useLive();
 
-const label = computed(() => ({ live: 'Live', connecting: 'Connecting', offline: 'Offline' })[status.value]);
+const label = computed(() => t(`live.${status.value}`));
+/** The ticker scrolls left to right in every language; each item reads in the page's direction. */
+const itemDir = computed(() => localeProperties.value.dir ?? 'ltr');
 const flags = computed(() => others.value.slice(0, 6).map((p) => ({ id: p.id, flag: flagEmoji(p.cc), pick: p.pick })));
 const more = computed(() => Math.max(0, others.value.length - flags.value.length));
 
@@ -22,9 +26,10 @@ onBeforeUnmount(() => clearInterval(clock));
 
 function ago(at: number) {
   const s = Math.max(0, Math.round((now.value - at) / 1000));
-  if (s < 60) return s < 10 ? 'now' : `${s}s`;
+  if (s < 60) return s < 10 ? t('live.now') : formatUnit(s, 'second', intl.value, 'narrow');
   const m = Math.round(s / 60);
-  return m < 60 ? `${m}m` : `${Math.round(m / 60)}h`;
+  if (m < 60) return formatUnit(m, 'minute', intl.value, 'narrow');
+  return formatUnit(Math.round(m / 60), 'hour', intl.value, 'narrow');
 }
 
 // The ticker runs one item every four seconds, so a long feed does not race.
@@ -40,43 +45,44 @@ const duration = computed(() => `${Math.max(18, props.feed.length * 4)}s`);
       </span>
 
       <span class="flex shrink-0 items-center gap-2">
-        <span class="flex -space-x-1.5" aria-hidden="true">
+        <span class="flex -space-x-1.5 rtl:space-x-reverse" aria-hidden="true">
           <span v-for="f in flags" :key="f.id" class="seat" :class="{ picking: f.pick }">{{ f.flag }}</span>
           <span v-if="more" class="seat seat-more font-mono">+{{ more }}</span>
         </span>
-        <span class="text-sm text-toned">
-          <span class="font-mono font-semibold tabular-nums text-highlighted">{{
-            status === 'live' ? online : '—'
-          }}</span>
-          at the table
-        </span>
+        <i18n-t keypath="live.atTable" tag="span" scope="global" class="text-sm text-toned">
+          <template #n>
+            <span class="font-mono font-semibold tabular-nums text-highlighted">{{
+              status === 'live' ? online : '—'
+            }}</span>
+          </template>
+        </i18n-t>
       </span>
 
       <span v-if="picking" class="picking-label hidden shrink-0 text-sm text-secondary sm:inline-flex">
-        {{ picking }} picking<span class="dots"><i>.</i><i>.</i><i>.</i></span>
+        {{ t('live.picking', { n: picking }, picking) }}<span class="dots"><i>.</i><i>.</i><i>.</i></span>
       </span>
 
-      <div class="ticker min-w-0 flex-1" aria-hidden="true">
+      <div class="ticker min-w-0 flex-1" dir="ltr" aria-hidden="true">
         <div v-if="props.feed.length" class="track" :style="{ '--duration': duration }">
           <template v-for="copy in 2" :key="copy">
-            <span v-for="item in props.feed" :key="`${copy}-${item.key}`" class="item">
+            <span v-for="item in props.feed" :key="`${copy}-${item.key}`" class="item" :dir="itemDir">
               <template v-if="item.kind === 'ticket'">
                 <UIcon name="i-lucide-ticket" class="size-3.5 text-primary" />
                 {{ flagEmoji(item.cc) }}
-                <span class="font-mono">{{ item.mine ? 'you' : shortAddress(item.owner ?? '', 4) }}</span>
-                <span class="text-muted">→</span>
+                <span class="font-mono">{{ item.mine ? t('live.you') : shortAddress(item.owner ?? '', 4) }}</span>
+                <span class="inline-block text-muted rtl:-scale-x-100">→</span>
                 <span class="font-mono font-semibold text-highlighted">{{ formatNumber(item.number ?? 0) }}</span>
               </template>
               <template v-else>
                 <UIcon name="i-lucide-user-round-plus" class="size-3.5 text-secondary" />
-                {{ flagEmoji(item.cc) }} joined
+                {{ flagEmoji(item.cc) }} {{ t('live.joined') }}
               </template>
               <span class="font-mono text-[0.65rem] text-dimmed">{{ ago(item.at) }}</span>
             </span>
           </template>
         </div>
-        <p v-else class="truncate text-sm text-muted">
-          The table is open. The next ticket shows up here the moment it lands.
+        <p v-else class="truncate text-sm text-muted" :dir="itemDir">
+          {{ t('live.empty') }}
         </p>
       </div>
     </div>

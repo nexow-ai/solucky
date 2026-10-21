@@ -39,9 +39,11 @@ test.describe.serial('a day of S☉Lucky', () => {
     expect(errors).toEqual([]);
   });
 
+  // Bought through a wallet that signs and sends itself and adds a priority
+  // fee, like Phantom; settling below uses a sign-only wallet.
   test('a player connects a wallet and buys a number', async ({ page }) => {
     const errors = watchForPageErrors(page);
-    await installTestWallet(page, wallet);
+    await installTestWallet(page, wallet, { signAndSend: true });
     await page.goto('/play');
     await connect(page, wallet);
 

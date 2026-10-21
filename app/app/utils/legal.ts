@@ -8,35 +8,25 @@ export const OPERATOR = {
 /** When the wording of the legal pages last changed. Update it with every change to them. */
 export const LEGAL_UPDATED = '2026-10-21';
 
+/**
+ * The legal documents, in the order they are listed. Each one's title and
+ * summary are `legal.pages.<key>.label` and `.description` in the dictionaries.
+ */
 export const LEGAL_PAGES = [
-  {
-    label: 'Legal notice',
-    to: '/legal',
-    icon: 'i-lucide-scale',
-    description: 'Who runs S☉Lucky, how to reach us, and the documents that apply.',
-  },
-  {
-    label: 'Terms of Service',
-    to: '/legal/terms',
-    icon: 'i-lucide-scroll-text',
-    description: 'The rules for using the site and playing, and what the program does and does not promise.',
-  },
-  {
-    label: 'Privacy Policy',
-    to: '/legal/privacy',
-    icon: 'i-lucide-eye-off',
-    description: 'What is public on Solana, what our servers see, and what we never collect.',
-  },
-  {
-    label: 'Cookies & storage',
-    to: '/legal/cookies',
-    icon: 'i-lucide-cookie',
-    description: 'No cookies, no trackers: the four settings the app keeps in your browser.',
-  },
-  {
-    label: 'Responsible play',
-    to: '/legal/responsible-play',
-    icon: 'i-lucide-heart-handshake',
-    description: 'How the odds work, and where to get help if playing stops being fun.',
-  },
+  { key: 'notice', to: '/legal', icon: 'i-lucide-scale' },
+  { key: 'terms', to: '/legal/terms', icon: 'i-lucide-scroll-text' },
+  { key: 'privacy', to: '/legal/privacy', icon: 'i-lucide-eye-off' },
+  { key: 'cookies', to: '/legal/cookies', icon: 'i-lucide-cookie' },
+  { key: 'play', to: '/legal/responsible-play', icon: 'i-lucide-heart-handshake' },
 ] as const;
+
+/**
+ * A legal page's index: each section's anchor (`openSource` → `#open-source`)
+ * and its title, `legal.<page>.<section>.title` in the dictionaries.
+ */
+export function legalSections(t: (key: string) => string, page: string, keys: readonly string[]) {
+  return keys.map((key) => ({
+    id: key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`),
+    label: t(`legal.${page}.${key}.title`),
+  }));
+}

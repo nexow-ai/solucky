@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, LOCALES } from './i18n/languages';
+
 /**
  * Security headers for production. The app talks to user-configured RPC
  * endpoints and browser wallets, so `connect-src` allows any HTTPS/WSS host
@@ -28,23 +30,30 @@ const securityHeaders = {
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
 };
 
+/** The dApp pages, in every language: they talk to a wallet and an RPC endpoint, so they only render in the browser. */
+const browserOnly = Object.fromEntries(
+  LOCALES.flatMap(({ code }) => {
+    const prefix = code === DEFAULT_LOCALE ? '' : `/${code}`;
+    return [
+      [`${prefix}/play`, { ssr: false }],
+      [`${prefix}/rounds/**`, { ssr: false }],
+    ];
+  }),
+);
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
-  modules: ['@nuxt/eslint', '@nuxt/ui'],
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/i18n'],
   css: ['~/assets/css/main.css'],
   devtools: { enabled: true },
 
   app: {
     head: {
-      htmlAttrs: { lang: 'en' },
-      title: 'S☉Lucky: the daily lottery on Solana',
+      // The title, description, lang and dir come from the page's language (app.vue);
+      // this title only stays on the shell of the browser-only pages until they load.
+      title: 'S☉Lucky',
       meta: [
-        {
-          name: 'description',
-          content:
-            'Pick a number, buy a ticket, and win the whole pot at midnight UTC. Every ticket, pot and draw lives on Solana and can be checked by anyone.',
-        },
         { name: 'theme-color', content: '#0c0716' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'S☉Lucky' },
@@ -57,13 +66,14 @@ export default defineNuxtConfig({
     },
   },
 
-  // The landing page is rendered per request, so runtime settings such as the
-  // cluster always apply (a prerendered page would keep the build's values).
-  // The dApp pages talk to a wallet and an RPC endpoint, so they only render
-  // in the browser.
+  // The landing and legal pages are rendered per request, so runtime settings
+  // such as the cluster always apply (a prerendered page would keep the
+  // build's values).
+  // English lives at the root: /en/… addresses go there.
   routeRules: {
-    '/play': { ssr: false },
-    '/rounds/**': { ssr: false },
+    ...browserOnly,
+    '/en': { redirect: { to: '/', statusCode: 301 } },
+    '/en/**': { redirect: { to: '/**', statusCode: 301 } },
   },
 
   // Dev and HMR stay header-free; production responses carry the headers.
@@ -88,7 +98,28 @@ export default defineNuxtConfig({
       twitterUrl: '',
       discordUrl: '',
       githubUrl: 'https://github.com/nexow-ai/solucky',
+      i18n: {
+        /** Public URL of the site again, for the hreflang and canonical links. */
+        baseUrl: '',
+      },
     },
+  },
+
+  // English at the root, every other language under its code (/fr/play). The
+  // language never comes from a cookie or a redirect: the header lists them
+  // all, and components/AppLangSuggest.vue offers the browser's own once.
+  i18n: {
+    strategy: 'prefix_except_default',
+    defaultLocale: DEFAULT_LOCALE,
+    locales: LOCALES.map((l) => ({
+      code: l.code,
+      language: l.language,
+      name: l.name,
+      dir: ('dir' in l ? l.dir : 'ltr') as 'ltr' | 'rtl',
+      file: `${l.code}.ts`,
+    })),
+    detectBrowserLanguage: false,
+    experimental: { typedOptionsAndMessages: 'default' },
   },
 
   // Bundle only the icons the code uses; on edge presets the server falls

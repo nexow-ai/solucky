@@ -301,3 +301,18 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+/*
+ * Scripts the brand fonts do not draw (Arabic, Hebrew, Devanagari, Thai,
+ * Chinese, Japanese, Korean) fall back to the faces their systems ship, so
+ * nothing is downloaded from anyone else. They drop the Latin letter-spacing,
+ * which breaks Arabic's joined letters and spreads CJK apart, and their
+ * headings get room for tall marks. Unlayered, so these win over utilities.
+ */
+:where(:lang(ar), :lang(he), :lang(hi), :lang(th), :lang(zh), :lang(ja), :lang(ko)) * {
+  letter-spacing: normal;
+}
+
+:where(:lang(ar), :lang(he), :lang(hi), :lang(th)) :is(h1, h2, h3) {
+  line-height: 1.3;
+}

@@ -6,7 +6,7 @@
 
 **A daily lottery on Solana. Pick a number, and the whole pot goes to one ticket at midnight UTC.**
 
-Every ticket, every lamport of the pot and every draw lives on-chain, where anyone can check it.
+Every ticket, every lamport of the pot and every draw lives on-chain, where anyone can check it. In 20 languages.
 
 [![CI](https://github.com/nexow-ai/solucky/actions/workflows/ci.yml/badge.svg)](https://github.com/nexow-ai/solucky/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -68,7 +68,7 @@ A bot (the **crank**, `bun run crank`) does steps 2–4 right after midnight, an
 programs/solucky/   Anchor program (Rust), with unit and LiteSVM integration tests
 idl/                The program's IDL, committed so the client can be regenerated without Rust
 clients/js/         @solucky/client: Codama-generated @solana/kit client plus helpers
-app/                Nuxt 4 + Nuxt UI app: landing page, game, round pages, /api/price, /api/geo
+app/                Nuxt 4 + Nuxt UI app: landing page, game, round pages, /api/price, /api/geo, in 20 languages (app/i18n)
 scripts/            Operator scripts: admin (config), crank (settle rounds), e2e (local end-to-end)
 .github/workflows/  CI, and an optional scheduled crank
 ```
@@ -150,6 +150,7 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different |
 | `NUXT_PUBLIC_PROGRAM_ID` | from the IDL | Program address |
 | `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
+| `NUXT_PUBLIC_I18N_BASE_URL` | empty | The same URL again, for the hreflang and canonical links of every language |
 | `NUXT_PUBLIC_TWITTER_URL`, `NUXT_PUBLIC_DISCORD_URL` | empty | Footer links, hidden when empty |
 
 **Scripts** (`admin`, `crank`, `monitor`, `localnet`, `e2e`):
@@ -161,6 +162,20 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `SOLANA_KEYPAIR_JSON` | — | The keypair's byte array, for CI secrets |
 | `SOLUCKY_PROGRAM_ID` | from the IDL | Program address |
 | `ALERT_WEBHOOK_URL` | — | `monitor` only: Slack or Discord webhook for alerts |
+
+## Languages
+
+English, Español, Français, Deutsch, Italiano, Português (Brasil), Nederlands, Türkçe, Русский, Українська, العربية, עברית, हिन्दी, ไทย, Tiếng Việt, Bahasa Indonesia, 简体中文, 繁體中文, 日本語 and 한국어: the same twenty as [beenzer.xyz](https://beenzer.xyz).
+
+- **The list** is [`app/i18n/languages.ts`](app/i18n/languages.ts): each language's path code, its `lang` tag, its name in itself, its direction, and the plural forms its messages give. `nuxt.config.ts` reads it for [@nuxtjs/i18n](https://i18n.nuxtjs.org).
+- **The words** are in `app/i18n/locales/`, one file per language. `en.ts` is the source and defines the type every other file must match. `bun run test:js` checks that every dictionary has the same keys and the same `{placeholders}` as English, the right number of plural forms, and valid message syntax, and that it is really translated. Messages follow vue-i18n: `{name}` is a value the page fills in (sometimes a link or bold text, rendered with `<i18n-t>`), and ` | ` separates plural forms. The legal pages are translated too, and each translation says the English version applies.
+- **Pages** exist in every language: English at the root (`/play`), the others under their code (`/fr/play`, `/ar/play`, `/zh-cn/play`). Each page has `hreflang` alternates and its own `og:locale`; set `NUXT_PUBLIC_I18N_BASE_URL` so they are absolute.
+- **Right to left:** Arabic and Hebrew set `dir="rtl"`, and Nuxt UI's components follow. Layout uses logical properties (`ps-`, `ms-`, `text-end`), arrows along the line of reading flip, and the parts that are clocks or numbers stay left to right: the solar dial, the day bar, the countdown, the reels, the keypad, the pot chart, addresses.
+- **Type:** Space Grotesk and JetBrains Mono cover Latin and Vietnamese. Cyrillic, Arabic, Hebrew, Devanagari, Thai, Chinese, Japanese and Korean use the faces their systems ship, so nothing is downloaded from anyone else; those scripts drop the Latin letter-spacing (`main.css`).
+- **Numbers:** lottery numbers and SOL amounts look the same in every language (`1 000 000 000`, `◎0.1`). Dollars, percentages, durations, dates and country names follow the page's language through `Intl`, with Western digits in Arabic and the Gregorian calendar in Thai. Program errors are translated from their codes (`app/utils/errors.ts`).
+- **Choosing:** the globe in the header lists every language in its own name, and the footer links them all. Nothing redirects and no cookie is set: a visitor whose browser prefers another of the languages is offered it once, in that language (`AppLangSuggest.vue`), and the choice is kept in local storage (`solucky:lang`, listed on the Cookies & storage page).
+
+To add a language: add it to `LOCALES` with its plural forms, copy `en.ts` to `<code>.ts` and translate it (keep the keys, `{placeholders}` and plural forms), add its Nuxt UI locale in `app/app/app.vue` and its offer in `app/i18n/suggest.ts`. To change copy, change `en.ts` and every other dictionary with it.
 
 ## Program reference
 

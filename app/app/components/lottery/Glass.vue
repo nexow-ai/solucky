@@ -185,7 +185,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
 }
 
 /* Day mode: frosted white glass over the same table. */
-:global(:root:not(.dark)) .glass {
+:root:not(.dark) .glass {
   background:
     linear-gradient(
       165deg,

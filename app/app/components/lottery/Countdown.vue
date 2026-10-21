@@ -5,28 +5,32 @@
  * in words, once a minute, rather than every second.
  */
 const props = defineProps<{ ms: number; size?: 'md' | 'lg' }>();
+const { t } = useI18n();
+const intl = useIntlLocale();
 
 const total = computed(() => Math.max(0, Math.floor(props.ms / 1000)));
 const parts = computed(() => {
   const pad = (n: number) => String(n).padStart(2, '0');
   return [
-    { label: 'h', value: pad(Math.floor(total.value / 3600)) },
-    { label: 'm', value: pad(Math.floor((total.value % 3600) / 60)) },
-    { label: 's', value: pad(total.value % 60) },
+    { key: 'h', label: t('countdown.h'), value: pad(Math.floor(total.value / 3600)) },
+    { key: 'm', label: t('countdown.m'), value: pad(Math.floor((total.value % 3600) / 60)) },
+    { key: 's', label: t('countdown.s'), value: pad(total.value % 60) },
   ];
 });
 const mood = computed(() => (total.value < 600 ? 'final' : total.value < 3600 ? 'warm' : 'calm'));
 const spoken = computed(() => {
   const h = Math.floor(total.value / 3600);
   const m = Math.floor((total.value % 3600) / 60);
-  return `${h} hours ${m} minutes left`;
+  const time = `${formatUnit(h, 'hour', intl.value, 'long')} ${formatUnit(m, 'minute', intl.value, 'long')}`;
+  return t('countdown.left', { time });
 });
 </script>
 
 <template>
-  <div class="countdown" :class="[`mood-${mood}`, props.size === 'lg' ? 'text-4xl' : 'text-2xl']">
+  <!-- Hours, minutes, seconds: read left to right in every language. -->
+  <div class="countdown" :class="[`mood-${mood}`, props.size === 'lg' ? 'text-4xl' : 'text-2xl']" dir="ltr">
     <span class="sr-only">{{ spoken }}</span>
-    <template v-for="(part, i) in parts" :key="part.label">
+    <template v-for="(part, i) in parts" :key="part.key">
       <span v-if="i" class="colon" aria-hidden="true">:</span>
       <span class="segment" aria-hidden="true">
         <span class="led font-mono font-semibold tabular-nums [--led-pitch:0.085em]">{{ part.value }}</span>

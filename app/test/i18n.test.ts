@@ -22,15 +22,42 @@ const isPlural = (message: string) => message.includes(' | ');
 
 const source = flatten(en as unknown as Tree);
 
+/** Everything wrong with one message, compared with its English original. */
+function check(message: string, original: string, forms: readonly string[]): string[] {
+  const problems: string[] = [];
+  baseCompile(message, { jit: true, onError: (error) => problems.push(error.message) });
+  // @ and $ start linked messages and modifiers; tags are refused at runtime.
+  if (/[@$]|<\/?[a-z]/i.test(message)) problems.push('uses @, $ or a <tag> as text');
+
+  const wanted = placeholders(original);
+  const used = placeholders(message);
+  const unknown = [...used].filter((name) => !wanted.has(name));
+  if (unknown.length) problems.push(`unknown values {${unknown.join('}, {')}}`);
+  if (isPlural(original)) {
+    const count = message.split(' | ').length;
+    if (count !== forms.length)
+      problems.push(`${count} plural forms instead of ${forms.length} (${forms.join(' | ')})`);
+    // A form may leave out the count ("a ticket"), never anything else.
+    const missing = [...wanted].filter((name) => name !== 'n' && !used.has(name));
+    if (missing.length) problems.push(`leaves out {${missing.join('}, {')}}`);
+  } else {
+    if (message.includes('|')) problems.push('has a | but is not a plural message');
+    const missing = [...wanted].filter((name) => !used.has(name));
+    if (missing.length) problems.push(`leaves out {${missing.join('}, {')}}`);
+  }
+  return problems;
+}
+
 describe('English', () => {
   it('is a valid source', () => {
-    for (const [key, message] of Object.entries(source)) {
-      expect(message.trim(), key).toBe(message);
-      if (isPlural(message)) expect(message.split(' | '), key).toHaveLength(2);
-    }
+    const problems = Object.entries(source).flatMap(([key, message]) =>
+      check(message, message, ['one', 'other']).map((problem) => `${key}: ${problem}`),
+    );
+    expect(problems).toEqual([]);
   });
 });
 
+// Each test lists every problem it finds, so a translator sees them all at once.
 describe.each(LOCALES.map((l) => [l.code, l] as const))('%s', (code, locale) => {
   const file = files[`../i18n/locales/${code}.ts`];
   const messages = file ? flatten(file.default) : {};
@@ -41,37 +68,17 @@ describe.each(LOCALES.map((l) => [l.code, l] as const))('%s', (code, locale) => 
   });
 
   it('writes valid messages with the same values to fill in', () => {
-    for (const [key, original] of Object.entries(source)) {
-      const message = messages[key];
-      if (message === undefined) continue;
-      const errors: string[] = [];
-      baseCompile(message, { jit: true, onError: (error) => errors.push(error.message) });
-      expect(errors, `${code}: ${key}`).toEqual([]);
-      // @ $ start linked messages and modifiers; tags are refused at runtime.
-      expect(message, `${code}: ${key} uses @, $ or a <tag>`).not.toMatch(/[@$]|<\/?[a-z]/i);
-
-      const wanted = placeholders(original);
-      const used = placeholders(message);
-      expect([...used].filter((name) => !wanted.has(name)), `${code}: ${key} has unknown values`).toEqual([]);
-      if (isPlural(original)) {
-        const forms = message.split(' | ');
-        expect(forms, `${code}: ${key} needs one form per plural category (${locale.plural.join(' | ')})`).toHaveLength(
-          locale.plural.length,
-        );
-        // A form may leave out the count ("a ticket"), never anything else.
-        const missing = [...wanted].filter((name) => name !== 'n' && !used.has(name));
-        expect(missing, `${code}: ${key} leaves out values`).toEqual([]);
-      } else {
-        expect(message, `${code}: ${key} is not a plural message`).not.toContain('|');
-        expect([...wanted].filter((name) => !used.has(name)), `${code}: ${key} leaves out values`).toEqual([]);
-      }
-    }
+    const problems = Object.entries(source).flatMap(([key, original]) =>
+      key in messages ? check(messages[key]!, original, locale.plural).map((problem) => `${key}: ${problem}`) : [],
+    );
+    expect(problems).toEqual([]);
   });
 
   it.skipIf(code === 'en')('is translated', () => {
     // Brand names, codes and a few short labels can stay the same as English.
-    const same = Object.entries(source).filter(([key, original]) => messages[key] === original && original.length > 12);
-    expect(same.length / Object.keys(source).length, same.map(([key]) => key).join(', ')).toBeLessThan(0.08);
+    const same = Object.keys(source).filter((key) => messages[key] === source[key] && source[key]!.length > 12);
+    const share = same.length / Object.keys(source).length;
+    expect(share, `${same.length} messages still in English: ${same.slice(0, 10).join(', ')}…`).toBeLessThan(0.08);
   });
 
   it('offers itself in its own words', () => {

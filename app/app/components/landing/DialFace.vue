@@ -4,9 +4,20 @@
  * the rings tickets sit on. Rendered on the server, so the dial is in place
  * before `LandingDialLive` loads the day's data on top of it.
  */
-const BEZEL =
-  'S☉LUCKY · ONE DRAW A DAY · DRAWN AFTER MIDNIGHT UTC · EVERY TICKET ON SOLANA · ' +
-  'S☉LUCKY · ONE DRAW A DAY · DRAWN AFTER MIDNIGHT UTC · EVERY TICKET ON SOLANA · ';
+const { t, locale } = useI18n();
+
+/** Columns a character takes in the monospace bezel: CJK and Hangul are twice as wide. */
+const width = (text: string) =>
+  [...text].reduce(
+    (sum, char) => sum + (/[\u1100-\u11ff\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\uff00-\uff60]/.test(char) ? 2 : 1),
+    0,
+  );
+
+// The motto, repeated to fill the ring about as densely in every language.
+const bezel = computed(() => {
+  const motto = `S☉LUCKY · ${t('dial.bezel').toLocaleUpperCase(locale.value)} · `;
+  return motto.repeat(Math.max(1, Math.round(152 / width(motto))));
+});
 
 // One tick every 15 minutes, longer on the hour.
 const ticks = Array.from({ length: 96 }, (_, i) => {
@@ -18,10 +29,13 @@ const ticks = Array.from({ length: 96 }, (_, i) => {
 });
 
 // Hour labels every three hours; midnight is marked as the draw.
-const labels = Array.from({ length: 8 }, (_, i) => {
-  const angle = -Math.PI / 2 + (i / 8) * 2 * Math.PI;
-  return { key: i, text: i === 0 ? 'DRAW' : String(i * 3).padStart(2, '0'), ...dialPoint(angle, DIAL.labels) };
-});
+const labels = computed(() =>
+  Array.from({ length: 8 }, (_, i) => {
+    const angle = -Math.PI / 2 + (i / 8) * 2 * Math.PI;
+    const text = i === 0 ? t('dial.draw').toLocaleUpperCase(locale.value) : String(i * 3).padStart(2, '0');
+    return { key: i, text, ...dialPoint(angle, DIAL.labels) };
+  }),
+);
 
 const spokes = Array.from({ length: 8 }, (_, i) => {
   const angle = -Math.PI / 2 + (i / 8) * 2 * Math.PI;
@@ -33,7 +47,8 @@ const circle = (r: number) => `M 0 ${-r} a ${r} ${r} 0 1 1 0 ${2 * r} a ${r} ${r
 </script>
 
 <template>
-  <div aria-hidden="true" class="pointer-events-none absolute inset-0 select-none">
+  <!-- A clock face: it turns the same way in every language. -->
+  <div aria-hidden="true" dir="ltr" class="pointer-events-none absolute inset-0 select-none">
     <svg viewBox="-300 -300 600 600" class="absolute inset-0 size-full">
       <circle :r="DIAL.bezel" class="fill-(--ui-bg)/70 stroke-(--ui-border)" stroke-width="1" />
       <circle :r="DIAL.ring + 8" class="fill-none stroke-(--ui-border)" stroke-width="1" />
@@ -89,7 +104,7 @@ const circle = (r: number) => `M 0 ${-r} a ${r} ${r} 0 1 1 0 ${2 * r} a ${r} ${r
       <path id="dial-bezel" :d="circle(DIAL.bezelText)" fill="none" />
       <text class="fill-(--ui-text-dimmed) font-mono text-[11px] font-semibold">
         <textPath href="#dial-bezel" :textLength="2 * Math.PI * DIAL.bezelText - 4" lengthAdjust="spacing">
-          {{ BEZEL }}
+          {{ bezel }}
         </textPath>
       </text>
     </svg>

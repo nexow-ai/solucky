@@ -1,7 +1,18 @@
 import { generateKeyPairSync } from 'node:crypto';
 
 import type { Page } from '@playwright/test';
-import { getAddressDecoder } from '@solana/kit';
+import {
+  compileTransaction,
+  createKeyPairFromPrivateKeyBytes,
+  decompileTransactionMessage,
+  getAddressDecoder,
+  getBase58Encoder,
+  getBase64EncodedWireTransaction,
+  getCompiledTransactionMessageDecoder,
+  getTransactionDecoder,
+  setTransactionMessageComputeUnitPrice,
+  signTransaction,
+} from '@solana/kit';
 
 const RPC_URL = process.env.SOLANA_RPC_URL || 'http://127.0.0.1:8899';
 const DAY_MS = 86_400_000;
@@ -58,88 +69,132 @@ export function createTestWallet(): TestWallet {
 }
 
 /**
+ * What Phantom does in `signAndSendTransaction`: add its own priority fee, then
+ * sign and submit with preflight. A transaction without compute headroom fails here.
+ */
+async function signAndSendLikePhantom(wallet: TestWallet, wire: number[]): Promise<number[]> {
+  const { messageBytes } = getTransactionDecoder().decode(Uint8Array.from(wire));
+  const message = decompileTransactionMessage(getCompiledTransactionMessageDecoder().decode(messageBytes));
+  const transaction = compileTransaction(setTransactionMessageComputeUnitPrice(50_000n, message));
+  const keyPair = await createKeyPairFromPrivateKeyBytes(Buffer.from(wallet.jwk.d!, 'base64url'));
+  const signed = await signTransaction([keyPair], transaction);
+  const signature = await rpc<string>('sendTransaction', [
+    getBase64EncodedWireTransaction(signed),
+    { encoding: 'base64', preflightCommitment: 'confirmed' },
+  ]);
+  return [...getBase58Encoder().encode(signature)];
+}
+
+/**
  * Registers `wallet` in the page as a Wallet Standard wallet that signs every
  * transaction it is asked to, like a real extension would after approval.
+ * With `signAndSend`, it also sends transactions itself the way Phantom does.
  */
-export async function installTestWallet(page: Page, wallet: TestWallet): Promise<void> {
-  await page.addInitScript(({ address, jwk }) => {
-    const base64url = (value: string) =>
-      Uint8Array.from(atob(value.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
-    const key = crypto.subtle.importKey('jwk', jwk, { name: 'Ed25519' }, false, ['sign']);
-    const account = {
-      address,
-      publicKey: base64url(jwk.x!),
-      chains: ['solana:localnet'],
-      features: ['solana:signTransaction'],
-      label: 'Test',
-    };
-    const listeners = new Set<(event: { accounts: (typeof account)[] }) => void>();
-    const shortvec = (bytes: Uint8Array) => {
-      let value = 0;
-      let size = 0;
-      for (;;) {
-        const byte = bytes[size]!;
-        value |= (byte & 0x7f) << (7 * size);
-        size++;
-        if (!(byte & 0x80)) return [value, size] as const;
-      }
-    };
-    const icon = `data:image/svg+xml,${encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#a21caf"/></svg>',
-    )}`;
-    const wallet = {
-      version: '1.0.0',
-      name: 'Test Wallet',
-      icon,
-      chains: ['solana:localnet'],
-      accounts: [] as (typeof account)[],
-      features: {
-        'standard:connect': {
-          version: '1.0.0',
-          connect: async () => {
-            wallet.accounts = [account];
-            listeners.forEach((listener) => listener({ accounts: wallet.accounts }));
-            return { accounts: wallet.accounts };
+export async function installTestWallet(
+  page: Page,
+  wallet: TestWallet,
+  { signAndSend = false }: { signAndSend?: boolean } = {},
+): Promise<void> {
+  if (signAndSend)
+    await page.exposeFunction('__testWalletSignAndSend', (wire: number[]) => signAndSendLikePhantom(wallet, wire));
+  await page.addInitScript(
+    ({ address, jwk, signAndSend }) => {
+      const base64url = (value: string) =>
+        Uint8Array.from(atob(value.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
+      const key = crypto.subtle.importKey('jwk', jwk, { name: 'Ed25519' }, false, ['sign']);
+      const account = {
+        address,
+        publicKey: base64url(jwk.x!),
+        chains: ['solana:localnet'],
+        features: signAndSend
+          ? ['solana:signTransaction', 'solana:signAndSendTransaction']
+          : ['solana:signTransaction'],
+        label: 'Test',
+      };
+      const listeners = new Set<(event: { accounts: (typeof account)[] }) => void>();
+      const shortvec = (bytes: Uint8Array) => {
+        let value = 0;
+        let size = 0;
+        for (;;) {
+          const byte = bytes[size]!;
+          value |= (byte & 0x7f) << (7 * size);
+          size++;
+          if (!(byte & 0x80)) return [value, size] as const;
+        }
+      };
+      const icon = `data:image/svg+xml,${encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#a21caf"/></svg>',
+      )}`;
+      const wallet = {
+        version: '1.0.0',
+        name: 'Test Wallet',
+        icon,
+        chains: ['solana:localnet'],
+        accounts: [] as (typeof account)[],
+        features: {
+          'standard:connect': {
+            version: '1.0.0',
+            connect: async () => {
+              wallet.accounts = [account];
+              listeners.forEach((listener) => listener({ accounts: wallet.accounts }));
+              return { accounts: wallet.accounts };
+            },
           },
-        },
-        'standard:disconnect': {
-          version: '1.0.0',
-          disconnect: async () => {
-            wallet.accounts = [];
-            listeners.forEach((listener) => listener({ accounts: [] }));
+          'standard:disconnect': {
+            version: '1.0.0',
+            disconnect: async () => {
+              wallet.accounts = [];
+              listeners.forEach((listener) => listener({ accounts: [] }));
+            },
           },
-        },
-        'standard:events': {
-          version: '1.0.0',
-          on: (_event: string, listener: (event: { accounts: (typeof account)[] }) => void) => {
-            listeners.add(listener);
-            return () => listeners.delete(listener);
+          'standard:events': {
+            version: '1.0.0',
+            on: (_event: string, listener: (event: { accounts: (typeof account)[] }) => void) => {
+              listeners.add(listener);
+              return () => listeners.delete(listener);
+            },
           },
+          'solana:signTransaction': {
+            version: '1.0.0',
+            supportedTransactionVersions: ['legacy', 0],
+            signTransaction: (...inputs: { transaction: Uint8Array }[]) =>
+              Promise.all(
+                inputs.map(async ({ transaction }) => {
+                  // Wire format: shortvec signature count, signatures, then the message.
+                  const signed = new Uint8Array(transaction);
+                  const [count, size] = shortvec(signed);
+                  const message = signed.slice(size + 64 * count);
+                  const signature = await crypto.subtle.sign({ name: 'Ed25519' }, await key, message);
+                  signed.set(new Uint8Array(signature), size);
+                  return { signedTransaction: signed };
+                }),
+              ),
+          },
+          ...(signAndSend && {
+            'solana:signAndSendTransaction': {
+              version: '1.0.0',
+              supportedTransactionVersions: ['legacy', 0],
+              signAndSendTransaction: (...inputs: { transaction: Uint8Array }[]) =>
+                Promise.all(
+                  inputs.map(async ({ transaction }) => {
+                    const send = (
+                      window as unknown as { __testWalletSignAndSend: (wire: number[]) => Promise<number[]> }
+                    ).__testWalletSignAndSend;
+                    return { signature: Uint8Array.from(await send([...transaction])) };
+                  }),
+                ),
+            },
+          }),
         },
-        'solana:signTransaction': {
-          version: '1.0.0',
-          supportedTransactionVersions: ['legacy', 0],
-          signTransaction: (...inputs: { transaction: Uint8Array }[]) =>
-            Promise.all(
-              inputs.map(async ({ transaction }) => {
-                // Wire format: shortvec signature count, signatures, then the message.
-                const signed = new Uint8Array(transaction);
-                const [count, size] = shortvec(signed);
-                const message = signed.slice(size + 64 * count);
-                const signature = await crypto.subtle.sign({ name: 'Ed25519' }, await key, message);
-                signed.set(new Uint8Array(signature), size);
-                return { signedTransaction: signed };
-              }),
-            ),
-        },
-      },
-    };
-    const register = (api: { register: (w: typeof wallet) => void }) => api.register(wallet);
-    window.addEventListener('wallet-standard:app-ready', (event) =>
-      register((event as CustomEvent<{ register: (w: typeof wallet) => void }>).detail),
-    );
-    window.dispatchEvent(new CustomEvent('wallet-standard:register-wallet', { detail: register }));
-  }, wallet);
+      };
+      const register = (api: { register: (w: typeof wallet) => void }) => api.register(wallet);
+      window.addEventListener('wallet-standard:app-ready', (event) =>
+        register((event as CustomEvent<{ register: (w: typeof wallet) => void }>).detail),
+      );
+      window.dispatchEvent(new CustomEvent('wallet-standard:register-wallet', { detail: register }));
+    },
+    { ...wallet, signAndSend },
+  );
 }
 
 /** Records Content Security Policy violations and uncaught errors on the page. */

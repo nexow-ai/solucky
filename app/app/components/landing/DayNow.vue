@@ -1,5 +1,6 @@
 <script setup lang="ts">
 /** The current time on the landing's day bar, from the cluster's clock. */
+const { t } = useI18n();
 const now = useNow();
 const progress = computed(() => dayProgress(now.value));
 const time = computed(() => new Date(now.value).toISOString().slice(11, 16));
@@ -11,7 +12,7 @@ const time = computed(() => new Date(now.value).toISOString().slice(11, 16));
     <span
       class="absolute top-4 left-1/2 -translate-x-1/2 font-mono text-[0.65rem] font-semibold whitespace-nowrap text-secondary"
     >
-      NOW {{ time }} UTC
+      <span class="uppercase">{{ t('home.how.now') }}</span> {{ time }} UTC
     </span>
   </div>
 </template>

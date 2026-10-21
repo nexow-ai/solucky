@@ -85,7 +85,8 @@
   width: min(118vh, 96vw);
   aspect-ratio: 1;
   translate: -50% -50%;
-  opacity: 0.5;
+  opacity: 0.32;
+  filter: blur(1px);
 }
 
 .wheel-ring {
@@ -97,7 +98,8 @@
     color-mix(in oklab, var(--ui-primary) 55%, transparent) 0deg 4.86deg,
     transparent 4.86deg 9.73deg
   );
-  mask: radial-gradient(circle, transparent 58%, #000 59%, #000 66%, transparent 67%);
+  mask: radial-gradient(circle, transparent 61.5%, #000 62%, #000 64.5%, transparent 65%);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 30%, transparent);
   animation: spin 120s linear infinite;
 }
 
@@ -190,7 +192,7 @@
   );
 }
 
-:global(:root:not(.dark)) .floor {
+:root:not(.dark) .floor {
   opacity: 0.45;
 }
 

@@ -42,6 +42,7 @@ export function useLottery() {
   const { address: wallet, refreshBalance } = useWallet();
   const { run } = useTransaction();
   const toast = useToast();
+  const { t } = useI18n();
 
   async function loadConfig() {
     const [address] = await findConfigPda({ programAddress });
@@ -70,7 +71,7 @@ export function useLottery() {
       await Promise.all([loadConfig(), loadToday(), loadHistory()]);
       error.value = null;
     } catch (cause) {
-      error.value = `Could not reach the Solana RPC endpoint (${friendlyError(cause)})`;
+      error.value = t('play.rpcError', { reason: friendlyError(cause, t) });
     } finally {
       loading.value = false;
     }
@@ -154,7 +155,7 @@ export function useLottery() {
     busy.value = true;
     try {
       const signature = await run(
-        `Buying number ${formatNumber(number)}`,
+        t('tx.buying', { number: formatNumber(number) }),
         () =>
           client.solucky.instructions
             .buyTicket({
@@ -165,7 +166,7 @@ export function useLottery() {
               maxPrice: price,
             })
             .sendTransaction(),
-        `Number ${formatNumber(number)} is yours. Good luck!`,
+        t('tx.bought', { number: formatNumber(number) }),
       );
       await after();
       return signature;
@@ -181,7 +182,7 @@ export function useLottery() {
       if (current > slot) return current;
       await new Promise((resolve) => setTimeout(resolve, 1_000));
     }
-    throw new Error('The cluster is slow to reach the draw slot. Try again in a minute.');
+    throw new Error(t('tx.slowSlot'));
   }
 
   /** Takes a finished round to the end: close, draw and pay the winner, as needed. */
@@ -199,7 +200,7 @@ export function useLottery() {
       if (current.data.status === RoundStatus.Closed) {
         if (await isPinnedSlotExpired(client.rpc, current.data.targetSlot)) {
           if (
-            !(await run(`Re-pinning the draw slot for ${label}`, () =>
+            !(await run(t('tx.repin', { day: label }), () =>
               ix.closeRound({ round: current.address }).sendTransaction(),
             ))
           )
@@ -208,28 +209,41 @@ export function useLottery() {
         }
       }
       if (current.data.status === RoundStatus.Open) {
-        if (!(await run(`Closing ${label}`, () => ix.closeRound({ round: current.address }).sendTransaction()))) return;
+        if (
+          !(await run(t('tx.closing', { day: label }), () =>
+            ix.closeRound({ round: current.address }).sendTransaction(),
+          ))
+        )
+          return;
         await reload();
       }
       if (current.data.status === RoundStatus.Closed) {
         await waitForSlot(current.data.targetSlot);
-        if (!(await run(`Drawing ${label}`, () => ix.drawRound({ round: current.address }).sendTransaction()))) return;
+        if (
+          !(await run(t('tx.drawing', { day: label }), () =>
+            ix.drawRound({ round: current.address }).sendTransaction(),
+          ))
+        )
+          return;
         await reload();
       }
       if (current.data.status === RoundStatus.Drawn) {
         const winner = await fetchTicketByIndex(client.rpc, current.address, current.data.winningIndex, programAddress);
-        if (!winner) throw new Error('The winning ticket could not be found.');
+        if (!winner) throw new Error(t('tx.noWinner'));
         await run(
-          `Paying the ${label} winner`,
+          t('tx.paying', { day: label }),
           () =>
             ix
               .claimPrize({ round: current.address, ticket: winner.address, owner: winner.data.owner })
               .sendTransaction(),
-          `Paid ◎${formatSol(current.data.pot - feeFor(current.data.pot, current.data.feeBps))} to the ${label} winner`,
+          t('tx.paid', {
+            amount: formatSol(current.data.pot - feeFor(current.data.pot, current.data.feeBps)),
+            day: label,
+          }),
         );
       }
     } catch (cause) {
-      toast.add({ title: `Could not settle ${label}`, description: friendlyError(cause), color: 'error' });
+      toast.add({ title: t('tx.settleFailed', { day: label }), description: friendlyError(cause, t), color: 'error' });
     } finally {
       busy.value = false;
       await after();
@@ -258,7 +272,7 @@ export function useLottery() {
               { programAddress },
             ),
           );
-        if (!(await run('Returning ticket rent', () => client.sendTransaction(batch)))) break;
+        if (!(await run(t('tx.reclaiming'), () => client.sendTransaction(batch)))) break;
       }
     } finally {
       busy.value = false;

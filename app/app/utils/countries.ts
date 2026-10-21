@@ -12,13 +12,17 @@ const CODES =
 
 export const COUNTRY_CODES: readonly string[] = CODES.split(' ');
 
-let names: Intl.DisplayNames | undefined;
+const names = new Map<string, Intl.DisplayNames>();
 
-/** `'ES'` → `'Spain'`; `null` → `'Private'`. */
-export function countryName(code: string | null): string {
-  if (!code) return 'Private';
-  names ??= new Intl.DisplayNames(['en'], { type: 'region' });
-  return names.of(code) ?? code;
+/** `'ES'` → `'Spain'` (`'España'` in Spanish); `null` → `privateLabel`. */
+export function countryName(code: string | null, locale = 'en', privateLabel = 'Private'): string {
+  if (!code) return privateLabel;
+  let display = names.get(locale);
+  if (!display) {
+    display = new Intl.DisplayNames([locale], { type: 'region' });
+    names.set(locale, display);
+  }
+  return display.of(code) ?? code;
 }
 
 export interface CountryOption {
@@ -27,9 +31,14 @@ export interface CountryOption {
   flag: string;
 }
 
-/** Options for the country picker, private first, then by name. */
-export function countryOptions(): CountryOption[] {
-  const countries = COUNTRY_CODES.map((code) => ({ value: code, label: countryName(code), flag: flagEmoji(code) }));
-  countries.sort((a, b) => a.label.localeCompare(b.label));
-  return [{ value: null, label: 'Private', flag: flagEmoji(null) }, ...countries];
+/** Options for the country picker, private first, then by name in the page's language. */
+export function countryOptions(locale = 'en', privateLabel = 'Private'): CountryOption[] {
+  const countries = COUNTRY_CODES.map((code) => ({
+    value: code,
+    label: countryName(code, locale),
+    flag: flagEmoji(code),
+  }));
+  const collator = new Intl.Collator(locale);
+  countries.sort((a, b) => collator.compare(a.label, b.label));
+  return [{ value: null, label: privateLabel, flag: flagEmoji(null) }, ...countries];
 }

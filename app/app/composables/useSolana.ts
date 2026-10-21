@@ -24,26 +24,35 @@ function createSoluckyClient(options: {
   rpcWsUrl?: string;
   programAddress: Address;
 }) {
-  return createClient()
-    .use(walletSigner({ chain: `solana:${options.cluster}`, storageKey: 'solucky:wallet' }))
-    .use(
-      solanaRpc({
-        rpcUrl: options.rpcUrl,
-        rpcSubscriptionsUrl: options.rpcWsUrl || undefined,
-        // Kit plans version 1 transactions by default; most wallets only sign
-        // legacy and version 0 ones, so stay on version 0.
-        transactionConfig: { version: 0 },
-      }),
-    )
-    // Phantom and similar wallets are more reliable when they sign and send
-    // themselves than when the app asks them only to sign.
-    .use(walletAwareSend())
-    .use(soluckyProgram({ programAddress: options.programAddress }));
+  return (
+    createClient()
+      .use(walletSigner({ chain: `solana:${options.cluster}`, storageKey: 'solucky:wallet' }))
+      .use(
+        solanaRpc({
+          rpcUrl: options.rpcUrl,
+          rpcSubscriptionsUrl: options.rpcWsUrl || undefined,
+          // Kit plans version 1 transactions by default; most wallets only sign
+          // legacy and version 0 ones, so stay on version 0.
+          transactionConfig: { version: 0 },
+        }),
+      )
+      // Phantom and similar wallets are more reliable when they sign and send
+      // themselves than when the app asks them only to sign.
+      .use(walletAwareSend())
+      .use(soluckyProgram({ programAddress: options.programAddress }))
+  );
 }
 
 export type SoluckyClient = ReturnType<typeof createSoluckyClient>;
 
 let client: SoluckyClient | undefined;
+
+if (import.meta.hot) {
+  // Drop the singleton on HMR so plugin changes (wallet send path, etc.) apply.
+  import.meta.hot.dispose(() => {
+    client = undefined;
+  });
+}
 
 /** The Solana client shared by the whole app, with the wallet and the program plugin. */
 export function useSolana() {

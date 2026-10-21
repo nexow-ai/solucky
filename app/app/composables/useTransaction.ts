@@ -1,10 +1,13 @@
+import { ensureWalletCluster } from '../utils/ensureCluster';
+
 /**
  * Runs a transaction with progress, success and error toasts.
  * Returns the signature, or `null` when it failed or was cancelled.
  */
 export function useTransaction() {
   const toast = useToast();
-  const { explorer } = useSolana();
+  const { t } = useI18n();
+  const { explorer, cluster } = useSolana();
 
   async function run(
     label: string,
@@ -13,7 +16,7 @@ export function useTransaction() {
   ): Promise<string | null> {
     const pending = toast.add({
       title: label,
-      description: 'Confirm in your wallet…',
+      description: t('tx.confirm'),
       icon: 'i-lucide-loader-circle',
       color: 'neutral',
       duration: 0,
@@ -21,9 +24,10 @@ export function useTransaction() {
       ui: { icon: 'animate-spin' },
     });
     try {
+      await ensureWalletCluster(cluster);
       const { context } = await send();
       toast.update(pending.id, {
-        title: success ?? `${label}: done`,
+        title: success ?? t('tx.done', { label }),
         description: undefined,
         icon: 'i-lucide-circle-check',
         color: 'success',
@@ -32,7 +36,7 @@ export function useTransaction() {
         ui: { icon: '' },
         actions: [
           {
-            label: 'View transaction',
+            label: t('tx.view'),
             icon: 'i-lucide-external-link',
             color: 'neutral',
             variant: 'outline',
@@ -44,8 +48,8 @@ export function useTransaction() {
       return context.signature;
     } catch (error) {
       toast.update(pending.id, {
-        title: isUserRejection(error) ? `${label}: cancelled` : `${label} failed`,
-        description: friendlyError(error),
+        title: isUserRejection(error) ? t('tx.cancelled', { label }) : t('tx.failed', { label }),
+        description: friendlyError(error, t),
         icon: isUserRejection(error) ? 'i-lucide-circle-x' : 'i-lucide-triangle-alert',
         color: isUserRejection(error) ? 'neutral' : 'error',
         duration: 8_000,

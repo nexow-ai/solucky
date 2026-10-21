@@ -6,6 +6,8 @@ import { countryFromBytes, flagEmoji, formatDay, msUntilClose } from '@solucky/c
  * share of the round already gone, and today's tickets, each placed by the
  * time it was bought (around) and its number (outwards). Sits on `LandingDialFace`.
  */
+const { t } = useI18n();
+const intl = useIntlLocale();
 const { today, tickets, pot, config, loading } = useLottery();
 const { address } = useWallet();
 const { flare } = useSolarFlares();
@@ -64,7 +66,7 @@ const countdown = computed(() => {
 </script>
 
 <template>
-  <div class="absolute inset-0">
+  <div class="absolute inset-0" dir="ltr">
     <svg viewBox="-300 -300 600 600" class="pointer-events-none absolute inset-0 size-full" aria-hidden="true">
       <defs>
         <linearGradient id="dial-arc" x1="0" y1="-1" x2="0" y2="1" gradientUnits="objectBoundingBox">
@@ -97,7 +99,7 @@ const countdown = computed(() => {
       viewBox="-300 -300 600 600"
       class="absolute inset-0 size-full"
       role="img"
-      :aria-label="`${dots.length} tickets today`"
+      :aria-label="t('dial.tickets', { n: dots.length }, dots.length)"
     >
       <g v-for="(dot, index) in dots" :key="dot.key">
         <title>{{ dot.title }}</title>
@@ -140,7 +142,7 @@ const countdown = computed(() => {
 
     <!-- The pot, in the middle of the sun. -->
     <div class="absolute inset-[28%] flex flex-col items-center justify-center text-center">
-      <p class="kicker text-[0.6rem]">Today's pot</p>
+      <p class="kicker text-[0.6rem]">{{ t('dial.pot') }}</p>
       <USkeleton v-if="loading" class="mt-2 h-8 w-28" />
       <p v-else :key="bumps" class="glow-primary mt-1.5 motion-safe:animate-bump">
         <span
@@ -149,13 +151,13 @@ const countdown = computed(() => {
           ◎{{ formatSol(pot, 3) }}
         </span>
       </p>
-      <p class="mt-1.5 font-mono text-[0.7rem] text-muted tabular-nums">{{ formatUsd(pot, price) }}</p>
+      <p class="mt-1.5 font-mono text-[0.7rem] text-muted tabular-nums">{{ formatUsd(pot, price, intl) }}</p>
       <p
         class="led mt-3 font-mono text-[min(1.7rem,5cqw)] leading-none font-extrabold text-primary tabular-nums [--led-pitch:0.1em]"
       >
         {{ countdown }}
       </p>
-      <p class="kicker mt-1 text-[0.6rem] text-secondary">to the draw · {{ formatDay(today) }}</p>
+      <p class="kicker mt-1 text-[0.6rem] text-secondary">{{ t('dial.toDraw', { day: formatDay(today) }) }}</p>
     </div>
   </div>
 </template>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { flagEmoji, getTicketSize, msUntilClose } from '@solucky/client';
 
+const { t } = useI18n();
+const intl = useIntlLocale();
 const lottery = useLottery();
 const { today, prize, myTickets, tickets, ticketPrice, takenNumbers, config, configMissing, busy } = lottery;
 const { connected, balance } = useWallet();
@@ -32,10 +34,11 @@ const notEnoughSol = computed(
 const paused = computed(() => config.value?.data.paused ?? false);
 
 const buyLabel = computed(() => {
-  if (taken.value) return `${formatNumber(number.value)} is taken today`;
-  if (tooBig.value) return 'Number out of range';
-  if (notEnoughSol.value) return 'Not enough SOL';
-  return `Buy ${formatNumber(number.value)} for ◎${ticketPrice.value === null ? '…' : formatSol(ticketPrice.value)}`;
+  if (taken.value) return t('pick.takenToday', { number: formatNumber(number.value) });
+  if (tooBig.value) return t('pick.outOfRange');
+  if (notEnoughSol.value) return t('pick.notEnough');
+  const price = ticketPrice.value === null ? '…' : formatSol(ticketPrice.value);
+  return t('pick.buy', { number: formatNumber(number.value), price });
 });
 
 // Each ticket is its own account; its rent comes back when it is closed.
@@ -48,9 +51,9 @@ onMounted(async () => {
     .catch(() => null);
 });
 
-const countries = countryOptions();
+const countries = computed(() => countryOptions(intl.value, t('country.private')));
 const selectedCountry = computed({
-  get: () => countries.find((c) => c.value === country.value) ?? countries[0],
+  get: () => countries.value.find((c) => c.value === country.value) ?? countries.value[0],
   set: (option) => setCountry(option?.value ?? null),
 });
 
@@ -135,35 +138,36 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
   <LotteryGlass hero>
     <div class="space-y-6 p-5 sm:p-7">
       <header class="text-center">
-        <p class="kicker">Pick a</p>
-        <h2 class="title text-4xl font-semibold tracking-[0.28em] text-highlighted">NUMBER</h2>
+        <p class="kicker">{{ t('pick.kicker') }}</p>
+        <h2 class="title text-4xl font-semibold tracking-[0.28em] text-highlighted uppercase">{{ t('pick.title') }}</h2>
         <p class="mt-4 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
-          <span class="kicker text-sm">Win</span>
+          <span class="kicker text-sm">{{ t('pick.win') }}</span>
           <span class="text-lucky glow-primary font-mono text-4xl font-semibold tabular-nums">
             ◎{{ formatSol(Math.round(prizeShown), 3) }}
           </span>
         </p>
         <div class="mt-3 flex items-center justify-center gap-3">
-          <span class="kicker text-sm">in</span>
+          <span class="kicker text-sm">{{ t('pick.in') }}</span>
           <LotteryCountdown :ms="left" />
         </div>
       </header>
 
       <div class="tray grid grid-cols-3 gap-2 px-2 py-3">
-        <LotteryStat label="Your tickets" :value="`×${myTickets.length}`" />
-        <LotteryStat label="Win chance" :value="formatPercent(chance)" />
-        <LotteryStat label="Ticket" :value="ticketPrice === null ? '—' : `◎${formatSol(ticketPrice)}`" />
+        <LotteryStat :label="t('stat.yourTickets')" :value="`×${myTickets.length}`" />
+        <LotteryStat :label="t('stat.winChance')" :value="formatPercent(chance, intl)" />
+        <LotteryStat :label="t('stat.ticket')" :value="ticketPrice === null ? '—' : `◎${formatSol(ticketPrice)}`" />
       </div>
 
       <div>
         <div class="window" :class="{ bad: taken || tooBig, rolling: spinning }">
           <span class="sr-only" aria-live="polite">{{ formatNumber(number) }}</span>
           <LotteryReels :value="number" :spinning="spinning" :invalid="taken || tooBig" />
-          <span v-if="taken" class="mt-2 text-xs font-medium text-error">Already taken today</span>
-          <span v-else class="mt-2 text-xs text-muted">0 to {{ formatNumber(maxNumber) }}, one ticket per number</span>
+          <span v-if="taken" class="mt-2 text-xs font-medium text-error">{{ t('pick.taken') }}</span>
+          <span v-else class="mt-2 text-xs text-muted">{{ t('pick.range', { max: formatNumber(maxNumber) }) }}</span>
         </div>
 
-        <div class="mt-4 grid grid-cols-3 gap-2" role="group" aria-label="Number pad">
+        <!-- A keypad: 1 2 3 on top, read left to right, in every language. -->
+        <div class="mt-4 grid grid-cols-3 gap-2" dir="ltr" role="group" :aria-label="t('pick.pad')">
           <UButton
             v-for="key in KEYS"
             :key="key"
@@ -177,7 +181,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
           />
           <UButton
             icon="i-lucide-rotate-ccw"
-            aria-label="Reset"
+            :aria-label="t('pick.reset')"
             color="neutral"
             variant="ghost"
             size="xl"
@@ -196,7 +200,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
           />
           <UButton
             icon="i-lucide-delete"
-            aria-label="Delete last digit"
+            :aria-label="t('pick.delete')"
             color="neutral"
             variant="ghost"
             size="xl"
@@ -211,7 +215,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         <div class="flex gap-2">
           <UButton
             icon="i-lucide-dices"
-            label="Lucky dip"
+            :label="t('pick.dip')"
             color="secondary"
             variant="outline"
             class="dip shrink-0"
@@ -222,9 +226,9 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
             v-model="selectedCountry"
             :items="countries"
             label-key="label"
-            :search-input="{ placeholder: 'Search a country' }"
+            :search-input="{ placeholder: t('pick.searchCountry') }"
             class="min-w-0 flex-1"
-            aria-label="Country shown with your ticket"
+            :aria-label="t('pick.country')"
           >
             <template #leading>
               <span>{{ selectedCountry?.flag ?? flagEmoji(null) }}</span>
@@ -240,15 +244,9 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
           color="warning"
           variant="subtle"
           icon="i-lucide-construction"
-          title="The lottery is not set up on this cluster yet."
+          :title="t('pick.notSetUp')"
         />
-        <UAlert
-          v-else-if="paused"
-          color="warning"
-          variant="subtle"
-          icon="i-lucide-pause"
-          title="Ticket sales are paused."
-        />
+        <UAlert v-else-if="paused" color="warning" variant="subtle" icon="i-lucide-pause" :title="t('pick.paused')" />
 
         <ClientOnly>
           <div class="relative">
@@ -269,9 +267,9 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
           </div>
         </ClientOnly>
         <p class="text-center text-xs text-muted">
-          Keys 0–9 type, ⌫ deletes, Enter buys.
+          {{ t('pick.keys') }}
           <template v-if="ticketRent !== null">
-            A ticket also holds ◎{{ formatSol(ticketRent, 5) }} of account rent, which you get back after the draw.
+            {{ t('pick.rent', { rent: formatSol(ticketRent, 5) }) }}
           </template>
         </p>
       </div>

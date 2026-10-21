@@ -5,15 +5,9 @@ import { countryFromBytes, flagEmoji, type Ticket } from '@solucky/client';
 /** A neon news band: today's newest tickets, between the rules every round runs by. */
 const props = defineProps<{ tickets?: readonly Account<Ticket>[] }>();
 
-const RULES = [
-  'New round every day at 00:00 UTC',
-  'One ticket wins the pot',
-  'Numbers from 0 to 1 000 000 000',
-  'House fee capped at 10% by the program',
-  'Anyone can close, draw and pay a round',
-  'Recompute every draw in your browser',
-  'Open source',
-];
+const { t } = useI18n();
+const RULES = ['daily', 'pot', 'numbers', 'fee', 'anyone', 'check', 'open'] as const;
+const max = formatNumber(1_000_000_000);
 
 const latest = computed(() => [...(props.tickets ?? [])].reverse().slice(0, 12));
 </script>
@@ -26,7 +20,7 @@ const latest = computed(() => [...(props.tickets ?? [])].reverse().slice(0, 12))
         :key="ticket.address"
         class="inline-flex items-center gap-2 font-mono text-xs tracking-widest whitespace-nowrap uppercase"
       >
-        <span class="text-success">New ticket</span>
+        <span class="text-success">{{ t('ticker.newTicket') }}</span>
         <span>{{ flagEmoji(countryFromBytes(ticket.data.country)) }}</span>
         <span class="font-semibold text-highlighted tabular-nums">{{ formatNumber(ticket.data.number) }}</span>
         <span class="text-dimmed">{{ shortAddress(ticket.data.owner) }}</span>
@@ -37,7 +31,7 @@ const latest = computed(() => [...(props.tickets ?? [])].reverse().slice(0, 12))
         class="inline-flex items-center gap-2 font-mono text-xs tracking-widest whitespace-nowrap text-muted uppercase"
       >
         <span :class="index % 2 ? 'text-secondary' : 'text-primary'">◆</span>
-        {{ rule }}
+        {{ t(`ticker.rules.${rule}`, { max }) }}
       </span>
     </UMarquee>
   </div>
