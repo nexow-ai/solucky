@@ -11,6 +11,8 @@ import {
   formatUnit,
   formatUsd,
   formatUtcTime,
+  roundPath,
+  roundTitle,
   shortAddress,
 } from '../app/utils/format';
 import { matchLocale } from '../i18n/languages';
@@ -63,6 +65,17 @@ describe('format', () => {
   });
 });
 
+describe('rounds', () => {
+  it("names each game's rounds", () => {
+    expect(roundTitle(0, 20_382)).toBe('2025-10-21');
+    expect(roundTitle(1, 20_382 * 24 + 14)).toBe('2025-10-21 14:00 UTC');
+    expect(roundTitle(2, 3)).toBe('#3');
+    expect(roundPath(0, 20_382)).toBe('/rounds/daily/2025-10-21');
+    expect(roundPath(1, 20_382 * 24 + 14)).toBe('/rounds/hourly/2025-10-21T14');
+    expect(roundPath(2, 3)).toBe('/rounds/guess/3');
+  });
+});
+
 describe('languages', () => {
   it("matches browser language tags to the site's languages", () => {
     expect(matchLocale('fr-CA')).toBe('fr');
@@ -100,7 +113,7 @@ describe('countries', () => {
 
 describe('errors', () => {
   it('explains program errors', () => {
-    expect(friendlyError(programError(6005))).toBe("Tickets can only be bought for today's round.");
+    expect(friendlyError(programError(6005))).toBe('Tickets can only be bought for the round on sale.');
     expect(friendlyError(programError(6004))).toBe('Ticket sales are paused.');
   });
 

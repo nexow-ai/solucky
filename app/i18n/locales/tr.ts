@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const tr: Dict = {
   meta: {
-    title: 'S☉Lucky: Solana’da günlük piyango',
+    title: 'S☉Lucky: Solana’da piyango oyunları',
     description:
-      'Bir sayı seçin, bir bilet alın ve UTC gece yarısında ödül havuzunun tamamını kazanın. Her bilet, havuz ve çekiliş Solana’da yer alır ve herkes tarafından kontrol edilebilir.',
-    ogImageAlt: 'S☉Lucky, Solana’da günlük piyango',
+      'Günlük ya da saatlik piyangoda bir sayı seçin veya gizli sayının peşine düşün. Kazanan, havuzun %80’ini alır. Her bilet, havuz ve çekiliş Solana’da yer alır ve herkes tarafından kontrol edilebilir.',
+    ogImageAlt: 'S☉Lucky, Solana’da piyango oyunları',
   },
 
   nav: {
@@ -19,6 +19,12 @@ const tr: Dict = {
   lang: {
     label: 'Dil',
     choose: 'Dil: {name}',
+  },
+
+  update: {
+    title: 'Yeni bir sürüm hazır',
+    hint: 'Hemen almak için yeniden yükle. Bir sonraki sayfa geçişinde kendiliğinden de yüklenir.',
+    reload: 'Yeniden yükle',
   },
 
   header: {
@@ -53,10 +59,10 @@ const tr: Dict = {
   },
 
   home: {
-    kicker: 'Solana’da günlük piyango',
+    kicker: 'Solana’da piyango oyunları',
     title: 'Bir sayı seçin.',
-    titleEnd: 'Gece yarısı havuzu kazanın.',
-    lead: 'Günde bir çekiliş, tek kazanan, havuzun tamamı. Her bilet, her lamport ve her çekiliş Solana’da yer alır; orada herkes kontrol edebilir.',
+    titleEnd: 'Gece yarısı kazanın.',
+    lead: 'Her gün bir çekiliş, her saat bir çekiliş ve bulunmayı bekleyen gizli bir sayı. Kazanan, havuzun %80’ini alır; kalanı bir sonraki tura aktarılır. Her bilet, her lamport ve her çekiliş Solana’da yer alır; orada herkes kontrol edebilir.',
     playNow: 'Hemen oynayın',
     howItWorks: 'Nasıl çalışır',
     program: 'Program',
@@ -95,7 +101,7 @@ const tr: Dict = {
         win: {
           title: 'UTC gece yarısı kazanın',
           description:
-            'Tek bir bilet, küçük bir kasa payı düşüldükten sonra havuzun tamamını kazanır. Daha çok bilet, daha iyi şans: her bilet bir kez sayılır.',
+            'Rastgele bir sayı çekilir ve ona en yakın bilet havuzun %80’ini kazanır. Kasa payı kalandan düşülür; geriye kalan da ertesi güne aktarılır.',
           when: 'UTC gece yarısından hemen sonra',
         },
       },
@@ -109,12 +115,12 @@ const tr: Dict = {
         locked: {
           title: 'Havuz programda kilitli',
           description:
-            'Bilet ücretleri doğrudan turun hesabına gider. Program bu parayı yalnızca kazanan biletin sahibine, kasa payını da hazineye öder. Operatör onu çekemez.',
+            'Bilet ücretleri doğrudan turun hesabına gider. Program bu paranın yalnızca %80’ini kazanan biletin sahibine, kasa payını hazineye, kalanını da oyunun bir sonraki turuna öder. Operatör onu çekemez.',
         },
         draw: {
           title: 'Kimsenin tahmin edemeyeceği bir çekiliş',
           description:
-            'Her satın alma, turun entropisine karıştırılır. Gün bittiğinde tur, birkaç saniye sonrasındaki bir slotu sabitler; o ana kadar kimsenin bilmediği bu slotun hash’i kazananı seçer.',
+            'Her satın alma, turun entropisine karıştırılır. Bir tur bittiğinde, birkaç saniye sonrasındaki bir slotu sabitler; o ana kadar kimsenin bilmediği bu slotun hash’i, biletlerin karşılaştırılacağı sayıyı seçer.',
         },
         anyone: {
           title: 'Herkes çalıştırabilir',
@@ -124,12 +130,12 @@ const tr: Dict = {
         browser: {
           title: 'Tarayıcınızda kontrol edilebilir',
           description:
-            'Her tur sayfası çekilişi herkese açık verilerden yeniden hesaplar: entropi, slot hash’i ve kazanan indeks. Aynı girdiler, aynı kazanan.',
+            'Her tur sayfası çekilişi herkese açık verilerden yeniden hesaplar: entropi, slot hash’i, çekilen sayı ve en yakın bilet. Aynı girdiler, aynı kazanan.',
         },
         limits: {
           title: 'Kasaya kesin sınırlar',
           description:
-            'Program kasa payını %10 ile sınırlar. Fiyat ve pay değişiklikleri yalnızca ertesi günün turunda geçerli olur ve bir alıcı, kendisine gösterilen fiyattan asla fazlasını ödemez.',
+            'Program kazanana her zaman havuzun %80’ini öder ve kasa payını %20 ile sınırlar. Fiyat ve pay değişiklikleri yalnızca sonradan açılan turlarda geçerli olur ve bir alıcı, kendisine gösterilen fiyattan asla fazlasını ödemez.',
         },
         open: {
           title: 'Açık kaynak',
@@ -150,15 +156,15 @@ const tr: Dict = {
         },
         price: {
           q: 'Bir bilet ne kadar?',
-          a: 'Fiyat zincir üstünde belirlenir ve Oyna sayfasında gösterilir. Bilet hesabı, fiyatın yanı sıra küçük bir kira depozitosu da tutar; tur ödendikten sonra bileti kapatarak bunu geri alırsınız. Günün ilk bileti ayrıca turun hesabının kirasını da öder; bu hesap, turun herkese açık kaydı olarak zincir üstünde kalır.',
+          a: 'Her oyunun fiyatı zincir üstünde belirlenir ve o oyunun Oyna sayfasında gösterilir. Bilet hesabı, fiyatın yanı sıra küçük bir kira depozitosu da tutar; tur ödendikten sonra bileti kapatarak bunu geri alırsınız. Bir turun ilk bileti ayrıca turun hesabının kirasını da öder; bu hesap, turun herkese açık kaydı olarak zincir üstünde kalır. Piyangolarda her bilet, sayısının orada kapladığı 4 baytın bedelini de öder.',
         },
         odds: {
           q: 'Kazanma şansım nasıl hesaplanır?',
-          a: 'Her biletin şansı aynıdır: biletlerinizin sayısı bölü o gün satılan tüm biletler. Seçtiğiniz sayı panodaki etiketinizdir; şansınızı değiştirmez.',
+          a: 'Piyangolarda çekilen sayıya en yakın bilet kazanır; bu yüzden şansınız, sayı aralığının sizin sayılarınıza başkalarınınkinden daha yakın olan payıdır: diğer biletlerden uzak bir sayı bu aralığın daha büyük bir kısmını kapsar. Sayıyı Tahmin Et oyununda her kontrol, sayıyı yeni tahminlerin henüz denenmemiş sayılara oranı kadar bir olasılıkla bulur.',
         },
         draw: {
           q: 'Turun çekilişini kimse yapmazsa ne olur?',
-          a: 'Küçük bir bot (crank), gece yarısından sonraki saniyeler içinde her turu kapatır, çekilişini yapar ve ödemesini gerçekleştirir; aynısını Geçmiş panelinden herkes yapabilir. Sabitlenen slot okunamayacak kadar eskirse (yaklaşık üç dakika), yeni bir slot sabitlemek için tur yeniden kapatılabilir; program buna yalnızca eski slota artık erişilemeyeceği kanıtlanabildiğinde izin verir.',
+          a: 'Küçük bir bot (crank), her piyango turunu bitişinden sonraki saniyeler içinde kapatır, çekilişini yapar ve ödemesini gerçekleştirir; yeni tahminleri de birkaç saniyede bir kontrol eder. Aynısını Oyna sayfasından herkes yapabilir. Sabitlenen slot okunamayacak kadar eskirse (yaklaşık üç dakika), yeni bir slot sabitlemek için tur yeniden kapatılabilir; program buna yalnızca eski slota artık erişilemeyeceği kanıtlanabildiğinde izin verir.',
         },
         country: {
           q: 'Ülkemi neden gösteriyorsunuz?',
@@ -194,9 +200,12 @@ const tr: Dict = {
     newTicket: 'Yeni bilet',
     rules: {
       daily: 'Her gün 00:00 UTC’de yeni tur',
-      pot: 'Havuzu tek bir bilet kazanır',
+      hourly: 'Ve her saat bir tane',
+      pot: 'En yakın sayı havuzun %80’ini kazanır',
+      carry: 'Kalanı bir sonraki tura aktarılır',
+      guess: 'Sayıyı Tahmin Et: süre sınırı yok, biri bulana kadar',
       numbers: '0 ile {max} arası sayılar',
-      fee: 'Kasa payı program tarafından %10 ile sınırlı',
+      fee: 'Kasa payı program tarafından %20 ile sınırlı',
       anyone: 'Herkes bir turu kapatabilir, çekilişini yapabilir ve ödeyebilir',
       check: 'Her çekilişi tarayıcınızda yeniden hesaplayın',
       open: 'Açık kaynak',
@@ -213,16 +222,16 @@ const tr: Dict = {
     entropy: 'Entropi',
     slotHash: 'Slot hash’i · slot {slot}',
     formula: 'sha256(entropi ‖ slot hash’i ‖ slot ‖ tur) =',
-    mod: 'ilk 8 bayt u64 olarak mod {count} = {ticket}',
-    ticketCount: 'bilet',
-    ticket: 'bilet #{index}',
+    mod: 'ilk 8 bayt u64 olarak mod {count} = {drawn}',
+    ticketCount: 'sayı',
+    closest: 'en yakın bilet: {number}',
     number: 'Sayı',
     paidTo: 'Alıcı',
     payout: 'Ödeme',
     check: 'Bu çekilişi kontrol edin',
     roundPage: 'Tur sayfası',
     nextDraw: 'Sonraki çekiliş 00:00 UTC’den sonra',
-    ok: 'Tarayıcınızda yeniden hesaplandı: aynı hash, #{index} numaralı bilet kazanır.',
+    ok: 'Tarayıcınızda yeniden hesaplandı: aynı hash, {number} sayısı kazanır.',
     mismatch: 'Tarayıcınızda yeniden hesaplanan hash bu turla eşleşmiyor.',
   },
 
@@ -235,7 +244,10 @@ const tr: Dict = {
     yourTickets: 'Biletleriniz',
     winChance: 'Kazanma şansı',
     chance: 'Şans',
-    todaysPot: 'Bugünkü havuz',
+    todaysPot: 'Havuz',
+    checked: 'Kontrol edilen',
+    waiting: 'Bekleyen',
+    numbersLeft: 'Kalan sayılar',
     winners: 'Kazananlar',
     averagePot: 'Ortalama havuz',
     biggestPot: 'En büyük havuz',
@@ -250,7 +262,8 @@ const tr: Dict = {
 
   play: {
     title: 'Oyna',
-    description: 'Bugünün sayısını seçin ve havuzun Solana’da canlı olarak büyümesini izleyin.',
+    description:
+      'Günlük ya da saatlik piyangoda bir sayı seçin veya gizli sayının peşine düşün ve havuzun Solana’da canlı olarak büyümesini izleyin.',
     testMoney: 'Solana {cluster} üzerinde oynuyorsunuz: biletlerin bedeli, gerçek değeri olmayan test SOL ile ödenir.',
     localFunds: 'Cüzdanınızı {url} adresine yönlendirin, ardından şu komutla bakiye yükleyin: {command}',
     phantomFunds:
@@ -266,7 +279,7 @@ const tr: Dict = {
     title: 'Seçin',
     win: 'Kazanın',
     in: 'kalan',
-    taken: 'Bugün zaten alınmış',
+    taken: 'Bu turda zaten alınmış',
     range: '0 ile {max} arası, her sayı için bir bilet',
     pad: 'Sayı tuş takımı',
     reset: 'Sıfırlayın',
@@ -274,10 +287,10 @@ const tr: Dict = {
     dip: 'Rastgele sayı',
     searchCountry: 'Ülke arayın',
     country: 'Biletinizle birlikte gösterilen ülke',
-    notSetUp: 'Piyango bu ağda henüz kurulmadı.',
+    notSetUp: 'Bu oyun bu ağda henüz kurulmadı.',
     paused: 'Bilet satışları duraklatıldı.',
     buy: '◎{price} karşılığında {number} sayısını alın',
-    takenToday: '{number} sayısı bugün alınmış',
+    takenToday: '{number} sayısı alınmış',
     outOfRange: 'Sayı aralık dışında',
     notEnough: 'Yeterli SOL yok',
     keys: '0–9 tuşları yazar, ⌫ siler, Enter satın alır.',
@@ -286,12 +299,54 @@ const tr: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Bugünkü',
     title: 'SOLPOT',
     closesIn: '{day} · kapanışa kalan',
+    carried: 'Önceki turdan aktarılan ◎{carry} dahil',
+    split: 'Kazanana %80 · {fee} kasa payı · kalanı bir sonraki tura',
     inPlay: 'Oyundaki sayılar',
     empty: 'Henüz bilet yok',
-    beFirst: 'Bugün bir sayı seçen ilk kişi siz olun.',
+    beFirst: 'Bu turda bir sayı seçen ilk kişi siz olun.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Oyunlar',
+    title: 'Oynamanın üç yolu',
+    description:
+      'Aynı sayılar, 0 ile {max} arası. Kazanan, havuzun %80’ini alır; kasa payı kalandan düşülür, geriye kalan da bir sonraki tura aktarılır.',
+    play: 'Oyna',
+    daily: {
+      name: 'Günlük piyango',
+      short: 'Günlük',
+      description: 'Her gün UTC gece yarısından sonra bir çekiliş. Çekilen sayıya en yakın bilet kazanır.',
+    },
+    hourly: {
+      name: 'Saatlik piyango',
+      short: 'Saatlik',
+      description: 'Her saat başı bir çekiliş (UTC). Çekilen sayıya en yakın bilet kazanır.',
+    },
+    guess: {
+      name: 'Sayıyı Tahmin Et',
+      short: 'Tahmin',
+      description:
+        'Süre sınırı yok. Yeni tahminler, biri turun sayısını bulana kadar birkaç saniyede bir kontrol edilir; ardından yeni bir tur başlar.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Biri bulana kadar',
+    odds: 'Her kontrol, sayıyı yeni tahminlerin henüz denenmemiş {n} sayıya oranı kadar bir olasılıkla bulur.',
+    bought: '{number} tahmininiz alındı. Birkaç saniye içinde kontrol edilecek.',
+    sealing: '{day} turunun son tahminleri mühürleniyor',
+    checkNow: 'Şimdi kontrol edin',
+    checkHint:
+      'Bir bot yeni tahminleri birkaç saniyede bir kontrol eder. Kontrolü herkes çalıştırabilir; maliyeti ağ ücretleridir.',
+    missed: 'Sayı bu değil: {numbers}',
+    left: 'Sayı, henüz denenmemiş {n} sayıdan biri.',
+    foundByYou: 'Buldunuz! Sayı {number} idi',
+    foundByOther: 'Başka bir oyuncu sayıyı buldu',
+    nextRound: 'Yeni bir sayıyla yeni bir tur satışta.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -309,8 +364,8 @@ const tr: Dict = {
     getBack: 'Geri alın',
     winners: 'Kazananlar',
     noWinners: 'Henüz kazanan yok',
-    firstDraw: 'İlk çekiliş UTC gece yarısı yapılır.',
-    chart: 'Günlük havuz',
+    firstDraw: 'İlk kazanan burada görünecek.',
+    chart: 'Tur başına havuz',
     chartEmpty: 'Henüz biten tur yok.',
     chartLabel:
       'Son turun havuzu; tüm değerler aşağıdaki listede. | Son {n} turun havuzu; tüm değerler aşağıdaki listede.',
@@ -320,6 +375,7 @@ const tr: Dict = {
     open: 'Açık',
     toClose: 'Kapanış bekleniyor',
     toDraw: 'Çekiliş bekleniyor',
+    checking: 'Tahminler kontrol ediliyor',
     unpaid: 'Çekildi, ödenmedi',
     paid: 'Ödendi',
   },
@@ -372,7 +428,7 @@ const tr: Dict = {
     balance: 'Bakiye',
     ticketsLeft: '{n} bilete yeter | {n} bilete yeter',
     needMore: 'oynamak için daha fazla SOL gerekli',
-    numbers: 'Bugünkü sayılarınız',
+    numbers: 'Bu turdaki sayılarınız',
     copy: 'Adresi kopyalayın',
     explorer: 'Explorer',
     play: 'Oyna',
@@ -382,10 +438,11 @@ const tr: Dict = {
   round: {
     title: '{day} turu',
     back: 'Oyuna dönün',
-    notDate: 'Bu bir tarih değil. Turlar YYYY-MM-DD biçiminde adlandırılır.',
+    notDate:
+      'Bu, bu oyunun bir turu değil. Günlük turlar YYYY-MM-DD, saatlik turlar YYYY-MM-DDTHH biçiminde, Sayıyı Tahmin Et turları ise numaralarıyla adlandırılır.',
     kicker: 'Tur',
-    nobody: 'O gün kimse oynamadı',
-    beFirst: 'Bugün bilet alan ilk kişi siz olun.',
+    nobody: 'Bu turda kimse oynamadı',
+    beFirst: 'Bu turda bilet alan ilk kişi siz olun.',
     onlyExists: 'Bir tur ancak ilk bileti satıldığında var olur.',
     pot: 'Havuz',
     usd: 'bugünkü fiyatla {usd}',
@@ -405,10 +462,12 @@ const tr: Dict = {
     slotHash: '{slot} numaralı slotun hash’i (program tarafından SlotHashes sysvar’ından okunur)',
     randomness: 'Rastgelelik',
     winning: 'Kazanan bilet',
-    winningFormula: 'ilk 8 bayt u64 olarak mod {count} = #{index} numaralı satın alma',
+    winningFormula: 'ilk 8 bayt u64 olarak mod {count} = {drawn}; en yakın biletin sayısı {number}',
+    guessFormula:
+      'ilk 8 bayt u64 olarak mod {left} (henüz denenmemiş sayılar) = {r}, {batch} değerinin altında (kontroldeki tahminler): #{index} numaralı satın alma sayıyı buldu',
     ok: 'Çekiliş doğrulandı.',
     mismatch: 'Uyuşmazlık: kayıtlı sonuç girdilerle eşleşmiyor.',
-    got: 'Tarayıcınızın sonucu: {hash}… ve #{index} numaralı bilet.',
+    got: 'Tarayıcınızın sonucu: {hash}… ve {number} sayısı.',
     tickets: 'Biletler',
     ticketsHint: 'Ödemeden sonra sahipleri tarafından kapatılan biletler artık burada görünmez; tur, toplamları korur.',
     noTickets: 'Bu tur için açık bilet kalmadı.',
@@ -421,7 +480,7 @@ const tr: Dict = {
 
   errors: {
     rejected: 'İsteği cüzdanınızda iptal ettiniz.',
-    taken: 'Bu sayı bugün başka birine ait. Başka bir sayı seçin.',
+    taken: 'Bu sayı bu turda başka birine ait. Başka bir sayı seçin.',
     funds: 'Cüzdanda yeterli SOL yok.',
     walletCluster:
       'Cüzdanınız imzalayamadı. Phantom’da: Settings → Developer Settings → Testnet Mode seçeneğini etkinleştirin → Devnet’i seçin; ardından yeniden bağlanıp tekrar deneyin.',
@@ -429,11 +488,11 @@ const tr: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Bunu yalnızca yetkili yapabilir.',
-      invalidTicketPrice: 'Bilet fiyatı en az 0,001 SOL olmalıdır.',
-      feeTooHigh: 'Kasa payı %10 sınırının üzerinde.',
+      invalidTicketPrice: 'Bilet fiyatı en az 0,002 SOL olmalıdır.',
+      feeTooHigh: 'Kasa payı %20 sınırının üzerinde.',
       invalidMaxNumber: 'En yüksek sayı sıfırdan büyük olmalıdır.',
       paused: 'Bilet satışları duraklatıldı.',
-      wrongDay: 'Biletler yalnızca bugünün turu için alınabilir.',
+      wrongRound: 'Biletler yalnızca satıştaki tur için alınabilir.',
       numberOutOfRange: 'Sayı aralık dışında.',
       invalidCountry: 'Ülke, büyük harfli bir ISO 3166-1 alpha-2 kodu olmalıdır.',
       roundNotOpen: 'Tur açık değil.',
@@ -450,6 +509,10 @@ const tr: Dict = {
       overflow: 'Aritmetik taşma.',
       priceChanged: 'Bilet fiyatı, kabul ettiğiniz fiyattan yüksek.',
       feeAlreadyCollected: 'Bu turun kasa payı zaten tahsil edildi.',
+      roundFull: 'Bu tur, alabileceği tüm biletleri sattı.',
+      nothingToCheck: 'Kontrol edilecek yeni tahmin yok.',
+      batchSealed: 'Son tahminler kontrol ediliyor; birkaç saniye sonra tekrar deneyin.',
+      invalidGame: 'Bilinmeyen oyun.',
     },
   },
 
@@ -538,14 +601,14 @@ const tr: Dict = {
       rounds: {
         title: 'Bir tur nasıl işler',
         intro: 'Bu kuralları program uygular; site yalnızca gösterir:',
-        day: 'Her UTC gününde, 00:00 UTC’den bir sonraki gece yarısına kadar bir tur sürer.',
+        day: 'S☉Lucky’de üç oyun vardır. Günlük piyangoda her UTC gününde, 00:00 UTC’den bir sonraki gece yarısına kadar bir tur sürer; saatlik piyangoda ise her UTC saatinde. Sayıyı Tahmin Et oyununda bir turun bitiş zamanı yoktur: bir tahmin sayısını bulana kadar sürer.',
         number:
           'Bir bilet, 0 ile programın yapılandırmasında belirlenen en yüksek sayı arasındaki tek bir sayıdır. Her sayı, tur başına yalnızca bir bilete ait olabilir.',
         price:
-          'Bilet fiyatı ve kasa payı, bir tur açıldığında yapılandırmadan kopyalanır ve o tur boyunca sabit kalır. Kasa payı hiçbir zaman havuzun %10’undan fazla olamaz. Satın alırken, size gösterilen fiyattan asla fazlasını ödemezsiniz.',
-        pot: 'Her biletin fiyatı, turun Solana’daki kendi hesabında tutulan tur havuzuna girer. Her biletin şansı aynıdır: şansınız, biletlerinizin o turda satılan tüm biletlere bölümüdür. Seçtiğiniz sayı bunu değiştirmez.',
-        draw: 'Gece yarısından sonra herkes turu kapatabilir, çekilişini yapabilir ve ödemesini gerçekleştirebilir. Kazanan biletin sahibi, havuzdan kasa payı düşülmüş tutarı alır; kasa payı hazineye gider.',
-        rent: 'Bir bilet hesabı ayrıca küçük bir kira depozitosu tutar; bileti, turu ödendikten sonra kapatarak bunu geri alırsınız. Bir turun ilk bileti, turun hesabının kirasını da öder; bu hesap, turun herkese açık kaydı olarak Solana’da kalır.',
+          'Her oyunun kendi bilet fiyatı ve kasa payı vardır. Bunlar, bir tur açıldığında en yüksek sayıyla birlikte kopyalanır ve o tur boyunca sabit kalır. Kasa payı hiçbir zaman havuzun %20’sinden fazla olamaz. Satın alırken, size gösterilen fiyattan asla fazlasını ödemezsiniz.',
+        pot: 'Her biletin fiyatı, turun Solana’daki kendi hesabında tutulan tur havuzuna girer. Piyangolarda 0 ile en yüksek sayı arasında rastgele bir sayı çekilir ve ona en yakın bilet kazanır; eşitlik durumunda küçük sayı kazanır. Sayıyı Tahmin Et oyununda yeni tahminler gruplar hâlinde kontrol edilir: bir grubun sayıyı içerme olasılığı, tahminlerinin henüz denenmemiş sayılara oranıdır; bu, tur açılırken gizlenmiş bir sayı için geçerli olasılığın aynısıdır.',
+        draw: 'Bir piyango turu sona erdiğinde ya da yeni tahminler kontrol beklemeye başlar başlamaz, herkes turu kapatabilir, çekilişini yapabilir ve ödemesini gerçekleştirebilir. Kazanan biletin sahibi havuzun %80’ini alır, kasa payı hazineye gider ve kalanı, oyunun çekilecek bir sonraki turu için programda kalır.',
+        rent: 'Bir bilet hesabı ayrıca küçük bir kira depozitosu tutar; bileti, turu ödendikten sonra kapatarak bunu geri alırsınız. Bir turun ilk bileti, turun hesabının kirasını da öder; bu hesap, turun herkese açık kaydı olarak Solana’da kalır. Piyangolarda her bilet, sayısının bu hesapta kapladığı 4 baytın kirasını da öder; bu kira iade edilmez.',
       },
       wallet: {
         title: 'Cüzdanınız ve işlemleriniz',
@@ -559,12 +622,12 @@ const tr: Dict = {
         title: 'Operatörün yapabildikleri ve yapamadıkları',
         intro: 'Programın yapılandırmasında bir yetkili tanımlıdır; yetkili şunları yapabilir:',
         price:
-          'bilet fiyatını (en az ◎0,001) ve kasa payını (en fazla %10) değiştirmek; değişiklik, açılacak bir sonraki turdan itibaren geçerli olur;',
+          'her oyunun bilet fiyatını (en az ◎0,002) ve kasa payını (en fazla %20) değiştirmek; değişiklik, o oyunun açılacak bir sonraki turundan itibaren geçerli olur;',
         pause:
           'bilet satışlarını duraklatmak ve yeniden başlatmak. Duraklatma yalnızca yeni biletleri durdurur: zaten oynanmış turların çekilişi ve ödemesi yine yapılabilir;',
         other: 'hazineyi, en yüksek sayıyı ve yetkilinin kendisini değiştirmek.',
         cannot:
-          'Programın kodu, yetkilinin ya da başka birinin bir turun havuzunu almasına veya onu kazanan biletin sahibinden başka bir yere göndermesine, kasa payından fazlasını almasına ya da bir alıcıdan kendisine gösterilen fiyattan fazlasını tahsil etmesine izin vermez.',
+          'Programın kodu, yetkilinin ya da başka birinin bir turun havuzunu almasına veya onu kazanan biletin sahibi, hazinenin kasa payı ve oyunun bir sonraki turu dışında bir yere göndermesine, kasa payından fazlasını almasına ya da bir alıcıdan kendisine gösterilen fiyattan fazlasını tahsil etmesine izin vermez.',
         upgrade:
           'Program yükseltilebilir: yükseltme yetkisini elinde tutan kişi farklı bir kod dağıtabilir; bu nedenle program değiştirilemez hâle getirilene ya da bir multisig’e devredilene kadar o kişiye güvenmiş olursunuz. Her sürümün kaynak kodu herkese açıktır ve dağıtılmış bir program, README’nin “Verifiable builds” bölümünde açıklandığı şekilde bu kaynakla karşılaştırılarak kontrol edilebilir.',
       },
@@ -574,7 +637,7 @@ const tr: Dict = {
         bugs: 'program, uygulama ve cüzdanınız dahil yazılımlarda hata olabilir ve bir hata biletlerinizi ya da SOL’unuzu kaybetmenize yol açabilir;',
         network:
           'Solana ya da sitenin kullandığı RPC uç noktası yavaş, yoğun ya da kapalı olabilir ve bir işlem başarısız olabilir ya da tur kapandıktan sonra ulaşabilir;',
-        draw: 'çekiliş, satışlar kapandığında kimsenin bilmediği bir Solana slotunun hash’ini kullanır. Oyuncular bunu tahmin edemez, ancak o slotu üreten doğrulayıcı sonucu etkileyebilir ve bir turu kapatan kişi, elverişsiz bir çekilişi o slot artık okunamayana kadar bekletebilir. Bu, doğrulanabilir bir rastgelelik oracle’ı değildir;',
+        draw: 'çekiliş, bir tur kapandığında ya da bir tahmin grubu mühürlendiğinde kimsenin bilmediği bir Solana slotunun hash’ini kullanır. Oyuncular bunu tahmin edemez, ancak o slotu üreten doğrulayıcı sonucu etkileyebilir ve bir turu kapatan kişi, elverişsiz bir çekilişi o slot artık okunamayana kadar bekletebilir. Bu, doğrulanabilir bir rastgelelik oracle’ı değildir;',
         site: 'site herhangi bir zamanda erişilemez olabilir. Program ve biletleriniz onsuz da çalışmaya devam eder;',
         law: 'piyangolar ve kripto varlıklarla ilgili yasalar ülkeden ülkeye farklıdır ve değişebilir.',
       },
@@ -740,9 +803,10 @@ const tr: Dict = {
       },
       odds: {
         title: 'Şansınızı bilin',
-        same: 'Her biletin şansı aynıdır. Bir turu kazanma şansınız, biletlerinizin o turda satılan tüm biletlere bölümüdür.',
-        label: 'Seçtiğiniz sayı panodaki etiketinizdir. Şansınızı değiştirmez.',
-        fee: 'Kazanan, havuzdan kasa payı düşülmüş tutarı alır; program bu payı %10 ile sınırlar. Yani tüm oyuncular birlikte ele alındığında biletler, onlara harcanan parayı bu pay düşülmüş olarak geri öder: ortalamada bir bilet, maliyetinden daha azını geri getirir.',
+        same: 'Piyangolarda rastgele bir sayıya en yakın bilet kazanır: şansınız, sayı aralığının sizin sayılarınıza başkalarınınkinden daha yakın olan payıdır. Sayıyı Tahmin Et oyununda her kontrol, sayıyı yeni tahminlerin henüz denenmemiş sayılara oranı kadar bir olasılıkla bulur.',
+        label:
+          'Hiçbir sayı diğerinden daha şanslı değildir: çekilen sayının aralıktaki herhangi bir sayı olma olasılığı eşittir.',
+        fee: 'Kazanan, havuzun %80’ini alır. Program tarafından %20 ile sınırlanan kasa payı kalandan düşülür; geriye kalan da oyunun bir sonraki turuna gider. Yani tüm oyuncular birlikte ele alındığında biletler, onlara harcanan parayı bu pay düşülmüş olarak geri öder: ortalamada bir bilet, maliyetinden daha azını geri getirir.',
         nothing: 'Sitedeki hiçbir şey bu şansı değiştirmez.',
       },
       final: {

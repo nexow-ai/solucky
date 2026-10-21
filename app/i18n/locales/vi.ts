@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const vi: Dict = {
   meta: {
-    title: 'S☉Lucky: xổ số hằng ngày trên Solana',
+    title: 'S☉Lucky: các trò chơi xổ số trên Solana',
     description:
-      'Chọn một con số, mua một vé và giành trọn quỹ thưởng lúc nửa đêm UTC. Mọi vé, quỹ thưởng và lượt quay số đều nằm trên Solana và ai cũng có thể kiểm tra.',
-    ogImageAlt: 'S☉Lucky, xổ số hằng ngày trên Solana',
+      'Chọn một con số trong xổ số hằng ngày hoặc hằng giờ, hoặc truy tìm con số ẩn. Người thắng nhận 80% quỹ thưởng. Mọi vé, quỹ thưởng và lượt quay số đều nằm trên Solana và ai cũng có thể kiểm tra.',
+    ogImageAlt: 'S☉Lucky, các trò chơi xổ số trên Solana',
   },
 
   nav: {
@@ -19,6 +19,12 @@ const vi: Dict = {
   lang: {
     label: 'Ngôn ngữ',
     choose: 'Ngôn ngữ: {name}',
+  },
+
+  update: {
+    title: 'Đã có phiên bản mới',
+    hint: 'Tải lại để dùng ngay. Phiên bản mới cũng tự tải khi bạn chuyển sang trang khác.',
+    reload: 'Tải lại',
   },
 
   header: {
@@ -53,10 +59,10 @@ const vi: Dict = {
   },
 
   home: {
-    kicker: 'Xổ số hằng ngày trên Solana',
+    kicker: 'Trò chơi xổ số trên Solana',
     title: 'Chọn một con số.',
-    titleEnd: 'Giành quỹ thưởng lúc nửa đêm.',
-    lead: 'Mỗi ngày một lượt quay số, một người thắng, trọn quỹ thưởng. Mọi vé, mọi lamport và mọi lượt quay số đều nằm trên Solana, nơi ai cũng có thể kiểm tra.',
+    titleEnd: 'Thắng lúc nửa đêm.',
+    lead: 'Mỗi ngày một lượt quay số, mỗi giờ một lượt quay số, và một con số ẩn để truy tìm. Người thắng nhận 80% quỹ thưởng, phần còn lại được chuyển sang vòng tiếp theo. Mọi vé, mọi lamport và mọi lượt quay số đều nằm trên Solana, nơi ai cũng có thể kiểm tra.',
     playNow: 'Chơi ngay',
     howItWorks: 'Cách hoạt động',
     program: 'Chương trình',
@@ -93,7 +99,7 @@ const vi: Dict = {
         win: {
           title: 'Thắng lúc nửa đêm UTC',
           description:
-            'Một vé giành trọn quỹ thưởng, trừ một khoản phí nhà cái nhỏ. Càng nhiều vé, cơ hội càng cao: mỗi vé được tính một lần.',
+            'Một số ngẫu nhiên được quay ra, và vé gần nó nhất giành 80% quỹ thưởng. Phí nhà cái được trừ từ phần còn lại, và phần dư được chuyển sang ngày hôm sau.',
           when: 'Ngay sau nửa đêm UTC',
         },
       },
@@ -108,12 +114,12 @@ const vi: Dict = {
         locked: {
           title: 'Quỹ thưởng bị khóa trong chương trình',
           description:
-            'Tiền mua vé đi thẳng vào tài khoản của vòng. Chương trình chỉ trả số tiền đó cho chủ sở hữu vé thắng, và trả phí cho kho bạc. Bên vận hành không thể rút số tiền đó.',
+            'Tiền mua vé đi thẳng vào tài khoản của vòng. Chương trình chỉ trả 80% số tiền đó cho chủ sở hữu vé thắng, trả phí cho kho bạc, và chuyển phần còn lại sang vòng tiếp theo của trò chơi. Bên vận hành không thể rút số tiền đó.',
         },
         draw: {
           title: 'Lượt quay số không ai đoán trước được',
           description:
-            'Mỗi lượt mua được trộn vào entropy của vòng. Khi ngày kết thúc, vòng ghim một slot vài giây trong tương lai; hash của slot đó, điều không ai biết cho đến lúc ấy, sẽ chọn ra người thắng.',
+            'Mỗi lượt mua được trộn vào entropy của vòng. Khi một vòng kết thúc, nó ghim một slot vài giây trong tương lai; hash của slot đó, điều không ai biết cho đến lúc ấy, sẽ chọn ra con số dùng để đo khoảng cách của các vé.',
         },
         anyone: {
           title: 'Ai cũng có thể thực hiện',
@@ -123,12 +129,12 @@ const vi: Dict = {
         browser: {
           title: 'Kiểm tra được ngay trong trình duyệt',
           description:
-            'Trang của mỗi vòng tính lại kết quả quay số từ dữ liệu công khai: entropy, hash của slot và chỉ số vé thắng. Cùng đầu vào, cùng người thắng.',
+            'Trang của mỗi vòng tính lại kết quả quay số từ dữ liệu công khai: entropy, hash của slot, số được quay ra và vé gần nhất. Cùng đầu vào, cùng người thắng.',
         },
         limits: {
           title: 'Giới hạn cứng đối với nhà cái',
           description:
-            'Chương trình giới hạn phí ở mức tối đa 10%. Thay đổi về giá và phí chỉ áp dụng cho vòng của ngày hôm sau, và người mua không bao giờ trả nhiều hơn mức giá đã được hiển thị cho họ.',
+            'Chương trình luôn trả cho người thắng 80% quỹ thưởng và giới hạn phí ở mức tối đa 20%. Thay đổi về giá và phí chỉ áp dụng cho các vòng mở sau đó, và người mua không bao giờ trả nhiều hơn mức giá đã được hiển thị cho họ.',
         },
         open: {
           title: 'Mã nguồn mở',
@@ -149,15 +155,15 @@ const vi: Dict = {
         },
         price: {
           q: 'Một vé giá bao nhiêu?',
-          a: 'Giá vé được đặt trên chuỗi và hiển thị trên trang Chơi. Ngoài giá vé, tài khoản vé còn giữ một khoản đặt cọc tiền thuê nhỏ, bạn sẽ nhận lại khi đóng vé sau khi vòng đã được trả thưởng. Vé đầu tiên trong ngày còn trả tiền thuê cho tài khoản của vòng, tài khoản này ở lại trên chuỗi làm hồ sơ công khai của vòng.',
+          a: 'Giá vé của mỗi trò chơi được đặt trên chuỗi và hiển thị trên trang Chơi của trò chơi đó. Ngoài giá vé, tài khoản vé còn giữ một khoản đặt cọc tiền thuê nhỏ, bạn sẽ nhận lại khi đóng vé sau khi vòng đã được trả thưởng. Vé đầu tiên của một vòng còn trả tiền thuê cho tài khoản của vòng, tài khoản này ở lại trên chuỗi làm hồ sơ công khai của vòng; trong các trò xổ số, mỗi vé còn trả cho 4 byte mà con số của nó chiếm trong đó.',
         },
         odds: {
           q: 'Tỉ lệ thắng của tôi được tính thế nào?',
-          a: 'Mọi vé đều có cơ hội như nhau: số vé của bạn chia cho tổng số vé bán ra trong ngày. Con số bạn chọn là nhãn của bạn trên bảng; nó không thay đổi tỉ lệ thắng của bạn.',
+          a: 'Trong các trò xổ số, vé gần số được quay ra nhất sẽ thắng, nên cơ hội của bạn là phần của dải số nằm gần các số của bạn hơn số của bất kỳ ai khác: một số nằm xa các vé khác sẽ chiếm phần lớn hơn. Trong Đoán số, mỗi lần kiểm tra tìm ra con số với tỉ lệ bằng số lượt đoán mới chia cho số con số chưa được thử.',
         },
         draw: {
           q: 'Nếu không ai quay số cho vòng thì sao?',
-          a: 'Một bot nhỏ (crank) đóng, quay số và trả thưởng mọi vòng chỉ vài giây sau nửa đêm, và ai cũng có thể làm điều tương tự từ bảng Lịch sử. Nếu slot đã ghim trở nên quá cũ để đọc (khoảng ba phút), vòng có thể được đóng lại lần nữa để ghim một slot mới; chương trình chỉ cho phép điều đó khi có thể chứng minh slot cũ không còn đọc được nữa.',
+          a: 'Một bot nhỏ (crank) đóng, quay số và trả thưởng mọi vòng xổ số chỉ vài giây sau khi vòng kết thúc, và kiểm tra các lượt đoán mới sau mỗi vài giây. Ai cũng có thể làm điều tương tự từ trang Chơi. Nếu slot đã ghim trở nên quá cũ để đọc (khoảng ba phút), vòng có thể được đóng lại lần nữa để ghim một slot mới; chương trình chỉ cho phép điều đó khi có thể chứng minh slot cũ không còn đọc được nữa.',
         },
         country: {
           q: 'Vì sao lại hiển thị quốc gia của tôi?',
@@ -193,9 +199,12 @@ const vi: Dict = {
     newTicket: 'Vé mới',
     rules: {
       daily: 'Vòng mới mỗi ngày lúc 00:00 UTC',
-      pot: 'Một vé giành trọn quỹ thưởng',
+      hourly: 'Và một vòng mỗi giờ',
+      pot: 'Số gần nhất giành 80% quỹ thưởng',
+      carry: 'Phần còn lại chuyển sang vòng tiếp theo',
+      guess: 'Đoán số: không có hạn chót, cho đến khi có người tìm ra',
       numbers: 'Các số từ 0 đến {max}',
-      fee: 'Phí nhà cái được chương trình giới hạn ở 10%',
+      fee: 'Phí nhà cái được chương trình giới hạn ở 20%',
       anyone: 'Ai cũng có thể đóng, quay số và trả thưởng một vòng',
       check: 'Tính lại mọi lượt quay số trong trình duyệt của bạn',
       open: 'Mã nguồn mở',
@@ -212,16 +221,16 @@ const vi: Dict = {
     entropy: 'Entropy',
     slotHash: 'Hash của slot · slot {slot}',
     formula: 'sha256(entropy ‖ hash của slot ‖ slot ‖ vòng) =',
-    mod: '8 byte đầu dưới dạng u64 mod {count} = {ticket}',
-    ticketCount: 'số vé',
-    ticket: 'vé #{index}',
+    mod: '8 byte đầu dưới dạng u64 mod {count} = {drawn}',
+    ticketCount: 'số lượng số',
+    closest: 'vé gần nhất: {number}',
     number: 'Số',
     paidTo: 'Trả cho',
     payout: 'Tiền thưởng',
     check: 'Kiểm tra lượt quay số này',
     roundPage: 'Trang của vòng',
     nextDraw: 'Lượt quay số tiếp theo sau 00:00 UTC',
-    ok: 'Đã tính lại trong trình duyệt của bạn: cùng hash, vé #{index} thắng.',
+    ok: 'Đã tính lại trong trình duyệt của bạn: cùng hash, số {number} thắng.',
     mismatch: 'Hash được tính lại trong trình duyệt của bạn không khớp với vòng này.',
   },
 
@@ -234,7 +243,10 @@ const vi: Dict = {
     yourTickets: 'Vé của bạn',
     winChance: 'Cơ hội thắng',
     chance: 'Cơ hội',
-    todaysPot: 'Quỹ thưởng hôm nay',
+    todaysPot: 'Quỹ thưởng',
+    checked: 'Đã kiểm tra',
+    waiting: 'Đang chờ',
+    numbersLeft: 'Số còn lại',
     winners: 'Người thắng',
     averagePot: 'Quỹ thưởng trung bình',
     biggestPot: 'Quỹ thưởng lớn nhất',
@@ -249,7 +261,8 @@ const vi: Dict = {
 
   play: {
     title: 'Chơi',
-    description: 'Chọn con số hôm nay và xem quỹ thưởng tăng lên trực tiếp trên Solana.',
+    description:
+      'Chọn một con số trong xổ số hằng ngày hoặc hằng giờ, hoặc truy tìm con số ẩn, và xem quỹ thưởng tăng lên trực tiếp trên Solana.',
     testMoney: 'Bạn đang chơi trên Solana {cluster}: vé được trả bằng SOL thử nghiệm, không có giá trị thật.',
     localFunds: 'Trỏ ví của bạn đến {url}, rồi nạp tiền vào ví bằng lệnh: {command}',
     phantomFunds:
@@ -265,7 +278,7 @@ const vi: Dict = {
     title: 'Con số',
     win: 'Thắng',
     in: 'sau',
-    taken: 'Đã có người chọn hôm nay',
+    taken: 'Đã có người chọn trong vòng này',
     range: '0 đến {max}, mỗi số một vé',
     pad: 'Bàn phím số',
     reset: 'Đặt lại',
@@ -273,10 +286,10 @@ const vi: Dict = {
     dip: 'Chọn ngẫu nhiên',
     searchCountry: 'Tìm quốc gia',
     country: 'Quốc gia hiển thị cùng vé của bạn',
-    notSetUp: 'Xổ số chưa được thiết lập trên cụm này.',
+    notSetUp: 'Trò chơi này chưa được thiết lập trên cụm này.',
     paused: 'Việc bán vé đang tạm dừng.',
     buy: 'Mua số {number} với giá ◎{price}',
-    takenToday: 'Số {number} đã có người chọn hôm nay',
+    takenToday: 'Số {number} đã có người chọn',
     outOfRange: 'Số nằm ngoài phạm vi',
     notEnough: 'Không đủ SOL',
     keys: 'Phím 0–9 để nhập, ⌫ để xóa, Enter để mua.',
@@ -285,12 +298,54 @@ const vi: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Hôm nay',
     title: 'SOLPOT',
     closesIn: '{day} · đóng sau',
+    carried: 'Bao gồm ◎{carry} chuyển sang từ vòng trước',
+    split: '80% cho người thắng · {fee} phí nhà cái · phần còn lại cho vòng tiếp theo',
     inPlay: 'Các số đang chơi',
     empty: 'Chưa có vé nào',
-    beFirst: 'Hãy là người đầu tiên chọn số hôm nay.',
+    beFirst: 'Hãy là người đầu tiên chọn số trong vòng này.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Trò chơi',
+    title: 'Ba cách để chơi',
+    description:
+      'Cùng các số, từ 0 đến {max}. Người thắng nhận 80% quỹ thưởng; phí nhà cái được trừ từ phần còn lại, và phần dư được chuyển sang vòng tiếp theo.',
+    play: 'Chơi',
+    daily: {
+      name: 'Xổ số hằng ngày',
+      short: 'Hằng ngày',
+      description: 'Mỗi ngày một lượt quay số sau nửa đêm UTC. Vé gần số được quay ra nhất sẽ thắng.',
+    },
+    hourly: {
+      name: 'Xổ số hằng giờ',
+      short: 'Hằng giờ',
+      description: 'Mỗi giờ một lượt quay số, đúng đầu giờ (UTC). Vé gần số được quay ra nhất sẽ thắng.',
+    },
+    guess: {
+      name: 'Đoán số',
+      short: 'Đoán số',
+      description:
+        'Không có hạn chót. Các lượt đoán mới được kiểm tra sau mỗi vài giây cho đến khi một lượt tìm ra con số của vòng; sau đó một vòng mới bắt đầu.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Cho đến khi có người tìm ra',
+    odds: 'Mỗi lần kiểm tra tìm ra con số với tỉ lệ bằng số lượt đoán mới chia cho {n} con số chưa được thử.',
+    bought: 'Đã ghi nhận lượt đoán {number}. Nó sẽ được kiểm tra sau vài giây.',
+    sealing: 'Đang niêm phong các lượt đoán mới nhất của vòng {day}',
+    checkNow: 'Kiểm tra ngay',
+    checkHint:
+      'Một bot kiểm tra các lượt đoán mới sau mỗi vài giây. Ai cũng có thể chạy việc kiểm tra; việc này tốn phí mạng.',
+    missed: 'Không phải con số: {numbers}',
+    left: 'Con số là một trong {n} con số chưa được thử.',
+    foundByYou: 'Bạn đã tìm ra! Con số là {number}',
+    foundByOther: 'Một người chơi khác đã tìm ra con số',
+    nextRound: 'Một vòng mới với con số mới đang mở bán.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -308,8 +363,8 @@ const vi: Dict = {
     getBack: 'Lấy lại',
     winners: 'Người thắng',
     noWinners: 'Chưa có người thắng',
-    firstDraw: 'Lượt quay số đầu tiên diễn ra lúc nửa đêm UTC.',
-    chart: 'Quỹ thưởng theo ngày',
+    firstDraw: 'Người thắng đầu tiên sẽ xuất hiện ở đây.',
+    chart: 'Quỹ thưởng theo vòng',
     chartEmpty: 'Chưa có vòng nào kết thúc.',
     chartLabel: 'Quỹ thưởng của {n} vòng gần nhất; danh sách bên dưới có mọi giá trị.',
   },
@@ -318,6 +373,7 @@ const vi: Dict = {
     open: 'Đang mở',
     toClose: 'Chờ đóng',
     toDraw: 'Chờ quay số',
+    checking: 'Đang kiểm tra lượt đoán',
     unpaid: 'Đã quay, chưa trả',
     paid: 'Đã trả thưởng',
   },
@@ -370,7 +426,7 @@ const vi: Dict = {
     balance: 'Số dư',
     ticketsLeft: 'Còn đủ mua {n} vé',
     needMore: 'cần thêm SOL để chơi',
-    numbers: 'Số của bạn hôm nay',
+    numbers: 'Số của bạn trong vòng này',
     copy: 'Sao chép địa chỉ',
     explorer: 'Explorer',
     play: 'Chơi',
@@ -380,10 +436,11 @@ const vi: Dict = {
   round: {
     title: 'Vòng {day}',
     back: 'Quay lại trò chơi',
-    notDate: 'Đây không phải là ngày. Các vòng được đặt tên theo dạng YYYY-MM-DD.',
+    notDate:
+      'Đây không phải là một vòng của trò chơi này. Vòng hằng ngày được đặt tên theo dạng YYYY-MM-DD, vòng hằng giờ theo dạng YYYY-MM-DDTHH, và vòng Đoán số theo số thứ tự của chúng.',
     kicker: 'Vòng',
-    nobody: 'Không ai chơi vào ngày này',
-    beFirst: 'Hãy là người đầu tiên mua vé hôm nay.',
+    nobody: 'Không ai chơi trong vòng này',
+    beFirst: 'Hãy là người đầu tiên mua vé trong vòng này.',
     onlyExists: 'Một vòng chỉ tồn tại khi vé đầu tiên của nó được bán.',
     pot: 'Quỹ thưởng',
     usd: '{usd} theo giá hôm nay',
@@ -403,10 +460,12 @@ const vi: Dict = {
     slotHash: 'Hash của slot {slot} (chương trình đọc từ sysvar SlotHashes)',
     randomness: 'Giá trị ngẫu nhiên',
     winning: 'Vé thắng',
-    winningFormula: '8 byte đầu dưới dạng u64 mod {count} = lượt mua #{index}',
+    winningFormula: '8 byte đầu dưới dạng u64 mod {count} = {drawn}; vé gần nhất giữ số {number}',
+    guessFormula:
+      '8 byte đầu dưới dạng u64 mod {left} (số con số chưa được thử) = {r}, nhỏ hơn {batch} (số lượt đoán trong lần kiểm tra): lượt mua #{index} đã tìm ra con số',
     ok: 'Kết quả quay số khớp.',
     mismatch: 'Không khớp: kết quả đã lưu không khớp với đầu vào.',
-    got: 'Trình duyệt của bạn tính ra {hash}… và vé #{index}.',
+    got: 'Trình duyệt của bạn tính ra {hash}… và số {number}.',
     tickets: 'Vé',
     ticketsHint: 'Vé đã được chủ sở hữu đóng sau khi trả thưởng sẽ không còn hiển thị ở đây; vòng vẫn giữ các số tổng.',
     noTickets: 'Vòng này không còn vé nào đang mở.',
@@ -419,7 +478,7 @@ const vi: Dict = {
 
   errors: {
     rejected: 'Bạn đã hủy yêu cầu trong ví.',
-    taken: 'Hôm nay đã có người giữ số này. Hãy chọn số khác.',
+    taken: 'Đã có người giữ số này trong vòng này. Hãy chọn số khác.',
     funds: 'Ví không đủ SOL.',
     walletCluster:
       'Ví của bạn không thể ký. Trong Phantom: Settings → Developer Settings → bật Testnet Mode → chọn Devnet, rồi kết nối lại và thử lại.',
@@ -427,11 +486,11 @@ const vi: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Chỉ quản trị viên mới có thể làm việc này.',
-      invalidTicketPrice: 'Giá vé phải ít nhất là 0.001 SOL.',
-      feeTooHigh: 'Phí vượt quá mức trần 10%.',
+      invalidTicketPrice: 'Giá vé phải ít nhất là 0.002 SOL.',
+      feeTooHigh: 'Phí vượt quá mức trần 20%.',
       invalidMaxNumber: 'Số lớn nhất phải lớn hơn không.',
       paused: 'Việc bán vé đang tạm dừng.',
-      wrongDay: 'Chỉ có thể mua vé cho vòng của hôm nay.',
+      wrongRound: 'Chỉ có thể mua vé cho vòng đang mở bán.',
       numberOutOfRange: 'Số nằm ngoài phạm vi.',
       invalidCountry: 'Quốc gia phải là mã ISO 3166-1 alpha-2 viết hoa.',
       roundNotOpen: 'Vòng hiện không mở.',
@@ -448,6 +507,10 @@ const vi: Dict = {
       overflow: 'Tràn số học.',
       priceChanged: 'Giá vé cao hơn mức giá bạn đã chấp nhận.',
       feeAlreadyCollected: 'Phí của vòng này đã được thu.',
+      roundFull: 'Vòng này đã bán hết số vé mà nó có thể chứa.',
+      nothingToCheck: 'Không có lượt đoán mới nào để kiểm tra.',
+      batchSealed: 'Các lượt đoán mới nhất đang được kiểm tra; hãy thử lại sau vài giây.',
+      invalidGame: 'Trò chơi không xác định.',
     },
   },
 
@@ -535,14 +598,14 @@ const vi: Dict = {
       rounds: {
         title: 'Một vòng diễn ra thế nào',
         intro: 'Chương trình thực thi các quy tắc này; trang web chỉ hiển thị chúng:',
-        day: 'Mỗi ngày UTC có một vòng, từ 00:00 UTC đến nửa đêm tiếp theo.',
+        day: 'S☉Lucky có ba trò chơi. Trong xổ số hằng ngày, mỗi ngày UTC có một vòng, từ 00:00 UTC đến nửa đêm tiếp theo; trong xổ số hằng giờ, mỗi giờ UTC có một vòng. Trong Đoán số, một vòng không có thời điểm kết thúc: nó kéo dài cho đến khi một lượt đoán tìm ra con số của vòng.',
         number:
           'Một vé là một con số, từ 0 đến số lớn nhất được đặt trong cấu hình của chương trình. Mỗi số chỉ thuộc về một vé trong mỗi vòng.',
         price:
-          'Giá vé và phí nhà cái được sao chép từ cấu hình khi một vòng mở, và giữ nguyên trong suốt vòng đó. Phí không bao giờ được vượt quá 10% quỹ thưởng. Khi mua, bạn không bao giờ trả nhiều hơn mức giá đã được hiển thị cho bạn.',
-        pot: 'Giá của mỗi vé được đưa vào quỹ thưởng của vòng, do chính tài khoản của vòng trên Solana nắm giữ. Mọi vé có cơ hội như nhau: cơ hội của bạn là số vé của bạn chia cho tổng số vé bán ra trong vòng đó. Con số bạn chọn không làm thay đổi điều này.',
-        draw: 'Sau nửa đêm, bất kỳ ai cũng có thể đóng vòng, quay số và trả thưởng. Chủ sở hữu vé thắng nhận quỹ thưởng trừ đi phí nhà cái, và phí được chuyển vào kho bạc.',
-        rent: 'Tài khoản vé còn giữ một khoản đặt cọc tiền thuê nhỏ, bạn sẽ nhận lại khi đóng vé sau khi vòng của nó đã được trả thưởng. Vé đầu tiên của một vòng còn trả tiền thuê cho tài khoản của vòng, tài khoản này ở lại trên Solana làm hồ sơ công khai của vòng.',
+          'Mỗi trò chơi có giá vé và phí nhà cái riêng. Chúng được sao chép, cùng với số lớn nhất, khi một vòng mở, và giữ nguyên trong suốt vòng đó. Phí không bao giờ được vượt quá 20% quỹ thưởng. Khi mua, bạn không bao giờ trả nhiều hơn mức giá đã được hiển thị cho bạn.',
+        pot: 'Giá của mỗi vé được đưa vào quỹ thưởng của vòng, do chính tài khoản của vòng trên Solana nắm giữ. Trong các trò xổ số, một số ngẫu nhiên từ 0 đến số lớn nhất được quay ra và vé gần nó nhất sẽ thắng; nếu hòa, số nhỏ hơn thắng. Trong Đoán số, các lượt đoán mới được kiểm tra theo từng lô: một lô chứa con số với tỉ lệ bằng số lượt đoán trong lô chia cho số con số chưa được thử, đúng bằng tỉ lệ đối với một con số được giấu từ khi vòng mở.',
+        draw: 'Khi một vòng xổ số đã kết thúc, hoặc ngay khi có lượt đoán mới đang chờ kiểm tra, bất kỳ ai cũng có thể đóng vòng, quay số và trả thưởng. Chủ sở hữu vé thắng nhận 80% quỹ thưởng, phí nhà cái được chuyển vào kho bạc, và phần còn lại ở lại trong chương trình cho vòng tiếp theo của trò chơi được quay số.',
+        rent: 'Tài khoản vé còn giữ một khoản đặt cọc tiền thuê nhỏ, bạn sẽ nhận lại khi đóng vé sau khi vòng của nó đã được trả thưởng. Vé đầu tiên của một vòng còn trả tiền thuê cho tài khoản của vòng, tài khoản này ở lại trên Solana làm hồ sơ công khai của vòng. Trong các trò xổ số, mỗi vé còn trả tiền thuê cho 4 byte mà con số của nó chiếm trong tài khoản đó, khoản này không được hoàn lại.',
       },
       wallet: {
         title: 'Ví và giao dịch của bạn',
@@ -555,12 +618,13 @@ const vi: Dict = {
       operator: {
         title: 'Những gì bên vận hành có thể và không thể làm',
         intro: 'Cấu hình của chương trình có một quản trị viên, có thể:',
-        price: 'thay đổi giá vé (ít nhất ◎0.001) và phí nhà cái (tối đa 10%), có hiệu lực từ vòng tiếp theo được mở;',
+        price:
+          'thay đổi giá vé (ít nhất ◎0.002) và phí nhà cái (tối đa 20%) của từng trò chơi, có hiệu lực từ vòng tiếp theo được mở của trò chơi đó;',
         pause:
           'tạm dừng và tiếp tục bán vé. Việc tạm dừng chỉ ngăn vé mới: các vòng đã chơi vẫn có thể được quay số và trả thưởng;',
         other: 'thay đổi kho bạc, số lớn nhất, và chính quản trị viên.',
         cannot:
-          'Mã của chương trình không cho phép quản trị viên, hay bất kỳ ai khác, lấy quỹ thưởng của một vòng hoặc gửi nó đến bất kỳ đâu ngoài chủ sở hữu vé thắng, lấy nhiều hơn khoản phí, hoặc thu của người mua nhiều hơn mức giá đã được hiển thị cho họ.',
+          'Mã của chương trình không cho phép quản trị viên, hay bất kỳ ai khác, lấy quỹ thưởng của một vòng hoặc gửi nó đến bất kỳ đâu ngoài chủ sở hữu vé thắng, khoản phí của kho bạc và vòng tiếp theo của trò chơi, lấy nhiều hơn khoản phí, hoặc thu của người mua nhiều hơn mức giá đã được hiển thị cho họ.',
         upgrade:
           'Chương trình có thể nâng cấp: người nắm giữ quyền nâng cấp của nó có thể triển khai mã khác, vì vậy bạn đang tin tưởng họ cho đến khi chương trình được đặt thành bất biến hoặc được chuyển giao cho một ví đa chữ ký. Mã nguồn của mọi phiên bản đều công khai, và một chương trình đã triển khai có thể được đối chiếu với mã nguồn như mục “Verifiable builds” trong README giải thích.',
       },
@@ -570,7 +634,7 @@ const vi: Dict = {
         bugs: 'phần mềm có thể có lỗi, kể cả chương trình, ứng dụng và ví của bạn, và một lỗi có thể khiến bạn mất vé hoặc SOL;',
         network:
           'Solana hoặc endpoint RPC mà trang web sử dụng có thể chậm, tắc nghẽn hoặc ngừng hoạt động, và một giao dịch có thể thất bại hoặc đến sau khi vòng đã đóng;',
-        draw: 'việc quay số dùng hash của một slot Solana mà không ai biết khi việc bán vé kết thúc. Người chơi không thể đoán trước nó, nhưng validator tạo ra slot đó có thể làm lệch kết quả, và người đóng một vòng có thể trì hoãn một lượt quay số bất lợi cho đến khi slot đó không còn đọc được. Đây không phải một oracle ngẫu nhiên có thể kiểm chứng;',
+        draw: 'việc quay số dùng hash của một slot Solana mà không ai biết khi một vòng đóng hoặc khi một lô lượt đoán được niêm phong. Người chơi không thể đoán trước nó, nhưng validator tạo ra slot đó có thể làm lệch kết quả, và người đóng một vòng có thể trì hoãn một lượt quay số bất lợi cho đến khi slot đó không còn đọc được. Đây không phải một oracle ngẫu nhiên có thể kiểm chứng;',
         site: 'trang web có thể không truy cập được vào bất cứ lúc nào. Chương trình, và vé của bạn, vẫn tiếp tục hoạt động mà không cần nó;',
         law: 'luật về xổ số và tài sản mã hóa khác nhau giữa các quốc gia và có thể thay đổi.',
       },
@@ -735,9 +799,9 @@ const vi: Dict = {
       },
       odds: {
         title: 'Hiểu rõ tỉ lệ thắng',
-        same: 'Mọi vé đều có cơ hội như nhau. Cơ hội thắng một vòng của bạn là số vé của bạn chia cho tổng số vé bán ra trong vòng đó.',
-        label: 'Con số bạn chọn là nhãn của bạn trên bảng. Nó không thay đổi cơ hội của bạn.',
-        fee: 'Người thắng nhận quỹ thưởng trừ đi phí nhà cái, khoản phí mà chương trình giới hạn ở mức 10%. Vì vậy, tính trên tất cả người chơi, vé trả lại số tiền đã bỏ ra mua chúng trừ đi khoản phí đó: tính trung bình, một vé mang lại ít hơn giá của nó.',
+        same: 'Trong các trò xổ số, vé gần một số ngẫu nhiên nhất sẽ thắng: cơ hội của bạn là phần của dải số nằm gần các số của bạn hơn số của bất kỳ ai khác. Trong Đoán số, mỗi lần kiểm tra tìm ra con số với tỉ lệ bằng số lượt đoán mới chia cho số con số chưa được thử.',
+        label: 'Không có số nào may mắn hơn số nào: số được quay ra có khả năng như nhau là bất kỳ số nào trong dải.',
+        fee: 'Người thắng nhận 80% quỹ thưởng. Phí nhà cái, khoản phí mà chương trình giới hạn ở mức 20%, được trừ từ phần còn lại, và phần dư được chuyển sang vòng tiếp theo của trò chơi. Vì vậy, tính trên tất cả người chơi, vé trả lại số tiền đã bỏ ra mua chúng trừ đi khoản phí đó: tính trung bình, một vé mang lại ít hơn giá của nó.',
         nothing: 'Không có gì trên trang web thay đổi được tỉ lệ này.',
       },
       final: {

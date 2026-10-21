@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { Account } from '@solana/kit';
-import { formatDay, type Round } from '@solucky/client';
+import type { Round } from '@solucky/client';
 
-/** Pot of each settled round, oldest to newest: one column per day. */
+/** Pot of each settled round, oldest to newest: one column per round. */
 const props = defineProps<{ rounds: readonly Account<Round>[] }>();
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -23,8 +23,8 @@ const bars = computed(() => {
     const h = max === 0n ? 0 : Math.max(2, (Number(round.data.pot) / Number(max)) * innerH);
     return {
       key: round.address,
-      day: round.data.day,
-      label: formatDay(round.data.day),
+      path: roundPath(round.data.kind, round.data.period),
+      label: roundTitle(round.data.kind, round.data.period),
       pot: round.data.pot,
       isMax: round.data.pot === max,
       band: { x: PAD.left + i * band, width: band },
@@ -100,7 +100,7 @@ function columnPath(bar: { x: number; y: number; width: number; height: number }
           class="cursor-pointer"
           @mouseenter="hovered = i"
           @focus="hovered = i"
-          @click="navigateTo(localePath(`/rounds/${bar.label}`))"
+          @click="navigateTo(localePath(bar.path))"
         />
       </g>
       <text :x="PAD.left" :y="HEIGHT - 4" class="fill-(--ui-text-dimmed) text-[9px]">

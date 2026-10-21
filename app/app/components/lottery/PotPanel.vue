@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { countryFromBytes, flagEmoji, formatDay, msUntilClose } from '@solucky/client';
+import { countryFromBytes, flagEmoji, GAME_SLUGS, type LotteryKind, msUntilClose } from '@solucky/client';
 
 const { t } = useI18n();
 const intl = useIntlLocale();
-const { today, pot, tickets, players, countries, loading } = useLottery();
+const { kind, lottery, period, pot, carry, feeBps, tickets, players, countries, loading } = useLottery();
 const { address } = useWallet();
 const { explorer } = useSolana();
 const price = useSolPrice();
 const now = useNow();
 
-const left = computed(() => msUntilClose(today.value, now.value));
+const left = computed(() =>
+  lottery.value && period.value !== null ? msUntilClose(kind.value as LotteryKind, period.value, now.value) : 0,
+);
+const fee = computed(() =>
+  new Intl.NumberFormat(intl.value, { style: 'percent', maximumFractionDigits: 2 }).format(feeBps.value / 10_000),
+);
 const newestFirst = computed(() => [...tickets.value].reverse());
 const potShown = useTween(() => Number(pot.value), 1_600);
 
@@ -28,7 +33,7 @@ watch(pot, (to, from) => {
   <LotteryGlass>
     <div class="space-y-6 p-5 sm:p-6">
       <header class="text-center">
-        <p class="kicker">{{ t('pot.kicker') }}</p>
+        <p class="kicker">{{ t(`games.${GAME_SLUGS[kind]}.name`) }}</p>
         <h2 class="text-3xl font-semibold tracking-[0.28em] text-muted">{{ t('pot.title') }}</h2>
         <div class="jackpot relative mt-4">
           <p class="text-lucky glow-primary led font-mono text-5xl font-semibold tabular-nums [--led-pitch:0.07em]">
@@ -44,10 +49,16 @@ watch(pot, (to, from) => {
           </span>
         </div>
         <p class="mt-1 font-mono text-lg font-semibold text-toned tabular-nums">{{ formatUsd(pot, price, intl) }}</p>
-        <p class="kicker mt-4 text-sm">{{ t('pot.closesIn', { day: formatDay(today) }) }}</p>
-        <div class="mt-2 flex justify-center">
-          <LotteryCountdown :ms="left" />
-        </div>
+        <p v-if="carry > 0n" class="mt-1 text-xs text-muted">
+          {{ t('pot.carried', { carry: formatSol(carry, 3) }) }}
+        </p>
+        <p class="mt-1 text-xs text-muted">{{ t('pot.split', { fee }) }}</p>
+        <template v-if="lottery && period !== null">
+          <p class="kicker mt-4 text-sm">{{ t('pot.closesIn', { day: roundTitle(kind, period) }) }}</p>
+          <div class="mt-2 flex justify-center">
+            <LotteryCountdown :ms="left" />
+          </div>
+        </template>
       </header>
 
       <div class="tray grid grid-cols-3 gap-2 px-2 py-3">

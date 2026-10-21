@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const it: Dict = {
   meta: {
-    title: 'S☉Lucky: la lotteria quotidiana su Solana',
+    title: 'S☉Lucky: giochi di lotteria su Solana',
     description:
-      'Scegli un numero, compra un biglietto e vinci l’intero montepremi a mezzanotte UTC. Ogni biglietto, montepremi ed estrazione vive su Solana e chiunque può verificarlo.',
-    ogImageAlt: 'S☉Lucky, la lotteria quotidiana su Solana',
+      'Scegli un numero nella lotteria quotidiana o in quella oraria, oppure scova il numero nascosto. Il vincitore si prende l’80% del montepremi. Ogni biglietto, montepremi ed estrazione vive su Solana e chiunque può verificarlo.',
+    ogImageAlt: 'S☉Lucky, giochi di lotteria su Solana',
   },
 
   nav: {
@@ -19,6 +19,12 @@ const it: Dict = {
   lang: {
     label: 'Lingua',
     choose: 'Lingua: {name}',
+  },
+
+  update: {
+    title: 'Una nuova versione è pronta',
+    hint: 'Ricarica per averla subito. Si carica anche da sola al prossimo cambio di pagina.',
+    reload: 'Ricarica',
   },
 
   header: {
@@ -53,10 +59,10 @@ const it: Dict = {
   },
 
   home: {
-    kicker: 'Lotteria quotidiana su Solana',
+    kicker: 'Giochi di lotteria su Solana',
     title: 'Scegli un numero.',
-    titleEnd: 'Vinci il montepremi a mezzanotte.',
-    lead: 'Un’estrazione al giorno, un vincitore, l’intero montepremi. Ogni biglietto, ogni lamport e ogni estrazione vivono su Solana, dove chiunque può verificarli.',
+    titleEnd: 'Vinci a mezzanotte.',
+    lead: 'Un’estrazione al giorno, un’estrazione ogni ora e un numero nascosto da scovare. Il vincitore si prende l’80% del montepremi, e il resto passa al round successivo. Ogni biglietto, ogni lamport e ogni estrazione vivono su Solana, dove chiunque può verificarli.',
     playNow: 'Gioca ora',
     howItWorks: 'Come funziona',
     program: 'Programma',
@@ -95,7 +101,7 @@ const it: Dict = {
         win: {
           title: 'Vinci a mezzanotte UTC',
           description:
-            'Un biglietto vince l’intero montepremi, meno una piccola commissione della casa. Più biglietti, più probabilità: ogni biglietto conta una volta.',
+            'Viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round del giorno dopo.',
           when: 'Subito dopo la mezzanotte UTC',
         },
       },
@@ -110,12 +116,12 @@ const it: Dict = {
         locked: {
           title: 'Il montepremi è bloccato nel programma',
           description:
-            'I soldi dei biglietti vanno dritti all’account del round. Il programma li paga solo al proprietario del biglietto vincente, e la commissione solo alla tesoreria. L’operatore non può prelevarli.',
+            'I soldi dei biglietti vanno dritti all’account del round. Il programma ne paga solo l’80% al proprietario del biglietto vincente, la commissione alla tesoreria e il resto al round successivo del gioco. L’operatore non può prelevarli.',
         },
         draw: {
           title: 'Un’estrazione che nessuno può prevedere',
           description:
-            'Ogni acquisto viene mescolato nell’entropia del round. Quando il giorno finisce, il round fissa uno slot qualche secondo nel futuro; l’hash di quello slot, sconosciuto a tutti fino ad allora, sceglie il vincitore.',
+            'Ogni acquisto viene mescolato nell’entropia del round. Quando un round finisce, fissa uno slot qualche secondo nel futuro; l’hash di quello slot, sconosciuto a tutti fino ad allora, sceglie il numero con cui si misurano i biglietti.',
         },
         anyone: {
           title: 'Chiunque può portarla a termine',
@@ -125,12 +131,12 @@ const it: Dict = {
         browser: {
           title: 'Verificabile nel tuo browser',
           description:
-            'La pagina di ogni round ricalcola l’estrazione dai dati pubblici: l’entropia, l’hash dello slot e l’indice vincente. Stessi input, stesso vincitore.',
+            'La pagina di ogni round ricalcola l’estrazione dai dati pubblici: l’entropia, l’hash dello slot, il numero estratto e il biglietto più vicino. Stessi input, stesso vincitore.',
         },
         limits: {
           title: 'Limiti rigidi per la casa',
           description:
-            'Il programma limita la commissione al 10%. Le modifiche di prezzo e commissione valgono solo dal round del giorno dopo, e chi compra non paga mai più del prezzo che gli è stato mostrato.',
+            'Il programma paga sempre al vincitore l’80% del montepremi e limita la commissione al 20%. Le modifiche di prezzo e commissione valgono solo per i round aperti in seguito, e chi compra non paga mai più del prezzo che gli è stato mostrato.',
         },
         open: {
           title: 'Open source',
@@ -151,15 +157,15 @@ const it: Dict = {
         },
         price: {
           q: 'Quanto costa un biglietto?',
-          a: 'Il prezzo è fissato on-chain e mostrato nella pagina Gioca. Oltre al prezzo, l’account di un biglietto contiene un piccolo deposito di rent, che recuperi chiudendo il biglietto una volta pagato il round. Il primo biglietto del giorno paga anche il rent dell’account del round, che resta on-chain come suo registro pubblico.',
+          a: 'Il prezzo di ogni gioco è fissato on-chain e mostrato nella sua pagina Gioca. Oltre al prezzo, l’account di un biglietto contiene un piccolo deposito di rent, che recuperi chiudendo il biglietto una volta pagato il round. Il primo biglietto di un round paga anche il rent dell’account del round, che resta on-chain come suo registro pubblico; nelle lotterie, ogni biglietto paga anche i 4 byte che il suo numero occupa lì.',
         },
         odds: {
           q: 'Come si calcolano le mie probabilità?',
-          a: 'Ogni biglietto ha la stessa probabilità: i tuoi biglietti divisi per tutti i biglietti venduti quel giorno. Il numero che scegli è la tua etichetta sul tabellone; non cambia le tue probabilità.',
+          a: 'Nelle lotterie vince il biglietto più vicino al numero estratto, quindi la tua probabilità è la parte dell’intervallo di numeri più vicina ai tuoi numeri che a quelli di chiunque altro: un numero lontano dagli altri biglietti ne copre una parte maggiore. In Indovina il numero, ogni verifica trova il numero con una probabilità pari ai nuovi tentativi divisi per i numeri non ancora provati.',
         },
         draw: {
           q: 'E se nessuno estrae il round?',
-          a: 'Un piccolo bot (il crank) chiude, estrae e paga ogni round pochi secondi dopo la mezzanotte, e chiunque può fare lo stesso dal pannello Cronologia. Se lo slot fissato diventa troppo vecchio per essere letto (circa tre minuti), il round può essere chiuso di nuovo per fissarne uno nuovo; il programma lo consente solo quando è dimostrabile che il vecchio slot è fuori portata.',
+          a: 'Un piccolo bot (il crank) chiude, estrae e paga ogni round delle lotterie pochi secondi dopo la sua fine, e verifica i nuovi tentativi ogni pochi secondi. Chiunque può fare lo stesso dalla pagina Gioca. Se lo slot fissato diventa troppo vecchio per essere letto (circa tre minuti), il round può essere chiuso di nuovo per fissarne uno nuovo; il programma lo consente solo quando è dimostrabile che il vecchio slot è fuori portata.',
         },
         country: {
           q: 'Perché mostrate il mio paese?',
@@ -195,9 +201,12 @@ const it: Dict = {
     newTicket: 'Nuovo biglietto',
     rules: {
       daily: 'Nuovo round ogni giorno alle 00:00 UTC',
-      pot: 'Un biglietto vince il montepremi',
+      hourly: 'E uno ogni ora',
+      pot: 'Il numero più vicino vince l’80% del montepremi',
+      carry: 'Il resto passa al round successivo',
+      guess: 'Indovina il numero: nessuna scadenza, finché qualcuno non lo trova',
       numbers: 'Numeri da 0 a {max}',
-      fee: 'Commissione della casa limitata al 10% dal programma',
+      fee: 'Commissione della casa limitata al 20% dal programma',
       anyone: 'Chiunque può chiudere, estrarre e pagare un round',
       check: 'Ricalcola ogni estrazione nel tuo browser',
       open: 'Open source',
@@ -214,16 +223,16 @@ const it: Dict = {
     entropy: 'Entropia',
     slotHash: 'Hash dello slot · slot {slot}',
     formula: 'sha256(entropia ‖ hash dello slot ‖ slot ‖ round) =',
-    mod: 'primi 8 byte come u64 mod {count} = {ticket}',
-    ticketCount: 'biglietti',
-    ticket: 'biglietto #{index}',
+    mod: 'primi 8 byte come u64 mod {count} = {drawn}',
+    ticketCount: 'numeri',
+    closest: 'biglietto più vicino: {number}',
     number: 'Numero',
     paidTo: 'Pagato a',
     payout: 'Vincita',
     check: 'Verifica questa estrazione',
     roundPage: 'Pagina del round',
     nextDraw: 'Prossima estrazione dopo le 00:00 UTC',
-    ok: 'Ricalcolato nel tuo browser: stesso hash, vince il biglietto #{index}.',
+    ok: 'Ricalcolato nel tuo browser: stesso hash, vince il numero {number}.',
     mismatch: 'L’hash ricalcolato nel tuo browser non corrisponde a questo round.',
   },
 
@@ -236,7 +245,10 @@ const it: Dict = {
     yourTickets: 'I tuoi biglietti',
     winChance: 'Prob. di vincita',
     chance: 'Probabilità',
-    todaysPot: 'Montepremi di oggi',
+    todaysPot: 'Montepremi',
+    checked: 'Verificati',
+    waiting: 'In attesa',
+    numbersLeft: 'Numeri rimasti',
     winners: 'Vincitori',
     averagePot: 'Montepremi medio',
     biggestPot: 'Montepremi più alto',
@@ -251,7 +263,8 @@ const it: Dict = {
 
   play: {
     title: 'Gioca',
-    description: 'Scegli il numero di oggi e guarda il montepremi crescere in diretta su Solana.',
+    description:
+      'Scegli un numero nella lotteria quotidiana o in quella oraria, oppure scova quello nascosto, e guarda il montepremi crescere in diretta su Solana.',
     testMoney: 'Stai giocando su Solana {cluster}: i biglietti costano SOL di test senza alcun valore reale.',
     localFunds: 'Punta il tuo wallet su {url}, poi ricaricalo con: {command}',
     phantomFunds:
@@ -267,7 +280,7 @@ const it: Dict = {
     title: 'Numero',
     win: 'Vinci',
     in: 'tra',
-    taken: 'Già preso oggi',
+    taken: 'Già preso in questo round',
     range: 'Da 0 a {max}, un biglietto per numero',
     pad: 'Tastierino numerico',
     reset: 'Azzera',
@@ -275,10 +288,10 @@ const it: Dict = {
     dip: 'A caso',
     searchCountry: 'Cerca un paese',
     country: 'Paese mostrato con il tuo biglietto',
-    notSetUp: 'La lotteria non è ancora configurata su questo cluster.',
+    notSetUp: 'Questo gioco non è ancora configurato su questo cluster.',
     paused: 'La vendita dei biglietti è in pausa.',
     buy: 'Compra il numero {number} per ◎{price}',
-    takenToday: 'Il numero {number} è preso oggi',
+    takenToday: 'Il numero {number} è preso',
     outOfRange: 'Numero fuori intervallo',
     notEnough: 'SOL insufficienti',
     keys: 'Tasti 0–9 per digitare, ⌫ per cancellare, Invio per comprare.',
@@ -287,12 +300,56 @@ const it: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Oggi',
     title: 'SOLPOT',
     closesIn: '{day} · chiude tra',
+    carried: 'Include ◎{carry} riportati dal round precedente',
+    split: '80% al vincitore · {fee} di commissione della casa · il resto al round successivo',
     inPlay: 'Numeri in gioco',
     empty: 'Ancora nessun biglietto',
-    beFirst: 'Sii la prima persona a scegliere un numero oggi.',
+    beFirst: 'Sii la prima persona a scegliere un numero in questo round.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Giochi',
+    title: 'Tre modi di giocare',
+    description:
+      'Stessi numeri, da 0 a {max}. Il vincitore si prende l’80% del montepremi; la commissione della casa esce dal resto, e ciò che avanza passa al round successivo.',
+    play: 'Gioca',
+    daily: {
+      name: 'Lotteria quotidiana',
+      short: 'Quotidiana',
+      description:
+        'Un’estrazione ogni giorno dopo la mezzanotte UTC. Vince il biglietto più vicino al numero estratto.',
+    },
+    hourly: {
+      name: 'Lotteria oraria',
+      short: 'Oraria',
+      description:
+        'Un’estrazione ogni ora, allo scoccare dell’ora (UTC). Vince il biglietto più vicino al numero estratto.',
+    },
+    guess: {
+      name: 'Indovina il numero',
+      short: 'Indovina',
+      description:
+        'Nessuna scadenza. I nuovi tentativi vengono verificati ogni pochi secondi finché uno non trova il numero del round; poi inizia un nuovo round.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Finché qualcuno non lo trova',
+    odds: 'Ogni verifica trova il numero con una probabilità pari ai nuovi tentativi divisi per i {n} numeri non ancora provati.',
+    bought: 'Il tentativo {number} è in gioco. Viene verificato tra pochi secondi.',
+    sealing: 'Sigillatura degli ultimi tentativi del round {day}',
+    checkNow: 'Verifica ora',
+    checkHint:
+      'Un bot verifica i nuovi tentativi ogni pochi secondi. Chiunque può avviare la verifica; costa le commissioni di rete.',
+    missed: 'Non è il numero: {numbers}',
+    left: 'Il numero è uno dei {n} numeri non ancora provati.',
+    foundByYou: 'L’hai trovato! Il numero era il {number}',
+    foundByOther: 'Un altro giocatore ha trovato il numero',
+    nextRound: 'È in vendita un nuovo round con un nuovo numero.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -310,8 +367,8 @@ const it: Dict = {
     getBack: 'Recuperali',
     winners: 'Vincitori',
     noWinners: 'Ancora nessun vincitore',
-    firstDraw: 'La prima estrazione avviene a mezzanotte UTC.',
-    chart: 'Montepremi per giorno',
+    firstDraw: 'Il primo vincitore comparirà qui.',
+    chart: 'Montepremi per round',
     chartEmpty: 'Ancora nessun round concluso.',
     chartLabel:
       'Montepremi dell’ultimo round; l’elenco qui sotto riporta ogni valore. | Montepremi degli ultimi {n} round; l’elenco qui sotto riporta ogni valore.',
@@ -321,6 +378,7 @@ const it: Dict = {
     open: 'Aperto',
     toClose: 'In attesa di chiusura',
     toDraw: 'In attesa di estrazione',
+    checking: 'Verifica dei tentativi',
     unpaid: 'Estratto, non pagato',
     paid: 'Pagato',
   },
@@ -373,7 +431,7 @@ const it: Dict = {
     balance: 'Saldo',
     ticketsLeft: '{n} biglietto rimanente | {n} biglietti rimanenti',
     needMore: 'servono più SOL per giocare',
-    numbers: 'I tuoi numeri di oggi',
+    numbers: 'I tuoi numeri in questo round',
     copy: 'Copia indirizzo',
     explorer: 'Explorer',
     play: 'Gioca',
@@ -383,10 +441,11 @@ const it: Dict = {
   round: {
     title: 'Round del {day}',
     back: 'Torna al gioco',
-    notDate: 'Questa non è una data. I round si chiamano YYYY-MM-DD.',
+    notDate:
+      'Questo non è un round di questo gioco. I round quotidiani si chiamano YYYY-MM-DD, quelli orari YYYY-MM-DDTHH e quelli di Indovina il numero con il loro numero.',
     kicker: 'Round',
-    nobody: 'Nessuno ha giocato in questo giorno',
-    beFirst: 'Sii la prima persona a comprare un biglietto oggi.',
+    nobody: 'Nessuno ha giocato in questo round',
+    beFirst: 'Sii la prima persona a comprare un biglietto in questo round.',
     onlyExists: 'Un round esiste solo dopo che è stato venduto il suo primo biglietto.',
     pot: 'Montepremi',
     usd: '{usd} al prezzo di oggi',
@@ -406,10 +465,12 @@ const it: Dict = {
     slotHash: 'Hash dello slot {slot} (letto dal programma dalla sysvar SlotHashes)',
     randomness: 'Casualità',
     winning: 'Biglietto vincente',
-    winningFormula: 'primi 8 byte come u64 mod {count} = acquisto #{index}',
+    winningFormula: 'primi 8 byte come u64 mod {count} = {drawn}; il biglietto più vicino ha il {number}',
+    guessFormula:
+      'primi 8 byte come u64 mod {left} (numeri non ancora provati) = {r}, sotto {batch} (tentativi nella verifica): l’acquisto #{index} ha trovato il numero',
     ok: 'L’estrazione è corretta.',
     mismatch: 'Discrepanza: il risultato salvato non corrisponde agli input.',
-    got: 'Il tuo browser ha ottenuto {hash}… e il biglietto #{index}.',
+    got: 'Il tuo browser ha ottenuto {hash}… e il numero {number}.',
     tickets: 'Biglietti',
     ticketsHint:
       'I biglietti chiusi dai proprietari dopo il pagamento non compaiono più qui; il round conserva i totali.',
@@ -423,7 +484,7 @@ const it: Dict = {
 
   errors: {
     rejected: 'Hai annullato la richiesta nel tuo wallet.',
-    taken: 'Qualcuno ha già questo numero oggi. Scegline un altro.',
+    taken: 'Qualcuno ha già questo numero in questo round. Scegline un altro.',
     funds: 'SOL insufficienti nel wallet.',
     walletCluster:
       'Il tuo wallet non è riuscito a firmare. In Phantom: Settings → Developer Settings → attiva Testnet Mode → seleziona Devnet, poi ricollegalo e riprova.',
@@ -431,11 +492,11 @@ const it: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Solo l’autorità può farlo.',
-      invalidTicketPrice: 'Il prezzo del biglietto deve essere di almeno 0,001 SOL.',
-      feeTooHigh: 'La commissione supera il limite del 10%.',
+      invalidTicketPrice: 'Il prezzo del biglietto deve essere di almeno 0,002 SOL.',
+      feeTooHigh: 'La commissione supera il limite del 20%.',
       invalidMaxNumber: 'Il numero più alto deve essere maggiore di zero.',
       paused: 'La vendita dei biglietti è in pausa.',
-      wrongDay: 'I biglietti si possono comprare solo per il round di oggi.',
+      wrongRound: 'I biglietti si possono comprare solo per il round in vendita.',
       numberOutOfRange: 'Il numero è fuori intervallo.',
       invalidCountry: 'Il paese deve essere un codice ISO 3166-1 alpha-2 in maiuscolo.',
       roundNotOpen: 'Il round non è aperto.',
@@ -452,6 +513,10 @@ const it: Dict = {
       overflow: 'Overflow aritmetico.',
       priceChanged: 'Il prezzo del biglietto è più alto di quello che hai accettato.',
       feeAlreadyCollected: 'La commissione di questo round è già stata riscossa.',
+      roundFull: 'Questo round ha venduto tutti i biglietti che può contenere.',
+      nothingToCheck: 'Non ci sono nuovi tentativi da verificare.',
+      batchSealed: 'Gli ultimi tentativi sono in verifica; riprova tra qualche secondo.',
+      invalidGame: 'Gioco sconosciuto.',
     },
   },
 
@@ -539,14 +604,14 @@ const it: Dict = {
       rounds: {
         title: 'Come funziona un round',
         intro: 'Il programma impone queste regole; il sito si limita a mostrarle:',
-        day: 'Si gioca un round per ogni giorno UTC, dalle 00:00 UTC alla mezzanotte successiva.',
+        day: 'S☉Lucky ha tre giochi. Nella lotteria quotidiana si gioca un round per ogni giorno UTC, dalle 00:00 UTC alla mezzanotte successiva; nella lotteria oraria, uno per ogni ora UTC. In Indovina il numero, un round non ha un orario di fine: dura finché un tentativo non trova il suo numero.',
         number:
           'Un biglietto è un numero, da 0 al numero più alto impostato nella configurazione del programma. Ogni numero può appartenere a un solo biglietto per round.',
         price:
-          'Il prezzo del biglietto e la commissione della casa vengono copiati dalla configurazione quando un round si apre, e restano fissi per quel round. La commissione non può mai superare il 10% del montepremi. Quando compri, non paghi mai più del prezzo che ti è stato mostrato.',
-        pot: 'Il prezzo di ogni biglietto va nel montepremi del round, custodito dall’account del round su Solana. Ogni biglietto ha la stessa probabilità: la tua probabilità è data dai tuoi biglietti divisi per tutti i biglietti venduti in quel round. Il numero che scegli non la cambia.',
-        draw: 'Dopo la mezzanotte, chiunque può chiudere il round, estrarlo e pagarlo. Il proprietario del biglietto vincente riceve il montepremi meno la commissione della casa, e la commissione va alla tesoreria.',
-        rent: 'L’account di un biglietto contiene anche un piccolo deposito di rent, che recuperi chiudendo il biglietto una volta pagato il suo round. Il primo biglietto di un round paga anche il rent dell’account del round, che resta su Solana come registro pubblico del round.',
+          'Ogni gioco ha il suo prezzo del biglietto e la sua commissione della casa. Vengono copiati, insieme al numero più alto, quando un round si apre, e restano fissi per quel round. La commissione non può mai superare il 20% del montepremi. Quando compri, non paghi mai più del prezzo che ti è stato mostrato.',
+        pot: 'Il prezzo di ogni biglietto va nel montepremi del round, custodito dall’account del round su Solana. Nelle lotterie viene estratto un numero a caso da 0 al numero più alto e vince il biglietto più vicino; in caso di parità vince il numero più basso. In Indovina il numero, i nuovi tentativi vengono verificati a gruppi: un gruppo contiene il numero con una probabilità pari ai suoi tentativi divisi per i numeri non ancora provati, la stessa di un numero nascosto all’apertura del round.',
+        draw: 'Una volta concluso un round delle lotterie, o appena ci sono nuovi tentativi in attesa di verifica, chiunque può chiudere il round, estrarlo e pagarlo. Il proprietario del biglietto vincente riceve l’80% del montepremi, la commissione della casa va alla tesoreria, e il resto rimane nel programma per essere estratto nel round successivo del gioco.',
+        rent: 'L’account di un biglietto contiene anche un piccolo deposito di rent, che recuperi chiudendo il biglietto una volta pagato il suo round. Il primo biglietto di un round paga anche il rent dell’account del round, che resta su Solana come registro pubblico del round. Nelle lotterie, ogni biglietto paga anche il rent dei 4 byte che il suo numero occupa in quell’account, che non viene restituito.',
       },
       wallet: {
         title: 'Il tuo wallet e le transazioni',
@@ -560,12 +625,12 @@ const it: Dict = {
         title: 'Cosa l’operatore può e non può fare',
         intro: 'La configurazione del programma ha un’autorità, che può:',
         price:
-          'cambiare il prezzo del biglietto (almeno ◎0,001) e la commissione della casa (al massimo 10%), con effetto dal prossimo round che si apre;',
+          'cambiare il prezzo del biglietto di ogni gioco (almeno ◎0,002) e la sua commissione della casa (al massimo 20%), con effetto dal prossimo round di quel gioco che si apre;',
         pause:
           'sospendere e riprendere la vendita dei biglietti. Una pausa blocca solo i nuovi biglietti: i round già giocati possono comunque essere estratti e pagati;',
         other: 'cambiare la tesoreria, il numero più alto e l’autorità stessa.',
         cannot:
-          'Il codice del programma non consente all’autorità, né a nessun altro, di prendere il montepremi di un round o di inviarlo a chiunque non sia il proprietario del biglietto vincente, di prendere più della commissione, o di far pagare a un acquirente più del prezzo che gli è stato mostrato.',
+          'Il codice del programma non consente all’autorità, né a nessun altro, di prendere il montepremi di un round o di inviarlo altrove che al proprietario del biglietto vincente, alla tesoreria per la commissione e al round successivo del gioco, di prendere più della commissione, o di far pagare a un acquirente più del prezzo che gli è stato mostrato.',
         upgrade:
           'Il programma è aggiornabile: chi ne detiene l’autorità di aggiornamento potrebbe distribuire codice diverso, quindi ti stai fidando di quella persona finché il programma non viene reso immutabile o affidato a un multisig. Il sorgente di ogni versione è pubblico, e un programma distribuito può essere confrontato con esso come spiega la sezione «Verifiable builds» del README.',
       },
@@ -575,7 +640,7 @@ const it: Dict = {
         bugs: 'il software può avere bug, compresi il programma, l’app e il tuo wallet, e un bug potrebbe costarti i tuoi biglietti o i tuoi SOL;',
         network:
           'Solana o l’endpoint RPC usato dal sito possono essere lenti, congestionati o fuori servizio, e una transazione può fallire o arrivare dopo la chiusura di un round;',
-        draw: 'l’estrazione usa l’hash di uno slot Solana che nessuno conosce quando le vendite si chiudono. I giocatori non possono prevederlo, ma il validatore che produce quello slot potrebbe influenzarlo, e chi chiude un round potrebbe trattenere un’estrazione sfavorevole finché quello slot non può più essere letto. Non è un oracolo di casualità verificabile;',
+        draw: 'l’estrazione usa l’hash di uno slot Solana che nessuno conosce quando un round si chiude o un gruppo di tentativi viene sigillato. I giocatori non possono prevederlo, ma il validatore che produce quello slot potrebbe influenzarlo, e chi chiude un round potrebbe trattenere un’estrazione sfavorevole finché quello slot non può più essere letto. Non è un oracolo di casualità verificabile;',
         site: 'il sito può essere non disponibile in qualsiasi momento. Il programma, e i tuoi biglietti, continuano a funzionare senza di esso;',
         law: 'le leggi su lotterie e cripto-attività variano da paese a paese e possono cambiare.',
       },
@@ -741,9 +806,10 @@ const it: Dict = {
       },
       odds: {
         title: 'Conosci le probabilità',
-        same: 'Ogni biglietto ha la stessa probabilità. La tua probabilità di vincere un round è data dai tuoi biglietti divisi per tutti i biglietti venduti in quel round.',
-        label: 'Il numero che scegli è la tua etichetta sul tabellone. Non cambia la tua probabilità.',
-        fee: 'Il vincitore riceve il montepremi meno la commissione della casa, che il programma limita al 10%. Quindi, considerando tutti i giocatori, i biglietti restituiscono i soldi spesi per acquistarli meno quella commissione: in media, un biglietto restituisce meno di quanto costa.',
+        same: 'Nelle lotterie vince il biglietto più vicino a un numero casuale: la tua probabilità è la parte dell’intervallo di numeri più vicina ai tuoi numeri che a quelli di chiunque altro. In Indovina il numero, ogni verifica trova il numero con una probabilità pari ai nuovi tentativi divisi per i numeri non ancora provati.',
+        label:
+          'Nessun numero è più fortunato di un altro: il numero estratto ha la stessa probabilità di essere qualsiasi numero dell’intervallo.',
+        fee: 'Il vincitore riceve l’80% del montepremi. La commissione della casa, che il programma limita al 20%, esce dal resto, e ciò che avanza va al round successivo del gioco. Quindi, considerando tutti i giocatori, i biglietti restituiscono i soldi spesi per acquistarli meno quella commissione: in media, un biglietto restituisce meno di quanto costa.',
         nothing: 'Niente sul sito cambia queste probabilità.',
       },
       final: {

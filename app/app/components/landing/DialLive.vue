@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { countryFromBytes, flagEmoji, formatDay, msUntilClose } from '@solucky/client';
+import { countryFromBytes, flagEmoji, GameKind, msUntilClose } from '@solucky/client';
 
 /**
  * The live layer of the solar dial: the sun at the cluster's time of day, the
@@ -8,13 +8,11 @@ import { countryFromBytes, flagEmoji, formatDay, msUntilClose } from '@solucky/c
  */
 const { t } = useI18n();
 const intl = useIntlLocale();
-const { today, tickets, pot, config, loading } = useLottery();
+const { period, tickets, pot, maxNumber, loading } = useLottery(GameKind.Daily);
 const { address } = useWallet();
 const { flare } = useSolarFlares();
 const price = useSolPrice();
 const now = useNow();
-
-const maxNumber = computed(() => config.value?.data.maxNumber ?? 1_000_000_000);
 
 const sun = computed(() => {
   const angle = dialAngle(now.value);
@@ -58,7 +56,8 @@ watch(pot, (next, previous) => {
 });
 
 const countdown = computed(() => {
-  const total = Math.max(0, Math.floor(msUntilClose(today.value, now.value) / 1000));
+  const day = period.value ?? 0;
+  const total = Math.max(0, Math.floor(msUntilClose(GameKind.Daily, day, now.value) / 1000));
   return [Math.floor(total / 3600), Math.floor((total % 3600) / 60), total % 60]
     .map((n) => String(n).padStart(2, '0'))
     .join(':');
@@ -157,7 +156,9 @@ const countdown = computed(() => {
       >
         {{ countdown }}
       </p>
-      <p class="kicker mt-1 text-[0.6rem] text-secondary">{{ t('dial.toDraw', { day: formatDay(today) }) }}</p>
+      <p class="kicker mt-1 text-[0.6rem] text-secondary">
+        {{ t('dial.toDraw', { day: roundTitle(GameKind.Daily, period ?? 0) }) }}
+      </p>
     </div>
   </div>
 </template>

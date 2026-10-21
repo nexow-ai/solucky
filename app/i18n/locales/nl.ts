@@ -3,10 +3,10 @@ import type { Dict } from './en';
 
 const nl: Dict = {
   meta: {
-    title: 'S☉Lucky: de dagelijkse loterij op Solana',
+    title: 'S☉Lucky: loterijspellen op Solana',
     description:
-      'Kies een getal, koop een lot en win om middernacht UTC de hele pot. Elk lot, elke pot en elke trekking staat op Solana en kan door iedereen worden gecontroleerd.',
-    ogImageAlt: 'S☉Lucky, de dagelijkse loterij op Solana',
+      'Kies een getal in de dagelijkse loterij of de uurloterij, of spoor het verborgen getal op. De winnaar krijgt 80% van de pot. Elk lot, elke pot en elke trekking staat op Solana en kan door iedereen worden gecontroleerd.',
+    ogImageAlt: 'S☉Lucky, loterijspellen op Solana',
   },
 
   nav: {
@@ -19,6 +19,12 @@ const nl: Dict = {
   lang: {
     label: 'Taal',
     choose: 'Taal: {name}',
+  },
+
+  update: {
+    title: 'Er is een nieuwe versie klaar',
+    hint: 'Herlaad om hem nu te krijgen. Hij laadt ook vanzelf bij je volgende paginawissel.',
+    reload: 'Herladen',
   },
 
   header: {
@@ -53,10 +59,10 @@ const nl: Dict = {
   },
 
   home: {
-    kicker: 'Dagelijkse loterij op Solana',
+    kicker: 'Loterijspellen op Solana',
     title: 'Kies een getal.',
-    titleEnd: 'Win de pot om middernacht.',
-    lead: 'Eén trekking per dag, één winnaar, de hele pot. Elk lot, elke lamport en elke trekking staat op Solana, waar iedereen het kan controleren.',
+    titleEnd: 'Win om middernacht.',
+    lead: 'Elke dag een trekking, elk uur een trekking, en een verborgen getal om op te sporen. De winnaar krijgt 80% van de pot, en de rest schuift door naar de volgende ronde. Elk lot, elke lamport en elke trekking staat op Solana, waar iedereen het kan controleren.',
     playNow: 'Nu spelen',
     howItWorks: 'Zo werkt het',
     program: 'Programma',
@@ -95,7 +101,7 @@ const nl: Dict = {
         win: {
           title: 'Win om middernacht UTC',
           description:
-            'Eén lot wint de hele pot, min een kleine huiscommissie. Meer loten, betere kansen: elk lot telt één keer.',
+            'Er wordt een willekeurig getal getrokken, en het lot dat er het dichtst bij ligt, wint 80% van de pot. De huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende dag.',
           when: 'Direct na middernacht UTC',
         },
       },
@@ -110,12 +116,12 @@ const nl: Dict = {
         locked: {
           title: 'De pot zit vast in het programma',
           description:
-            'Het geld van de loten gaat rechtstreeks naar het account van de ronde. Het programma betaalt het alleen uit aan de eigenaar van het winnende lot, en de commissie aan de treasury. De beheerder kan het niet opnemen.',
+            'Het geld van de loten gaat rechtstreeks naar het account van de ronde. Het programma betaalt er alleen 80% van uit aan de eigenaar van het winnende lot, de commissie aan de treasury en de rest aan de volgende ronde van het spel. De beheerder kan het niet opnemen.',
         },
         draw: {
           title: 'Een trekking die niemand kan voorspellen',
           description:
-            'Elke aankoop wordt in de entropie van de ronde gemengd. Als de dag eindigt, legt de ronde een slot een paar seconden in de toekomst vast; de hash van dat slot, tot dan voor iedereen onbekend, bepaalt de winnaar.',
+            'Elke aankoop wordt in de entropie van de ronde gemengd. Als een ronde eindigt, legt ze een slot een paar seconden in de toekomst vast; de hash van dat slot, tot dan voor iedereen onbekend, bepaalt het getal waarmee de loten worden vergeleken.',
         },
         anyone: {
           title: 'Iedereen kan het uitvoeren',
@@ -125,12 +131,12 @@ const nl: Dict = {
         browser: {
           title: 'Te controleren in je browser',
           description:
-            'Elke rondepagina berekent de trekking opnieuw uit openbare gegevens: de entropie, de slothash en de winnende index. Dezelfde invoer, dezelfde winnaar.',
+            'Elke rondepagina berekent de trekking opnieuw uit openbare gegevens: de entropie, de slothash, het getrokken getal en het dichtstbijzijnde lot. Dezelfde invoer, dezelfde winnaar.',
         },
         limits: {
           title: 'Harde grenzen voor het huis',
           description:
-            'Het programma begrenst de commissie op 10%. Wijzigingen in prijs en commissie gelden pas voor de ronde van de volgende dag, en een koper betaalt nooit meer dan de prijs die hij te zien kreeg.',
+            'Het programma betaalt de winnaar altijd 80% van de pot uit en begrenst de commissie op 20%. Wijzigingen in prijs en commissie gelden pas voor rondes die daarna openen, en een koper betaalt nooit meer dan de prijs die hij te zien kreeg.',
         },
         open: {
           title: 'Open source',
@@ -151,15 +157,15 @@ const nl: Dict = {
         },
         price: {
           q: 'Wat kost een lot?',
-          a: 'De prijs wordt on-chain vastgesteld en staat op de pagina “Spelen”. Naast de prijs houdt een lotaccount een kleine borg voor rent vast, die je terugkrijgt door het lot te sluiten zodra de ronde is uitbetaald. Het eerste lot van de dag betaalt ook de rent van het account van de ronde, dat on-chain blijft als openbare registratie ervan.',
+          a: 'De prijs van elk spel wordt on-chain vastgesteld en staat op de pagina “Spelen” van dat spel. Naast de prijs houdt een lotaccount een kleine borg voor rent vast, die je terugkrijgt door het lot te sluiten zodra de ronde is uitbetaald. Het eerste lot van een ronde betaalt ook de rent van het account van de ronde, dat on-chain blijft als openbare registratie ervan; in de loterijen betaalt elk lot ook voor de 4 bytes die zijn getal daarin inneemt.',
         },
         odds: {
           q: 'Hoe wordt mijn kans berekend?',
-          a: 'Elk lot heeft dezelfde kans: jouw loten gedeeld door alle loten die die dag zijn verkocht. Het getal dat je kiest is je label op het bord; het verandert je kans niet.',
+          a: 'In de loterijen wint het lot dat het dichtst bij het getrokken getal ligt. Je kans is dus het deel van het getallenbereik dat dichter bij jouw getallen ligt dan bij die van wie dan ook: een getal ver van de andere loten dekt er meer van. Bij Raad het getal vindt elke controle het getal met een kans van de nieuwe pogingen gedeeld door de getallen die nog niet geprobeerd zijn.',
         },
         draw: {
           q: 'Wat als niemand de ronde trekt?',
-          a: 'Een kleine bot (de crank) sluit, trekt en betaalt elke ronde binnen enkele seconden na middernacht uit, en iedereen kan hetzelfde doen vanuit het paneel “Geschiedenis”. Als het vastgelegde slot ooit te oud wordt om te lezen (ongeveer drie minuten), kan de ronde opnieuw worden gesloten om een nieuw slot vast te leggen; het programma staat dat alleen toe als het oude slot aantoonbaar buiten bereik is.',
+          a: 'Een kleine bot (de crank) sluit, trekt en betaalt elke loterijronde binnen enkele seconden na het einde ervan uit, en controleert om de paar seconden nieuwe pogingen. Iedereen kan hetzelfde doen vanaf de pagina “Spelen”. Als het vastgelegde slot ooit te oud wordt om te lezen (ongeveer drie minuten), kan de ronde opnieuw worden gesloten om een nieuw slot vast te leggen; het programma staat dat alleen toe als het oude slot aantoonbaar buiten bereik is.',
         },
         country: {
           q: 'Waarom tonen jullie mijn land?',
@@ -195,9 +201,12 @@ const nl: Dict = {
     newTicket: 'Nieuw lot',
     rules: {
       daily: 'Elke dag om 00:00 UTC een nieuwe ronde',
-      pot: 'Eén lot wint de pot',
+      hourly: 'En elk uur één',
+      pot: 'Het dichtstbijzijnde getal wint 80% van de pot',
+      carry: 'De rest schuift door naar de volgende ronde',
+      guess: 'Raad het getal: geen deadline, tot iemand het vindt',
       numbers: 'Getallen van 0 tot {max}',
-      fee: 'Huiscommissie door het programma begrensd op 10%',
+      fee: 'Huiscommissie door het programma begrensd op 20%',
       anyone: 'Iedereen kan een ronde sluiten, trekken en uitbetalen',
       check: 'Reken elke trekking na in je browser',
       open: 'Open source',
@@ -214,16 +223,16 @@ const nl: Dict = {
     entropy: 'Entropie',
     slotHash: 'Slothash · slot {slot}',
     formula: 'sha256(entropie ‖ slothash ‖ slot ‖ ronde) =',
-    mod: 'eerste 8 bytes als u64 mod {count} = {ticket}',
-    ticketCount: 'loten',
-    ticket: 'lot #{index}',
+    mod: 'eerste 8 bytes als u64 mod {count} = {drawn}',
+    ticketCount: 'getallen',
+    closest: 'dichtstbijzijnde lot: {number}',
     number: 'Getal',
     paidTo: 'Betaald aan',
     payout: 'Uitbetaling',
     check: 'Controleer deze trekking',
     roundPage: 'Rondepagina',
     nextDraw: 'Volgende trekking na 00:00 UTC',
-    ok: 'Nagerekend in je browser: dezelfde hash, lot #{index} wint.',
+    ok: 'Nagerekend in je browser: dezelfde hash, getal {number} wint.',
     mismatch: 'De hash die je browser heeft nagerekend, komt niet overeen met deze ronde.',
   },
 
@@ -236,7 +245,10 @@ const nl: Dict = {
     yourTickets: 'Jouw loten',
     winChance: 'Winkans',
     chance: 'Kans',
-    todaysPot: 'Pot van vandaag',
+    todaysPot: 'Pot',
+    checked: 'Gecontroleerd',
+    waiting: 'Wachtend',
+    numbersLeft: 'Getallen over',
     winners: 'Winnaars',
     averagePot: 'Gemiddelde pot',
     biggestPot: 'Grootste pot',
@@ -251,7 +263,8 @@ const nl: Dict = {
 
   play: {
     title: 'Spelen',
-    description: 'Kies het getal van vandaag en zie de pot live groeien op Solana.',
+    description:
+      'Kies een getal in de dagelijkse loterij of de uurloterij, of spoor het verborgen getal op, en zie de pot live groeien op Solana.',
     testMoney: 'Je speelt op Solana {cluster}: loten kosten test-SOL zonder echte waarde.',
     localFunds: 'Richt je wallet op {url} en vul hem daarna met: {command}',
     phantomFunds:
@@ -267,7 +280,7 @@ const nl: Dict = {
     title: 'Getal',
     win: 'Win',
     in: 'over',
-    taken: 'Vandaag al bezet',
+    taken: 'Al bezet in deze ronde',
     range: '0 tot {max}, één lot per getal',
     pad: 'Cijferblok',
     reset: 'Resetten',
@@ -275,10 +288,10 @@ const nl: Dict = {
     dip: 'Willekeurig',
     searchCountry: 'Zoek een land',
     country: 'Land dat bij je lot wordt getoond',
-    notSetUp: 'De loterij is op dit cluster nog niet ingesteld.',
+    notSetUp: 'Dit spel is op dit cluster nog niet ingesteld.',
     paused: 'De verkoop van loten is gepauzeerd.',
     buy: 'Koop {number} voor ◎{price}',
-    takenToday: '{number} is vandaag bezet',
+    takenToday: '{number} is bezet',
     outOfRange: 'Getal buiten bereik',
     notEnough: 'Niet genoeg SOL',
     keys: 'Typ met 0–9, ⌫ wist, Enter koopt.',
@@ -287,12 +300,56 @@ const nl: Dict = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: 'Vandaag',
     title: 'SOLPOT',
     closesIn: '{day} · sluit over',
+    carried: 'Inclusief ◎{carry} doorgeschoven uit de vorige ronde',
+    split: '80% naar de winnaar · {fee} huiscommissie · de rest naar de volgende ronde',
     inPlay: 'Getallen in het spel',
     empty: 'Nog geen loten',
-    beFirst: 'Kies vandaag als eerste een getal.',
+    beFirst: 'Kies in deze ronde als eerste een getal.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Spellen',
+    title: 'Drie manieren om te spelen',
+    description:
+      'Dezelfde getallen, van 0 tot {max}. De winnaar krijgt 80% van de pot; de huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende ronde.',
+    play: 'Spelen',
+    daily: {
+      name: 'Dagelijkse loterij',
+      short: 'Dagelijks',
+      description:
+        'Elke dag een trekking na middernacht UTC. Het lot dat het dichtst bij het getrokken getal ligt, wint.',
+    },
+    hourly: {
+      name: 'Uurloterij',
+      short: 'Elk uur',
+      description:
+        'Elk uur een trekking, op het hele uur (UTC). Het lot dat het dichtst bij het getrokken getal ligt, wint.',
+    },
+    guess: {
+      name: 'Raad het getal',
+      short: 'Raden',
+      description:
+        'Geen deadline. Nieuwe pogingen worden om de paar seconden gecontroleerd tot er een het getal van de ronde vindt; dan begint er een nieuwe ronde.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Tot iemand het vindt',
+    odds: 'Elke controle vindt het getal met een kans van de nieuwe pogingen gedeeld door de {n} getallen die nog niet geprobeerd zijn.',
+    bought: 'Poging {number} is binnen. Ze wordt over een paar seconden gecontroleerd.',
+    sealing: 'De laatste pogingen van ronde {day} verzegelen',
+    checkNow: 'Nu controleren',
+    checkHint:
+      'Een bot controleert om de paar seconden nieuwe pogingen. Iedereen kan de controle uitvoeren; het kost netwerkkosten.',
+    missed: 'Niet het getal: {numbers}',
+    left: 'Het getal is een van de {n} getallen die nog niet geprobeerd zijn.',
+    foundByYou: 'Je hebt het gevonden! {number} was het getal',
+    foundByOther: 'Een andere speler heeft het getal gevonden',
+    nextRound: 'Er is een nieuwe ronde met een nieuw getal te koop.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -310,8 +367,8 @@ const nl: Dict = {
     getBack: 'Terughalen',
     winners: 'Winnaars',
     noWinners: 'Nog geen winnaars',
-    firstDraw: 'De eerste trekking is om middernacht UTC.',
-    chart: 'Pot per dag',
+    firstDraw: 'De eerste winnaar verschijnt hier.',
+    chart: 'Pot per ronde',
     chartEmpty: 'Nog geen afgeronde rondes.',
     chartLabel:
       'Pot van de laatste ronde; de lijst hieronder bevat elke waarde. | Pot van de laatste {n} rondes; de lijst hieronder bevat elke waarde.',
@@ -321,6 +378,7 @@ const nl: Dict = {
     open: 'Open',
     toClose: 'Wacht op sluiting',
     toDraw: 'Wacht op trekking',
+    checking: 'Pogingen controleren',
     unpaid: 'Getrokken, onbetaald',
     paid: 'Uitbetaald',
   },
@@ -373,7 +431,7 @@ const nl: Dict = {
     balance: 'Saldo',
     ticketsLeft: 'nog {n} lot | nog {n} loten',
     needMore: 'meer SOL nodig om te spelen',
-    numbers: 'Jouw getallen vandaag',
+    numbers: 'Jouw getallen in deze ronde',
     copy: 'Adres kopiëren',
     explorer: 'Explorer',
     play: 'Spelen',
@@ -383,10 +441,11 @@ const nl: Dict = {
   round: {
     title: 'Ronde {day}',
     back: 'Terug naar het spel',
-    notDate: 'Dit is geen datum. Rondes heten YYYY-MM-DD.',
+    notDate:
+      'Dit is geen ronde van dit spel. Dagelijkse rondes heten YYYY-MM-DD, uurrondes YYYY-MM-DDTHH, en rondes van Raad het getal heten naar hun nummer.',
     kicker: 'Ronde',
-    nobody: 'Niemand speelde op deze dag',
-    beFirst: 'Koop vandaag als eerste een lot.',
+    nobody: 'Niemand speelde in deze ronde',
+    beFirst: 'Koop in deze ronde als eerste een lot.',
     onlyExists: 'Een ronde bestaat pas zodra het eerste lot ervan is verkocht.',
     pot: 'Pot',
     usd: '{usd} tegen de koers van vandaag',
@@ -406,10 +465,12 @@ const nl: Dict = {
     slotHash: 'Slothash van slot {slot} (door het programma gelezen uit de sysvar SlotHashes)',
     randomness: 'Willekeur',
     winning: 'Winnend lot',
-    winningFormula: 'eerste 8 bytes als u64 mod {count} = aankoop #{index}',
+    winningFormula: 'eerste 8 bytes als u64 mod {count} = {drawn}; het dichtstbijzijnde lot heeft {number}',
+    guessFormula:
+      'eerste 8 bytes als u64 mod {left} (getallen die nog niet geprobeerd zijn) = {r}, onder {batch} (pogingen in de controle): aankoop #{index} vond het getal',
     ok: 'De trekking klopt.',
     mismatch: 'Geen overeenkomst: het opgeslagen resultaat past niet bij de invoer.',
-    got: 'Je browser kwam uit op {hash}… en lot #{index}.',
+    got: 'Je browser kwam uit op {hash}… en getal {number}.',
     tickets: 'Loten',
     ticketsHint:
       'Loten die hun eigenaars na de uitbetaling hebben gesloten, staan hier niet meer; de ronde houdt de totalen bij.',
@@ -423,7 +484,7 @@ const nl: Dict = {
 
   errors: {
     rejected: 'Je hebt het verzoek in je wallet geannuleerd.',
-    taken: 'Iemand heeft dit getal vandaag al. Kies een ander.',
+    taken: 'Iemand heeft dit getal in deze ronde al. Kies een ander.',
     funds: 'Niet genoeg SOL in de wallet.',
     walletCluster:
       'Je wallet kon niet ondertekenen. In Phantom: Settings → Developer Settings → Testnet Mode inschakelen → Devnet kiezen, koppel daarna opnieuw en probeer het nog eens.',
@@ -431,11 +492,11 @@ const nl: Dict = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Alleen de authority kan dit doen.',
-      invalidTicketPrice: 'De lotprijs moet minstens 0,001 SOL zijn.',
-      feeTooHigh: 'De commissie ligt boven het maximum van 10%.',
+      invalidTicketPrice: 'De lotprijs moet minstens 0,002 SOL zijn.',
+      feeTooHigh: 'De commissie ligt boven het maximum van 20%.',
       invalidMaxNumber: 'Het hoogste getal moet groter zijn dan nul.',
       paused: 'De verkoop van loten is gepauzeerd.',
-      wrongDay: 'Loten kunnen alleen voor de ronde van vandaag worden gekocht.',
+      wrongRound: 'Loten kunnen alleen worden gekocht voor de ronde die in de verkoop is.',
       numberOutOfRange: 'Het getal valt buiten het bereik.',
       invalidCountry: 'Het land moet een ISO 3166-1 alpha-2-code in hoofdletters zijn.',
       roundNotOpen: 'De ronde is niet open.',
@@ -452,6 +513,10 @@ const nl: Dict = {
       overflow: 'Rekenkundige overloop.',
       priceChanged: 'De lotprijs is hoger dan de prijs die je hebt geaccepteerd.',
       feeAlreadyCollected: 'De commissie van deze ronde is al geïnd.',
+      roundFull: 'Deze ronde heeft alle loten verkocht die ze kan bevatten.',
+      nothingToCheck: 'Er zijn geen nieuwe pogingen om te controleren.',
+      batchSealed: 'De laatste pogingen worden gecontroleerd; probeer het over een paar seconden opnieuw.',
+      invalidGame: 'Onbekend spel.',
     },
   },
 
@@ -539,14 +604,14 @@ const nl: Dict = {
       rounds: {
         title: 'Hoe een ronde werkt',
         intro: 'Het programma dwingt deze regels af; de site toont ze alleen:',
-        day: 'Er loopt één ronde per UTC-dag, van 00:00 UTC tot de volgende middernacht.',
+        day: 'S☉Lucky heeft drie spellen. In de dagelijkse loterij loopt er één ronde per UTC-dag, van 00:00 UTC tot de volgende middernacht; in de uurloterij één per UTC-uur. Bij Raad het getal heeft een ronde geen eindtijd: ze loopt tot een poging het getal ervan vindt.',
         number:
           'Een lot is één getal, van 0 tot het hoogste getal dat in de configuratie van het programma is ingesteld. Elk getal kan per ronde door één lot worden bezet.',
         price:
-          'De lotprijs en de huiscommissie worden uit de configuratie overgenomen wanneer een ronde opent, en liggen voor die ronde vast. De commissie kan nooit meer zijn dan 10% van de pot. Als je koopt, betaal je nooit meer dan de prijs die je te zien kreeg.',
-        pot: 'De prijs van elk lot gaat naar de pot van de ronde, die wordt bewaard door het eigen account van de ronde op Solana. Elk lot heeft dezelfde kans: jouw kans is jouw loten gedeeld door alle loten die in die ronde zijn verkocht. Het getal dat je kiest, verandert daar niets aan.',
-        draw: 'Na middernacht kan iedereen de ronde sluiten, trekken en uitbetalen. De eigenaar van het winnende lot ontvangt de pot min de huiscommissie, en de commissie gaat naar de treasury.',
-        rent: 'Een lotaccount houdt ook een kleine borg voor rent vast, die je terugkrijgt door het lot te sluiten zodra de ronde ervan is uitbetaald. Het eerste lot van een ronde betaalt ook de rent van het account van de ronde, dat op Solana blijft als openbare registratie van de ronde.',
+          'Elk spel heeft een eigen lotprijs en huiscommissie. Die worden, samen met het hoogste getal, overgenomen wanneer een ronde opent, en liggen voor die ronde vast. De commissie kan nooit meer zijn dan 20% van de pot. Als je koopt, betaal je nooit meer dan de prijs die je te zien kreeg.',
+        pot: 'De prijs van elk lot gaat naar de pot van de ronde, die wordt bewaard door het eigen account van de ronde op Solana. In de loterijen wordt een willekeurig getal van 0 tot het hoogste getal getrokken en wint het lot dat er het dichtst bij ligt; bij een gelijkspel wint het laagste getal. Bij Raad het getal worden nieuwe pogingen in groepen gecontroleerd: een groep bevat het getal met een kans van zijn pogingen gedeeld door de getallen die nog niet geprobeerd zijn, dezelfde kans als bij een getal dat bij de opening van de ronde werd verborgen.',
+        draw: 'Zodra een loterijronde is afgelopen, of zodra er nieuwe pogingen op een controle wachten, kan iedereen de ronde sluiten, trekken en uitbetalen. De eigenaar van het winnende lot ontvangt 80% van de pot, de huiscommissie gaat naar de treasury, en de rest blijft in het programma om in de volgende ronde van het spel te worden getrokken.',
+        rent: 'Een lotaccount houdt ook een kleine borg voor rent vast, die je terugkrijgt door het lot te sluiten zodra de ronde ervan is uitbetaald. Het eerste lot van een ronde betaalt ook de rent van het account van de ronde, dat op Solana blijft als openbare registratie van de ronde. In de loterijen betaalt elk lot ook de rent van de 4 bytes die zijn getal in dat account inneemt; die krijg je niet terug.',
       },
       wallet: {
         title: 'Je wallet en transacties',
@@ -560,12 +625,12 @@ const nl: Dict = {
         title: 'Wat de beheerder wel en niet kan',
         intro: 'De configuratie van het programma heeft een authority, die:',
         price:
-          'de lotprijs (minstens ◎0,001) en de huiscommissie (hoogstens 10%) kan wijzigen, met ingang van de volgende ronde die opent;',
+          'per spel de lotprijs (minstens ◎0,002) en de huiscommissie (hoogstens 20%) kan wijzigen, met ingang van de volgende ronde van dat spel die opent;',
         pause:
           'de verkoop van loten kan pauzeren en hervatten. Een pauze stopt alleen nieuwe loten: rondes die al gespeeld zijn, kunnen nog steeds worden getrokken en uitbetaald;',
         other: 'de treasury, het hoogste getal en de authority zelf kan wijzigen.',
         cannot:
-          'De code van het programma staat de authority, of wie dan ook, niet toe de pot van een ronde te nemen of hem ergens anders heen te sturen dan naar de eigenaar van het winnende lot, meer te nemen dan de commissie, of een koper meer te rekenen dan de prijs die hij te zien kreeg.',
+          'De code van het programma staat de authority, of wie dan ook, niet toe de pot van een ronde te nemen of hem ergens anders heen te sturen dan naar de eigenaar van het winnende lot, de treasury (voor de commissie) en de volgende ronde van het spel, meer te nemen dan de commissie, of een koper meer te rekenen dan de prijs die hij te zien kreeg.',
         upgrade:
           'Het programma is upgradebaar: wie de upgrade-authority ervan heeft, zou andere code kunnen deployen, dus je vertrouwt die persoon totdat het programma onveranderlijk wordt gemaakt of aan een multisig wordt overgedragen. De broncode van elke versie is openbaar, en een gedeployd programma kan daartegen worden gecontroleerd, zoals de sectie “Verifiable builds” in de README uitlegt.',
       },
@@ -575,7 +640,7 @@ const nl: Dict = {
         bugs: 'software bugs kan bevatten, ook het programma, de app en je wallet, en een bug je je loten of je SOL kan kosten;',
         network:
           'Solana of het RPC-endpoint dat de site gebruikt traag, overbelast of offline kan zijn, en een transactie kan mislukken of pas aankomen nadat een ronde is gesloten;',
-        draw: 'de trekking de hash gebruikt van een Solana-slot dat niemand kent als de verkoop sluit. Spelers kunnen die niet voorspellen, maar de validator die dat slot produceert, zou hem kunnen beïnvloeden, en wie een ronde sluit, zou een ongunstige trekking kunnen tegenhouden totdat dat slot niet meer kan worden gelezen. Het is geen oracle voor verifieerbare willekeur;',
+        draw: 'de trekking de hash gebruikt van een Solana-slot dat niemand kent als een ronde sluit of een groep pogingen wordt verzegeld. Spelers kunnen die niet voorspellen, maar de validator die dat slot produceert, zou hem kunnen beïnvloeden, en wie een ronde sluit, zou een ongunstige trekking kunnen tegenhouden totdat dat slot niet meer kan worden gelezen. Het is geen oracle voor verifieerbare willekeur;',
         site: 'de site op elk moment onbereikbaar kan zijn. Het programma, en je loten, blijven zonder de site werken;',
         law: 'wetten over loterijen en cryptoactiva per land verschillen en kunnen veranderen.',
       },
@@ -741,9 +806,10 @@ const nl: Dict = {
       },
       odds: {
         title: 'Ken de kansen',
-        same: 'Elk lot heeft dezelfde kans. Je kans om een ronde te winnen is jouw loten gedeeld door alle loten die erin zijn verkocht.',
-        label: 'Het getal dat je kiest, is je label op het bord. Het verandert je kans niet.',
-        fee: 'De winnaar ontvangt de pot min de huiscommissie, die het programma begrenst op 10%. Over alle spelers samen betalen loten dus het geld terug dat eraan is uitgegeven, min die commissie: gemiddeld levert een lot minder op dan het kost.',
+        same: 'In de loterijen wint het lot dat het dichtst bij een willekeurig getal ligt: je kans is het deel van het getallenbereik dat dichter bij jouw getallen ligt dan bij die van wie dan ook. Bij Raad het getal vindt elke controle het getal met een kans van de nieuwe pogingen gedeeld door de getallen die nog niet geprobeerd zijn.',
+        label:
+          'Geen enkel getal brengt meer geluk dan een ander: het getrokken getal kan met gelijke kans elk getal uit het bereik zijn.',
+        fee: 'De winnaar ontvangt 80% van de pot. De huiscommissie, die het programma begrenst op 20%, gaat van de rest af, en wat overblijft, gaat naar de volgende ronde van het spel. Over alle spelers samen betalen loten dus het geld terug dat eraan is uitgegeven, min die commissie: gemiddeld levert een lot minder op dan het kost.',
         nothing: 'Niets op de site verandert deze kansen.',
       },
       final: {

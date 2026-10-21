@@ -6,7 +6,7 @@ const localePath = useLocalePath();
 const intl = useIntlLocale();
 const { wallets, connected, address, ready, status, balance, connect, disconnect, refreshBalance } = useWallet();
 const { explorer, clusterLabel, isMainnet } = useSolana();
-const { myTickets, tickets: dayTickets, ticketPrice, pot, prize } = useLottery();
+const { myTickets, myChance: chance, ticketPrice, pot, prize } = useLottery();
 const solUsd = useSolPrice();
 const toast = useToast();
 const open = ref(false);
@@ -19,7 +19,6 @@ const INSTALL = [
   { name: 'Backpack', to: 'https://backpack.app/downloads' },
 ];
 
-const chance = computed(() => (myTickets.value.length ? myTickets.value.length / dayTickets.value.length : null));
 const ticketNumbers = computed(() =>
   [...myTickets.value]
     .map((ticket) => ticket.data.number)

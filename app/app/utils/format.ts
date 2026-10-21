@@ -1,4 +1,4 @@
-import { lamportsToSol } from '@solucky/client';
+import { formatPeriod, GAME_SLUGS, GameKind, lamportsToSol } from '@solucky/client';
 
 // Building an Intl.NumberFormat is slow and the panels format numbers on every
 // clock tick, so each formatter is created once.
@@ -87,4 +87,16 @@ export function formatDate(isoDay: string, locale = 'en-US'): string {
   return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(
     new Date(`${isoDay}T00:00:00Z`),
   );
+}
+
+/** A round's name on screen: `2026-10-21`, `2026-10-21 14:00 UTC` or `#3`. */
+export function roundTitle(kind: number, period: number): string {
+  const label = formatPeriod(kind, period);
+  if (kind === GameKind.Daily) return label;
+  return kind === GameKind.Hourly ? `${label.replace('T', ' ')}:00 UTC` : `#${label}`;
+}
+
+/** Path of a round's page: `/rounds/daily/2026-10-21`, `/rounds/guess/3`. */
+export function roundPath(kind: number, period: number): string {
+  return `/rounds/${GAME_SLUGS[kind as GameKind]}/${formatPeriod(kind, period)}`;
 }

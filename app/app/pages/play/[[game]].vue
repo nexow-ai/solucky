@@ -1,8 +1,15 @@
 <script setup lang="ts">
+import { GAME_SLUGS, gameFromSlug } from '@solucky/client';
+
+// `/play` is the daily lottery; `/play/hourly` and `/play/guess` the others.
+definePageMeta({ validate: (route) => !route.params.game || gameFromSlug(String(route.params.game)) !== null });
+
 const { t } = useI18n();
+const localePath = useLocalePath();
+const game = useGame();
 
 useSeoMeta({
-  title: () => `${t('play.title')} · S☉Lucky`,
+  title: () => `${t(`games.${GAME_SLUGS[game.value]}.name`)} · S☉Lucky`,
   description: () => t('play.description'),
 });
 
@@ -57,6 +64,19 @@ const testFunds = computed(() =>
         :title="error"
         :actions="[{ label: t('play.retry'), color: 'error', variant: 'outline', loading, onClick: refresh }]"
       />
+
+      <nav class="flex justify-center gap-2" :aria-label="t('games.tag')">
+        <UButton
+          v-for="(slug, kind) in GAME_SLUGS"
+          :key="slug"
+          :to="localePath(`/play/${slug}`)"
+          :label="t(`games.${slug}.short`)"
+          :aria-current="kind === game ? 'page' : undefined"
+          :color="kind === game ? 'primary' : 'neutral'"
+          :variant="kind === game ? 'soft' : 'ghost'"
+          size="lg"
+        />
+      </nav>
 
       <LotteryLiveBar :feed="feed" />
 

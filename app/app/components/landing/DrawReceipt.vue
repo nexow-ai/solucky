@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import type { Account } from '@solana/kit';
-import { computeRandomness, countryFromBytes, flagEmoji, formatDay, type Round, winningIndex } from '@solucky/client';
+import { fetchEncodedAccount } from '@solana/kit';
+import {
+  closestNumber,
+  computeRandomness,
+  countryFromBytes,
+  drawnNumber,
+  flagEmoji,
+  GameKind,
+  type Round,
+  roundNumbers,
+} from '@solucky/client';
 
 /**
- * The last settled draw, printed like a receipt: the public inputs, the hash
- * they give, the winning ticket, and a button that redoes the hash in the
- * browser. Until a round is settled it prints blanks of the same length, so
+ * The last settled daily draw, printed like a receipt: the public inputs, the
+ * hash they give, the drawn number and the closest ticket, and a button that
+ * redoes the draw in the browser. Until a round is settled it prints blanks of the same length, so
  * the receipt keeps one height whether it is loading, empty or filled.
  */
 const { t } = useI18n();
 const localePath = useLocalePath();
-const { settled, loading } = useLottery();
-const { explorer } = useSolana();
+const { settled, loading } = useLottery(GameKind.Daily);
+const { client, explorer } = useSolana();
 
 const last = computed(() =>
-  settled.value.reduce<Account<Round> | null>((a, b) => (!a || b.data.day > a.data.day ? b : a), null),
+  settled.value.reduce<Account<Round> | null>((a, b) => (!a || b.data.period > a.data.period ? b : a), null),
 );
 
 const hex = (bytes: ArrayLike<number>) => Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
@@ -50,8 +60,16 @@ async function verify() {
     slot: round.data.drawSlot,
     round: round.address,
   });
-  const index = winningIndex(randomness, round.data.ticketCount);
-  check.value = hex(randomness) === hex(round.data.randomness) && index === round.data.winningIndex ? 'ok' : 'mismatch';
+  // The closest number needs every number of the round, stored after its fields.
+  const account = await fetchEncodedAccount(client.rpc, round.address, { commitment: 'confirmed' });
+  const drawn = drawnNumber(randomness, round.data.maxNumber);
+  const closest = account.exists ? closestNumber(roundNumbers(account.data), drawn) : null;
+  check.value =
+    hex(randomness) === hex(round.data.randomness) &&
+    drawn === round.data.drawnNumber &&
+    closest === round.data.winningNumber
+      ? 'ok'
+      : 'mismatch';
 }
 </script>
 
@@ -70,7 +88,7 @@ async function verify() {
         <div class="flex justify-between gap-4">
           <dt class="uppercase">{{ t('receipt.round') }}</dt>
           <dd class="font-semibold text-highlighted">
-            {{ last ? formatDay(last.data.day) : loading ? '…' : t('receipt.noneYet') }}
+            {{ last ? roundTitle(GameKind.Daily, last.data.period) : loading ? '…' : t('receipt.noneYet') }}
           </dd>
         </div>
         <div class="flex justify-between gap-4">
@@ -101,13 +119,14 @@ async function verify() {
         {{ last ? hex(last.data.randomness) : BLANK }}
       </p>
       <i18n-t keypath="receipt.mod" tag="p" scope="global" class="mt-3 text-muted">
-        <template #count>{{ last ? last.data.ticketCount : t('receipt.ticketCount') }}</template>
-        <template #ticket>
-          <span class="font-semibold text-highlighted">{{
-            t('receipt.ticket', { index: last ? last.data.winningIndex : '—' })
-          }}</span>
+        <template #count>{{ last ? formatNumber(last.data.maxNumber + 1) : t('receipt.ticketCount') }}</template>
+        <template #drawn>
+          <span class="font-semibold text-highlighted">{{ last ? formatNumber(last.data.drawnNumber) : '—' }}</span>
         </template>
       </i18n-t>
+      <p class="text-muted">
+        {{ t('receipt.closest', { number: last ? formatNumber(last.data.winningNumber) : '—' }) }}
+      </p>
       <hr class="my-4 border-dashed border-accented" />
 
       <dl class="space-y-1.5">
@@ -163,7 +182,7 @@ async function verify() {
         />
         <UButton
           v-if="last"
-          :to="localePath(`/rounds/${formatDay(last.data.day)}`)"
+          :to="localePath(roundPath(GameKind.Daily, last.data.period))"
           :label="t('receipt.roundPage')"
           trailing-icon="i-lucide-arrow-right"
           :ui="{ trailingIcon: 'rtl:-scale-x-100' }"
@@ -174,7 +193,7 @@ async function verify() {
         <span v-else class="py-1.5 text-muted">{{ t('receipt.nextDraw') }}</span>
       </div>
       <p v-if="last && check === 'ok'" class="mt-3 text-success" role="status">
-        {{ t('receipt.ok', { index: last.data.winningIndex }) }}
+        {{ t('receipt.ok', { number: formatNumber(last.data.winningNumber) }) }}
       </p>
       <p v-else-if="last && check === 'mismatch'" class="mt-3 text-error" role="status">
         {{ t('receipt.mismatch') }}

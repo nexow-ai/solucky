@@ -1,3 +1,6 @@
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { DEFAULT_LOCALE, LOCALES } from './i18n/languages';
 
 /**
@@ -36,6 +39,7 @@ const browserOnly = Object.fromEntries(
     const prefix = code === DEFAULT_LOCALE ? '' : `/${code}`;
     return [
       [`${prefix}/play`, { ssr: false }],
+      [`${prefix}/play/**`, { ssr: false }],
       [`${prefix}/rounds/**`, { ssr: false }],
     ];
   }),
@@ -62,6 +66,7 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon.png' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/manifest.webmanifest' },
       ],
     },
   },
@@ -93,6 +98,8 @@ export default defineNuxtConfig({
       rpcWsUrl: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
+      /** Highest ticket number, shown until the on-chain config loads. */
+      maxNumber: 21_000_000,
       /** Public URL of the site, for absolute links in social cards. */
       siteUrl: '',
       twitterUrl: '',
@@ -152,6 +159,22 @@ export default defineNuxtConfig({
       { name: 'Space Grotesk', provider: 'google', weights: [400, 500, 600, 700] },
       { name: 'JetBrains Mono', provider: 'google', weights: [400, 600, 800] },
     ],
+  },
+
+  // How often an open page asks for the latest build (app/plugins/pwa.client.ts).
+  experimental: {
+    checkOutdatedBuildInterval: 10 * 60_000,
+  },
+
+  hooks: {
+    // The service worker carries the build id, so every deploy changes its
+    // bytes and browsers install it. Nitro has compressed it already: drop
+    // those copies rather than serve the placeholder.
+    'nitro:build:public-assets'(nitro) {
+      const sw = join(nitro.options.output.publicDir, 'sw.js');
+      writeFileSync(sw, readFileSync(sw, 'utf8').replace('__BUILD_ID__', nitro.options.runtimeConfig.app.buildId));
+      for (const copy of [`${sw}.br`, `${sw}.gz`]) rmSync(copy, { force: true });
+    },
   },
 
   vite: {

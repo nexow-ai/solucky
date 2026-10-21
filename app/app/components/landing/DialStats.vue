@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { GameKind } from '@solucky/client';
+
 /** Readouts under the solar dial, with today's entropy: the rolling hash every purchase feeds. */
 const { t } = useI18n();
-const { round, tickets, players, ticketPrice } = useLottery();
+const { round, tickets, players, ticketPrice } = useLottery(GameKind.Daily);
 const { clusterLabel } = useSolana();
 
 const entropy = computed(() => {

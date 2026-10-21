@@ -14,10 +14,10 @@
  */
 const en = {
   meta: {
-    title: 'S☉Lucky: the daily lottery on Solana',
+    title: 'S☉Lucky: lottery games on Solana',
     description:
-      'Pick a number, buy a ticket, and win the whole pot at midnight UTC. Every ticket, pot and draw lives on Solana and can be checked by anyone.',
-    ogImageAlt: 'S☉Lucky, the daily lottery on Solana',
+      'Pick a number in the daily or hourly lottery, or hunt down the hidden number. The winner takes 80% of the pot. Every ticket, pot and draw lives on Solana and can be checked by anyone.',
+    ogImageAlt: 'S☉Lucky, lottery games on Solana',
   },
 
   nav: {
@@ -30,6 +30,12 @@ const en = {
   lang: {
     label: 'Language',
     choose: 'Language: {name}',
+  },
+
+  update: {
+    title: 'A new version is ready',
+    hint: 'Reload to get it now. It also loads by itself on your next page change.',
+    reload: 'Reload',
   },
 
   header: {
@@ -64,10 +70,10 @@ const en = {
   },
 
   home: {
-    kicker: 'Daily lottery on Solana',
+    kicker: 'Lottery games on Solana',
     title: 'Pick a number.',
-    titleEnd: 'Win the pot at midnight.',
-    lead: 'One draw a day, one winner, the whole pot. Every ticket, every lamport and every draw lives on Solana, where anyone can check it.',
+    titleEnd: 'Win at midnight.',
+    lead: 'A draw every day, a draw every hour, and a hidden number to hunt down. The winner takes 80% of the pot, and the rest carries over to the next round. Every ticket, every lamport and every draw lives on Solana, where anyone can check it.',
     playNow: 'Play now',
     howItWorks: 'How it works',
     program: 'Program',
@@ -105,7 +111,7 @@ const en = {
         win: {
           title: 'Win at midnight UTC',
           description:
-            'One ticket wins the whole pot, minus a small house fee. More tickets, better odds: every ticket counts once.',
+            'A random number is drawn, and the ticket closest to it wins 80% of the pot. The house fee comes out of the rest, and what is left carries over to the next day.',
           when: 'Right after midnight UTC',
         },
       },
@@ -120,12 +126,12 @@ const en = {
         locked: {
           title: 'The pot is locked in the program',
           description:
-            'Ticket money goes straight to the round’s account. The program only ever pays it to the winning ticket’s owner, and the fee to the treasury. The operator cannot withdraw it.',
+            'Ticket money goes straight to the round’s account. The program only ever pays 80% of it to the winning ticket’s owner, the fee to the treasury, and the rest to the game’s next round. The operator cannot withdraw it.',
         },
         draw: {
           title: 'A draw nobody can predict',
           description:
-            'Every purchase is mixed into the round’s entropy. When the day ends, the round pins a slot a few seconds in the future; that slot’s hash, unknown to everyone until then, picks the winner.',
+            'Every purchase is mixed into the round’s entropy. When a round ends, it pins a slot a few seconds in the future; that slot’s hash, unknown to everyone until then, picks the number the tickets are measured against.',
         },
         anyone: {
           title: 'Anyone can run it',
@@ -135,12 +141,12 @@ const en = {
         browser: {
           title: 'Checkable in your browser',
           description:
-            'Each round page recomputes the draw from public data: the entropy, the slot hash and the winning index. Same inputs, same winner.',
+            'Each round page recomputes the draw from public data: the entropy, the slot hash, the drawn number and the closest ticket. Same inputs, same winner.',
         },
         limits: {
           title: 'Hard limits on the house',
           description:
-            'The program caps the fee at 10%. Price and fee changes only apply to the next day’s round, and a buyer never pays more than the price they were shown.',
+            'The program always pays the winner 80% of the pot and caps the fee at 20%. Price and fee changes only apply to rounds opened afterwards, and a buyer never pays more than the price they were shown.',
         },
         open: {
           title: 'Open source',
@@ -161,15 +167,15 @@ const en = {
         },
         price: {
           q: 'How much does a ticket cost?',
-          a: 'The price is set on-chain and shown on the Play page. Besides the price, a ticket account holds a small rent deposit that you get back by closing the ticket once the round is paid. The first ticket of the day also pays the rent of the round’s account, which stays on-chain as its public record.',
+          a: 'Each game’s price is set on-chain and shown on its Play page. Besides the price, a ticket account holds a small rent deposit that you get back by closing the ticket once the round is paid. The first ticket of a round also pays the rent of the round’s account, which stays on-chain as its public record; in the lotteries, each ticket also pays for the 4 bytes its number takes there.',
         },
         odds: {
           q: 'How are my odds calculated?',
-          a: 'Every ticket has the same chance: your tickets divided by all tickets sold that day. The number you pick is your label on the board; it does not change your odds.',
+          a: 'In the lotteries, the ticket closest to the drawn number wins, so your chance is the share of the number range that lies closer to your numbers than to anyone else’s: a number far from the other tickets covers more of it. In Guess the number, each check finds the number with odds of the new guesses over the numbers not tried yet.',
         },
         draw: {
           q: 'What if nobody draws the round?',
-          a: 'A small bot (the crank) closes, draws and pays every round within seconds of midnight, and anyone can do the same from the History panel. If the pinned slot ever becomes too old to read (about three minutes), the round can be closed again to pin a fresh one; the program only allows that once the old slot is provably out of reach.',
+          a: 'A small bot (the crank) closes, draws and pays every lottery round within seconds of its end, and checks new guesses every few seconds. Anyone can do the same from the Play page. If the pinned slot ever becomes too old to read (about three minutes), the round can be closed again to pin a fresh one; the program only allows that once the old slot is provably out of reach.',
         },
         country: {
           q: 'Why do you show my country?',
@@ -205,9 +211,12 @@ const en = {
     newTicket: 'New ticket',
     rules: {
       daily: 'New round every day at 00:00 UTC',
-      pot: 'One ticket wins the pot',
+      hourly: 'And one every hour',
+      pot: 'The closest number wins 80% of the pot',
+      carry: 'The rest carries over to the next round',
+      guess: 'Guess the number: no deadline, until someone finds it',
       numbers: 'Numbers from 0 to {max}',
-      fee: 'House fee capped at 10% by the program',
+      fee: 'House fee capped at 20% by the program',
       anyone: 'Anyone can close, draw and pay a round',
       check: 'Recompute every draw in your browser',
       open: 'Open source',
@@ -224,16 +233,16 @@ const en = {
     entropy: 'Entropy',
     slotHash: 'Slot hash · slot {slot}',
     formula: 'sha256(entropy ‖ slot hash ‖ slot ‖ round) =',
-    mod: 'first 8 bytes as u64 mod {count} = {ticket}',
-    ticketCount: 'tickets',
-    ticket: 'ticket #{index}',
+    mod: 'first 8 bytes as u64 mod {count} = {drawn}',
+    ticketCount: 'numbers',
+    closest: 'closest ticket: {number}',
     number: 'Number',
     paidTo: 'Paid to',
     payout: 'Payout',
     check: 'Check this draw',
     roundPage: 'Round page',
     nextDraw: 'Next draw after 00:00 UTC',
-    ok: 'Recomputed in your browser: same hash, ticket #{index} wins.',
+    ok: 'Recomputed in your browser: same hash, number {number} wins.',
     mismatch: 'The hash recomputed in your browser does not match this round.',
   },
 
@@ -246,7 +255,10 @@ const en = {
     yourTickets: 'Your tickets',
     winChance: 'Win chance',
     chance: 'Chance',
-    todaysPot: "Today's pot",
+    todaysPot: 'Pot',
+    checked: 'Checked',
+    waiting: 'Waiting',
+    numbersLeft: 'Numbers left',
     winners: 'Winners',
     averagePot: 'Average pot',
     biggestPot: 'Biggest pot',
@@ -261,7 +273,8 @@ const en = {
 
   play: {
     title: 'Play',
-    description: "Pick today's number and watch the pot grow live on Solana.",
+    description:
+      'Pick a number in the daily or hourly lottery, or hunt down the hidden one, and watch the pot grow live on Solana.',
     testMoney: 'You are playing on Solana {cluster}: tickets cost test SOL with no real value.',
     localFunds: 'Point your wallet at {url}, then fund it with: {command}',
     phantomFunds:
@@ -277,7 +290,7 @@ const en = {
     title: 'Number',
     win: 'Win',
     in: 'in',
-    taken: 'Already taken today',
+    taken: 'Already taken in this round',
     range: '0 to {max}, one ticket per number',
     pad: 'Number pad',
     reset: 'Reset',
@@ -285,10 +298,10 @@ const en = {
     dip: 'Lucky dip',
     searchCountry: 'Search a country',
     country: 'Country shown with your ticket',
-    notSetUp: 'The lottery is not set up on this cluster yet.',
+    notSetUp: 'This game is not set up on this cluster yet.',
     paused: 'Ticket sales are paused.',
     buy: 'Buy {number} for ◎{price}',
-    takenToday: '{number} is taken today',
+    takenToday: '{number} is taken',
     outOfRange: 'Number out of range',
     notEnough: 'Not enough SOL',
     keys: 'Keys 0–9 type, ⌫ deletes, Enter buys.',
@@ -297,12 +310,53 @@ const en = {
 
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
-    kicker: "Today's",
     title: 'SOLPOT',
     closesIn: '{day} · closes in',
+    carried: 'Includes ◎{carry} carried over from the last round',
+    split: '80% to the winner · {fee} house fee · the rest to the next round',
     inPlay: 'Numbers in play',
     empty: 'No tickets yet',
-    beFirst: 'Be the first to pick a number today.',
+    beFirst: 'Be the first to pick a number in this round.',
+  },
+
+  /** The three games, as the play page's switcher and the landing page name them. */
+  games: {
+    tag: 'Games',
+    title: 'Three ways to play',
+    description:
+      'Same numbers, from 0 to {max}. The winner takes 80% of the pot; the house fee comes out of the rest, and what is left carries over to the next round.',
+    play: 'Play',
+    daily: {
+      name: 'Daily lottery',
+      short: 'Daily',
+      description: 'A draw every day after midnight UTC. The ticket closest to the drawn number wins.',
+    },
+    hourly: {
+      name: 'Hourly lottery',
+      short: 'Hourly',
+      description: 'A draw every hour, on the hour (UTC). The ticket closest to the drawn number wins.',
+    },
+    guess: {
+      name: 'Guess the number',
+      short: 'Guess',
+      description:
+        'No deadline. New guesses are checked every few seconds until one finds the round’s number; then a new round starts.',
+    },
+  },
+
+  /** Guess the number: the checks and their results. */
+  guess: {
+    noDeadline: 'Until someone finds it',
+    odds: 'Each check finds the number with odds of the new guesses over the {n} numbers not tried yet.',
+    bought: 'Guess {number} is in. It is checked in a few seconds.',
+    sealing: 'Sealing the latest guesses of round {day}',
+    checkNow: 'Check now',
+    checkHint: 'A bot checks new guesses every few seconds. Anyone can run the check; it costs network fees.',
+    missed: 'Not the number: {numbers}',
+    left: 'The number is one of the {n} numbers not tried yet.',
+    foundByYou: 'You found it! {number} was the number',
+    foundByOther: 'Another player found the number',
+    nextRound: 'A new round with a new number is on sale.',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -320,8 +374,8 @@ const en = {
     getBack: 'Get it back',
     winners: 'Winners',
     noWinners: 'No winners yet',
-    firstDraw: 'The first draw happens at midnight UTC.',
-    chart: 'Pot per day',
+    firstDraw: 'The first winner shows up here.',
+    chart: 'Pot per round',
     chartEmpty: 'No finished rounds yet.',
     chartLabel:
       'Pot of the last round; the list below has every value. | Pot of the last {n} rounds; the list below has every value.',
@@ -331,6 +385,7 @@ const en = {
     open: 'Open',
     toClose: 'Waiting to close',
     toDraw: 'Waiting for draw',
+    checking: 'Checking guesses',
     unpaid: 'Drawn, unpaid',
     paid: 'Paid',
   },
@@ -383,7 +438,7 @@ const en = {
     balance: 'Balance',
     ticketsLeft: '{n} ticket left | {n} tickets left',
     needMore: 'need more SOL to play',
-    numbers: 'Your numbers today',
+    numbers: 'Your numbers in this round',
     copy: 'Copy address',
     explorer: 'Explorer',
     play: 'Play',
@@ -393,10 +448,11 @@ const en = {
   round: {
     title: 'Round {day}',
     back: 'Back to the game',
-    notDate: 'This is not a date. Rounds are named YYYY-MM-DD.',
+    notDate:
+      'This is not a round of this game. Daily rounds are named YYYY-MM-DD, hourly rounds YYYY-MM-DDTHH, and Guess rounds by their number.',
     kicker: 'Round',
-    nobody: 'Nobody played this day',
-    beFirst: 'Be the first to buy a ticket today.',
+    nobody: 'Nobody played this round',
+    beFirst: 'Be the first to buy a ticket in this round.',
     onlyExists: 'A round only exists once its first ticket is sold.',
     pot: 'Pot',
     usd: "{usd} at today's price",
@@ -416,10 +472,12 @@ const en = {
     slotHash: 'Slot hash of slot {slot} (read by the program from the SlotHashes sysvar)',
     randomness: 'Randomness',
     winning: 'Winning ticket',
-    winningFormula: 'first 8 bytes as u64 mod {count} = purchase #{index}',
+    winningFormula: 'first 8 bytes as u64 mod {count} = {drawn}; the closest ticket holds {number}',
+    guessFormula:
+      'first 8 bytes as u64 mod {left} (numbers not tried yet) = {r}, below {batch} (guesses in the check): purchase #{index} found the number',
     ok: 'The draw checks out.',
     mismatch: 'Mismatch: the stored result does not match the inputs.',
-    got: 'Your browser got {hash}… and ticket #{index}.',
+    got: 'Your browser got {hash}… and number {number}.',
     tickets: 'Tickets',
     ticketsHint: 'Tickets closed by their owners after the payout no longer show here; the round keeps the totals.',
     noTickets: 'No open tickets left for this round.',
@@ -432,7 +490,7 @@ const en = {
 
   errors: {
     rejected: 'You cancelled the request in your wallet.',
-    taken: 'Someone already holds this number today. Pick another one.',
+    taken: 'Someone already holds this number in this round. Pick another one.',
     funds: 'Not enough SOL in the wallet.',
     walletCluster:
       'Your wallet could not sign. In Phantom: Settings → Developer Settings → enable Testnet Mode → select Devnet, then reconnect and try again.',
@@ -440,11 +498,11 @@ const en = {
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
       unauthorized: 'Only the authority can do this.',
-      invalidTicketPrice: 'The ticket price must be at least 0.001 SOL.',
-      feeTooHigh: 'The fee is above the 10% cap.',
+      invalidTicketPrice: 'The ticket price must be at least 0.002 SOL.',
+      feeTooHigh: 'The fee is above the 20% cap.',
       invalidMaxNumber: 'The highest number must be greater than zero.',
       paused: 'Ticket sales are paused.',
-      wrongDay: "Tickets can only be bought for today's round.",
+      wrongRound: 'Tickets can only be bought for the round on sale.',
       numberOutOfRange: 'The number is out of range.',
       invalidCountry: 'The country must be an uppercase ISO 3166-1 alpha-2 code.',
       roundNotOpen: 'The round is not open.',
@@ -461,6 +519,10 @@ const en = {
       overflow: 'Arithmetic overflow.',
       priceChanged: 'The ticket price is higher than the price you accepted.',
       feeAlreadyCollected: 'The fee of this round was already collected.',
+      roundFull: 'This round has sold all the tickets it can hold.',
+      nothingToCheck: 'There are no new guesses to check.',
+      batchSealed: 'The latest guesses are being checked; try again in a few seconds.',
+      invalidGame: 'Unknown game.',
     },
   },
 
@@ -547,14 +609,14 @@ const en = {
       rounds: {
         title: 'How a round works',
         intro: 'The program enforces these rules; the site only shows them:',
-        day: 'One round runs per UTC day, from 00:00 UTC to the next midnight.',
+        day: 'S☉Lucky has three games. In the daily lottery, a round runs per UTC day, from 00:00 UTC to the next midnight; in the hourly lottery, per UTC hour. In Guess the number, a round has no end time: it runs until a guess finds its number.',
         number:
           'A ticket is one number, from 0 to the highest number set in the program’s configuration. Each number can be held by one ticket per round.',
         price:
-          'The ticket price and the house fee are copied from the configuration when a round opens, and stay fixed for that round. The fee can never be more than 10% of the pot. When you buy, you never pay more than the price you were shown.',
-        pot: 'Every ticket’s price goes into the round’s pot, held by the round’s own account on Solana. Each ticket has the same chance: your chance is your tickets divided by all the tickets sold in that round. The number you pick does not change it.',
-        draw: 'After midnight, anyone can close the round, draw it and pay it. The winning ticket’s owner receives the pot minus the house fee, and the fee goes to the treasury.',
-        rent: 'A ticket account also holds a small rent deposit, which you get back by closing the ticket once its round is paid. The first ticket of a round also pays the rent of the round’s account, which stays on Solana as the round’s public record.',
+          'Each game has its own ticket price and house fee. They are copied, with the highest number, when a round opens, and stay fixed for that round. The fee can never be more than 20% of the pot. When you buy, you never pay more than the price you were shown.',
+        pot: 'Every ticket’s price goes into the round’s pot, held by the round’s own account on Solana. In the lotteries, a random number from 0 to the highest number is drawn and the ticket closest to it wins; a tie goes to the lower number. In Guess the number, new guesses are checked in batches: a batch holds the number with odds of its guesses over the numbers not tried yet, the same odds as for a number hidden when the round opened.',
+        draw: 'Once a lottery round has ended, or as soon as new guesses wait for a check, anyone can close the round, draw it and pay it. The winning ticket’s owner receives 80% of the pot, the house fee goes to the treasury, and the rest stays in the program for the game’s next round to be drawn.',
+        rent: 'A ticket account also holds a small rent deposit, which you get back by closing the ticket once its round is paid. The first ticket of a round also pays the rent of the round’s account, which stays on Solana as the round’s public record. In the lotteries, each ticket also pays the rent of the 4 bytes its number takes in that account, which is not returned.',
       },
       wallet: {
         title: 'Your wallet and transactions',
@@ -568,12 +630,12 @@ const en = {
         title: 'What the operator can and cannot do',
         intro: 'The program’s configuration has an authority, which can:',
         price:
-          'change the ticket price (at least ◎0.001) and the house fee (at most 10%), effective from the next round to open;',
+          'change each game’s ticket price (at least ◎0.002) and house fee (at most 20%), effective from that game’s next round to open;',
         pause:
           'pause and resume ticket sales. A pause stops new tickets only: rounds already played can still be drawn and paid;',
         other: 'change the treasury, the highest number, and the authority itself.',
         cannot:
-          'The program’s code does not let the authority, or anyone else, take a round’s pot or send it anywhere but to the winning ticket’s owner, take more than the fee, or charge a buyer more than the price they were shown.',
+          'The program’s code does not let the authority, or anyone else, take a round’s pot or send it anywhere but to the winning ticket’s owner, the treasury’s fee and the game’s next round, take more than the fee, or charge a buyer more than the price they were shown.',
         upgrade:
           'The program is upgradeable: whoever holds its upgrade authority could deploy different code, so you are trusting them until the program is made immutable or handed to a multisig. The source of every version is public, and a deployed program can be checked against it as the README’s “Verifiable builds” section explains.',
       },
@@ -583,7 +645,7 @@ const en = {
         bugs: 'software can have bugs, including the program, the app and your wallet, and a bug could cost you your tickets or your SOL;',
         network:
           'Solana or the RPC endpoint the site uses can be slow, congested or down, and a transaction can fail or arrive after a round closes;',
-        draw: 'the draw uses the hash of a Solana slot that nobody knows when sales close. Players cannot predict it, but the validator that produces that slot could bias it, and whoever closes a round could hold back an unfavourable draw until that slot can no longer be read. It is not a verifiable randomness oracle;',
+        draw: 'the draw uses the hash of a Solana slot that nobody knows when a round closes or a batch of guesses is sealed. Players cannot predict it, but the validator that produces that slot could bias it, and whoever closes a round could hold back an unfavourable draw until that slot can no longer be read. It is not a verifiable randomness oracle;',
         site: 'the site can be unavailable at any time. The program, and your tickets, keep working without it;',
         law: 'laws on lotteries and crypto-assets differ between countries and can change.',
       },
@@ -746,9 +808,9 @@ const en = {
       },
       odds: {
         title: 'Know the odds',
-        same: 'Every ticket has the same chance. Your chance of winning a round is your tickets divided by all the tickets sold in it.',
-        label: 'The number you pick is your label on the board. It does not change your chance.',
-        fee: 'The winner receives the pot minus the house fee, which the program caps at 10%. So, taken over all players, tickets pay back the money spent on them minus that fee: on average, a ticket returns less than it costs.',
+        same: 'In the lotteries, the ticket closest to a random number wins: your chance is the share of the number range that lies closer to your numbers than to anyone else’s. In Guess the number, each check finds the number with odds of the new guesses over the numbers not tried yet.',
+        label: 'No number is luckier than another: the drawn number is equally likely to be any number in the range.',
+        fee: 'The winner receives 80% of the pot. The house fee, which the program caps at 20%, comes out of the rest, and what is left goes to the game’s next round. So, taken over all players, tickets pay back the money spent on them minus that fee: on average, a ticket returns less than it costs.',
         nothing: 'Nothing on the site changes these odds.',
       },
       final: {

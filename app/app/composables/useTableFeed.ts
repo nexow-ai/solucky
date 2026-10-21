@@ -32,7 +32,7 @@ function push(item: FeedItem) {
  */
 export function useTableFeed() {
   const { t } = useI18n();
-  const { tickets, today, loading, pot } = useLottery();
+  const { tickets, kind, period, loading, pot } = useLottery();
   const { address } = useWallet();
   const live = useLive();
   const toast = useToast();
@@ -74,10 +74,10 @@ export function useTableFeed() {
       const freshTickets = ticketWatcher();
       let lastTicketToast = 0;
       watch(
-        [tickets, today, loading],
-        ([list, day, isLoading]) => {
+        [tickets, () => `${kind.value}:${period.value}`, loading],
+        ([list, round, isLoading]) => {
           if (isLoading) return;
-          for (const ticket of freshTickets(list, day)) {
+          for (const ticket of freshTickets(list, round)) {
             const cc = countryFromBytes(ticket.data.country);
             const mine = ticket.data.owner === address.value;
             push({
