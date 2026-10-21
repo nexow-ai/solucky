@@ -32,7 +32,12 @@ watch(pot, (to, from) => {
           <p class="text-lucky glow-primary led font-mono text-5xl font-semibold tabular-nums [--led-pitch:0.07em]">
             ◎{{ formatSol(Math.round(potShown), 3) }}
           </p>
-          <span v-for="g in gains" :key="g.id" class="gain font-mono text-sm font-semibold text-secondary" aria-hidden="true">
+          <span
+            v-for="g in gains"
+            :key="g.id"
+            class="gain font-mono text-sm font-semibold text-secondary"
+            aria-hidden="true"
+          >
             +◎{{ formatSol(g.amount, 3) }}
           </span>
         </div>

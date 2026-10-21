@@ -74,12 +74,7 @@ export function parseClientMessage(raw: string): ClientMessage | null {
  * `perSecond`. Returns false when the connection is over its budget, and the
  * message should be dropped.
  */
-export function allow(
-  bucket: { tokens: number; at: number },
-  now: number,
-  burst = 6,
-  perSecond = 0.5,
-): boolean {
+export function allow(bucket: { tokens: number; at: number }, now: number, burst = 6, perSecond = 0.5): boolean {
   bucket.tokens = Math.min(burst, bucket.tokens + ((now - bucket.at) / 1000) * perSecond);
   bucket.at = now;
   if (bucket.tokens < 1) return false;

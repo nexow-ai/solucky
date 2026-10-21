@@ -334,7 +334,11 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
   justify-content: center;
   border-radius: 1rem;
   color: var(--ui-text-highlighted);
-  background: linear-gradient(180deg, color-mix(in oklab, white 11%, transparent), color-mix(in oklab, white 3%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, white 11%, transparent),
+    color-mix(in oklab, white 3%, transparent)
+  );
   box-shadow:
     inset 0 1px 0 color-mix(in oklab, white 28%, transparent),
     inset 0 -2px 0 color-mix(in oklab, black 40%, transparent),

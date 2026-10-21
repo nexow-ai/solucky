@@ -9,7 +9,9 @@ const props = defineProps<{ value: number; spinning?: boolean; invalid?: boolean
 const cells = computed(() =>
   formatNumber(props.value)
     .split('')
-    .map((char, i) => (char === ' ' ? { gap: true as const, key: `g${i}` } : { gap: false as const, digit: Number(char), key: `d${i}` })),
+    .map((char, i) =>
+      char === ' ' ? { gap: true as const, key: `g${i}` } : { gap: false as const, digit: Number(char), key: `d${i}` },
+    ),
 );
 const STRIP = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 </script>
@@ -45,7 +47,13 @@ const STRIP = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   overflow: hidden;
   border-radius: 0.18em;
   background:
-    linear-gradient(to bottom, color-mix(in oklab, black 55%, transparent), transparent 30%, transparent 70%, color-mix(in oklab, black 55%, transparent)),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, black 55%, transparent),
+      transparent 30%,
+      transparent 70%,
+      color-mix(in oklab, black 55%, transparent)
+    ),
     color-mix(in oklab, var(--ui-bg) 70%, transparent);
   box-shadow:
     inset 0 1px 0 color-mix(in oklab, white 12%, transparent),

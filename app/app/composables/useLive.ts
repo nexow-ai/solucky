@@ -95,10 +95,14 @@ export function useLive() {
         emit({ t: 'leave', id: message.id, online: message.online });
         break;
       case 'peer':
-        setPeers((map) => map.set(message.id, { ...(map.get(message.id) ?? { pick: false }), id: message.id, cc: message.cc }));
+        setPeers((map) =>
+          map.set(message.id, { ...(map.get(message.id) ?? { pick: false }), id: message.id, cc: message.cc }),
+        );
         break;
       case 'pick':
-        setPeers((map) => map.set(message.id, { ...(map.get(message.id) ?? { cc: null }), id: message.id, pick: message.on }));
+        setPeers((map) =>
+          map.set(message.id, { ...(map.get(message.id) ?? { cc: null }), id: message.id, pick: message.on }),
+        );
         break;
     }
   }
