@@ -14,7 +14,11 @@ function choose(code: string) {
 </script>
 
 <template>
-  <UPopover v-model:open="open" :content="{ align: 'end', sideOffset: 8 }" :ui="{ content: 'w-[min(100vw-2rem,24rem)] p-2' }">
+  <UPopover
+    v-model:open="open"
+    :content="{ align: 'end', sideOffset: 8 }"
+    :ui="{ content: 'w-[min(100vw-2rem,24rem)] p-2' }"
+  >
     <UButton
       icon="i-lucide-globe"
       color="neutral"

@@ -15,7 +15,12 @@ const toast = useToast();
 const airdropping = ref(false);
 
 const items = computed<NavigationMenuItem[]>(() => [
-  { label: t('nav.play'), to: localePath('/play'), icon: 'i-lucide-ticket', active: route.path === localePath('/play') },
+  {
+    label: t('nav.play'),
+    to: localePath('/play'),
+    icon: 'i-lucide-ticket',
+    active: route.path === localePath('/play'),
+  },
   { label: t('nav.how'), to: localePath({ path: '/', hash: '#how-it-works' }), exactHash: true },
   { label: t('nav.fairness'), to: localePath({ path: '/', hash: '#fairness' }), exactHash: true },
   { label: t('nav.faq'), to: localePath({ path: '/', hash: '#faq' }), exactHash: true },

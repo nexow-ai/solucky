@@ -35,7 +35,8 @@ function check(message: string, original: string, forms: readonly string[]): str
   if (unknown.length) problems.push(`unknown values {${unknown.join('}, {')}}`);
   if (isPlural(original)) {
     const count = message.split(' | ').length;
-    if (count !== forms.length) problems.push(`${count} plural forms instead of ${forms.length} (${forms.join(' | ')})`);
+    if (count !== forms.length)
+      problems.push(`${count} plural forms instead of ${forms.length} (${forms.join(' | ')})`);
     // A form may leave out the count ("a ticket"), never anything else.
     const missing = [...wanted].filter((name) => name !== 'n' && !used.has(name));
     if (missing.length) problems.push(`leaves out {${missing.join('}, {')}}`);

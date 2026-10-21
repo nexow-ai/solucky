@@ -82,12 +82,20 @@ async function reclaimAll() {
         :title="
           t(
             'history.rent',
-            { n: leftovers.length, sol: formatSol(leftovers.reduce((n, ticket) => n + ticket.lamports, 0n), 4) },
+            {
+              n: leftovers.length,
+              sol: formatSol(
+                leftovers.reduce((n, ticket) => n + ticket.lamports, 0n),
+                4,
+              ),
+            },
             leftovers.length,
           )
         "
         :description="t('history.rentHint')"
-        :actions="[{ label: t('history.getBack'), color: 'info', variant: 'solid', loading: busy, onClick: reclaimAll }]"
+        :actions="[
+          { label: t('history.getBack'), color: 'info', variant: 'solid', loading: busy, onClick: reclaimAll },
+        ]"
       />
 
       <LotteryPotChart :rounds="settled" />

@@ -1,5 +1,26 @@
 <script setup lang="ts">
-import { ar, de, en, es, fr, he, hi, id, it, ja, ko, nl, pt_br, ru, th, tr, uk, vi, zh_cn, zh_tw } from '@nuxt/ui/locale';
+import {
+  ar,
+  de,
+  en,
+  es,
+  fr,
+  he,
+  hi,
+  id,
+  it,
+  ja,
+  ko,
+  nl,
+  pt_br,
+  ru,
+  th,
+  tr,
+  uk,
+  vi,
+  zh_cn,
+  zh_tw,
+} from '@nuxt/ui/locale';
 
 import type { Locale } from '~~/i18n/languages';
 

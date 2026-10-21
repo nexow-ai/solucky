@@ -22,7 +22,11 @@ export const SUGGEST: Record<Locale, { text: string; go: string; close: string }
   hi: { text: 'यह पेज हिंदी में भी उपलब्ध है।', go: 'हिंदी में पढ़ें', close: 'नहीं, धन्यवाद' },
   th: { text: 'หน้านี้มีภาษาไทยด้วย', go: 'อ่านภาษาไทย', close: 'ไม่เป็นไร ขอบคุณ' },
   vi: { text: 'Trang này cũng có bằng tiếng Việt.', go: 'Đọc bằng tiếng Việt', close: 'Không, cảm ơn' },
-  id: { text: 'Halaman ini juga tersedia dalam bahasa Indonesia.', go: 'Baca dalam bahasa Indonesia', close: 'Tidak, terima kasih' },
+  id: {
+    text: 'Halaman ini juga tersedia dalam bahasa Indonesia.',
+    go: 'Baca dalam bahasa Indonesia',
+    close: 'Tidak, terima kasih',
+  },
   'zh-cn': { text: '此页面也有简体中文版。', go: '阅读简体中文版', close: '不用了，谢谢' },
   'zh-tw': { text: '本頁也有繁體中文版。', go: '閱讀繁體中文版', close: '不用了，謝謝' },
   ja: { text: 'このページは日本語でも読めます。', go: '日本語で読む', close: 'いいえ、結構です' },

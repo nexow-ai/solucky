@@ -246,13 +246,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
           icon="i-lucide-construction"
           :title="t('pick.notSetUp')"
         />
-        <UAlert
-          v-else-if="paused"
-          color="warning"
-          variant="subtle"
-          icon="i-lucide-pause"
-          :title="t('pick.paused')"
-        />
+        <UAlert v-else-if="paused" color="warning" variant="subtle" icon="i-lucide-pause" :title="t('pick.paused')" />
 
         <ClientOnly>
           <div class="relative">

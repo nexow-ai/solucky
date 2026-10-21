@@ -68,9 +68,9 @@ const faq = computed(() =>
       </template>
       <template #title>
         <span class="glow-primary inline-block"
-          ><span class="led inline-block font-mono text-[0.8em] font-extrabold tracking-normal"
-            >{{ t('home.title') }}</span
-          ></span
+          ><span class="led inline-block font-mono text-[0.8em] font-extrabold tracking-normal">{{
+            t('home.title')
+          }}</span></span
         ><br />
         <span class="text-lucky">{{ t('home.titleEnd') }}</span>
       </template>

@@ -77,5 +77,7 @@ export function formatUnit(
 
 /** `2026-10-21` → `21 October 2026`, in the language's own words. */
 export function formatDate(isoDay: string, locale = 'en-US'): string {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${isoDay}T00:00:00Z`));
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(
+    new Date(`${isoDay}T00:00:00Z`),
+  );
 }

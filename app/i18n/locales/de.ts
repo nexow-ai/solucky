@@ -609,7 +609,8 @@ const de: Dict = {
         account: 'Es gibt kein Benutzerkonto, keine E-Mail und keine Registrierung. Du spielst mit einer Wallet.',
         cookies: 'Die Website setzt keine Cookies und lädt keine Analyse-Tools, Werbung oder Tracker.',
         database: 'Wir führen keine Datenbank über Spieler, und wir verkaufen oder teilen keine Daten über dich.',
-        public: 'Deine Tickets sind auf Solana öffentlich, und zwar absichtlich: Genau das ermöglicht es allen, das Spiel zu prüfen.',
+        public:
+          'Deine Tickets sind auf Solana öffentlich, und zwar absichtlich: Genau das ermöglicht es allen, das Spiel zu prüfen.',
         controller: '{operator} betreibt die Website und ist für die Daten verantwortlich, die sie verarbeitet.',
       },
       onChain: {
@@ -663,7 +664,8 @@ const de: Dict = {
       rights: {
         title: 'Deine Wahlmöglichkeiten und Rechte',
         flag: 'Du kannst ohne Länderflagge spielen: Entscheide dich vor dem Kauf, sie privat zu halten.',
-        clear: 'Du kannst die Einstellungen in deinem Browser jederzeit löschen und eine neue Wallet nutzen, wann immer du willst.',
+        clear:
+          'Du kannst die Einstellungen in deinem Browser jederzeit löschen und eine neue Wallet nutzen, wann immer du willst.',
         law: 'Je nachdem, wo du lebst, hast du möglicherweise das Recht, auf personenbezogene Daten über dich zuzugreifen, sie berichtigen oder löschen zu lassen oder ihrer Verwendung zu widersprechen. Schreib an {email}, und wir antworten. Wir haben fast nichts über dich gespeichert, und was auf Solana steht, können wir nicht ändern oder löschen.',
       },
       children: {
@@ -758,7 +760,8 @@ const de: Dict = {
       },
       limits: {
         title: 'Eigene Limits setzen',
-        intro: 'S☉Lucky hat keine Benutzerkonten, kann also keine Limits setzen oder dich sperren. Du kannst deine eigenen setzen:',
+        intro:
+          'S☉Lucky hat keine Benutzerkonten, kann also keine Limits setzen oder dich sperren. Du kannst deine eigenen setzen:',
         wallet: 'Nutze eine separate Wallet, die nur so viel enthält, wie du auszugeben bereit bist.',
         block: 'Sperre die Website mit einem Website-Blocker oder der Kindersicherung deines Geräts.',
         trust: 'Erzähl es jemandem, dem du vertraust, und bitte diese Person, dir zu helfen, deine Limits einzuhalten.',

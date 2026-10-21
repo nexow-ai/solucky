@@ -8,7 +8,10 @@ const { t, locale } = useI18n();
 
 /** Columns a character takes in the monospace bezel: CJK and Hangul are twice as wide. */
 const width = (text: string) =>
-  [...text].reduce((sum, char) => sum + (/[\u1100-\u11ff\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\uff00-\uff60]/.test(char) ? 2 : 1), 0);
+  [...text].reduce(
+    (sum, char) => sum + (/[\u1100-\u11ff\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\uff00-\uff60]/.test(char) ? 2 : 1),
+    0,
+  );
 
 // The motto, repeated to fill the ring about as densely in every language.
 const bezel = computed(() => {

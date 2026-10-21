@@ -84,7 +84,9 @@ const facts = computed(() => {
     { label: t('round.price'), value: `◎${formatSol(r.ticketPrice)}` },
     {
       label: t('round.fee'),
-      value: new Intl.NumberFormat(intl.value, { style: 'percent', maximumFractionDigits: 2 }).format(r.feeBps / 10_000),
+      value: new Intl.NumberFormat(intl.value, { style: 'percent', maximumFractionDigits: 2 }).format(
+        r.feeBps / 10_000,
+      ),
     },
     { label: t('round.slot'), value: r.targetSlot ? formatNumber(r.targetSlot) : '—' },
   ];
@@ -102,13 +104,7 @@ const facts = computed(() => {
       :ui="{ leadingIcon: 'rtl:-scale-x-100' }"
     />
 
-    <UAlert
-      v-if="day === null"
-      color="error"
-      variant="subtle"
-      icon="i-lucide-calendar-x"
-      :title="t('round.notDate')"
-    />
+    <UAlert v-if="day === null" color="error" variant="subtle" icon="i-lucide-calendar-x" :title="t('round.notDate')" />
 
     <template v-else>
       <div class="flex flex-wrap items-center justify-between gap-3">

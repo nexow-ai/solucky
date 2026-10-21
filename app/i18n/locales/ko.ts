@@ -68,8 +68,7 @@ const ko: Dict = {
     how: {
       tag: '작동 방식',
       title: '네 단계, 하루 한 번 추첨',
-      description:
-        '라운드는 UTC 달력을 따라요. 새 라운드는 UTC 00:00에 열리고, 다음 자정 직후에 추첨해요.',
+      description: '라운드는 UTC 달력을 따라요. 새 라운드는 UTC 00:00에 열리고, 다음 자정 직후에 추첨해요.',
       opens: '라운드 시작',
       draw: '추첨',
       now: '지금',
@@ -82,7 +81,8 @@ const ko: Dict = {
         },
         number: {
           title: '번호 고르기',
-          description: '0부터 {max}까지 아무 번호나 고를 수 있어요. 번호 하나는 하루에 티켓 한 장만 가질 수 있으니 서두르세요.',
+          description:
+            '0부터 {max}까지 아무 번호나 고를 수 있어요. 번호 하나는 하루에 티켓 한 장만 가질 수 있으니 서두르세요.',
           when: 'UTC 자정까지',
         },
         pot: {
@@ -641,8 +641,7 @@ const ko: Dict = {
         wallet:
           '{name}: Phantom, Solflare, Backpack 등 각 제작사가 만든 소프트웨어로, 자체 정책이 있어요. 사이트는 지갑에 연결과, 내가 승인한 트랜잭션의 서명만 요청해요.',
         walletName: '내 지갑',
-        links:
-          '{name}: Solana Explorer, Solana 포셋, GitHub, 저희 소셜 계정은 각자의 정책이 있는 다른 사이트예요.',
+        links: '{name}: Solana Explorer, Solana 포셋, GitHub, 저희 소셜 계정은 각자의 정책이 있는 다른 사이트예요.',
         linksName: '내가 여는 링크',
         own: '글꼴, 사운드, 이미지는 저희 도메인에서 제공되므로, 사이트를 불러와도 다른 누구에게도 연결되지 않아요.',
       },

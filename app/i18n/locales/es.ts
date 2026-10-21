@@ -460,8 +460,7 @@ const es: Dict = {
     updated: 'Última actualización: {date}',
     onThisPage: 'En esta página',
     others: 'Otros documentos legales',
-    translated:
-      'Esta página es una traducción del original en inglés. Si difieren, se aplica la versión en inglés.',
+    translated: 'Esta página es una traducción del original en inglés. Si difieren, se aplica la versión en inglés.',
     readEnglish: 'Leer en inglés',
     repository: 'repositorio del código fuente',
 
@@ -608,7 +607,8 @@ const es: Dict = {
         account: 'No hay cuenta, correo ni registro. Juegas con una billetera.',
         cookies: 'El sitio no instala cookies ni carga analítica, anuncios ni rastreadores.',
         database: 'No guardamos una base de datos de jugadores, y no vendemos ni compartimos datos sobre ti.',
-        public: 'Tus boletos son públicos en Solana, por diseño: eso es lo que permite a cualquiera comprobar el juego.',
+        public:
+          'Tus boletos son públicos en Solana, por diseño: eso es lo que permite a cualquiera comprobar el juego.',
         controller: '{operator} gestiona el sitio y es responsable de los datos que trata.',
       },
       onChain: {
@@ -662,7 +662,8 @@ const es: Dict = {
       rights: {
         title: 'Tus opciones y tus derechos',
         flag: 'Puedes jugar sin bandera de país: elige mantenerla privada antes de comprar.',
-        clear: 'Puedes borrar los ajustes de tu navegador en cualquier momento, y usar una billetera nueva cuando quieras.',
+        clear:
+          'Puedes borrar los ajustes de tu navegador en cualquier momento, y usar una billetera nueva cuando quieras.',
         law: 'Según dónde vivas, puedes tener derecho a acceder a tus datos personales, corregirlos o eliminarlos, o a oponerte a cómo se usan. Escribe a {email} y te responderemos. Casi no guardamos nada sobre ti, y no podemos cambiar ni borrar lo que está en Solana.',
       },
       children: {
@@ -699,7 +700,8 @@ const es: Dict = {
           when: 'Cuando cambias el tema.',
         },
         wallet: {
-          holds: 'El nombre de la última billetera que conectaste y su dirección, para que la app pueda volver a conectarla.',
+          holds:
+            'El nombre de la última billetera que conectaste y su dirección, para que la app pueda volver a conectarla.',
           when: 'Cuando conectas una billetera; se elimina cuando la desconectas.',
         },
         country: {

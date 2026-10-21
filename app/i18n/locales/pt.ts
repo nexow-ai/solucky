@@ -411,8 +411,7 @@ const pt: Dict = {
     mismatch: 'Divergência: o resultado gravado não confere com as entradas.',
     got: 'Seu navegador obteve {hash}… e o bilhete #{index}.',
     tickets: 'Bilhetes',
-    ticketsHint:
-      'Bilhetes fechados pelos donos depois do pagamento não aparecem mais aqui; a rodada mantém os totais.',
+    ticketsHint: 'Bilhetes fechados pelos donos depois do pagamento não aparecem mais aqui; a rodada mantém os totais.',
     noTickets: 'Não restam bilhetes abertos nesta rodada.',
     account: 'Conta da rodada {address} · {day}',
   },
@@ -460,8 +459,7 @@ const pt: Dict = {
     updated: 'Última atualização: {date}',
     onThisPage: 'Nesta página',
     others: 'Outros documentos legais',
-    translated:
-      'Esta página é uma tradução do original em inglês. Se houver divergência, vale a versão em inglês.',
+    translated: 'Esta página é uma tradução do original em inglês. Se houver divergência, vale a versão em inglês.',
     readEnglish: 'Ler em inglês',
     repository: 'repositório do código-fonte',
 
@@ -608,7 +606,8 @@ const pt: Dict = {
         account: 'Não há conta, e-mail nem cadastro. Você joga com uma carteira.',
         cookies: 'O site não grava cookies e não carrega ferramentas de análise, anúncios nem rastreadores.',
         database: 'Não mantemos um banco de dados de jogadores, e não vendemos nem compartilhamos dados sobre você.',
-        public: 'Seus bilhetes são públicos na Solana, por design: é isso que permite que qualquer pessoa confira o jogo.',
+        public:
+          'Seus bilhetes são públicos na Solana, por design: é isso que permite que qualquer pessoa confira o jogo.',
         controller: 'A {operator} opera o site e é responsável pelos dados que ele trata.',
       },
       onChain: {
@@ -662,7 +661,8 @@ const pt: Dict = {
       rights: {
         title: 'Suas escolhas e direitos',
         flag: 'Você pode jogar sem bandeira de país: escolha mantê-la privada antes de comprar.',
-        clear: 'Você pode limpar as configurações no seu navegador a qualquer momento, e usar uma carteira nova quando quiser.',
+        clear:
+          'Você pode limpar as configurações no seu navegador a qualquer momento, e usar uma carteira nova quando quiser.',
         law: 'Dependendo de onde você mora, você pode ter o direito de acessar, corrigir ou excluir dados pessoais sobre você, ou de se opor à forma como eles são usados. Envie um e-mail para {email} e responderemos. Não guardamos quase nada sobre você, e não podemos alterar nem apagar o que está na Solana.',
       },
       children: {

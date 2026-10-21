@@ -337,8 +337,7 @@ const nl: Dict = {
     now: 'nu',
     empty: 'De tafel is open. Het volgende lot verschijnt hier zodra het binnenkomt.',
     joinedOne: 'Er is een nieuwe speler aan tafel aangeschoven',
-    joinedMany:
-      '{n} nieuwe speler is aan tafel aangeschoven | {n} nieuwe spelers zijn aan tafel aangeschoven',
+    joinedMany: '{n} nieuwe speler is aan tafel aangeschoven | {n} nieuwe spelers zijn aan tafel aangeschoven',
     hereNow: '{n} nu hier',
     locked: '{who} legt {number} vast',
     potNow: 'De pot staat nu op ◎{pot} met {n} lot | De pot staat nu op ◎{pot} met {n} loten',
@@ -663,7 +662,8 @@ const nl: Dict = {
       rights: {
         title: 'Je keuzes en rechten',
         flag: 'Je kunt spelen zonder landvlag: kies ervoor die privé te houden voordat je koopt.',
-        clear: 'Je kunt de instellingen in je browser op elk moment wissen, en een nieuwe wallet gebruiken wanneer je maar wilt.',
+        clear:
+          'Je kunt de instellingen in je browser op elk moment wissen, en een nieuwe wallet gebruiken wanneer je maar wilt.',
         law: 'Afhankelijk van waar je woont, heb je mogelijk het recht om persoonsgegevens over jou in te zien, te laten corrigeren of te laten verwijderen, of bezwaar te maken tegen hoe ze worden gebruikt. Mail naar {email} en we antwoorden. We bewaren bijna niets over jou, en we kunnen niet wijzigen of verwijderen wat op Solana staat.',
       },
       children: {
@@ -677,7 +677,8 @@ const nl: Dict = {
     },
 
     cookies: {
-      description: 'Geen cookies, geen trackers: de vijf instellingen die de app in je browser bewaart, en hoe je ze verwijdert.',
+      description:
+        'Geen cookies, geen trackers: de vijf instellingen die de app in je browser bewaart, en hoe je ze verwijdert.',
       none: {
         title: 'Geen cookies',
         p1: 'S☉Lucky plaatst geen cookies en laadt geen analytics-, advertentie- of trackingscripts. Het beveiligingsbeleid van de site staat alleen scripts van het eigen domein toe.',
@@ -699,7 +700,8 @@ const nl: Dict = {
           when: 'Als je van thema wisselt.',
         },
         wallet: {
-          holds: 'De naam van de wallet die je het laatst koppelde en het adres ervan, zodat de app hem opnieuw kan koppelen.',
+          holds:
+            'De naam van de wallet die je het laatst koppelde en het adres ervan, zodat de app hem opnieuw kan koppelen.',
           when: 'Als je een wallet koppelt; verwijderd als je hem ontkoppelt.',
         },
         country: {
@@ -757,10 +759,12 @@ const nl: Dict = {
       },
       limits: {
         title: 'Je eigen limieten stellen',
-        intro: 'S☉Lucky heeft geen accounts, dus het kan geen limieten instellen of je uitsluiten. Je kunt je eigen limieten stellen:',
+        intro:
+          'S☉Lucky heeft geen accounts, dus het kan geen limieten instellen of je uitsluiten. Je kunt je eigen limieten stellen:',
         wallet: 'Houd een aparte wallet aan met alleen wat je bereid bent uit te geven.',
         block: 'Gebruik een websiteblokkering of het ouderlijk toezicht van je apparaat om de site te blokkeren.',
-        trust: 'Vertel het aan iemand die je vertrouwt, en vraag die persoon je te helpen je aan je limieten te houden.',
+        trust:
+          'Vertel het aan iemand die je vertrouwt, en vraag die persoon je te helpen je aan je limieten te houden.',
       },
       help: {
         title: 'Hulp zoeken',

@@ -49,7 +49,9 @@ const others = computed(() => LEGAL_PAGES.filter((page) => page.key !== props.pa
           <LandingSectionTag index="§" :label="t('legal.kicker')" />
         </template>
       </UPageHeader>
-      <p class="mt-4 font-mono text-xs text-dimmed">{{ t('legal.updated', { date: formatDate(LEGAL_UPDATED, intl) }) }}</p>
+      <p class="mt-4 font-mono text-xs text-dimmed">
+        {{ t('legal.updated', { date: formatDate(LEGAL_UPDATED, intl) }) }}
+      </p>
       <!-- The English text is the one that applies; translations say so and link to it. -->
       <p v-if="locale !== 'en'" class="mt-2 text-sm text-muted">
         {{ t('legal.translated') }}

@@ -209,13 +209,21 @@ export function useLottery() {
         }
       }
       if (current.data.status === RoundStatus.Open) {
-        if (!(await run(t('tx.closing', { day: label }), () => ix.closeRound({ round: current.address }).sendTransaction())))
+        if (
+          !(await run(t('tx.closing', { day: label }), () =>
+            ix.closeRound({ round: current.address }).sendTransaction(),
+          ))
+        )
           return;
         await reload();
       }
       if (current.data.status === RoundStatus.Closed) {
         await waitForSlot(current.data.targetSlot);
-        if (!(await run(t('tx.drawing', { day: label }), () => ix.drawRound({ round: current.address }).sendTransaction())))
+        if (
+          !(await run(t('tx.drawing', { day: label }), () =>
+            ix.drawRound({ round: current.address }).sendTransaction(),
+          ))
+        )
           return;
         await reload();
       }

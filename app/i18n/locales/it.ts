@@ -663,7 +663,8 @@ const it: Dict = {
       rights: {
         title: 'Le tue scelte e i tuoi diritti',
         flag: 'Puoi giocare senza la bandiera del tuo paese: scegli di tenerlo privato prima di comprare.',
-        clear: 'Puoi cancellare le impostazioni nel tuo browser in qualsiasi momento, e usare un nuovo wallet quando vuoi.',
+        clear:
+          'Puoi cancellare le impostazioni nel tuo browser in qualsiasi momento, e usare un nuovo wallet quando vuoi.',
         law: 'A seconda di dove vivi, potresti avere il diritto di accedere ai dati personali che ti riguardano, di correggerli o cancellarli, o di opporti al modo in cui vengono usati. Scrivi a {email} e ti risponderemo. Non conserviamo quasi nulla su di te, e non possiamo modificare o cancellare ciò che è su Solana.',
       },
       children: {
@@ -752,7 +753,8 @@ const it: Dict = {
       habits: {
         title: 'Che resti un divertimento',
         budget: 'Decidi in anticipo quanto accetti di perdere, e fermati quando quella somma è finita.',
-        chase: 'Non cercare mai di rifarti delle perdite, e non giocare mai con soldi presi in prestito o di cui hai bisogno.',
+        chase:
+          'Non cercare mai di rifarti delle perdite, e non giocare mai con soldi presi in prestito o di cui hai bisogno.',
         mood: 'Non giocare in un momento di turbamento o di stanchezza, né dopo aver bevuto.',
         breaks: 'Fai delle pause, e lascia che il gioco resti una parte della tua vita tra tante.',
       },

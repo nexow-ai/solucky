@@ -39,7 +39,11 @@ async function choose(wallet: (typeof wallets.value)[number]) {
     open.value = false;
   } catch (error) {
     if ((error as Error).name !== 'AbortError') {
-      toast.add({ title: t('wallet.failed', { wallet: wallet.name }), description: friendlyError(error, t), color: 'error' });
+      toast.add({
+        title: t('wallet.failed', { wallet: wallet.name }),
+        description: friendlyError(error, t),
+        color: 'error',
+      });
     }
   } finally {
     connecting.value = null;
@@ -101,11 +105,7 @@ async function signOut() {
               ·
               {{
                 balance >= ticketPrice
-                  ? t(
-                      'wallet.ticketsLeft',
-                      { n: formatNumber(balance / ticketPrice) },
-                      Number(balance / ticketPrice),
-                    )
+                  ? t('wallet.ticketsLeft', { n: formatNumber(balance / ticketPrice) }, Number(balance / ticketPrice))
                   : t('wallet.needMore')
               }}
             </span>
@@ -190,12 +190,7 @@ async function signOut() {
     </template>
   </UPopover>
 
-  <UModal
-    v-else
-    v-model:open="open"
-    :title="t('wallet.title')"
-    :description="t('wallet.description')"
-  >
+  <UModal v-else v-model:open="open" :title="t('wallet.title')" :description="t('wallet.description')">
     <UButton
       :label="t('wallet.connect')"
       icon="i-lucide-wallet"

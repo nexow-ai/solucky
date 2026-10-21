@@ -134,7 +134,8 @@ const fr: Dict = {
         },
         open: {
           title: 'Open source',
-          description: 'Le programme, l’appli et les scripts de l’opérateur sont publics, avec des tests pour chaque règle.',
+          description:
+            'Le programme, l’appli et les scripts de l’opérateur sont publics, avec des tests pour chaque règle.',
         },
       },
     },
@@ -340,7 +341,8 @@ const fr: Dict = {
     joinedMany: '{n} nouveau joueur a rejoint la table | {n} nouveaux joueurs ont rejoint la table',
     hereNow: '{n} ici en ce moment',
     locked: '{who} a joué le {number}',
-    potNow: 'La cagnotte est maintenant de ◎{pot} avec {n} ticket | La cagnotte est maintenant de ◎{pot} avec {n} tickets',
+    potNow:
+      'La cagnotte est maintenant de ◎{pot} avec {n} ticket | La cagnotte est maintenant de ◎{pot} avec {n} tickets',
   },
 
   /** Progress toasts for a transaction: {label} is one of the actions below. */
@@ -606,10 +608,12 @@ const fr: Dict = {
       summary: {
         title: 'En bref',
         account: 'Il n’y a ni compte, ni e-mail, ni inscription. Tu joues avec un portefeuille.',
-        cookies: 'Le site ne dépose aucun cookie et ne charge aucun outil d’analyse, aucune publicité ni aucun traceur.',
+        cookies:
+          'Le site ne dépose aucun cookie et ne charge aucun outil d’analyse, aucune publicité ni aucun traceur.',
         database:
           'Nous ne tenons pas de base de données des joueurs, et nous ne vendons ni ne partageons de données sur toi.',
-        public: 'Tes tickets sont publics sur Solana, par conception : c’est ce qui permet à n’importe qui de vérifier le jeu.',
+        public:
+          'Tes tickets sont publics sur Solana, par conception : c’est ce qui permet à n’importe qui de vérifier le jeu.',
         controller: '{operator} gère le site et est responsable des données qu’il traite.',
       },
       onChain: {
@@ -663,7 +667,8 @@ const fr: Dict = {
       rights: {
         title: 'Tes choix et tes droits',
         flag: 'Tu peux jouer sans drapeau de pays : choisis de garder ton pays privé avant d’acheter.',
-        clear: 'Tu peux effacer les réglages enregistrés dans ton navigateur à tout moment, et utiliser un nouveau portefeuille quand tu veux.',
+        clear:
+          'Tu peux effacer les réglages enregistrés dans ton navigateur à tout moment, et utiliser un nouveau portefeuille quand tu veux.',
         law: 'Selon l’endroit où tu vis, tu peux avoir le droit d’accéder aux données personnelles te concernant, de les corriger ou de les supprimer, ou de t’opposer à leur utilisation. Écris à {email} et nous te répondrons. Nous ne détenons presque rien sur toi, et nous ne pouvons ni modifier ni supprimer ce qui se trouve sur Solana.',
       },
       children: {
@@ -700,7 +705,8 @@ const fr: Dict = {
           when: 'Quand tu changes de thème.',
         },
         wallet: {
-          holds: 'Le nom du dernier portefeuille que tu as connecté et son adresse, pour que l’appli puisse le reconnecter.',
+          holds:
+            'Le nom du dernier portefeuille que tu as connecté et son adresse, pour que l’appli puisse le reconnecter.',
           when: 'Quand tu connectes un portefeuille ; supprimé quand tu le déconnectes.',
         },
         country: {
@@ -758,7 +764,8 @@ const fr: Dict = {
       },
       limits: {
         title: 'Fixer tes propres limites',
-        intro: 'S☉Lucky n’a pas de comptes : il ne peut donc ni fixer de limites ni t’exclure. Tu peux fixer les tiennes :',
+        intro:
+          'S☉Lucky n’a pas de comptes : il ne peut donc ni fixer de limites ni t’exclure. Tu peux fixer les tiennes :',
         wallet: 'Garde un portefeuille séparé qui ne contient que ce que tu acceptes de dépenser.',
         block: 'Utilise un bloqueur de sites ou le contrôle parental de ton appareil pour bloquer le site.',
         trust: 'Parles-en à une personne de confiance, et demande-lui de t’aider à respecter tes limites.',
