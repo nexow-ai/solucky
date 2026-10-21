@@ -23,6 +23,7 @@
     "@iconify-json/lucide": "1.2.147",
     "@iconify-json/simple-icons": "1.2.100",
     "@nuxt/ui": "4.12.0",
+    "@nuxtjs/i18n": "10.6.0",
     "@solana/kit": "8.5.0",
     "@solana/kit-plugin-rpc": "0.22.0",
     "@solana/kit-plugin-wallet": "0.22.0",
