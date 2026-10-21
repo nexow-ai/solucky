@@ -27,6 +27,24 @@ const pt: Dict = {
     reload: 'Recarregar',
   },
 
+  install: {
+    label: 'Instalar o app',
+    ios: 'Para instalar o S☉Lucky, abra o menu Compartilhar do seu navegador e escolha Adicionar à Tela de Início.',
+  },
+
+  push: {
+    on: 'Avise-me quando uma rodada deste jogo for ganha',
+    off: 'Desativar as notificações deste jogo',
+    enabled: 'Notificações ativadas',
+    enabledHint: '{game}: você vai receber uma notificação sempre que uma rodada for ganha.',
+    disabled: 'Notificações desativadas',
+    blocked:
+      'As notificações estão bloqueadas para este site. Permita-as nas configurações do seu navegador e tente de novo.',
+    failed: 'Não foi possível alterar as notificações. Tente de novo.',
+    lottery: 'Rodada {round}: saiu o {drawn}. O bilhete mais próximo, {winning}, ganha ◎{prize}.',
+    guess: 'Rodada {round}: o número era {winning}. O palpite que o encontrou ganha ◎{prize}.',
+  },
+
   header: {
     beta: 'Beta',
     getSol: 'Obter SOL',
@@ -698,6 +716,9 @@ const pt: Dict = {
         price: 'O preço do SOL',
         priceBody:
           'Para mostrar os potes em dólares, nosso servidor busca o preço do SOL na Coinbase, ou na CoinGecko se a Coinbase não responder, e o mantém em cache por um minuto. Essas solicitações partem do nosso servidor e não levam nada sobre você.',
+        push: 'Notificações dos sorteios',
+        pushBody:
+          'Se você ativar as notificações de um jogo, seu navegador entrega ao nosso servidor uma inscrição push: um endereço no serviço push do seu navegador (operado pelo Google, pela Mozilla, pela Apple ou pela Microsoft, conforme o navegador) e as chaves para criptografar mensagens para ele. Nós a guardamos com o seu idioma e os jogos que você escolheu, e nada mais: nenhum endereço de carteira, nenhum endereço IP. Quando uma rodada de um desses jogos é ganha, nosso servidor envia o resultado, criptografado, por esse serviço push, que o entrega ao seu navegador conforme a própria política. Desativar as notificações apaga a inscrição, e nós também a apagamos quando o serviço push nos informa que ela não existe mais.',
       },
       thirdParties: {
         title: 'Serviços que seu navegador usa',
@@ -716,6 +737,8 @@ const pt: Dict = {
       browser: {
         title: 'O que fica no seu navegador',
         body: 'O app guarda cinco configurações no armazenamento local do seu navegador: seu tema, sua última carteira, sua escolha de país, a configuração de som e seu idioma. A página {cookies} lista todas elas.',
+        cache:
+          'Para abrir sem conexão, o app também guarda cópias das páginas que você visita e dos próprios arquivos no armazenamento de cache do seu navegador. Cada nova versão do site as substitui.',
       },
       purposes: {
         title: 'Para quê, e o que nunca fazemos',
@@ -755,6 +778,8 @@ const pt: Dict = {
         holds: 'O que guarda',
         saved: 'Salvo',
         wallet: 'A extensão da sua carteira guarda os próprios dados, conforme a política do fabricante.',
+        cache:
+          'Para abrir sem conexão, o app também guarda cópias das páginas que você visita e dos próprios arquivos no armazenamento de cache do seu navegador; cada nova versão do site as substitui. Se você ativar as notificações dos sorteios, seu navegador também guarda a inscrição push até você desativá-las. Limpar os dados deste site remove tudo isso.',
       },
       keys: {
         theme: {

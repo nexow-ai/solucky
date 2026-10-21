@@ -57,6 +57,7 @@ const keys = [
       </tbody>
     </table>
     <p>{{ t('legal.cookies.storage.wallet') }}</p>
+    <p>{{ t('legal.cookies.storage.cache') }}</p>
 
     <h2 id="clear">{{ t('legal.cookies.clear.title') }}</h2>
     <ul>

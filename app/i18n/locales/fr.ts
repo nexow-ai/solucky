@@ -23,8 +23,26 @@ const fr: Dict = {
 
   update: {
     title: 'Une nouvelle version est prête',
-    hint: 'Rechargez pour l’avoir tout de suite. Elle se charge aussi d’elle-même au prochain changement de page.',
+    hint: 'Recharge pour l’avoir tout de suite. Elle se charge aussi d’elle-même au prochain changement de page.',
     reload: 'Recharger',
+  },
+
+  install: {
+    label: 'Installer l’appli',
+    ios: 'Pour installer S☉Lucky, ouvre le menu Partager de ton navigateur et choisis Sur l’écran d’accueil.',
+  },
+
+  push: {
+    on: 'Me prévenir quand une manche de ce jeu est gagnée',
+    off: 'Couper les notifications de ce jeu',
+    enabled: 'Notifications activées',
+    enabledHint: '{game} : tu recevras une notification chaque fois qu’une manche est gagnée.',
+    disabled: 'Notifications désactivées',
+    blocked:
+      'Les notifications sont bloquées pour ce site. Autorise-les dans les réglages de ton navigateur, puis réessaie.',
+    failed: 'Impossible de modifier les notifications. Réessaie.',
+    lottery: 'Manche {round} : le {drawn} a été tiré. Le ticket le plus proche, le {winning}, gagne ◎{prize}.',
+    guess: 'Manche {round} : le numéro était le {winning}. La proposition qui l’a trouvé gagne ◎{prize}.',
   },
 
   header: {
@@ -704,6 +722,9 @@ const fr: Dict = {
         price: 'Le prix du SOL',
         priceBody:
           'Pour afficher les cagnottes en dollars, notre serveur récupère le prix du SOL auprès de Coinbase, ou de CoinGecko si Coinbase ne répond pas, et le met en cache pendant une minute. Ces requêtes partent de notre serveur et ne contiennent rien sur toi.',
+        push: 'Notifications des tirages',
+        pushBody:
+          'Si tu actives les notifications d’un jeu, ton navigateur donne à notre serveur un abonnement push : une adresse auprès du service push de ton navigateur (géré par Google, Mozilla, Apple ou Microsoft, selon le navigateur) et les clés pour lui chiffrer des messages. Nous le gardons avec ta langue et les jeux choisis, et rien d’autre : ni adresse de portefeuille, ni adresse IP. Quand une manche de l’un de ces jeux est gagnée, notre serveur envoie le résultat, chiffré, via ce service push, qui le remet à ton navigateur selon sa propre politique. Couper les notifications supprime l’abonnement, et nous le supprimons aussi quand le service push nous indique qu’il n’existe plus.',
       },
       thirdParties: {
         title: 'Services qu’utilise ton navigateur',
@@ -722,6 +743,8 @@ const fr: Dict = {
       browser: {
         title: 'Ce qui reste dans ton navigateur',
         body: 'L’appli garde cinq réglages dans le stockage local de ton navigateur : ton thème, ton dernier portefeuille, ton choix de pays, le réglage du son et ta langue. La page {cookies} les liste.',
+        cache:
+          'Pour s’ouvrir sans connexion, l’appli garde aussi des copies des pages que tu visites et de ses propres fichiers dans le stockage de cache de ton navigateur. Chaque nouvelle version du site les remplace.',
       },
       purposes: {
         title: 'Pourquoi, et ce que nous ne faisons jamais',
@@ -761,6 +784,8 @@ const fr: Dict = {
         holds: 'Contenu',
         saved: 'Enregistré',
         wallet: 'L’extension de ton portefeuille garde ses propres données, selon la politique de son éditeur.',
+        cache:
+          'Pour s’ouvrir sans connexion, l’appli garde aussi des copies des pages que tu visites et de ses propres fichiers dans le stockage de cache de ton navigateur ; chaque nouvelle version du site les remplace. Si tu actives les notifications des tirages, ton navigateur garde aussi l’abonnement push jusqu’à ce que tu les coupes. Effacer les données de ce site supprime le tout.',
       },
       keys: {
         theme: {

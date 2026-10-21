@@ -27,6 +27,23 @@ const it: Dict = {
     reload: 'Ricarica',
   },
 
+  install: {
+    label: 'Installa l’app',
+    ios: 'Per installare S☉Lucky, apri il menu Condividi del tuo browser e scegli Aggiungi alla schermata Home.',
+  },
+
+  push: {
+    on: 'Avvisami quando viene vinto un round di questo gioco',
+    off: 'Disattiva le notifiche di questo gioco',
+    enabled: 'Notifiche attive',
+    enabledHint: '{game}: riceverai una notifica ogni volta che viene vinto un round.',
+    disabled: 'Notifiche disattivate',
+    blocked: 'Le notifiche sono bloccate per questo sito. Consentile nelle impostazioni del tuo browser, poi riprova.',
+    failed: 'Impossibile modificare le notifiche. Riprova.',
+    lottery: 'Round {round}: è stato estratto il {drawn}. Il biglietto più vicino, il {winning}, vince ◎{prize}.',
+    guess: 'Round {round}: il numero era il {winning}. Il tentativo che l’ha trovato vince ◎{prize}.',
+  },
+
   header: {
     beta: 'Beta',
     getSol: 'Ottieni SOL',
@@ -702,6 +719,9 @@ const it: Dict = {
         price: 'Il prezzo di SOL',
         priceBody:
           'Per mostrare i montepremi in dollari, il nostro server recupera il prezzo di SOL da Coinbase, o da CoinGecko se Coinbase non risponde, e lo tiene in cache per un minuto. Queste richieste partono dal nostro server e non contengono nulla su di te.',
+        push: 'Notifiche delle estrazioni',
+        pushBody:
+          'Se attivi le notifiche di un gioco, il tuo browser dà al nostro server un’iscrizione push: un indirizzo presso il servizio push del tuo browser (gestito da Google, Mozilla, Apple o Microsoft, a seconda del browser) e le chiavi per cifrargli i messaggi. La conserviamo con la tua lingua e i giochi che hai scelto, e nient’altro: nessun indirizzo del wallet, nessun indirizzo IP. Quando viene vinto un round di uno di quei giochi, il nostro server invia il risultato, cifrato, tramite quel servizio push, che lo consegna al tuo browser secondo la propria politica. Disattivare le notifiche cancella l’iscrizione, e la cancelliamo anche quando il servizio push ci dice che non esiste più.',
       },
       thirdParties: {
         title: 'Servizi usati dal tuo browser',
@@ -720,6 +740,8 @@ const it: Dict = {
       browser: {
         title: 'Cosa resta nel tuo browser',
         body: 'L’app conserva cinque impostazioni nella memoria locale del tuo browser: il tuo tema, il tuo ultimo wallet, la tua scelta del paese, l’impostazione dei suoni e la tua lingua. La pagina {cookies} le elenca.',
+        cache:
+          'Per aprirsi senza connessione, l’app conserva anche copie delle pagine che visiti e dei propri file nella memoria cache del tuo browser. Ogni nuova versione del sito le sostituisce.',
       },
       purposes: {
         title: 'Perché, e cosa non facciamo mai',
@@ -759,6 +781,8 @@ const it: Dict = {
         holds: 'Contenuto',
         saved: 'Salvato',
         wallet: 'L’estensione del tuo wallet conserva i propri dati, secondo la politica del suo produttore.',
+        cache:
+          'Per aprirsi senza connessione, l’app conserva anche copie delle pagine che visiti e dei propri file nella memoria cache del tuo browser; ogni nuova versione del sito le sostituisce. Se attivi le notifiche delle estrazioni, il tuo browser conserva anche l’iscrizione push finché non le disattivi. Cancellare i dati di questo sito rimuove tutto.',
       },
       keys: {
         theme: {

@@ -10,7 +10,8 @@ const prompt = useInstallPrompt();
 const ios = ref(false);
 
 onMounted(() => {
-  const apple = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const apple =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   ios.value = apple && !matchMedia('(display-mode: standalone)').matches;
 });
 
@@ -28,6 +29,12 @@ async function install() {
 
 <template>
   <UTooltip v-if="prompt || ios" :text="t('install.label')">
-    <UButton icon="i-lucide-download" color="neutral" variant="ghost" :aria-label="t('install.label')" @click="install" />
+    <UButton
+      icon="i-lucide-download"
+      color="neutral"
+      variant="ghost"
+      :aria-label="t('install.label')"
+      @click="install"
+    />
   </UTooltip>
 </template>

@@ -23,8 +23,25 @@ const tr: Dict = {
 
   update: {
     title: 'Yeni bir sürüm hazır',
-    hint: 'Hemen almak için yeniden yükle. Bir sonraki sayfa geçişinde kendiliğinden de yüklenir.',
+    hint: 'Hemen almak için yeniden yükleyin. Bir sonraki sayfa geçişinde kendiliğinden de yüklenir.',
     reload: 'Yeniden yükle',
+  },
+
+  install: {
+    label: 'Uygulamayı yükle',
+    ios: 'S☉Lucky’yi yüklemek için tarayıcınızın Paylaş menüsünü açın ve Ana Ekrana Ekle’yi seçin.',
+  },
+
+  push: {
+    on: 'Bu oyunun bir turu kazanıldığında bana haber ver',
+    off: 'Bu oyunun bildirimlerini kapat',
+    enabled: 'Bildirimler açık',
+    enabledHint: '{game}: Her tur kazanıldığında bir bildirim alacaksınız.',
+    disabled: 'Bildirimler kapalı',
+    blocked: 'Bu site için bildirimler engellenmiş. Tarayıcınızın ayarlarından izin verin, sonra yeniden deneyin.',
+    failed: 'Bildirimler değiştirilemedi. Yeniden deneyin.',
+    lottery: 'Tur {round}: {drawn} çekildi. En yakın bilet, {winning}, ◎{prize} kazanıyor.',
+    guess: 'Tur {round}: Sayı {winning} idi. Onu bulan tahmin ◎{prize} kazanıyor.',
   },
 
   header: {
@@ -699,6 +716,9 @@ const tr: Dict = {
         price: 'SOL fiyatı',
         priceBody:
           'Havuzları dolar cinsinden göstermek için sunucumuz SOL fiyatını Coinbase’den, Coinbase yanıt vermezse CoinGecko’dan alır ve bir dakika boyunca önbellekte tutar. Bu istekler sunucumuzdan gelir ve sizinle ilgili hiçbir bilgi taşımaz.',
+        push: 'Çekiliş bildirimleri',
+        pushBody:
+          'Bir oyun için bildirimleri açarsanız, tarayıcınız sunucumuza bir anlık bildirim aboneliği verir: tarayıcınızın anlık bildirim hizmetindeki bir adres (tarayıcıya göre Google, Mozilla, Apple veya Microsoft tarafından işletilir) ve ona gönderilecek mesajları şifrelemek için anahtarlar. Bunu dilinizle ve seçtiğiniz oyunlarla birlikte saklarız, başka hiçbir şeyi değil: cüzdan adresi yok, IP adresi yok. Bu oyunlardan birinin bir turu kazanıldığında sunucumuz sonucu şifreli olarak bu hizmet üzerinden gönderir; hizmet de onu kendi politikası kapsamında tarayıcınıza iletir. Bildirimleri kapatmak aboneliği siler; anlık bildirim hizmeti aboneliğin artık var olmadığını bildirdiğinde de onu sileriz.',
       },
       thirdParties: {
         title: 'Tarayıcınızın kullandığı hizmetler',
@@ -717,6 +737,8 @@ const tr: Dict = {
       browser: {
         title: 'Tarayıcınızda neler kalır',
         body: 'Uygulama, tarayıcınızın yerel depolamasında beş ayar saklar: temanız, son cüzdanınız, ülke tercihiniz, ses ayarı ve diliniz. {cookies} sayfası bunları listeler.',
+        cache:
+          'Uygulama, bağlantı olmadan da açılabilmek için ziyaret ettiğiniz sayfaların ve kendi dosyalarının kopyalarını tarayıcınızın önbellek deposunda da saklar. Sitenin her yeni sürümü bunların yerini alır.',
       },
       purposes: {
         title: 'Neden ve asla yapmadıklarımız',
@@ -756,6 +778,8 @@ const tr: Dict = {
         holds: 'Ne içerir',
         saved: 'Kayıt zamanı',
         wallet: 'Cüzdan eklentiniz kendi verilerini, üreticisinin politikası kapsamında kendisi saklar.',
+        cache:
+          'Uygulama, bağlantı olmadan da açılabilmek için ziyaret ettiğiniz sayfaların ve kendi dosyalarının kopyalarını tarayıcınızın önbellek deposunda da saklar; sitenin her yeni sürümü bunların yerini alır. Çekiliş bildirimlerini açarsanız tarayıcınız, siz kapatana kadar anlık bildirim aboneliğini de saklar. Bu sitenin verilerini temizlemek hepsini kaldırır.',
       },
       keys: {
         theme: {

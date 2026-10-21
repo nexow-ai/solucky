@@ -27,6 +27,23 @@ const vi: Dict = {
     reload: 'Tải lại',
   },
 
+  install: {
+    label: 'Cài đặt ứng dụng',
+    ios: 'Để cài S☉Lucky, mở menu Chia sẻ của trình duyệt và chọn Thêm vào MH chính.',
+  },
+
+  push: {
+    on: 'Báo cho tôi khi có người thắng một vòng của trò chơi này',
+    off: 'Tắt thông báo của trò chơi này',
+    enabled: 'Đã bật thông báo',
+    enabledHint: '{game}: bạn sẽ nhận thông báo mỗi khi có người thắng một vòng.',
+    disabled: 'Đã tắt thông báo',
+    blocked: 'Thông báo đang bị chặn trên trang này. Hãy cho phép trong cài đặt trình duyệt rồi thử lại.',
+    failed: 'Không thể thay đổi thông báo. Hãy thử lại.',
+    lottery: 'Vòng {round}: số {drawn} được quay ra. Vé gần nhất, {winning}, thắng ◎{prize}.',
+    guess: 'Vòng {round}: con số là {winning}. Lượt đoán tìm ra nó thắng ◎{prize}.',
+  },
+
   header: {
     beta: 'Beta',
     getSol: 'Nhận SOL',
@@ -696,6 +713,9 @@ const vi: Dict = {
         price: 'Giá SOL',
         priceBody:
           'Để hiển thị quỹ thưởng bằng đô la, máy chủ của chúng tôi lấy giá SOL từ Coinbase, hoặc từ CoinGecko nếu Coinbase không phản hồi, và lưu vào bộ nhớ đệm trong một phút. Các yêu cầu này xuất phát từ máy chủ của chúng tôi và không mang thông tin gì về bạn.',
+        push: 'Thông báo kết quả quay số',
+        pushBody:
+          'Nếu bạn bật thông báo cho một trò chơi, trình duyệt sẽ đưa cho máy chủ của chúng tôi một đăng ký push: một địa chỉ tại dịch vụ push của trình duyệt (do Google, Mozilla, Apple hoặc Microsoft vận hành, tùy trình duyệt) và các khóa để mã hóa tin nhắn gửi đến đó. Chúng tôi lưu nó cùng ngôn ngữ của bạn và các trò chơi bạn chọn, ngoài ra không gì khác: không địa chỉ ví, không địa chỉ IP. Khi có người thắng một vòng của một trong các trò chơi đó, máy chủ của chúng tôi gửi kết quả, đã mã hóa, qua dịch vụ push ấy, và dịch vụ sẽ chuyển nó đến trình duyệt của bạn theo chính sách riêng của mình. Tắt thông báo sẽ xóa đăng ký, và chúng tôi cũng xóa nó khi dịch vụ push cho biết đăng ký không còn tồn tại.',
       },
       thirdParties: {
         title: 'Các dịch vụ trình duyệt của bạn sử dụng',
@@ -714,6 +734,8 @@ const vi: Dict = {
       browser: {
         title: 'Những gì lưu lại trong trình duyệt của bạn',
         body: 'Ứng dụng lưu năm thiết lập trong bộ nhớ cục bộ của trình duyệt: giao diện, ví dùng gần nhất, lựa chọn quốc gia, thiết lập âm thanh và ngôn ngữ của bạn. Trang {cookies} liệt kê chúng.',
+        cache:
+          'Để mở được khi không có kết nối, ứng dụng còn lưu bản sao của các trang bạn truy cập và các tệp của chính nó trong bộ nhớ đệm của trình duyệt. Mỗi phiên bản mới của trang sẽ thay thế chúng.',
       },
       purposes: {
         title: 'Vì sao, và những gì chúng tôi không bao giờ làm',
@@ -752,6 +774,8 @@ const vi: Dict = {
         holds: 'Nội dung lưu',
         saved: 'Thời điểm lưu',
         wallet: 'Tiện ích ví của bạn lưu dữ liệu riêng của nó, theo chính sách của nhà phát triển.',
+        cache:
+          'Để mở được khi không có kết nối, ứng dụng còn lưu bản sao của các trang bạn truy cập và các tệp của chính nó trong bộ nhớ đệm của trình duyệt; mỗi phiên bản mới của trang sẽ thay thế chúng. Nếu bạn bật thông báo kết quả quay số, trình duyệt cũng giữ đăng ký push cho đến khi bạn tắt. Xóa dữ liệu của trang này sẽ gỡ bỏ tất cả.',
       },
       keys: {
         theme: {

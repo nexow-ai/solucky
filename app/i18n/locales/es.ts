@@ -27,6 +27,24 @@ const es: Dict = {
     reload: 'Recargar',
   },
 
+  install: {
+    label: 'Instalar la app',
+    ios: 'Para instalar S☉Lucky, abre el menú Compartir de tu navegador y elige Añadir a pantalla de inicio.',
+  },
+
+  push: {
+    on: 'Avísame cuando se gane una ronda de este juego',
+    off: 'Desactivar las notificaciones de este juego',
+    enabled: 'Notificaciones activadas',
+    enabledHint: '{game}: recibirás una notificación cada vez que se gane una ronda.',
+    disabled: 'Notificaciones desactivadas',
+    blocked:
+      'Las notificaciones están bloqueadas para este sitio. Permítelas en los ajustes de tu navegador y vuelve a intentarlo.',
+    failed: 'No se pudieron cambiar las notificaciones. Vuelve a intentarlo.',
+    lottery: 'Ronda {round}: salió el {drawn}. El boleto más cercano, el {winning}, gana ◎{prize}.',
+    guess: 'Ronda {round}: el número era el {winning}. El intento que lo encontró gana ◎{prize}.',
+  },
+
   header: {
     beta: 'Beta',
     getSol: 'Obtener SOL',
@@ -699,6 +717,9 @@ const es: Dict = {
         price: 'El precio del SOL',
         priceBody:
           'Para mostrar los pozos en dólares, nuestro servidor obtiene el precio del SOL de Coinbase, o de CoinGecko si Coinbase no responde, y lo guarda en caché durante un minuto. Estas solicitudes salen de nuestro servidor y no llevan nada sobre ti.',
+        push: 'Notificaciones de los sorteos',
+        pushBody:
+          'Si activas las notificaciones de un juego, tu navegador le da a nuestro servidor una suscripción push: una dirección en el servicio push de tu navegador (de Google, Mozilla, Apple o Microsoft, según el navegador) y las claves para cifrarle mensajes. La guardamos con tu idioma y los juegos que elegiste, y nada más: ni dirección de billetera ni dirección IP. Cuando se gana una ronda de uno de esos juegos, nuestro servidor envía el resultado, cifrado, a través de ese servicio push, que lo entrega a tu navegador según su propia política. Al desactivar las notificaciones se borra la suscripción, y también la borramos cuando el servicio push nos dice que ya no existe.',
       },
       thirdParties: {
         title: 'Servicios que usa tu navegador',
@@ -717,6 +738,8 @@ const es: Dict = {
       browser: {
         title: 'Qué se queda en tu navegador',
         body: 'La app guarda cinco ajustes en el almacenamiento local de tu navegador: tu tema, tu última billetera, tu elección de país, el ajuste de sonido y tu idioma. La página {cookies} los enumera.',
+        cache:
+          'Para abrirse sin conexión, la app también guarda copias de las páginas que visitas y de sus propios archivos en el almacenamiento de caché de tu navegador. Cada nueva versión del sitio las reemplaza.',
       },
       purposes: {
         title: 'Para qué, y lo que nunca hacemos',
@@ -756,6 +779,8 @@ const es: Dict = {
         holds: 'Qué guarda',
         saved: 'Se guarda',
         wallet: 'La extensión de tu billetera guarda sus propios datos, según la política de su fabricante.',
+        cache:
+          'Para abrirse sin conexión, la app también guarda copias de las páginas que visitas y de sus propios archivos en el almacenamiento de caché de tu navegador; cada nueva versión del sitio las reemplaza. Si activas las notificaciones de los sorteos, tu navegador también guarda la suscripción push hasta que las desactives. Borrar los datos de este sitio elimina todo esto.',
       },
       keys: {
         theme: {

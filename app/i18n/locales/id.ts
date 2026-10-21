@@ -27,6 +27,23 @@ const id: Dict = {
     reload: 'Muat ulang',
   },
 
+  install: {
+    label: 'Pasang aplikasi',
+    ios: 'Untuk memasang S☉Lucky, buka menu Bagikan di browser-mu lalu pilih Tambah ke Layar Utama.',
+  },
+
+  push: {
+    on: 'Beri tahu aku saat ronde permainan ini dimenangkan',
+    off: 'Matikan notifikasi permainan ini',
+    enabled: 'Notifikasi aktif',
+    enabledHint: '{game}: kamu akan mendapat notifikasi setiap kali sebuah ronde dimenangkan.',
+    disabled: 'Notifikasi nonaktif',
+    blocked: 'Notifikasi diblokir untuk situs ini. Izinkan di pengaturan browser-mu, lalu coba lagi.',
+    failed: 'Notifikasi tidak bisa diubah. Coba lagi.',
+    lottery: 'Ronde {round}: angka {drawn} terundi. Tiket terdekat, {winning}, memenangkan ◎{prize}.',
+    guess: 'Ronde {round}: angkanya {winning}. Tebakan yang menemukannya memenangkan ◎{prize}.',
+  },
+
   header: {
     beta: 'Beta',
     getSol: 'Dapatkan SOL',
@@ -704,6 +721,9 @@ const id: Dict = {
         price: 'Harga SOL',
         priceBody:
           'Untuk menampilkan pot dalam dolar, server kami mengambil harga SOL dari Coinbase, atau dari CoinGecko jika Coinbase tidak menjawab, lalu menyimpannya di cache selama satu menit. Permintaan ini berasal dari server kami dan tidak membawa apa pun tentang dirimu.',
+        push: 'Notifikasi undian',
+        pushBody:
+          'Jika kamu mengaktifkan notifikasi untuk sebuah permainan, browser-mu memberi server kami sebuah langganan push: alamat di layanan push browser-mu (dijalankan oleh Google, Mozilla, Apple, atau Microsoft, tergantung browser-nya) dan kunci untuk mengenkripsi pesan ke sana. Kami menyimpannya bersama bahasamu dan permainan yang kamu pilih, dan tidak ada yang lain: tanpa alamat dompet, tanpa alamat IP. Saat ronde salah satu permainan itu dimenangkan, server kami mengirim hasilnya, terenkripsi, lewat layanan push itu, yang mengantarkannya ke browser-mu sesuai kebijakannya sendiri. Mematikan notifikasi menghapus langganan itu, dan kami juga menghapusnya saat layanan push memberi tahu bahwa langganan itu sudah tidak ada.',
       },
       thirdParties: {
         title: 'Layanan yang digunakan browser-mu',
@@ -722,6 +742,8 @@ const id: Dict = {
       browser: {
         title: 'Apa yang tetap ada di browser-mu',
         body: 'Aplikasi menyimpan lima pengaturan di penyimpanan lokal browser-mu: tema, dompet terakhir, pilihan negara, pengaturan suara, dan bahasamu. Halaman {cookies} mencantumkannya.',
+        cache:
+          'Agar bisa dibuka tanpa koneksi, aplikasi juga menyimpan salinan halaman yang kamu kunjungi dan file-filenya sendiri di penyimpanan cache browser-mu. Setiap versi baru situs menggantikannya.',
       },
       purposes: {
         title: 'Untuk apa, dan apa yang tidak pernah kami lakukan',
@@ -761,6 +783,8 @@ const id: Dict = {
         holds: 'Isinya',
         saved: 'Disimpan',
         wallet: 'Ekstensi dompetmu menyimpan datanya sendiri, sesuai kebijakan pembuatnya.',
+        cache:
+          'Agar bisa dibuka tanpa koneksi, aplikasi juga menyimpan salinan halaman yang kamu kunjungi dan file-filenya sendiri di penyimpanan cache browser-mu; setiap versi baru situs menggantikannya. Jika kamu mengaktifkan notifikasi undian, browser-mu juga menyimpan langganan push sampai kamu mematikannya. Menghapus data situs ini menghapus semuanya.',
       },
       keys: {
         theme: {

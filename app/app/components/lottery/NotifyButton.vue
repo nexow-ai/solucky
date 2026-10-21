@@ -48,7 +48,11 @@ async function toggle() {
     if (!wanted.length) await current.unsubscribe();
     toast.add(
       on.value
-        ? { title: t('push.enabled'), description: t('push.enabledHint', { game: gameName.value }), icon: 'i-lucide-bell-ring' }
+        ? {
+            title: t('push.enabled'),
+            description: t('push.enabledHint', { game: gameName.value }),
+            icon: 'i-lucide-bell-ring',
+          }
         : { title: t('push.disabled'), icon: 'i-lucide-bell-off' },
     );
   } catch {

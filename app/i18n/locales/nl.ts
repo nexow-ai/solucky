@@ -27,6 +27,24 @@ const nl: Dict = {
     reload: 'Herladen',
   },
 
+  install: {
+    label: 'App installeren',
+    ios: 'Open het deelmenu van je browser en kies Zet op beginscherm om S☉Lucky te installeren.',
+  },
+
+  push: {
+    on: 'Laat het me weten als een ronde van dit spel gewonnen is',
+    off: 'Meldingen voor dit spel uitzetten',
+    enabled: 'Meldingen aan',
+    enabledHint: '{game}: je krijgt een melding telkens als een ronde gewonnen is.',
+    disabled: 'Meldingen uit',
+    blocked:
+      'Meldingen zijn geblokkeerd voor deze site. Sta ze toe in de instellingen van je browser en probeer het opnieuw.',
+    failed: 'Meldingen konden niet worden gewijzigd. Probeer het opnieuw.',
+    lottery: 'Ronde {round}: {drawn} is getrokken. Het dichtstbijzijnde lot, {winning}, wint ◎{prize}.',
+    guess: 'Ronde {round}: het getal was {winning}. De poging die het vond, wint ◎{prize}.',
+  },
+
   header: {
     beta: 'Bèta',
     getSol: 'SOL halen',
@@ -701,6 +719,9 @@ const nl: Dict = {
         price: 'De SOL-koers',
         priceBody:
           'Om potten in dollars te tonen, haalt onze server de SOL-koers op bij Coinbase, of bij CoinGecko als Coinbase niet antwoordt, en slaat die een minuut in de cache op. Deze verzoeken komen van onze server en bevatten niets over jou.',
+        push: 'Meldingen van trekkingen',
+        pushBody:
+          'Als je meldingen voor een spel aanzet, geeft je browser onze server een push-abonnement: een adres bij de pushdienst van je browser (van Google, Mozilla, Apple of Microsoft, afhankelijk van de browser) en de sleutels om berichten ervoor te versleutelen. We bewaren het met je taal en de spellen die je koos, en verder niets: geen walletadres, geen IP-adres. Als een ronde van een van die spellen gewonnen is, stuurt onze server de uitslag versleuteld via die pushdienst, die hem onder zijn eigen beleid bij je browser bezorgt. Meldingen uitzetten verwijdert het abonnement, en we verwijderen het ook als de pushdienst laat weten dat het niet meer bestaat.',
       },
       thirdParties: {
         title: 'Diensten die je browser gebruikt',
@@ -719,6 +740,8 @@ const nl: Dict = {
       browser: {
         title: 'Wat in je browser blijft',
         body: 'De app bewaart vijf instellingen in de lokale opslag van je browser: je thema, je laatste wallet, je landkeuze, de geluidsinstelling en je taal. De pagina {cookies} somt ze op.',
+        cache:
+          'Zodat ze ook zonder verbinding opent, bewaart de app kopieën van de pagina’s die je bezoekt en van haar eigen bestanden in de cacheopslag van je browser. Elke nieuwe versie van de site vervangt ze.',
       },
       purposes: {
         title: 'Waarom, en wat we nooit doen',
@@ -758,6 +781,8 @@ const nl: Dict = {
         holds: 'Wat erin staat',
         saved: 'Opgeslagen',
         wallet: 'Je walletextensie bewaart haar eigen gegevens, onder het beleid van de maker ervan.',
+        cache:
+          'Zodat ze ook zonder verbinding opent, bewaart de app kopieën van de pagina’s die je bezoekt en van haar eigen bestanden in de cacheopslag van je browser; elke nieuwe versie van de site vervangt ze. Als je meldingen van trekkingen aanzet, bewaart je browser ook het push-abonnement tot je ze uitzet. De gegevens van deze site wissen verwijdert dat allemaal.',
       },
       keys: {
         theme: {

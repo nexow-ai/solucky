@@ -38,6 +38,23 @@ const en = {
     reload: 'Reload',
   },
 
+  install: {
+    label: 'Install app',
+    ios: 'To install S☉Lucky, open your browser’s Share menu and choose Add to Home Screen.',
+  },
+
+  push: {
+    on: 'Notify me when a round of this game is won',
+    off: 'Stop notifications for this game',
+    enabled: 'Notifications on',
+    enabledHint: '{game}: you will get a notification each time a round is won.',
+    disabled: 'Notifications off',
+    blocked: 'Notifications are blocked for this site. Allow them in your browser’s settings, then try again.',
+    failed: 'Could not change notifications. Try again.',
+    lottery: 'Round {round}: {drawn} was drawn. The closest ticket, {winning}, wins ◎{prize}.',
+    guess: 'Round {round}: {winning} was the number. The guess that found it wins ◎{prize}.',
+  },
+
   header: {
     beta: 'Beta',
     getSol: 'Get SOL',
@@ -706,6 +723,9 @@ const en = {
         price: 'The SOL price',
         priceBody:
           'To show pots in dollars, our server fetches the SOL price from Coinbase, or from CoinGecko if Coinbase does not answer, and caches it for a minute. These requests come from our server and carry nothing about you.',
+        push: 'Draw notifications',
+        pushBody:
+          'If you turn on notifications for a game, your browser gives our server a push subscription: an address at your browser’s push service (run by Google, Mozilla, Apple or Microsoft, depending on the browser) and the keys to encrypt messages for it. We store it with your language and the games you chose, and nothing else: no wallet address, no IP address. When a round of one of those games is won, our server sends the result, encrypted, through that push service, which delivers it to your browser under its own policy. Turning notifications off deletes the subscription, and we delete it too when the push service tells us it no longer exists.',
       },
       thirdParties: {
         title: 'Services your browser uses',
@@ -724,6 +744,8 @@ const en = {
       browser: {
         title: 'What stays in your browser',
         body: 'The app keeps five settings in your browser’s local storage: your theme, your last wallet, your country choice, the sound setting and your language. The {cookies} page lists them.',
+        cache:
+          'So that it opens without a connection, the app also keeps copies of the pages you visit and of its own files in your browser’s cache storage. Each new version of the site replaces them.',
       },
       purposes: {
         title: 'Why, and what we never do',
@@ -761,6 +783,8 @@ const en = {
         holds: 'What it holds',
         saved: 'Saved',
         wallet: 'Your wallet extension keeps its own data, under its maker’s policy.',
+        cache:
+          'So that it opens without a connection, the app also keeps copies of the pages you visit and of its own files in your browser’s cache storage; each new version of the site replaces them. If you turn on draw notifications, your browser also keeps the push subscription until you turn them off. Clearing this site’s data removes all of it.',
       },
       keys: {
         theme: {

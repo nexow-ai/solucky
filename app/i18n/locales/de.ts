@@ -27,6 +27,24 @@ const de: Dict = {
     reload: 'Neu laden',
   },
 
+  install: {
+    label: 'App installieren',
+    ios: 'Um S☉Lucky zu installieren, öffne das Teilen-Menü deines Browsers und wähle „Zum Home-Bildschirm“.',
+  },
+
+  push: {
+    on: 'Benachrichtige mich, wenn eine Runde dieses Spiels gewonnen wird',
+    off: 'Benachrichtigungen für dieses Spiel ausschalten',
+    enabled: 'Benachrichtigungen an',
+    enabledHint: '{game}: Du bekommst jedes Mal eine Benachrichtigung, wenn eine Runde gewonnen wird.',
+    disabled: 'Benachrichtigungen aus',
+    blocked:
+      'Benachrichtigungen sind für diese Website blockiert. Erlaube sie in den Einstellungen deines Browsers und versuch es dann noch einmal.',
+    failed: 'Benachrichtigungen konnten nicht geändert werden. Versuch es noch einmal.',
+    lottery: 'Runde {round}: Gezogen wurde {drawn}. Das nächstgelegene Ticket, {winning}, gewinnt ◎{prize}.',
+    guess: 'Runde {round}: Die Zahl war {winning}. Der Tipp, der sie gefunden hat, gewinnt ◎{prize}.',
+  },
+
   header: {
     beta: 'Beta',
     getSol: 'SOL holen',
@@ -703,6 +721,9 @@ const de: Dict = {
         price: 'Der SOL-Kurs',
         priceBody:
           'Um Pots in Dollar anzuzeigen, ruft unser Server den SOL-Kurs bei Coinbase ab, oder bei CoinGecko, falls Coinbase nicht antwortet, und speichert ihn eine Minute lang zwischen. Diese Anfragen kommen von unserem Server und enthalten nichts über dich.',
+        push: 'Benachrichtigungen zu Ziehungen',
+        pushBody:
+          'Wenn du Benachrichtigungen für ein Spiel einschaltest, gibt dein Browser unserem Server ein Push-Abonnement: eine Adresse beim Push-Dienst deines Browsers (betrieben von Google, Mozilla, Apple oder Microsoft, je nach Browser) und die Schlüssel, um Nachrichten dafür zu verschlüsseln. Wir speichern es zusammen mit deiner Sprache und den gewählten Spielen, sonst nichts: keine Wallet-Adresse, keine IP-Adresse. Wenn eine Runde eines dieser Spiele gewonnen wird, schickt unser Server das Ergebnis verschlüsselt über diesen Push-Dienst, der es nach seiner eigenen Richtlinie an deinen Browser zustellt. Schaltest du die Benachrichtigungen aus, wird das Abonnement gelöscht; wir löschen es auch, wenn der Push-Dienst meldet, dass es nicht mehr existiert.',
       },
       thirdParties: {
         title: 'Dienste, die dein Browser nutzt',
@@ -721,6 +742,8 @@ const de: Dict = {
       browser: {
         title: 'Was in deinem Browser bleibt',
         body: 'Die App speichert fünf Einstellungen im lokalen Speicher deines Browsers: dein Farbschema, deine zuletzt genutzte Wallet, deine Länderwahl, die Sound-Einstellung und deine Sprache. Die Seite {cookies} listet sie auf.',
+        cache:
+          'Damit sie auch ohne Verbindung startet, speichert die App außerdem Kopien der besuchten Seiten und ihrer eigenen Dateien im Cache-Speicher deines Browsers. Jede neue Version der Website ersetzt sie.',
       },
       purposes: {
         title: 'Wozu, und was wir nie tun',
@@ -760,6 +783,8 @@ const de: Dict = {
         holds: 'Inhalt',
         saved: 'Gespeichert',
         wallet: 'Deine Wallet-Erweiterung speichert ihre eigenen Daten, gemäß der Richtlinie ihres Herstellers.',
+        cache:
+          'Damit sie auch ohne Verbindung startet, speichert die App außerdem Kopien der besuchten Seiten und ihrer eigenen Dateien im Cache-Speicher deines Browsers; jede neue Version der Website ersetzt sie. Wenn du Benachrichtigungen zu Ziehungen einschaltest, speichert dein Browser zusätzlich das Push-Abonnement, bis du sie ausschaltest. Das Löschen der Daten dieser Website entfernt all das.',
       },
       keys: {
         theme: {
