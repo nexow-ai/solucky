@@ -85,10 +85,26 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="city-far">
-      <img src="/images/city/far.svg" alt="" width="1600" height="420" loading="lazy" decoding="async" class="parallax [--depth:22px]" />
+      <img
+        src="/images/city/far.svg"
+        alt=""
+        width="1600"
+        height="420"
+        loading="lazy"
+        decoding="async"
+        class="parallax [--depth:22px]"
+      />
     </div>
     <div class="city-near">
-      <img src="/images/city/near.svg" alt="" width="1600" height="300" loading="lazy" decoding="async" class="parallax [--depth:44px]" />
+      <img
+        src="/images/city/near.svg"
+        alt=""
+        width="1600"
+        height="300"
+        loading="lazy"
+        decoding="async"
+        class="parallax [--depth:44px]"
+      />
     </div>
 
     <div class="horizon" />

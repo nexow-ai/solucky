@@ -70,12 +70,7 @@ async function signOut() {
     <template #content>
       <div class="space-y-4 p-4">
         <div class="flex items-start gap-3">
-          <img
-            v-if="connected.wallet.icon"
-            :src="connected.wallet.icon"
-            alt=""
-            class="size-10 shrink-0 rounded-lg"
-          />
+          <img v-if="connected.wallet.icon" :src="connected.wallet.icon" alt="" class="size-10 shrink-0 rounded-lg" />
           <div class="min-w-0 flex-1">
             <div class="flex flex-wrap items-center gap-2">
               <p class="truncate font-semibold text-highlighted">{{ connected.wallet.name }}</p>
@@ -94,7 +89,7 @@ async function signOut() {
 
         <div class="rounded-lg bg-elevated px-4 py-3">
           <p class="kicker text-[0.65rem]">Balance</p>
-          <p class="mt-1 font-dots text-3xl font-black tabular-nums text-highlighted">
+          <p class="led mt-1 font-mono text-3xl font-semibold tabular-nums text-highlighted">
             {{ balance === null ? '—' : `◎${formatSol(balance, 4)}` }}
           </p>
           <p class="mt-0.5 font-mono text-xs text-muted tabular-nums">
@@ -127,13 +122,7 @@ async function signOut() {
               variant="subtle"
               class="font-mono tabular-nums"
             />
-            <UBadge
-              v-if="moreTickets"
-              :label="`+${moreTickets}`"
-              color="neutral"
-              variant="outline"
-              class="font-mono"
-            />
+            <UBadge v-if="moreTickets" :label="`+${moreTickets}`" color="neutral" variant="outline" class="font-mono" />
           </div>
         </div>
 
