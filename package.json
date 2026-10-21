@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "S☉Lucky: a daily, verifiable lottery on Solana. Built by Nexow, Inc.",
+  "description": "S☉Lucky: verifiable lottery games on Solana (daily, hourly and guess the number). Built by Nexow, Inc.",
   "license": "MIT",
   "author": {
     "name": "Nexow, Inc.",
