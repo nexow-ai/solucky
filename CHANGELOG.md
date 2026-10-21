@@ -21,6 +21,7 @@ A rewrite of the 2022 prototype into a self-contained, verifiable product. Nothi
 - Verifiable builds in Anchor's pinned Docker image (`bun run program:build:verifiable`), and a Release workflow that attaches the binary, its hash and the IDL to each `v*` release.
 - Faster pages on mobile: number formatters are created once instead of on every clock tick, Nuxt UI only ships CSS for the components in use, the Node server serves precompressed static files, and the wallet button and live pot load after first paint.
 - Production security headers for the app (CSP, frame blocking, HSTS and more), also written to Cloudflare's `_headers`.
+- Legal pages under `/legal`, linked from the footer: legal notice, Terms of Service, Privacy Policy, Cookies & storage (no cookies; the four local-storage settings) and Responsible play.
 - README, security policy, contributing guide and MIT license.
 
 ### Changed
