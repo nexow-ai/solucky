@@ -342,7 +342,7 @@ const faq = [
         description="Pick a number nobody has taken yet. Good luck!"
         variant="naked"
         class="dark reveal bg-default"
-        :ui="{ container: 'py-32 sm:py-40' }"
+        :ui="{ container: 'py-32 sm:py-40 lg:py-40' }"
         :links="[
           {
             label: 'Play now',
