@@ -35,6 +35,17 @@ const links = computed(() =>
           </ULink>
           on {{ clusterLabel }}. 18+ only. Play for fun, and only where lotteries are legal.
         </p>
+        <nav aria-label="Legal" class="flex flex-wrap gap-x-4 gap-y-1 pt-2">
+          <ULink
+            v-for="page in LEGAL_PAGES"
+            :key="page.to"
+            :to="page.to"
+            exact
+            class="underline-offset-4 hover:text-primary hover:underline"
+          >
+            {{ page.label }}
+          </ULink>
+        </nav>
       </div>
     </template>
 
