@@ -20,10 +20,13 @@ export interface Vapid {
   subject: string;
 }
 
+/** Bytes on their own buffer, as WebCrypto takes them. */
+type Bytes = Uint8Array<ArrayBuffer>;
+
 const utf8 = new TextEncoder();
 export const toBase64Url = (bytes: Uint8Array) => Buffer.from(bytes).toString('base64url');
-export const fromBase64Url = (text: string) => new Uint8Array(Buffer.from(text, 'base64url'));
-const concat = (...parts: Uint8Array[]) => new Uint8Array(Buffer.concat(parts));
+export const fromBase64Url = (text: string): Bytes => Uint8Array.from(Buffer.from(text, 'base64url'));
+const concat = (...parts: Uint8Array[]): Bytes => Uint8Array.from(Buffer.concat(parts));
 
 /** A P-256 key as a JWK, from its uncompressed public point (and private scalar). */
 export function p256Jwk(publicKey: Uint8Array, d?: string): JsonWebKey {
@@ -32,7 +35,7 @@ export function p256Jwk(publicKey: Uint8Array, d?: string): JsonWebKey {
   return { kty: 'EC', crv: 'P-256', x, y, ...(d && { d }) };
 }
 
-async function hkdf(salt: Uint8Array, ikm: Uint8Array, info: Uint8Array, length: number) {
+async function hkdf(salt: Bytes, ikm: Bytes, info: Bytes, length: number) {
   const key = await crypto.subtle.importKey('raw', ikm, 'HKDF', false, ['deriveBits']);
   return new Uint8Array(await crypto.subtle.deriveBits({ name: 'HKDF', hash: 'SHA-256', salt, info }, key, length * 8));
 }
@@ -45,8 +48,8 @@ export async function encryptPayload(
   plaintext: Uint8Array,
   keys: Subscription['keys'],
   local?: CryptoKeyPair,
-  salt = crypto.getRandomValues(new Uint8Array(16)),
-): Promise<Uint8Array> {
+  salt: Bytes = crypto.getRandomValues(new Uint8Array(16)),
+): Promise<Bytes> {
   local ??= (await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, [
     'deriveBits',
   ])) as CryptoKeyPair;
@@ -55,12 +58,21 @@ export async function encryptPayload(
   const peer = await crypto.subtle.importKey('raw', uaPublic, { name: 'ECDH', namedCurve: 'P-256' }, false, []);
   const shared = new Uint8Array(await crypto.subtle.deriveBits({ name: 'ECDH', public: peer }, local.privateKey, 256));
 
-  const ikm = await hkdf(fromBase64Url(keys.auth), shared, concat(utf8.encode('WebPush: info\0'), uaPublic, asPublic), 32);
+  const ikm = await hkdf(
+    fromBase64Url(keys.auth),
+    shared,
+    concat(utf8.encode('WebPush: info\0'), uaPublic, asPublic),
+    32,
+  );
   const cek = await hkdf(salt, ikm, utf8.encode('Content-Encoding: aes128gcm\0'), 16);
   const nonce = await hkdf(salt, ikm, utf8.encode('Content-Encoding: nonce\0'), 12);
   const aes = await crypto.subtle.importKey('raw', cek, 'AES-GCM', false, ['encrypt']);
   // 0x02 marks the last (and only) record.
-  const sealed = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: nonce }, aes, concat(plaintext, new Uint8Array([2])));
+  const sealed = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv: nonce },
+    aes,
+    concat(plaintext, new Uint8Array([2])),
+  );
 
   // Header: salt, record size (4096), key id length, key id (our public key).
   const header = new Uint8Array(21);
