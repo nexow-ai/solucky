@@ -90,9 +90,11 @@ const sections = [
     <ul>
       <li>
         <strong>A Solana RPC endpoint</strong>, which the app reads the game from and sends your transactions through:
-        <template v-if="rpcHost"><code>{{ rpcHost }}</code> on this site</template
-        ><template v-else>Solana's public endpoint for {{ clusterLabel }}</template>. It receives your IP address and
-        the accounts the app looks up, including your wallet's once you connect it, under its operator's policy.
+        <template v-if="rpcHost"
+          ><code>{{ rpcHost }}</code> on this site</template
+        ><template v-else>Solana's public endpoint for {{ clusterLabel }}</template
+        >. It receives your IP address and the accounts the app looks up, including your wallet's once you connect it,
+        under its operator's policy.
       </li>
       <li>
         <strong>Your wallet</strong>, such as Phantom, Solflare or Backpack, which is software from its own maker, with

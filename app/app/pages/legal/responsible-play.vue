@@ -37,8 +37,8 @@ const help = [
     <ul>
       <li>S☉Lucky is for people aged 18 and over, where lotteries are legal.</li>
       <li v-if="!isMainnet">
-        This site runs on Solana {{ clusterLabel }}: tickets cost test SOL, which is free and has no value. It is a
-        good way to see how the game works without spending anything.
+        This site runs on Solana {{ clusterLabel }}: tickets cost test SOL, which is free and has no value. It is a good
+        way to see how the game works without spending anything.
       </li>
       <li v-else>This site runs on Solana Mainnet: tickets cost real SOL.</li>
       <li>Play for fun, never to make money or to win back money you lost.</li>
@@ -47,8 +47,8 @@ const help = [
     <h2 id="odds">Know the odds</h2>
     <ul>
       <li>
-        Every ticket has the same chance. Your chance of winning a round is your tickets divided by all the tickets
-        sold in it.
+        Every ticket has the same chance. Your chance of winning a round is your tickets divided by all the tickets sold
+        in it.
       </li>
       <li>The number you pick is your label on the board. It does not change your chance.</li>
       <li>
@@ -60,8 +60,8 @@ const help = [
 
     <h2 id="final">Tickets are final</h2>
     <p>
-      A ticket cannot be cancelled or refunded once it is bought. The only thing you get back is its small rent
-      deposit, by closing the ticket after its round is paid.
+      A ticket cannot be cancelled or refunded once it is bought. The only thing you get back is its small rent deposit,
+      by closing the ticket after its round is paid.
     </p>
 
     <h2 id="habits">Keep it fun</h2>
@@ -73,9 +73,7 @@ const help = [
     </ul>
 
     <h2 id="limits">Setting your own limits</h2>
-    <p>
-      S☉Lucky has no accounts, so it cannot set limits or exclude you. You can set your own:
-    </p>
+    <p>S☉Lucky has no accounts, so it cannot set limits or exclude you. You can set your own:</p>
     <ul>
       <li>Keep a separate wallet holding only what you are ready to spend.</li>
       <li>Use a website blocker or your device's parental controls to block the site.</li>

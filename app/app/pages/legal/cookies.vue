@@ -45,15 +45,20 @@ const keys = [
     <p>
       Our host, Cloudflare, can set strictly necessary security cookies, such as <code>__cf_bm</code>, when its bot
       protection is on. Cloudflare uses them to tell people from bots, as its
-      <a href="https://developers.cloudflare.com/fundamentals/reference/policies-compliances/cloudflare-cookies/" target="_blank" rel="noopener">cookie list</a>
+      <a
+        href="https://developers.cloudflare.com/fundamentals/reference/policies-compliances/cloudflare-cookies/"
+        target="_blank"
+        rel="noopener"
+        >cookie list</a
+      >
       explains.
     </p>
 
     <h2 id="storage">What the app keeps in your browser</h2>
     <p>
-      The app saves a few settings in your browser's local storage, so they are still there next time. They stay on
-      your device: the app never sends them to our server. The flag you pick only leaves your browser when you choose to:
-      on a ticket you buy, and on the Play page's live table.
+      The app saves a few settings in your browser's local storage, so they are still there next time. They stay on your
+      device: the app never sends them to our server. The flag you pick only leaves your browser when you choose to: on
+      a ticket you buy, and on the Play page's live table.
     </p>
     <table>
       <thead>
@@ -65,7 +70,9 @@ const keys = [
       </thead>
       <tbody>
         <tr v-for="row in keys" :key="row.key">
-          <td><code>{{ row.key }}</code></td>
+          <td>
+            <code>{{ row.key }}</code>
+          </td>
           <td>{{ row.holds }}</td>
           <td>{{ row.when }}</td>
         </tr>

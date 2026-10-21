@@ -30,16 +30,16 @@ const documents = LEGAL_PAGES.filter((page) => page.to !== '/legal');
     <p>S☉Lucky has two parts:</p>
     <ul>
       <li>
-        <strong>The program</strong>, a Solana program that sells the tickets, holds each day's pot and pays the
-        winner. This site uses the program at
+        <strong>The program</strong>, a Solana program that sells the tickets, holds each day's pot and pays the winner.
+        This site uses the program at
         <a :href="explorer('address', programAddress)" target="_blank" rel="noopener"
           ><code>{{ programAddress }}</code></a
         >
         on Solana {{ clusterLabel }}. Anyone can use it directly, without this site.
       </li>
       <li>
-        <strong>This site</strong>, which shows the program's public data and helps you send transactions from your
-        own wallet. It never holds your keys or your SOL.
+        <strong>This site</strong>, which shows the program's public data and helps you send transactions from your own
+        wallet. It never holds your keys or your SOL.
       </li>
     </ul>
 
@@ -47,15 +47,16 @@ const documents = LEGAL_PAGES.filter((page) => page.to !== '/legal');
     <p>Using the site means accepting these documents:</p>
     <ul>
       <li v-for="page in documents" :key="page.to">
-        <NuxtLink :to="page.to">{{ page.label }}</NuxtLink>: {{ page.description }}
+        <NuxtLink :to="page.to">{{ page.label }}</NuxtLink
+        >: {{ page.description }}
       </li>
     </ul>
 
     <h2 id="security">Reporting a security issue</h2>
     <p>
-      Please do not open a public issue. Email <a :href="`mailto:${OPERATOR.email}`">{{ OPERATOR.email }}</a> with
-      the subject <code>Security report: solucky</code>, and never test against other players' funds: use devnet or
-      a local validator. The security policy, <code>SECURITY.md</code> in the
+      Please do not open a public issue. Email <a :href="`mailto:${OPERATOR.email}`">{{ OPERATOR.email }}</a> with the
+      subject <code>Security report: solucky</code>, and never test against other players' funds: use devnet or a local
+      validator. The security policy, <code>SECURITY.md</code> in the
       <a :href="config.githubUrl" target="_blank" rel="noopener">source repository</a>, explains what to include and
       what is in scope.
     </p>
