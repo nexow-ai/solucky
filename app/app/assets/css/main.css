@@ -143,6 +143,81 @@ html {
   mask-size: var(--led-pitch) var(--led-pitch);
 }
 
+/* Long-form text on the legal pages. */
+@utility prose-legal {
+  color: var(--ui-text);
+  line-height: 1.75;
+
+  & > * + * {
+    margin-top: 1rem;
+  }
+  & h2 {
+    margin-top: 3rem;
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ui-text-highlighted);
+    scroll-margin-top: calc(var(--ui-header-height) + 1.5rem);
+  }
+  & > h2:first-child {
+    margin-top: 0;
+  }
+  & h3 {
+    margin-top: 2rem;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--ui-text-highlighted);
+  }
+  & ul,
+  & ol {
+    padding-left: 1.25rem;
+  }
+  & ul {
+    list-style: disc;
+  }
+  & ol {
+    list-style: decimal;
+  }
+  & li + li {
+    margin-top: 0.5rem;
+  }
+  & li::marker {
+    color: var(--ui-primary);
+  }
+  & a {
+    color: var(--ui-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  & strong {
+    font-weight: 600;
+    color: var(--ui-text-highlighted);
+  }
+  & code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 0.1em 0.35em;
+    border-radius: 0.25rem;
+    background: var(--ui-bg-elevated);
+  }
+  & table {
+    width: 100%;
+    font-size: var(--text-sm);
+    border-collapse: collapse;
+  }
+  & th,
+  & td {
+    padding: 0.6rem 0.75rem 0.6rem 0;
+    border-bottom: 1px solid var(--ui-border);
+    text-align: left;
+    vertical-align: top;
+  }
+  & th {
+    font-weight: 600;
+    color: var(--ui-text-highlighted);
+  }
+}
+
 /* A field of dots, faded out by the element's own mask. */
 @utility bg-dots {
   background-image: radial-gradient(
