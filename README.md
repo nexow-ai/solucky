@@ -1,402 +1,208 @@
 <div align="center">
 
-# 🎰 [S☉Lucky](https://dailywin.sol)
+<img src="app/public/logo.png" alt="" width="96" />
 
-Website: [dailywin.sol](https://dailywin.sol)
-Account: [ArrZMZh5heYyy4hWzcEXbV2wbxyHxf7rugEvFuNzE3LE](https://explorer.solana.com/address/ArrZMZh5heYyy4hWzcEXbV2wbxyHxf7rugEvFuNzE3LE?cluster=mainnet)
+# S☉Lucky
 
-### *Decentralized Daily Lottery on Solana*
+**A daily lottery on Solana. Pick a number, and the whole pot goes to one ticket at midnight UTC.**
 
-[![Solana](https://img.shields.io/badge/Solana-Program-9945FF?style=for-the-badge&logo=solana&logoColor=white)](https://solana.com)
-[![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org)
-[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
-[![Socket.IO](https://img.shields.io/badge/Socket.IO-Realtime-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io)
+Every ticket, every lamport of the pot and every draw lives on-chain, where anyone can check it.
 
-*Connect your wallet, pick your lucky number, and watch the pot grow in real-time* ✨
+[![CI](https://github.com/nexow-ai/solucky/actions/workflows/ci.yml/badge.svg)](https://github.com/nexow-ai/solucky/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Anchor 1.2](https://img.shields.io/badge/Anchor-1.2-9945FF)
+![Nuxt 4](https://img.shields.io/badge/Nuxt-4-00DC82)
 
-[Quick Start](#-quick-start) • [Features](#-features) • [Architecture](#-architecture) • [Configuration](#-configuration)
+A product of [Nexow, Inc.](https://nexow.studio)
 
 </div>
 
 ---
 
-## 🎯 Overview
+## How it works
 
-**SOLucky** is a fully decentralized, transparent daily lottery built on Solana. Every ticket is stored on-chain with complete fairness and verifiability. The platform features real-time updates, live statistics, and seamless wallet integration.
-
-### Why SOLucky?
-
-- 🔒 **Trustless & Transparent** - All tickets stored on-chain
-- ⚡ **Real-time Updates** - Watch the pot grow with Socket.IO
-- 🌍 **Global Participation** - Track players by country
-- 💰 **Live SOL/USD Pricing** - Real-time market rates
-- 📊 **Historical Analytics** - Complete draw history and stats
-- 🎨 **Beautiful UI** - Modern design with Tailwind CSS
-
----
-
-## 🏗 Architecture
+Each UTC day is a **round**. Players buy **tickets** at a fixed price, each carrying a number from 0 to 1 000 000 000. A number can only be sold once per round. Every ticket has the same chance of winning: your odds are your tickets divided by all tickets sold that day.
 
 ```mermaid
-graph LR
-    A[👛 Solana Wallet] --> B[🎨 Vue 3 Client]
-    B --> C[⚡ Node.js + Socket.IO]
-    C --> D[🐘 PostgreSQL]
-    C --> E[⛓️ Solana Program]
-    B --> E
+stateDiagram-v2
+    direction LR
+    [*] --> Open: first ticket of the day
+    Open --> Closed: close_round, after 00:00 UTC
+    Closed --> Drawn: draw_round, once the pinned slot is produced
+    Closed --> Closed: close_round again if the pinned slot expired
+    Drawn --> Settled: claim_prize pays the winner
+    Settled --> [*]: collect_fee pays the treasury
 ```
 
-### Stack Components
+1. **Buy.** `buy_ticket` moves the ticket price from the player to the day's round account and mixes the purchase into the round's entropy. The first ticket of the day opens the round. The buyer passes the price they were shown and never pays more.
+2. **Close.** After midnight UTC anyone can call `close_round`. It pins a slot 8 slots in the future, whose hash nobody knows yet.
+3. **Draw.** Once that slot exists, anyone can call `draw_round`. The program reads the slot's hash from the SlotHashes sysvar and computes `randomness = sha256(entropy ‖ slot_hash ‖ slot ‖ round)`. The winning ticket is purchase number `u64(randomness[0..8]) mod ticket_count`.
+4. **Pay.** Anyone can call `claim_prize`. The pot minus the house fee goes to the winning ticket's owner, and nobody else can receive it. Anyone can then call `collect_fee` to send the fee to the treasury; the two steps are separate so the treasury can never hold up a winner.
+5. **Reclaim.** After the payout, players can close their tickets to get the account rent back. The round account stays on-chain as the public record of the day.
 
-| Layer | Technology | Location |
-|-------|-----------|----------|
-| **Smart Contract** | Rust + Anchor | `solotto/*/src/program/lib.rs` |
-| **Backend Server** | Express + Socket.IO | `solotto/server/` |
-| **Lottery dApp** | Vue 3 + Tailwind | `solotto/client/` |
-| **Landing Page** | Vue 3 | `web/` |
-| **Database** | PostgreSQL | Remote/Local |
-| **Real-time** | Socket.IO | Backend & Clients |
+A bot (the **crank**, `bun run crank`) does steps 2–4 right after midnight, and any player can close, draw and pay from the History panel of the app. Each step only costs network fees.
 
-### Data Flow
+## Fairness and trust
+
+| Guarantee | Enforced by |
+| --- | --- |
+| The pot can only go to the winner and the fee to the treasury | `claim_prize` checks the ticket and its owner; `collect_fee` checks the configured treasury |
+| The operator cannot withdraw a pot or stop it from being paid | No such instruction exists; pausing only blocks new tickets, and the winner's payout never touches the treasury. The authority can only change where fees go |
+| The fee is at most 10%, and price or fee changes never affect a round already selling | `MAX_FEE_BPS`, and each round copies the price and fee when it opens |
+| A buyer never pays more than the price they saw | `buy_ticket` takes a `max_price` |
+| Prizes can always be paid, even to an empty wallet | Tickets cost at least 0.001 SOL, so a prize is always above the rent-exempt minimum |
+| Only the program's upgrade authority can create the config | `initialize` checks the program data account |
+| Anyone can finish a round | `close_round`, `draw_round` and `claim_prize` need no special signer |
+| Anyone can check the draw | The round stores the entropy, slot, slot hash and randomness; the app recomputes them in the browser |
+
+**Known limits.** This draw is fair against players, not against validators:
+
+- The randomness comes from the hash of a slot pinned a few slots in the future, so nobody can predict it when the round closes. But the slot hash is a bank hash, which depends on the block's contents: the leader of that slot can try different blocks and publish a favourable one, or skip it (leaders produce 4 slots in a row, and the next leader can fork a block out). A validator who also closes the round can aim the pinned slot at its own leader slots.
+- Once the pinned slot exists, anyone can compute the result before drawing. The draw stays possible while SlotHashes still holds that slot (about 512 slots, ~3.5 minutes), and `close_round` only pins a new slot once SlotHashes proves the old one is out of reach. A player who closes a round and dislikes the result could still withhold the draw and hope nobody else draws in time. Run the crank continuously (`bun run crank --watch --interval 10`) so every round is drawn within seconds.
+- For real-money pots, replace the draw with a verifiable randomness oracle such as Switchboard On-Demand or ORAO VRF. The draw logic is one function in [`draw_round.rs`](programs/solucky/src/instructions/draw_round.rs).
+- An upgradeable program is only as trustworthy as its upgrade authority. Consider a multisig, or making the program immutable once it is stable.
+
+## Repository layout
 
 ```
-1. User connects Solana wallet 👛
-2. Client commits ticket (number + country) 🎟️
-3. Backend broadcasts update via Socket.IO 📡
-4. On-chain ticket account created ⛓️
-5. Stats aggregated in PostgreSQL 📊
-6. Live updates pushed to all clients ⚡
+programs/solucky/   Anchor program (Rust), with unit and LiteSVM integration tests
+idl/                The program's IDL, committed so the client can be regenerated without Rust
+clients/js/         @solucky/client: Codama-generated @solana/kit client plus helpers
+app/                Nuxt 4 + Nuxt UI app: landing page, game, round pages, /api/price, /api/geo
+scripts/            Operator scripts: admin (config), crank (settle rounds), e2e (local end-to-end)
+.github/workflows/  CI, and an optional scheduled crank
 ```
 
----
+## Requirements
 
-## ✨ Features
+- [Bun](https://bun.sh) 1.2 or later, and Node.js 22.22 or later
+- To build the program: [Rust](https://rustup.rs) (the pinned toolchain installs itself), [Anchor](https://www.anchor-lang.com/docs/installation) 1.2.1 (`avm install 1.2.1 && avm use 1.2.1`) and the [Solana CLI](https://docs.anza.xyz/cli/install) (Agave) for `cargo build-sbf`
+- To deploy to devnet or mainnet: the Solana CLI **4.x** (tested with 4.3.2; older CLIs cannot deploy SBPF v3 programs)
+- To run everything locally: [Surfpool](https://github.com/txtx/surfpool) 1.6 or later. Its cheatcodes load the program without the Solana CLI or a deploy keypair, and move the clock past midnight
 
-### 🎮 Core Gameplay
-- 🔐 **Solana Wallet Integration** - Phantom, Solflare, and more
-- 🎟️ **Ticket Commitment** - Choose your lucky number (0-99)
-- 🌍 **Country Tracking** - Geographic distribution of players
-- ⏰ **Daily Draws** - Reset at 00:00:00 UTC
-
-### 📊 Real-time Stats
-- 💰 **Live Pot Value** - Updated in SOL and USD
-- 👥 **Active Players** - Connected users count
-- ✅ **Verified Tickets** - Total committed tickets
-- 🗺️ **Global Map** - Players by country
-
-### 💻 Technical Features
-- ⚡ **Socket.IO** - Sub-second update latency
-- 📈 **Chart.js Integration** - Historical data visualization
-- 🎨 **Tailwind CSS** - Responsive, modern UI
-- 🔄 **Auto-rotation** - Daily table creation at 08:00 UTC
-- 💱 **Live Ticker** - Bitstamp SOL/USD feed
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
+## Quick start
 
 ```bash
-# Required
-Node.js >= 16
-npm or yarn
-PostgreSQL >= 12
-
-# Optional (for smart contract development)
-Rust + Cargo
-Solana CLI
-Anchor Framework
+bun install
+bun run dev          # http://localhost:3000, against devnet
 ```
 
-### Installation
+The app talks to the program on the cluster set in `app/.env` (see [`app/.env.example`](app/.env.example)). Until the program is deployed and initialized there, the game shows "The lottery is not set up on this cluster yet".
+
+### Run the whole stack locally
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/77.git
-cd 77
+bun run program:build        # anchor build, copy the IDL, regenerate the client
+surfpool start --offline --no-deploy
 
-# 2. Install root dependencies
-npm install
-
-# 3. Install backend dependencies
-cd solotto/server
-npm install
-
-# 4. Install client dependencies
-cd ../client
-npm install
-
-# 5. Install web landing dependencies
-cd ../../web
-npm install
+# in another terminal
+export SOLANA_RPC_URL=http://127.0.0.1:8899
+bun run localnet --fund <YOUR WALLET ADDRESS>   # load the program, create the config, send you ◎10
+bun run e2e                                     # optional: play a full round and check every payout
+NUXT_PUBLIC_CLUSTER=localnet bun run dev
 ```
 
-### Running Development Servers
+`localnet` and `e2e` only run against a local RPC. They load `target/deploy/solucky.so` at the program address with your keypair (or a throwaway one) as upgrade authority, and create a config with ◎0.1 tickets and a 5% fee. Point your wallet at `http://127.0.0.1:8899` to play.
+
+The program address in the code, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`, belongs to a keypair that Nexow keeps out of the repository. On a fresh clone, `anchor build` creates a new `target/deploy/solucky-keypair.json`; run `anchor keys sync` and `bun run program:build` once to switch the code, IDL and client to your own address. Keep that keypair backed up and never commit it.
+
+## Deploying
+
+1. **Program.** Make a [verifiable build](#verifiable-builds), then deploy it with the wallet that should be the upgrade authority:
+   ```bash
+   bun run program:build:verifiable
+   solana program deploy -u devnet --program-id target/deploy/solucky-keypair.json target/verifiable/solucky.so
+   ```
+2. **Config.** As the upgrade authority, create the config (tickets cost at least ◎0.001). Fund the treasury with at least ◎0.001 first, so it can receive small fees:
+   ```bash
+   SOLANA_RPC_URL=https://api.devnet.solana.com bun run admin init --treasury <ADDRESS> --price 0.1 --fee-bps 500
+   bun run admin status
+   ```
+   Later changes: `bun run admin set --price 0.2`, `--fee-bps 300`, `--treasury <ADDRESS>`, `--authority <ADDRESS>`, `--pause`, `--resume`.
+3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc). Set the cluster, and preferably a dedicated RPC endpoint, as `NUXT_PUBLIC_*` variables there. `bun run build` produces a Node server in `app/.output` instead.
+4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so rounds are drawn within seconds of midnight. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON`. Use a dedicated, lightly funded keypair: the crank never needs authority.
+5. **Monitoring.** `bun run monitor --crank <CRANK ADDRESS>` exits with an error when a finished round is still unsettled 15 minutes after midnight, or when the crank holds less than ◎0.05; with `ALERT_WEBHOOK_URL` set it also posts to a Slack or Discord webhook. [`.github/workflows/monitor.yml`](.github/workflows/monitor.yml) runs it twice a day once the repository variable `SOLUCKY_MONITOR_ENABLED=true` is set (with the variables `SOLANA_RPC_URL` and `SOLUCKY_CRANK`, and the secret `ALERT_WEBHOOK_URL`); GitHub also emails you when a run fails.
+
+## Verifiable builds
+
+`bun run program:build:verifiable` builds the program inside Anchor's pinned Docker image (`quay.io/ottersec/anchor:v1.2.1`), so the same commit always produces the same bytes, whoever builds it. Deploy `target/verifiable/solucky.so`, not the regular build, so the program on-chain can be traced back to this source.
+
+Every `v*` tag runs the [Release workflow](.github/workflows/release.yml), which makes the same build and attaches `solucky.so`, its SHA-256, its program hash and the IDL to the GitHub release. The program hash ignores the file's trailing zero bytes, as the chain does, so it is the value to compare with a deployment.
+
+To check a deployed program against a commit, rebuild that commit (or download the release's `solucky.so`) and compare hashes with [`solana-verify`](https://github.com/Ellipsis-Labs/solana-verifiable-build):
 
 ```bash
-# Terminal 1 - Backend Server (Port 5001)
-cd solotto/server
-node server.js
-
-# Terminal 2 - Lottery Client (Port 8080)
-cd solotto/client
-npm run serve
-
-# Terminal 3 - Landing Page (Port 8081)
-cd web
-npm run serve
+git checkout <COMMIT> && bun run program:build:verifiable
+solana-verify get-executable-hash target/verifiable/solucky.so
+solana-verify get-program-hash -u devnet 8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2   # must print the same hash
 ```
 
----
+To show the program as verified in Solana explorers, the upgrade authority can publish the check with `solana-verify verify-from-repo --remote`, passing `--base-image quay.io/ottersec/anchor:v1.2.1` so it builds exactly like `program:build:verifiable`.
 
-## ⚙️ Configuration
+## Configuration
 
-### Backend Server `.env`
+**App** (`app/.env`, or the host's environment; all public):
 
-Create `solotto/server/.env`:
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `NUXT_PUBLIC_CLUSTER` | `devnet` | `mainnet`, `devnet`, `testnet` or `localnet`; also picks the wallet chain |
+| `NUXT_PUBLIC_RPC_URL` | public endpoint | RPC endpoint. Use a provider in production: public endpoints are rate-limited |
+| `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different |
+| `NUXT_PUBLIC_PROGRAM_ID` | from the IDL | Program address |
+| `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
+| `NUXT_PUBLIC_TWITTER_URL`, `NUXT_PUBLIC_DISCORD_URL` | empty | Footer links, hidden when empty |
 
-```env
-# Database
-POSTGRE_URL=postgres://user:password@localhost:5432/solucky
+**Scripts** (`admin`, `crank`, `monitor`, `localnet`, `e2e`):
 
-# CORS
-CLIENT_URL=http://localhost:8080
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `SOLANA_RPC_URL` | devnet | RPC endpoint |
+| `SOLANA_KEYPAIR` | `~/.config/solana/id.json` | Signer keypair file |
+| `SOLANA_KEYPAIR_JSON` | — | The keypair's byte array, for CI secrets |
+| `SOLUCKY_PROGRAM_ID` | from the IDL | Program address |
+| `ALERT_WEBHOOK_URL` | — | `monitor` only: Slack or Discord webhook for alerts |
 
-# Server
-PORT=5001
-```
+## Program reference
 
-### Lottery Client `.env`
+| Instruction | Who | What |
+| --- | --- | --- |
+| `initialize(ticket_price, fee_bps, max_number)` | upgrade authority | Creates the config |
+| `update_config(update)` | config authority | Changes the authority, treasury, price, fee, number range or pause flag |
+| `buy_ticket(day, number, country, max_price)` | any player | Buys `number` in today's round, at no more than `max_price` |
+| `close_round` | anyone | Ends a finished round and pins the draw slot |
+| `draw_round` | anyone | Picks the winning ticket |
+| `claim_prize` | anyone | Pays the winner |
+| `collect_fee` | anyone | Sends a settled round's fee to the treasury |
+| `close_ticket` | ticket owner | Returns a settled round's ticket rent |
 
-Create `solotto/client/.env`:
+Accounts are PDAs: `Config` (`"config"`), `Round` (`"round"`, day as u32 LE) and `Ticket` (`"ticket"`, round, number as u32 LE). Days count from the Unix epoch in UTC. A ticket's country is an ISO 3166-1 alpha-2 code, or two zero bytes when the player keeps it private. Error codes start at 6000; see [`error.rs`](programs/solucky/src/error.rs).
 
-```env
-# Backend WebSocket
-VUE_APP_SOCKET_ENDPOINT=http://localhost:5001
-
-# Solana Cluster
-VUE_APP_CLUSTER_URL=https://api.devnet.solana.com
-# For mainnet: https://api.mainnet-beta.solana.com
-
-# Program ID
-VUE_APP_PROGRAM_ID=fH2j1AXaGr14kCroRseuetQsJmi6rij1NNqkBicdksr
-```
-
-### Landing Page `.env`
-
-Create `web/.env`:
-
-```env
-VUE_APP_SOCKET_ENDPOINT=http://localhost:5001
-VUE_APP_CLUSTER_URL=https://api.devnet.solana.com
-```
-
-> 💡 **Tip**: Check `.env.sample` files in each directory for complete examples
-
----
-
-## 🔧 Development
-
-### Smart Contract
-
-**Location**: `solotto/client/src/program/lib.rs`
-
-#### Instructions
-
-| Instruction | Parameters | Description |
-|------------|------------|-------------|
-| `send_ticket` | `owner`, `number: i32`, `country: String` | Create new ticket |
-| `delete_ticket` | - | Delete single ticket |
-| `delete_tickets` | - | Delete all user tickets |
-| `close` | - | Close account and reclaim rent |
-| `force_defund` | - | Safety mechanism for closed accounts |
-
-#### Ticket Account Structure
-
-```rust
-pub struct Ticket {
-    pub owner: Pubkey,      // Wallet address
-    pub timestamp: i64,     // Unix timestamp
-    pub number: i32,        // Lucky number (0-99)
-    pub country: String,    // ISO country code
-}
-```
-
-**Program ID**: `fH2j1AXaGr14kCroRseuetQsJmi6rij1NNqkBicdksr`
-
-### Backend Server
-
-**Location**: `solotto/server/`
-
-#### Socket.IO Events
-
-| Event | Direction | Payload | Description |
-|-------|-----------|---------|-------------|
-| `getPOT` | Server → Client | `{ sol: Number, usd: Number }` | Current pot value |
-| `getTickets` | Server → Client | `Array<Ticket>` | All active tickets |
-| `nVerified` | Server → Client | `Number` | Verified ticket count |
-| `nPlayers` | Server → Client | `Number` | Unique player count |
-| `getHistory` | Server → Client | `Array<Draw>` | Historical draws |
-| `userNumber` | Client → Server | `{ number: Number, country: String }` | Commit ticket |
-
-#### Scripts
+## Development
 
 ```bash
-# Production
-npm start
-
-# Development (auto-reload)
-npm run dev
+bun run program:test   # program unit + LiteSVM integration tests (needs target/deploy/solucky.so)
+bun run test:js        # client and app unit tests
+bun run test:browser   # Playwright, against a production build on a local Surfpool (see below)
+bun run typecheck
+bun run lint           # ESLint, and Clippy with warnings as errors
+bun run format         # Prettier and rustfmt
+bun run check          # everything CI runs, except the program build and the e2e
 ```
 
-### Frontend Clients
+After changing the program, run `bun run program:build`: it rebuilds the program, copies the IDL to `idl/` and regenerates `clients/js/src/generated`. Never edit generated files by hand.
 
-#### Lottery dApp (`solotto/client`)
+The browser tests drive the real app in Chromium with an injected test wallet: connect, buy a number, settle the round after midnight and check the draw, with no Content Security Policy violations allowed. Run them with Surfpool up and `bun run localnet` done, after `bun run build`.
 
-Main application with:
-- 🎮 Play panel (ticket submission)
-- 💰 Pot display (SOL/USD)
-- 📊 Statistics dashboard
-- 📜 History viewer
+CI runs three jobs on every push: the program (format, build, Clippy, tests, and a check that the committed IDL matches), the client and app (stale generated code, format, types, lint, tests, Node and Cloudflare builds), and an end-to-end job on Surfpool with the program binary the first job built, which plays a full round with the scripts and then with the browser.
 
-#### Landing Page (`web`)
+## Security
 
-Marketing site with:
-- 🎨 Hero section
-- 👛 Wallet status
-- 📱 Call-to-action
+Report vulnerabilities privately; see [SECURITY.md](SECURITY.md). Production builds of the app send a strict set of security headers (CSP with no third-party scripts, `frame-ancestors 'none'`, HSTS, and others), defined in [`app/nuxt.config.ts`](app/nuxt.config.ts); on Cloudflare, Nitro writes them to `_headers` so static files carry them too. Before version 1.0.0 this repository contained credentials and a keypair in plain text. They are gone from the code but remain in the git history of this public repository, so treat all of them as compromised.
 
-#### Common Commands
+## Legal
 
-```bash
-# Development server
-npm run serve
+Lotteries and gambling are regulated in most countries. The public app runs on devnet with test SOL. Running S☉Lucky with real money is the operator's responsibility: check the licences you need, restrict access where it is not allowed, and only let adults play.
 
-# Production build
-npm run build
+## License
 
-# Linting
-npm run lint
-```
-
----
-
-## 🗄️ Database Schema
-
-### Daily Tables
-
-Tables are auto-created at **08:00 UTC** with format: `_YYYY_MM_DD_`
-
-```sql
-CREATE TABLE _2024_10_21_ (
-    id SERIAL PRIMARY KEY,
-    owner VARCHAR(44),
-    number INT,
-    country VARCHAR(2),
-    timestamp BIGINT,
-    verified BOOLEAN DEFAULT false
-);
-```
-
----
-
-## 🐛 Troubleshooting
-
-### Socket Connection Issues
-
-**Problem**: Client can't connect to Socket.IO server
-
-**Solutions**:
-- ✅ Verify `VUE_APP_SOCKET_ENDPOINT` matches backend URL
-- ✅ Check CORS settings in `solotto/server/server.js`
-- ✅ Ensure backend server is running on correct port
-- ✅ Check firewall/network settings
-
-### Empty Pot/Metrics
-
-**Problem**: No data displayed in UI
-
-**Solutions**:
-- ✅ Verify PostgreSQL connection via `POSTGRE_URL`
-- ✅ Check if daily table exists (created at 08:00 UTC)
-- ✅ Inspect browser console for errors
-- ✅ Ensure backend has database permissions
-
-### Wallet Connection Errors
-
-**Problem**: Can't connect Solana wallet
-
-**Solutions**:
-- ✅ Check `VUE_APP_CLUSTER_URL` is valid RPC endpoint
-- ✅ Verify wallet adapter is properly installed
-- ✅ Test with different wallet (Phantom, Solflare, etc.)
-- ✅ Check browser console for adapter errors
-- ✅ Ensure wallet has SOL for transaction fees
-
-### Build Issues
-
-**Problem**: npm install or build fails
-
-**Solutions**:
-- ✅ Use Node.js 16 or higher
-- ✅ Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
-- ✅ Clear npm cache: `npm cache clean --force`
-- ✅ Check for node-gyp issues on Windows
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. 🍴 Fork the repository
-2. 🌿 Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. 💾 Commit your changes (`git commit -m '✨ Add amazing feature'`)
-4. 📤 Push to the branch (`git push origin feature/amazing-feature`)
-5. 🎉 Open a Pull Request
-
-### Guidelines
-
-- Ensure all linters pass before submitting
-- Write clear commit messages
-- Update documentation for new features
-- Test thoroughly on devnet before proposing mainnet changes
-
----
-
-## 📋 Roadmap
-
-- [ ] 🎨 UI/UX improvements
-- [ ] 🔔 Push notifications for draws
-- [ ] 📱 Mobile app (React Native)
-- [ ] 🏆 Leaderboard system
-- [ ] 🎁 Referral rewards
-- [ ] 🌐 Multi-language support
-- [ ] 🔐 Enhanced security audits
-- [ ] 📈 Advanced analytics dashboard
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- Solana Foundation for the amazing blockchain
-- Anchor Framework for smart contract development
-- Vue.js community for excellent tooling
-- Socket.IO for real-time communication
-
----
-
-<div align="center">
-
-**Built with ❤️ on Solana**
-
-[⬆ Back to Top](#-solucky-77)
-
-</div>
+[MIT](LICENSE) © 2022–2026 Nexow, Inc. · [nexow.studio](https://nexow.studio)

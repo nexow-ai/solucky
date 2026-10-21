@@ -1,0 +1,22 @@
+[toolchain]
+anchor_version = "1.2.1"
+package_manager = "bun"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.devnet]
+solucky = "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2"
+
+[programs.localnet]
+solucky = "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2"
+
+[provider]
+cluster = "devnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "cargo test -p solucky"
+
+[hooks]

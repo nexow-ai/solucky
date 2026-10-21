@@ -1,0 +1,21 @@
+[workspace]
+members = ["programs/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.89.0"
+license = "MIT"
+authors = ["Nexow, Inc. <admin@nexow.ai>"]
+homepage = "https://nexow.studio"
+repository = "https://github.com/nexow-ai/solucky"
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1
+
+[profile.release.build-override]
+opt-level = 3
+incremental = false
+codegen-units = 1

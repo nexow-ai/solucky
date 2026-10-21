@@ -1,0 +1,1366 @@
+{
+  "address": "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2",
+  "metadata": {
+    "name": "solucky",
+    "version": "1.0.0",
+    "spec": "0.1.0",
+    "description": "S☉Lucky: a daily, verifiable lottery on Solana.",
+    "repository": "https://github.com/nexow-ai/solucky"
+  },
+  "instructions": [
+    {
+      "name": "buy_ticket",
+      "docs": [
+        "Buys `number` in today's round, opening the round if needed. Fails if",
+        "the round's ticket price is above `max_price`."
+      ],
+      "discriminator": [
+        11,
+        24,
+        17,
+        193,
+        168,
+        116,
+        164,
+        169
+      ],
+      "accounts": [
+        {
+          "name": "buyer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "docs": [
+            "Opened by the day's first buyer."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "day"
+              }
+            ]
+          }
+        },
+        {
+          "name": "ticket",
+          "docs": [
+            "Fails with \"already in use\" if someone holds this number today."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  105,
+                  99,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "arg",
+                "path": "number"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "day",
+          "type": "u32"
+        },
+        {
+          "name": "number",
+          "type": "u32"
+        },
+        {
+          "name": "country",
+          "type": {
+            "array": [
+              "u8",
+              2
+            ]
+          }
+        },
+        {
+          "name": "max_price",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claim_prize",
+      "docs": [
+        "Pays the winner."
+      ],
+      "discriminator": [
+        157,
+        233,
+        139,
+        121,
+        246,
+        62,
+        234,
+        235
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.day",
+                "account": "Round"
+              }
+            ]
+          },
+          "relations": [
+            "ticket"
+          ]
+        },
+        {
+          "name": "ticket",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  105,
+                  99,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "ticket.number",
+                "account": "Ticket"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "relations": [
+            "ticket"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_round",
+      "docs": [
+        "Ends a finished round and pins the slot that will seed its draw."
+      ],
+      "discriminator": [
+        149,
+        14,
+        81,
+        88,
+        230,
+        226,
+        234,
+        37
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.day",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "slot_hashes",
+          "address": "SysvarS1otHashes111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_ticket",
+      "docs": [
+        "Returns a settled round's ticket rent to its owner."
+      ],
+      "discriminator": [
+        66,
+        209,
+        114,
+        197,
+        75,
+        27,
+        182,
+        117
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "ticket"
+          ]
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.day",
+                "account": "Round"
+              }
+            ]
+          },
+          "relations": [
+            "ticket"
+          ]
+        },
+        {
+          "name": "ticket",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  105,
+                  99,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "ticket.number",
+                "account": "Ticket"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "collect_fee",
+      "docs": [
+        "Sends a settled round's house fee to the treasury."
+      ],
+      "discriminator": [
+        60,
+        173,
+        247,
+        103,
+        4,
+        93,
+        130,
+        48
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.day",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "draw_round",
+      "docs": [
+        "Picks the winning ticket from the pinned slot's hash."
+      ],
+      "discriminator": [
+        193,
+        98,
+        43,
+        206,
+        179,
+        168,
+        227,
+        135
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.day",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "slot_hashes",
+          "docs": [
+            "deserialize on-chain."
+          ],
+          "address": "SysvarS1otHashes111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "docs": [
+        "Creates the config. Only the program's upgrade authority can call it."
+      ],
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "docs": [
+            "Must be the program's upgrade authority, so nobody can front-run the",
+            "deployment and claim the config."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "program",
+          "address": "8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2"
+        },
+        {
+          "name": "program_data"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "ticket_price",
+          "type": "u64"
+        },
+        {
+          "name": "fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "max_number",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "update_config",
+      "docs": [
+        "Changes the config. Price and fee changes apply to the next rounds."
+      ],
+      "discriminator": [
+        29,
+        158,
+        252,
+        191,
+        10,
+        83,
+        219,
+        99
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "update",
+          "type": {
+            "defined": {
+              "name": "ConfigUpdate"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Config",
+      "discriminator": [
+        155,
+        12,
+        170,
+        224,
+        30,
+        250,
+        204,
+        130
+      ]
+    },
+    {
+      "name": "Round",
+      "discriminator": [
+        87,
+        127,
+        165,
+        51,
+        73,
+        78,
+        116,
+        174
+      ]
+    },
+    {
+      "name": "Ticket",
+      "discriminator": [
+        41,
+        228,
+        24,
+        165,
+        78,
+        90,
+        235,
+        200
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "ConfigUpdated",
+      "discriminator": [
+        40,
+        241,
+        230,
+        122,
+        11,
+        19,
+        198,
+        194
+      ]
+    },
+    {
+      "name": "FeeCollected",
+      "discriminator": [
+        12,
+        28,
+        17,
+        248,
+        244,
+        36,
+        8,
+        73
+      ]
+    },
+    {
+      "name": "PrizeClaimed",
+      "discriminator": [
+        213,
+        150,
+        192,
+        76,
+        199,
+        33,
+        212,
+        38
+      ]
+    },
+    {
+      "name": "RoundClosed",
+      "discriminator": [
+        45,
+        243,
+        28,
+        22,
+        132,
+        70,
+        175,
+        226
+      ]
+    },
+    {
+      "name": "RoundDrawn",
+      "discriminator": [
+        147,
+        89,
+        5,
+        223,
+        177,
+        229,
+        18,
+        87
+      ]
+    },
+    {
+      "name": "TicketPurchased",
+      "discriminator": [
+        108,
+        59,
+        246,
+        95,
+        84,
+        145,
+        13,
+        71
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "Only the authority can do this"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidTicketPrice",
+      "msg": "The ticket price must be at least 0.001 SOL"
+    },
+    {
+      "code": 6002,
+      "name": "FeeTooHigh",
+      "msg": "The fee is above the 10% cap"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidMaxNumber",
+      "msg": "The highest number must be greater than zero"
+    },
+    {
+      "code": 6004,
+      "name": "Paused",
+      "msg": "Ticket sales are paused"
+    },
+    {
+      "code": 6005,
+      "name": "WrongDay",
+      "msg": "Tickets can only be bought for today's round"
+    },
+    {
+      "code": 6006,
+      "name": "NumberOutOfRange",
+      "msg": "The number is out of range"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidCountry",
+      "msg": "The country must be an uppercase ISO 3166-1 alpha-2 code"
+    },
+    {
+      "code": 6008,
+      "name": "RoundNotOpen",
+      "msg": "The round is not open"
+    },
+    {
+      "code": 6009,
+      "name": "RoundNotOver",
+      "msg": "The round has not ended yet"
+    },
+    {
+      "code": 6010,
+      "name": "RoundAlreadyDrawn",
+      "msg": "The round was already drawn"
+    },
+    {
+      "code": 6011,
+      "name": "DrawStillPossible",
+      "msg": "The pinned slot can still be drawn"
+    },
+    {
+      "code": 6012,
+      "name": "RoundNotClosed",
+      "msg": "The round is not closed"
+    },
+    {
+      "code": 6013,
+      "name": "TargetSlotNotReached",
+      "msg": "The pinned slot has not been reached yet"
+    },
+    {
+      "code": 6014,
+      "name": "RandomnessUnavailable",
+      "msg": "The pinned slot's hash is not readable yet; try again shortly, or close the round again once it expired"
+    },
+    {
+      "code": 6015,
+      "name": "RoundNotDrawn",
+      "msg": "The round has not been drawn"
+    },
+    {
+      "code": 6016,
+      "name": "NotWinningTicket",
+      "msg": "This is not the winning ticket"
+    },
+    {
+      "code": 6017,
+      "name": "RoundNotSettled",
+      "msg": "The round has not been settled"
+    },
+    {
+      "code": 6018,
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
+    },
+    {
+      "code": 6019,
+      "name": "PriceChanged",
+      "msg": "The ticket price is higher than the price you accepted"
+    },
+    {
+      "code": 6020,
+      "name": "FeeAlreadyCollected",
+      "msg": "The fee of this round was already collected"
+    }
+  ],
+  "types": [
+    {
+      "name": "Config",
+      "docs": [
+        "Global settings. Only `authority` can change them, and changes to the",
+        "price or fee only apply to rounds opened afterwards."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "docs": [
+              "Receives the house fee through `collect_fee`."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "ticket_price",
+            "docs": [
+              "Price of one ticket, in lamports."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "fee_bps",
+            "docs": [
+              "House fee, in basis points of the pot. Capped at `MAX_FEE_BPS`."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "max_number",
+            "docs": [
+              "Highest number a ticket can carry (inclusive)."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "paused",
+            "docs": [
+              "Blocks new tickets. Closing, drawing and claiming always stay open,",
+              "so a pause can never lock a pot."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigUpdate",
+      "docs": [
+        "Fields left as `None` keep their current value."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "treasury",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "ticket_price",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "fee_bps",
+            "type": {
+              "option": "u16"
+            }
+          },
+          {
+            "name": "max_number",
+            "type": {
+              "option": "u32"
+            }
+          },
+          {
+            "name": "paused",
+            "type": {
+              "option": "bool"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "ticket_price",
+            "type": "u64"
+          },
+          {
+            "name": "fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "max_number",
+            "type": "u32"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeeCollected",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day",
+            "type": "u32"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PrizeClaimed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day",
+            "type": "u32"
+          },
+          {
+            "name": "winner",
+            "type": "pubkey"
+          },
+          {
+            "name": "number",
+            "type": "u32"
+          },
+          {
+            "name": "payout",
+            "type": "u64"
+          },
+          {
+            "name": "fee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Round",
+      "docs": [
+        "One UTC day of play. The account holds the pot itself, on top of its",
+        "rent-exempt balance, and stays on-chain as the round's public record."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day",
+            "docs": [
+              "Days since the Unix epoch (UTC)."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "RoundStatus"
+              }
+            }
+          },
+          {
+            "name": "ticket_price",
+            "docs": [
+              "Ticket price and fee copied from `Config` when the round opened."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "ticket_count",
+            "type": "u32"
+          },
+          {
+            "name": "pot",
+            "docs": [
+              "Lamports collected from tickets, held by this account."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "entropy",
+            "docs": [
+              "Rolling SHA-256 of every purchase in the round."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "target_slot",
+            "docs": [
+              "Slot pinned by `close_round`; the draw uses it or the next produced slot."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "draw_slot",
+            "docs": [
+              "Slot whose hash the draw used, and that hash, as read from SlotHashes."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "slot_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "randomness",
+            "docs": [
+              "`sha256(entropy || slot_hash || draw_slot || round)`."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "winning_index",
+            "docs": [
+              "Purchase index of the winning ticket: `randomness[..8] % ticket_count`."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "winning_number",
+            "type": "u32"
+          },
+          {
+            "name": "winner",
+            "type": "pubkey"
+          },
+          {
+            "name": "winner_country",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "payout",
+            "docs": [
+              "Lamports paid to the winner, and the house fee for the treasury."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "fee",
+            "type": "u64"
+          },
+          {
+            "name": "fee_collected",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundClosed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day",
+            "type": "u32"
+          },
+          {
+            "name": "ticket_count",
+            "type": "u32"
+          },
+          {
+            "name": "pot",
+            "type": "u64"
+          },
+          {
+            "name": "target_slot",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundDrawn",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day",
+            "type": "u32"
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          },
+          {
+            "name": "slot_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "randomness",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "winning_index",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Open"
+          },
+          {
+            "name": "Closed"
+          },
+          {
+            "name": "Drawn"
+          },
+          {
+            "name": "Settled"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Ticket",
+      "docs": [
+        "A number held by one player in one round. Its address is derived from the",
+        "round and the number, so each number can only be sold once per day."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "number",
+            "type": "u32"
+          },
+          {
+            "name": "index",
+            "docs": [
+              "Purchase order within the round, starting at 0."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "country",
+            "docs": [
+              "ISO 3166-1 alpha-2 code in uppercase ASCII, or `[0, 0]` if undisclosed."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TicketPurchased",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "day",
+            "type": "u32"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "number",
+            "type": "u32"
+          },
+          {
+            "name": "index",
+            "type": "u32"
+          },
+          {
+            "name": "country",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "pot",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "CONFIG_SEED",
+      "type": "bytes",
+      "value": "[99, 111, 110, 102, 105, 103]"
+    },
+    {
+      "name": "DRAW_DELAY_SLOTS",
+      "docs": [
+        "Slots between closing a round and the slot whose hash seeds its draw.",
+        "Nobody knows that hash when the round closes."
+      ],
+      "type": "u64",
+      "value": "8"
+    },
+    {
+      "name": "DRAW_WINDOW_SLOTS",
+      "docs": [
+        "The SlotHashes sysvar only remembers the last 512 produced slots, so a",
+        "pinned slot can be drawn for about this many slots. `close_round` only",
+        "pins a new slot once SlotHashes proves the old one is out of reach."
+      ],
+      "type": "u64",
+      "value": "500"
+    },
+    {
+      "name": "MAX_FEE_BPS",
+      "docs": [
+        "Highest house fee the authority can ever set: 10%."
+      ],
+      "type": "u16",
+      "value": "1000"
+    },
+    {
+      "name": "MIN_TICKET_PRICE",
+      "docs": [
+        "Lowest ticket price: 0.001 SOL. With the 10% fee cap, a prize is always",
+        "above the rent-exempt minimum of an empty wallet, so it can always be paid."
+      ],
+      "type": "u64",
+      "value": "1000000"
+    },
+    {
+      "name": "ROUND_DURATION",
+      "docs": [
+        "A round lasts one UTC day: round `d` is open from `d * 86_400` to",
+        "`(d + 1) * 86_400` seconds after the Unix epoch."
+      ],
+      "type": "i64",
+      "value": "86400"
+    },
+    {
+      "name": "ROUND_SEED",
+      "type": "bytes",
+      "value": "[114, 111, 117, 110, 100]"
+    },
+    {
+      "name": "TICKET_SEED",
+      "type": "bytes",
+      "value": "[116, 105, 99, 107, 101, 116]"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "@solucky/app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "S☉Lucky web app: landing page and dApp.",
+  "license": "MIT",
+  "author": "Nexow, Inc. <admin@nexow.ai> (https://nexow.studio)",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "build:cloudflare": "nuxt build --preset cloudflare_durable",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "nuxt prepare && eslint .",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "test:browser": "playwright test",
+    "deploy": "nuxt build --preset cloudflare_durable && wrangler deploy"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "1.2.147",
+    "@iconify-json/simple-icons": "1.2.100",
+    "@nuxt/ui": "4.12.0",
+    "@solana/kit": "8.5.0",
+    "@solana/kit-plugin-rpc": "0.22.0",
+    "@solana/kit-plugin-wallet": "0.22.0",
+    "@solana/sysvars": "8.5.0",
+    "@solucky/client": "workspace:*",
+    "nuxt": "4.6.2",
+    "tailwindcss": "4.3.3",
+    "vue": "3.5.44"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "1.17.0",
+    "@playwright/test": "1.64.1",
+    "eslint": "10.13.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5",
+    "vue-tsc": "3.3.13",
+    "wrangler": "4.151.3"
+  }
+}

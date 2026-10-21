@@ -1,0 +1,154 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUN_VERSION: 1.2.21
+  ANCHOR_VERSION: 1.2.1
+  SOLANA_VERSION: 4.3.2
+  SURFPOOL_VERSION: 1.6.1
+
+jobs:
+  program:
+    name: Program (build, lint, test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Cache Solana platform tools
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/solana
+          key: solana-${{ env.SOLANA_VERSION }}-anchor-${{ env.ANCHOR_VERSION }}
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install the Solana CLI and Anchor
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v${SOLANA_VERSION}/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL -o "$HOME/.local/bin/anchor" \
+            "https://github.com/otter-sec/anchor/releases/download/v${ANCHOR_VERSION}/anchor-${ANCHOR_VERSION}-x86_64-unknown-linux-gnu"
+          chmod +x "$HOME/.local/bin/anchor"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Format
+        run: cargo fmt --check
+
+      - name: Build
+        # A fresh checkout has no program keypair; the address comes from declare_id!.
+        run: anchor build --ignore-keys
+
+      - name: The committed IDL matches the program
+        run: diff target/idl/solucky.json idl/solucky.json
+
+      - name: Clippy
+        run: cargo clippy -p solucky --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test -p solucky
+
+      - name: Keep the program for the end-to-end job
+        uses: actions/upload-artifact@v7
+        with:
+          name: program
+          path: target/deploy/solucky.so
+          retention-days: 7
+
+  e2e:
+    name: End to end on Surfpool (scripts and browser)
+    needs: program
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: program
+          path: target/deploy
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Start Surfpool
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL "https://github.com/txtx/surfpool/releases/download/v${SURFPOOL_VERSION}/surfpool-linux-x64.tar.gz" \
+            | tar xz -C "$HOME/.local/bin"
+          nohup "$HOME/.local/bin/surfpool" start --offline --no-deploy --no-tui --no-studio --ci > surfpool.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:8899 -H 'content-type: application/json' \
+              -d '{"jsonrpc":"2.0","id":1,"method":"getHealth"}' && exit 0
+            sleep 1
+          done
+          cat surfpool.log
+          exit 1
+
+      - name: Play a full round
+        # No keypair: the script loads the program with a throwaway authority.
+        run: bun run e2e
+        env:
+          SOLANA_RPC_URL: http://127.0.0.1:8899
+
+      - name: Browser tests
+        # The production build, so the security headers are on too.
+        run: |
+          bun run build
+          cd app && bunx playwright install --with-deps chromium
+          bun run test:browser
+        env:
+          SOLANA_RPC_URL: http://127.0.0.1:8899
+
+      - name: Keep the browser traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-traces
+          path: app/test-results/
+          retention-days: 7
+
+      - name: Surfpool log
+        if: failure()
+        run: cat surfpool.log
+
+  app:
+    name: Client and app (types, lint, test, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - run: bun install --frozen-lockfile
+
+      - name: Generated client is up to date
+        run: bun run codegen && git diff --exit-code clients/js
+
+      - name: Format
+        run: bunx prettier --check .
+
+      - name: Types
+        run: bun run typecheck
+
+      - name: Lint
+        run: bun run --cwd app lint
+
+      - name: Unit tests
+        run: bun run test:js
+
+      - name: Build (Node and Cloudflare)
+        run: bun run build && bun run build:cloudflare

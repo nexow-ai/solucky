@@ -1,0 +1,20 @@
+// Cloudflare Workers deployment of the app: `bun run deploy` from the repo root.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "solucky",
+  "main": "./.output/server/index.mjs",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "./.output/public", "binding": "ASSETS" },
+  "observability": { "enabled": true },
+  // Nitro's cloudflare_durable preset sends every WebSocket of the play page's
+  // live table to this one Durable Object, so all players share one table.
+  "durable_objects": {
+    "bindings": [{ "name": "$DurableObject", "class_name": "$DurableObject" }],
+  },
+  "migrations": [{ "tag": "v1-live-table", "new_sqlite_classes": ["$DurableObject"] }],
+  // Public settings read by the app at runtime (see app/.env.example).
+  "vars": {
+    "NUXT_PUBLIC_CLUSTER": "devnet",
+  },
+}

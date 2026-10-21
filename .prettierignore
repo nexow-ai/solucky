@@ -1,0 +1,11 @@
+node_modules
+target
+.anchor
+.nuxt
+.output
+coverage
+bun.lock
+Cargo.lock
+idl
+clients/js/src/generated
+*.md
