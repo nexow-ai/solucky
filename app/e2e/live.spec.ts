@@ -19,7 +19,8 @@ test('a player at the table sees another join and buy, live', async ({ browser }
   const errors = watchForPageErrors(page);
   await installTestWallet(page, player);
   await page.goto('/play');
-  await expect(watcher.getByText('A new player joined the table')).toBeVisible();
+  // The toast and the ticker can both show the line.
+  await expect(watcher.getByText('A new player joined the table').first()).toBeVisible();
 
   await page.getByRole('banner').getByRole('button', { name: 'Connect wallet' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Test Wallet' }).click();
@@ -28,7 +29,9 @@ test('a player at the table sees another join and buy, live', async ({ browser }
   await page.getByRole('button', { name: `Buy ${spaced(number)} for ◎0.1` }).click();
   await expect(page.getByText(`Number ${spaced(number)} is yours. Good luck!`)).toBeVisible();
 
-  await expect(watcher.getByText(new RegExp(`locked in ${spaced(number)}`))).toBeVisible();
+  // A string, not a RegExp: only string matching treats the app's no-break
+  // digit spaces as spaces.
+  await expect(watcher.getByText(`locked in ${spaced(number)}`).first()).toBeVisible();
   await expect(watcher.getByRole('list').getByText(spaced(number), { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
   expect(watcherErrors).toEqual([]);
