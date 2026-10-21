@@ -25,6 +25,17 @@ import {
   type TransactionSigner,
 } from '@solana/kit';
 
+/**
+ * The compute unit limit for a simulated cost, with the margin Kit's own
+ * executor adds: 10% shrinking to 2% at 500k units, and at least 300 units.
+ * Never the exact estimate: Phantom adds a priority-fee instruction before it
+ * sends, which then runs out of compute and fails as "Unexpected error".
+ */
+export function withComputeUnitMargin(units: number): number {
+  const margin = 0.1 - 0.08 * Math.min(units / 500_000, 1);
+  return Math.min(1_400_000, units + Math.max(300, Math.ceil(units * margin)));
+}
+
 async function confirmSignature(
   rpc: {
     getSignatureStatuses: (signatures: Signature[]) => {
@@ -78,11 +89,13 @@ export function walletAwareSend() {
       rpc: c.rpc as unknown as Parameters<typeof sendAndConfirmTransactionFactory>[0]['rpc'],
       rpcSubscriptions: c.rpcSubscriptions,
     });
-    const estimateAndSetResourceLimits = estimateAndSetResourceLimitsFactory(
-      estimateResourceLimitsFactory({
-        rpc: c.rpc as unknown as Parameters<typeof estimateResourceLimitsFactory>[0]['rpc'],
-      }),
-    );
+    const estimateResourceLimits = estimateResourceLimitsFactory({
+      rpc: c.rpc as unknown as Parameters<typeof estimateResourceLimitsFactory>[0]['rpc'],
+    });
+    const estimateAndSetResourceLimits = estimateAndSetResourceLimitsFactory(async (message, config) => {
+      const estimate = await estimateResourceLimits(message, config);
+      return { ...estimate, computeUnitLimit: withComputeUnitMargin(estimate.computeUnitLimit) };
+    });
 
     const executor = createTransactionPlanExecutor({
       executeTransactionMessage: async (context, transactionMessage, executorConfig) => {
