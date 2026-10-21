@@ -25,6 +25,11 @@ export function dialAngle(ms: number): number {
   return -Math.PI / 2 + dayProgress(ms) * 2 * Math.PI;
 }
 
+/**
+ * Point on the dial, rounded to 0.01 units: the server and the browser may
+ * disagree on the last digits of `Math.sin`, which would break hydration.
+ */
 export function dialPoint(angle: number, radius: number): { x: number; y: number } {
-  return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius };
+  const round = (v: number) => Math.round(v * 100) / 100;
+  return { x: round(Math.cos(angle) * radius), y: round(Math.sin(angle) * radius) };
 }

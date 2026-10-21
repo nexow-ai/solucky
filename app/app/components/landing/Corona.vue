@@ -2,8 +2,8 @@
 /**
  * The sun's corona around the solar dial: a ring of rays whose length drifts
  * with slow noise, leans towards the pointer, and flares wherever a ticket
- * lands. The canvas is centred on the dial; `inner` is the dial's radius as a
- * share of the canvas width. Draws at a low frame rate, stops off screen and
+ * lands. The parent sizes and centres the canvas on the dial; `inner` is the
+ * dial's radius as a share of the canvas width. Draws at a low frame rate, stops off screen and
  * in background tabs, and keeps a single still frame for reduced motion.
  */
 const props = withDefaults(defineProps<{ inner?: number }>(), { inner: 0.26 });
@@ -23,7 +23,10 @@ onMounted(() => {
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   // A fixed jitter per ray, so the corona looks combed rather than uniform.
-  const jitter = Array.from({ length: RAYS }, (_, i) => 0.55 + 0.45 * Math.abs(Math.sin(i * 12.9898) * 43758.5453 % 1));
+  const jitter = Array.from(
+    { length: RAYS },
+    (_, i) => 0.55 + 0.45 * Math.abs((Math.sin(i * 12.9898) * 43758.5453) % 1),
+  );
   let width = 0;
   let primary = '';
   let secondary = '';
@@ -159,5 +162,5 @@ onBeforeUnmount(() => stop());
 </script>
 
 <template>
-  <canvas ref="canvas" aria-hidden="true" class="pointer-events-none size-full" />
+  <canvas ref="canvas" aria-hidden="true" class="pointer-events-none" />
 </template>

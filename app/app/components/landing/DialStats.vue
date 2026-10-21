@@ -17,7 +17,9 @@ watch(entropy, (next, previous) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-3 gap-y-4 border-y border-default py-3 sm:grid-cols-[1fr_1fr_1fr_1.6fr]">
+  <div
+    class="grid grid-cols-3 gap-y-4 rounded-(--ui-radius) bg-default/85 py-3 ring ring-default sm:grid-cols-[1fr_1fr_1fr_1.6fr]"
+  >
     <LotteryStat label="Tickets" :value="tickets.length" />
     <LotteryStat label="Players" :value="players" />
     <LotteryStat label="Ticket" :value="ticketPrice === null ? '—' : `◎${formatSol(ticketPrice)}`" />

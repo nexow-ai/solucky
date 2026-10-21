@@ -93,11 +93,23 @@ const countdown = computed(() => {
     </svg>
 
     <!-- Tickets: a native tooltip names each one. -->
-    <svg viewBox="-300 -300 600 600" class="absolute inset-0 size-full" role="img" :aria-label="`${dots.length} tickets today`">
+    <svg
+      viewBox="-300 -300 600 600"
+      class="absolute inset-0 size-full"
+      role="img"
+      :aria-label="`${dots.length} tickets today`"
+    >
       <g v-for="(dot, index) in dots" :key="dot.key">
         <title>{{ dot.title }}</title>
         <circle :cx="dot.x" :cy="dot.y" r="9" fill="transparent" />
-        <circle v-if="dot.mine" :cx="dot.x" :cy="dot.y" r="7" class="fill-none stroke-(--ui-secondary)" stroke-width="1.5" />
+        <circle
+          v-if="dot.mine"
+          :cx="dot.x"
+          :cy="dot.y"
+          r="7"
+          class="fill-none stroke-(--ui-secondary)"
+          stroke-width="1.5"
+        />
         <circle
           :cx="dot.x"
           :cy="dot.y"
@@ -130,15 +142,17 @@ const countdown = computed(() => {
     <div class="absolute inset-[28%] flex flex-col items-center justify-center text-center">
       <p class="kicker text-[0.6rem]">Today's pot</p>
       <USkeleton v-if="loading" class="mt-2 h-8 w-28" />
-      <p
-        v-else
-        :key="bumps"
-        class="text-lucky glow-primary mt-1 font-dots text-[min(3rem,9cqw)] leading-none font-black tabular-nums motion-safe:animate-bump"
-      >
-        ◎{{ formatSol(pot, 3) }}
+      <p v-else :key="bumps" class="glow-primary mt-1.5 motion-safe:animate-bump">
+        <span
+          class="led block font-mono text-[min(3rem,9cqw)] leading-none font-extrabold text-highlighted tabular-nums"
+        >
+          ◎{{ formatSol(pot, 3) }}
+        </span>
       </p>
-      <p class="mt-1 font-mono text-[0.7rem] text-muted tabular-nums">{{ formatUsd(pot, price) }}</p>
-      <p class="mt-3 font-dots text-[min(1.6rem,4.8cqw)] leading-none font-bold text-highlighted tabular-nums">
+      <p class="mt-1.5 font-mono text-[0.7rem] text-muted tabular-nums">{{ formatUsd(pot, price) }}</p>
+      <p
+        class="led mt-3 font-mono text-[min(1.7rem,5cqw)] leading-none font-extrabold text-primary tabular-nums [--led-pitch:0.1em]"
+      >
         {{ countdown }}
       </p>
       <p class="kicker mt-1 text-[0.6rem] text-secondary">to the draw · {{ formatDay(today) }}</p>

@@ -14,23 +14,27 @@ const steps = [
     title: 'Connect a wallet',
     description: 'Phantom, Solflare, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
     icon: 'i-lucide-wallet',
+    when: 'Any time',
   },
   {
     title: 'Pick your number',
     description: 'Any number from 0 to 1 000 000 000. Each number can be held by one ticket per day, so be quick.',
     icon: 'i-lucide-hash',
+    when: 'Until midnight UTC',
   },
   {
     title: 'Watch the pot grow',
     description:
       'Every ticket adds its price to the pot, held by the round’s own account on Solana. Nobody else can move it.',
     icon: 'i-lucide-trending-up',
+    when: 'All day',
   },
   {
     title: 'Win at midnight UTC',
     description:
       'One ticket wins the whole pot, minus a small house fee. More tickets, better odds: every ticket counts once.',
     icon: 'i-lucide-trophy',
+    when: 'Right after midnight UTC',
   },
 ];
 
@@ -112,27 +116,36 @@ const faq = [
       orientation="horizontal"
       class="dark"
       :ui="{
-        container: 'pt-14 pb-52 sm:pt-20 sm:pb-80 lg:pt-24 lg:pb-72',
-        title: 'text-4xl sm:text-6xl',
+        root: 'overflow-hidden',
+        container: 'py-14 sm:py-20 lg:py-24',
+        title: 'text-5xl sm:text-7xl',
       }"
     >
       <template #top>
-        <LandingHeroScene />
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 bg-default">
+          <div class="bg-dots absolute inset-0 mask-[radial-gradient(ellipse_at_70%_50%,black,transparent_70%)]" />
+          <div
+            class="absolute inset-0 bg-[radial-gradient(45%_55%_at_75%_45%,color-mix(in_oklab,var(--ui-primary)_20%,transparent),transparent_70%)]"
+          />
+          <div class="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
+        </div>
       </template>
 
       <template #headline>
         <span
-          class="kicker inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-primary ring ring-primary/40 backdrop-blur-sm"
+          class="kicker inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-primary ring ring-primary/40"
         >
           <span class="size-1.5 animate-blink rounded-full bg-primary" />
           Daily lottery on Solana
         </span>
       </template>
       <template #title>
-        Pick a number.<br />
-        <span class="glitch text-lucky glow-primary" data-text="Win the pot at midnight."
-          >Win the pot at midnight.</span
-        >
+        <span class="glow-primary inline-block"
+          ><span class="led inline-block font-mono text-[0.8em] font-extrabold tracking-normal"
+            >Pick a number.</span
+          ></span
+        ><br />
+        <span class="text-lucky">Win the pot at midnight.</span>
       </template>
       <template #description>
         One draw a day, one winner, the whole pot. Every ticket, every lamport and every draw lives on Solana, where
@@ -154,10 +167,9 @@ const faq = [
             color="neutral"
             variant="outline"
             trailing-icon="i-lucide-arrow-down"
-            class="bg-default/40 backdrop-blur-sm"
           />
         </div>
-        <dl class="mt-10 grid max-w-md grid-cols-3 gap-4 border-l-2 border-primary/60 ps-4">
+        <dl class="mt-10 grid max-w-md grid-cols-3 gap-4 border-l-2 border-secondary/70 ps-4">
           <div>
             <dt class="kicker text-[0.65rem]">Program</dt>
             <dd class="mt-1 font-mono text-xs">
@@ -177,14 +189,28 @@ const faq = [
         </dl>
       </template>
 
-      <!-- Holds the card's height while its chunk loads, so the scene anchored to the hero's bottom stays put. -->
-      <div class="min-h-[26.5rem]">
-        <ClientOnly>
-          <LazyLotteryLiveCard />
-          <template #fallback>
-            <USkeleton class="mx-auto h-[26.5rem] w-full max-w-sm" />
-          </template>
-        </ClientOnly>
+      <!-- The solar dial: today as a 24-hour ring, with the corona behind it. -->
+      <div class="relative mx-auto w-full max-w-[34rem]">
+        <div aria-hidden="true" class="absolute inset-x-0 top-0 -z-10 aspect-square">
+          <LandingCorona class="absolute -top-[45%] -left-[45%] size-[190%]" />
+        </div>
+        <div class="@container relative aspect-square">
+          <LandingDialFace />
+          <ClientOnly>
+            <LazyLandingDialLive />
+          </ClientOnly>
+        </div>
+        <!-- Holds the readouts' height while their chunk loads. -->
+        <div class="mt-6 min-h-[8.625rem] sm:min-h-[4.625rem]">
+          <ClientOnly>
+            <LazyLandingDialStats />
+          </ClientOnly>
+        </div>
+        <p
+          class="mx-auto mt-3 w-fit rounded-(--ui-radius) bg-default/85 px-3 py-1.5 text-center text-xs text-pretty text-muted"
+        >
+          Each dot is one of today’s tickets: around the dial by the time it was bought, outwards by its number.
+        </p>
       </div>
     </UPageHero>
 
@@ -201,148 +227,146 @@ const faq = [
       id="how-it-works"
       title="Four steps, one draw a day"
       description="Rounds follow the UTC calendar: a new one opens at 00:00 UTC and is drawn right after the next midnight."
-      :ui="{ features: 'gap-4 lg:grid-cols-4' }"
     >
       <template #headline>
         <LandingSectionTag index="01" label="How it works" />
       </template>
-      <template #features>
-        <UPageCard
-          v-for="(step, index) in steps"
-          :key="step.title"
-          as="li"
-          :title="step.title"
-          :description="step.description"
-          variant="subtle"
-          spotlight
-          spotlight-color="primary"
-          class="reveal"
-          :ui="{ spotlight: 'hud-corners bg-default/85', leading: 'mb-6 flex w-full items-center justify-between' }"
+      <div class="reveal">
+        <!-- The day, from the round opening to the draw. -->
+        <div
+          class="relative mb-14 hidden h-px bg-linear-to-r from-primary/20 via-primary to-secondary sm:block"
+          aria-hidden="true"
         >
-          <template #leading>
-            <span class="text-lucky glow-primary font-display text-4xl font-black">0{{ index + 1 }}</span>
-            <UIcon :name="step.icon" class="size-6 text-secondary" />
-          </template>
-        </UPageCard>
-      </template>
+          <span class="absolute -top-6 left-0 font-mono text-[0.65rem] tracking-widest text-muted">
+            00:00 UTC · ROUND OPENS
+          </span>
+          <span class="absolute -top-6 right-0 font-mono text-[0.65rem] tracking-widest text-secondary">
+            24:00 UTC · DRAW
+          </span>
+          <ClientOnly>
+            <LazyLandingDayNow />
+          </ClientOnly>
+        </div>
+        <ol
+          class="grid gap-px overflow-hidden rounded-(--ui-radius) border border-default bg-(--ui-border) sm:grid-cols-2 lg:grid-cols-4"
+        >
+          <li v-for="(step, index) in steps" :key="step.title" class="group relative bg-default p-6 sm:p-8">
+            <span
+              aria-hidden="true"
+              class="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-lucky transition-transform duration-500 group-hover:scale-x-100"
+            />
+            <div class="flex items-start justify-between">
+              <span class="led font-mono text-6xl leading-none font-extrabold text-primary">0{{ index + 1 }}</span>
+              <UIcon :name="step.icon" class="size-5 text-secondary" />
+            </div>
+            <h3 class="mt-8 text-lg font-semibold text-highlighted">{{ step.title }}</h3>
+            <p class="mt-2 text-sm text-pretty text-muted">{{ step.description }}</p>
+            <p class="mt-6 font-mono text-[0.65rem] tracking-widest text-dimmed uppercase">{{ step.when }}</p>
+          </li>
+        </ol>
+      </div>
     </UPageSection>
 
     <UPageSection
       id="fairness"
       title="Don’t trust us. Check."
       description="S☉Lucky is a Solana program, not a server holding your money. These rules are enforced by its code."
-      :ui="{ features: 'gap-4' }"
     >
-      <template #top>
-        <img
-          src="/images/circuit.svg"
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          class="pointer-events-none absolute inset-0 -z-10 size-full object-cover opacity-60 mask-[radial-gradient(ellipse_at_center,black_15%,transparent_72%)]"
-        />
-      </template>
       <template #headline>
         <LandingSectionTag index="02" label="Fairness" />
       </template>
-      <template #features>
-        <UPageCard
-          v-for="rule in fairness"
-          :key="rule.title"
-          as="li"
-          :title="rule.title"
-          :description="rule.description"
-          :icon="rule.icon"
-          variant="subtle"
-          spotlight
-          spotlight-color="secondary"
-          class="reveal"
-          :ui="{
-            spotlight: 'hud-corners bg-default/85 [--hud-color:var(--ui-secondary)]',
-            leadingIcon: 'size-6 text-secondary glow-secondary',
-          }"
-        />
-      </template>
+      <div class="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-16">
+        <ol class="border-t border-default">
+          <li
+            v-for="(rule, index) in fairness"
+            :key="rule.title"
+            class="reveal grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 border-b border-default py-6"
+          >
+            <span class="pt-0.5 font-mono text-xs font-semibold text-secondary">§{{ index + 1 }}</span>
+            <div>
+              <h3 class="flex items-center gap-2 font-semibold text-highlighted">
+                <UIcon :name="rule.icon" class="size-4 shrink-0 text-primary" />
+                {{ rule.title }}
+              </h3>
+              <p class="mt-1.5 text-pretty text-muted">{{ rule.description }}</p>
+            </div>
+          </li>
+        </ol>
+        <!-- The receipt keeps one height in every state; this holds it while its chunk loads. -->
+        <div class="min-h-[41rem] lg:sticky lg:top-24">
+          <ClientOnly>
+            <LazyLandingDrawReceipt />
+            <template #fallback>
+              <div class="mx-auto h-[41rem] w-full max-w-sm rotate-1 bg-elevated perforated" />
+            </template>
+          </ClientOnly>
+        </div>
+      </div>
     </UPageSection>
 
-    <UPageSection id="faq" title="Questions">
+    <UPageSection
+      id="faq"
+      orientation="horizontal"
+      title="Questions"
+      description="Still unsure? The program, the app and the operator scripts are open source."
+      :links="[
+        {
+          label: 'Read the code',
+          to: config.githubUrl,
+          target: '_blank',
+          color: 'neutral',
+          variant: 'outline',
+          icon: 'i-simple-icons-github',
+        },
+      ]"
+      :ui="{
+        container: 'lg:grid-cols-[1fr_2fr] lg:items-start',
+        wrapper: 'lg:sticky lg:top-24',
+        headline: 'justify-start',
+      }"
+    >
       <template #headline>
         <LandingSectionTag index="03" label="FAQ" />
       </template>
-      <div
-        class="hud-corners reveal mx-auto w-full max-w-3xl rounded-(--ui-radius) bg-default/85 px-4 py-2 ring ring-default sm:px-6"
-      >
-        <UAccordion
-          :items="faq"
-          type="multiple"
-          :ui="{ trigger: 'text-base text-highlighted hover:text-primary', trailingIcon: 'text-primary' }"
-        />
-      </div>
+      <UAccordion
+        :items="faq"
+        type="multiple"
+        class="reveal border-t border-default"
+        :ui="{ trigger: 'py-5 text-base text-highlighted hover:text-primary', trailingIcon: 'text-secondary' }"
+      />
     </UPageSection>
 
-    <UPageSection>
-      <div class="reveal relative">
-        <div aria-hidden="true" class="mask-ring absolute -inset-px overflow-hidden rounded-xl [--ring-width:1.5px]">
-          <div
-            class="absolute inset-[-60%] animate-spin-slow bg-[conic-gradient(var(--ui-primary),transparent_25%,transparent_50%,var(--ui-secondary),transparent_75%,transparent)]"
-          />
-        </div>
-        <UPageCTA
-          title="Today’s pot is waiting"
-          description="Pick a number nobody has taken yet. Good luck!"
-          variant="naked"
-          class="dark bg-default"
-          :ui="{ container: 'pt-16 pb-56 sm:pt-20 sm:pb-72 lg:pt-20 lg:pb-72' }"
-          :links="[
-            {
-              label: 'Play now',
-              to: '/play',
-              size: 'xl',
-              icon: 'i-lucide-ticket',
-              class: 'bg-lucky shadow-neon shine font-semibold tracking-wide text-white hover:opacity-90',
-            },
-            {
-              label: 'Read the code',
-              to: config.githubUrl,
-              target: '_blank',
-              size: 'xl',
-              color: 'neutral',
-              variant: 'outline',
-              icon: 'i-simple-icons-github',
-              class: 'bg-default/40 backdrop-blur-sm',
-            },
-          ]"
-        >
-          <template #top>
-            <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+    <UPageSection :ui="{ container: 'py-12 sm:py-16 lg:py-20' }">
+      <UPageCTA
+        title="Today’s pot is waiting"
+        description="Pick a number nobody has taken yet. Good luck!"
+        variant="naked"
+        class="dark reveal bg-default"
+        :ui="{ container: 'py-32 sm:py-40' }"
+        :links="[
+          {
+            label: 'Play now',
+            to: '/play',
+            size: 'xl',
+            icon: 'i-lucide-ticket',
+            class: 'bg-lucky shadow-neon shine font-semibold tracking-wide text-white hover:opacity-90',
+          },
+        ]"
+      >
+        <template #top>
+          <!-- Midnight: the sun eclipsed, its corona turning around the disc. -->
+          <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <div class="bg-dots absolute inset-0 mask-[radial-gradient(circle_at_center,black,transparent_70%)]" />
+            <div class="absolute top-1/2 left-1/2 size-[30rem] -translate-1/2 sm:size-[38rem]">
               <div
-                class="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_100%,color-mix(in_oklab,var(--ui-primary)_40%,transparent),transparent_70%)]"
+                class="absolute inset-0 animate-spin-slow rounded-full bg-[conic-gradient(var(--ui-color-primary-400),transparent_18%,var(--ui-color-primary-700)_34%,transparent_50%,var(--ui-color-primary-500)_64%,var(--ui-secondary)_69%,transparent_76%,var(--ui-color-primary-400))] opacity-60 blur-2xl"
               />
-              <img
-                src="/images/city-far.svg"
-                alt=""
-                loading="lazy"
-                class="absolute inset-x-0 bottom-16 h-40 w-full object-cover object-bottom opacity-80 sm:h-56"
-                width="1600"
-                height="420"
-              />
-              <img
-                src="/images/city-near.svg"
-                alt=""
-                loading="lazy"
-                class="absolute inset-x-0 bottom-16 h-24 w-full object-cover object-bottom sm:h-36"
-                width="1600"
-                height="300"
-              />
-              <div class="absolute inset-x-0 bottom-16 h-px bg-primary shadow-[0_0_18px_3px_var(--ui-primary)]" />
-              <div class="grid-floor absolute inset-x-0 bottom-0 h-16 bg-linear-to-b from-primary/15 to-default">
-                <div><div /></div>
-              </div>
-              <div class="bg-scanlines absolute inset-0 opacity-50" />
+              <div class="absolute inset-[11%] rounded-full bg-default shadow-[0_0_70px_6px_var(--ui-primary)]" />
+              <div class="absolute inset-[11%] rounded-full ring-1 ring-primary/70" />
             </div>
-          </template>
-        </UPageCTA>
-      </div>
+          </div>
+        </template>
+      </UPageCTA>
     </UPageSection>
   </div>
 </template>
