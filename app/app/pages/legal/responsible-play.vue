@@ -23,7 +23,7 @@ const help = [
     where: 'United States.',
   },
   { name: 'GamCare', url: 'https://www.gamcare.org.uk', where: 'United Kingdom.' },
-  { name: 'BeGambleAware', url: 'https://www.begambleaware.org', where: 'United Kingdom.' },
+  { name: 'GambleAware', url: 'https://www.gambleaware.org', where: 'United Kingdom.' },
 ];
 </script>
 
