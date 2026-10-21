@@ -11,6 +11,10 @@ updates:
         patterns: ['nuxt', '@nuxt/*', 'vue', 'vue-router', 'tailwindcss', '@iconify-json/*']
       tooling:
         patterns: ['eslint', 'prettier', 'typescript', 'vue-tsc', 'vitest', 'wrangler', '@types/*']
+    ignore:
+      # TypeScript 7 is the native port: vue-tsc still needs the JavaScript compiler (typescript/lib/tsc).
+      - dependency-name: typescript
+        versions: ['>= 7']
     commit-message:
       prefix: build(deps)
 
@@ -21,6 +25,16 @@ updates:
     groups:
       anchor-and-solana:
         patterns: ['anchor-*', 'solana-*', 'litesvm']
+    ignore:
+      # 3.0.0 is a deliberate compile_error! release; bincode is no longer developed.
+      - dependency-name: bincode
+        versions: ['>= 3']
+      # The test crates must share LiteSVM's Solana majors (and Anchor's), so
+      # major versions move together, by hand, when LiteSVM moves.
+      - dependency-name: 'solana-*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'anchor-*'
+        update-types: ['version-update:semver-major']
     commit-message:
       prefix: build(deps)
 
