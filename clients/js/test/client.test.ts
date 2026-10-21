@@ -1,5 +1,12 @@
 import { describe, expect, test } from 'bun:test';
-import { address, type Blockhash, getAddressEncoder, getBase64Decoder } from '@solana/kit';
+import {
+  address,
+  type Blockhash,
+  getAddressEncoder,
+  getBase64Decoder,
+  SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM,
+  SolanaError,
+} from '@solana/kit';
 import { getSysvarSlotHashesEncoder } from '@solana/sysvars';
 
 import {
@@ -9,6 +16,8 @@ import {
   dayEnd,
   dayOf,
   dayStart,
+  describeError,
+  errorReason,
   feeFor,
   findRoundPda,
   findTicketPda,
@@ -21,6 +30,7 @@ import {
   lamportsToSol,
   msUntilClose,
   parseDay,
+  SOLUCKY_ERROR__PAUSED,
   TICKET_OFFSETS,
   winningIndex,
 } from '../src';
@@ -143,4 +153,25 @@ test('money helpers', () => {
   expect(lamportsToSol(1_500_000_000n)).toBe(1.5);
   expect(feeFor(1_000n, 500)).toBe(50n);
   expect(feeFor(999n, 1)).toBe(0n);
+});
+
+describe('errors', () => {
+  const failed = (code: number) =>
+    new Error('Transaction simulation failed', {
+      cause: new SolanaError(SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM, { code, index: 1 }),
+    });
+
+  test('tell program, system and wallet errors apart', () => {
+    expect(errorReason(failed(6004))).toEqual({ kind: 'program', code: SOLUCKY_ERROR__PAUSED });
+    expect(errorReason(failed(0))).toEqual({ kind: 'number-taken' });
+    expect(errorReason(failed(1))).toEqual({ kind: 'insufficient-funds' });
+    expect(errorReason(new Error('Unexpected error'))).toEqual({ kind: 'wallet-cluster' });
+    expect(errorReason(new Error('boom'))).toEqual({ kind: 'other', message: 'boom' });
+  });
+
+  test('describe them in English', () => {
+    expect(describeError(failed(6004))).toBe('Ticket sales are paused.');
+    expect(describeError(failed(0))).toMatch(/already holds this number/);
+    expect(describeError(new Error(''))).toBe('Something went wrong.');
+  });
 });
