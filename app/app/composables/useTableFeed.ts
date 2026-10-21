@@ -31,6 +31,7 @@ function push(item: FeedItem) {
  * transaction toast, so they only join the feed.
  */
 export function useTableFeed() {
+  const { t } = useI18n();
   const { tickets, today, loading, pot } = useLottery();
   const { address } = useWallet();
   const live = useLive();
@@ -50,15 +51,16 @@ export function useTableFeed() {
         if (batch && now < batch.until) {
           batch.flags.push(flagEmoji(peer.cc));
           batch.until = now + JOIN_BATCH_MS;
+          const count = batch.flags.length;
           toast.update(batch.id, {
-            title: `${batch.flags.length} new players joined the table`,
-            description: `${batch.flags.slice(-8).join(' ')} · ${online} here now`,
+            title: t('live.joinedMany', { n: count }, count),
+            description: `${batch.flags.slice(-8).join(' ')} · ${t('live.hereNow', { n: online })}`,
           });
           return;
         }
         const shown = toast.add({
-          title: `${flagEmoji(peer.cc)} A new player joined the table`,
-          description: `${online} here now`,
+          title: `${flagEmoji(peer.cc)} ${t('live.joinedOne')}`,
+          description: t('live.hereNow', { n: online }),
           icon: 'i-lucide-user-round-plus',
           color: 'secondary',
           duration: 4_500,
@@ -75,16 +77,16 @@ export function useTableFeed() {
         [tickets, today, loading],
         ([list, day, isLoading]) => {
           if (isLoading) return;
-          for (const t of freshTickets(list, day)) {
-            const cc = countryFromBytes(t.data.country);
-            const mine = t.data.owner === address.value;
+          for (const ticket of freshTickets(list, day)) {
+            const cc = countryFromBytes(ticket.data.country);
+            const mine = ticket.data.owner === address.value;
             push({
-              key: `ticket:${t.address}`,
+              key: `ticket:${ticket.address}`,
               kind: 'ticket',
               cc,
               at: Date.now(),
-              owner: t.data.owner,
-              number: t.data.number,
+              owner: ticket.data.owner,
+              number: ticket.data.number,
               mine,
             });
             const now = Date.now();
@@ -92,8 +94,11 @@ export function useTableFeed() {
             lastTicketToast = now;
             sound.play('pot');
             toast.add({
-              title: `${flagEmoji(cc)} ${shortAddress(t.data.owner, 4)} locked in ${formatNumber(t.data.number)}`,
-              description: `The pot is now ◎${formatSol(pot.value, 3)} with ${list.length} tickets`,
+              title: t('live.locked', {
+                who: `${flagEmoji(cc)} ${shortAddress(ticket.data.owner, 4)}`,
+                number: formatNumber(ticket.data.number),
+              }),
+              description: t('live.potNow', { pot: formatSol(pot.value, 3), n: list.length }, list.length),
               icon: 'i-lucide-ticket',
               color: 'primary',
               duration: 5_000,

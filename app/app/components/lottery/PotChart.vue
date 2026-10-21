@@ -4,6 +4,8 @@ import { formatDay, type Round } from '@solucky/client';
 
 /** Pot of each settled round, oldest to newest: one column per day. */
 const props = defineProps<{ rounds: readonly Account<Round>[] }>();
+const { t } = useI18n();
+const localePath = useLocalePath();
 
 const WIDTH = 320;
 const HEIGHT = 140;
@@ -54,15 +56,16 @@ function columnPath(bar: { x: number; y: number; width: number; height: number }
 </script>
 
 <template>
-  <figure class="relative">
-    <figcaption class="kicker mb-2 text-center">Pot per day</figcaption>
-    <p v-if="!bars.length" class="py-10 text-center text-sm text-muted">No finished rounds yet.</p>
+  <!-- Time runs left to right on the chart in every language; its tooltip is placed the same way. -->
+  <figure class="relative" dir="ltr">
+    <figcaption class="kicker mb-2 text-center">{{ t('history.chart') }}</figcaption>
+    <p v-if="!bars.length" class="py-10 text-center text-sm text-muted">{{ t('history.chartEmpty') }}</p>
     <svg
       v-else
       :viewBox="`0 0 ${WIDTH} ${HEIGHT}`"
       class="w-full overflow-visible"
       role="img"
-      :aria-label="`Pot of the last ${bars.length} rounds; the list below has every value.`"
+      :aria-label="t('history.chartLabel', { n: bars.length }, bars.length)"
       @mouseleave="hovered = null"
     >
       <line
@@ -97,7 +100,7 @@ function columnPath(bar: { x: number; y: number; width: number; height: number }
           class="cursor-pointer"
           @mouseenter="hovered = i"
           @focus="hovered = i"
-          @click="navigateTo(`/rounds/${bar.label}`)"
+          @click="navigateTo(localePath(`/rounds/${bar.label}`))"
         />
       </g>
       <text :x="PAD.left" :y="HEIGHT - 4" class="fill-(--ui-text-dimmed) text-[9px]">

@@ -1,96 +1,63 @@
 <script setup lang="ts">
 const { isMainnet, clusterLabel } = useSolana();
+const { t } = useI18n();
 
-const sections = [
-  { id: 'basics', label: 'Before you play' },
-  { id: 'odds', label: 'Know the odds' },
-  { id: 'final', label: 'Tickets are final' },
-  { id: 'habits', label: 'Keep it fun' },
-  { id: 'limits', label: 'Setting your own limits' },
-  { id: 'help', label: 'Getting help' },
-];
+const sections = computed(() => legalSections(t, 'play', ['basics', 'odds', 'final', 'habits', 'limits', 'help']));
 
-// Independent organisations, listed for information only.
+// Independent organisations, listed for information only; `where` is under legal.play.help.
 const help = [
-  {
-    name: 'Gamblers Anonymous',
-    url: 'https://www.gamblersanonymous.org',
-    where: 'Worldwide: meetings and contacts by country.',
-  },
-  {
-    name: 'National Council on Problem Gambling',
-    url: 'https://www.ncpgambling.org',
-    where: 'United States.',
-  },
-  { name: 'GamCare', url: 'https://www.gamcare.org.uk', where: 'United Kingdom.' },
-  { name: 'GambleAware', url: 'https://www.gambleaware.org', where: 'United Kingdom.' },
-];
+  { name: 'Gamblers Anonymous', url: 'https://www.gamblersanonymous.org', where: 'worldwide' },
+  { name: 'National Council on Problem Gambling', url: 'https://www.ncpgambling.org', where: 'us' },
+  { name: 'GamCare', url: 'https://www.gamcare.org.uk', where: 'uk' },
+  { name: 'GambleAware', url: 'https://www.gambleaware.org', where: 'uk' },
+] as const;
 </script>
 
 <template>
-  <LegalPage
-    title="Responsible play"
-    description="How the odds work, and where to get help if playing stops being fun."
-    :sections="sections"
-  >
-    <h2 id="basics">Before you play</h2>
+  <LegalPage page="play" :sections="sections">
+    <h2 id="basics">{{ t('legal.play.basics.title') }}</h2>
     <ul>
-      <li>S☉Lucky is for people aged 18 and over, where lotteries are legal.</li>
-      <li v-if="!isMainnet">
-        This site runs on Solana {{ clusterLabel }}: tickets cost test SOL, which is free and has no value. It is a good
-        way to see how the game works without spending anything.
-      </li>
-      <li v-else>This site runs on Solana Mainnet: tickets cost real SOL.</li>
-      <li>Play for fun, never to make money or to win back money you lost.</li>
+      <li>{{ t('legal.play.basics.age') }}</li>
+      <li v-if="!isMainnet">{{ t('legal.play.basics.test', { cluster: clusterLabel }) }}</li>
+      <li v-else>{{ t('legal.play.basics.real') }}</li>
+      <li>{{ t('legal.play.basics.fun') }}</li>
     </ul>
 
-    <h2 id="odds">Know the odds</h2>
+    <h2 id="odds">{{ t('legal.play.odds.title') }}</h2>
     <ul>
-      <li>
-        Every ticket has the same chance. Your chance of winning a round is your tickets divided by all the tickets sold
-        in it.
-      </li>
-      <li>The number you pick is your label on the board. It does not change your chance.</li>
-      <li>
-        The winner receives the pot minus the house fee, which the program caps at 10%. So, taken over all players,
-        tickets pay back the money spent on them minus that fee: on average, a ticket returns less than it costs.
-      </li>
-      <li>Nothing on the site changes these odds.</li>
+      <li>{{ t('legal.play.odds.same') }}</li>
+      <li>{{ t('legal.play.odds.label') }}</li>
+      <li>{{ t('legal.play.odds.fee') }}</li>
+      <li>{{ t('legal.play.odds.nothing') }}</li>
     </ul>
 
-    <h2 id="final">Tickets are final</h2>
-    <p>
-      A ticket cannot be cancelled or refunded once it is bought. The only thing you get back is its small rent deposit,
-      by closing the ticket after its round is paid.
-    </p>
+    <h2 id="final">{{ t('legal.play.final.title') }}</h2>
+    <p>{{ t('legal.play.final.body') }}</p>
 
-    <h2 id="habits">Keep it fun</h2>
+    <h2 id="habits">{{ t('legal.play.habits.title') }}</h2>
     <ul>
-      <li>Decide in advance how much you are ready to lose, and stop when it is gone.</li>
-      <li>Never chase losses, and never play with borrowed money or money you need.</li>
-      <li>Do not play when you are upset, tired or have been drinking.</li>
-      <li>Take breaks, and keep playing one part of your life among many.</li>
+      <li>{{ t('legal.play.habits.budget') }}</li>
+      <li>{{ t('legal.play.habits.chase') }}</li>
+      <li>{{ t('legal.play.habits.mood') }}</li>
+      <li>{{ t('legal.play.habits.breaks') }}</li>
     </ul>
 
-    <h2 id="limits">Setting your own limits</h2>
-    <p>S☉Lucky has no accounts, so it cannot set limits or exclude you. You can set your own:</p>
+    <h2 id="limits">{{ t('legal.play.limits.title') }}</h2>
+    <p>{{ t('legal.play.limits.intro') }}</p>
     <ul>
-      <li>Keep a separate wallet holding only what you are ready to spend.</li>
-      <li>Use a website blocker or your device's parental controls to block the site.</li>
-      <li>Tell someone you trust, and ask them to help you stick to your limits.</li>
+      <li>{{ t('legal.play.limits.wallet') }}</li>
+      <li>{{ t('legal.play.limits.block') }}</li>
+      <li>{{ t('legal.play.limits.trust') }}</li>
     </ul>
 
-    <h2 id="help">Getting help</h2>
-    <p>
-      If playing has stopped being fun, or someone close to you is worried about it, these independent organisations
-      offer free and confidential help. We are not affiliated with them.
-    </p>
+    <h2 id="help">{{ t('legal.play.help.title') }}</h2>
+    <p>{{ t('legal.play.help.intro') }}</p>
     <ul>
       <li v-for="org in help" :key="org.url">
         <a :href="org.url" target="_blank" rel="noopener">{{ org.name }}</a
-        >: {{ org.where }}
+        >: {{ t(`legal.play.help.${org.where}`) }}
       </li>
     </ul>
-    <p>If you or someone else is in immediate danger, call your local emergency number.</p>
+    <p>{{ t('legal.play.help.emergency') }}</p>
   </LegalPage>
 </template>

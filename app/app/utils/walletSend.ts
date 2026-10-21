@@ -27,9 +27,11 @@ import {
 
 async function confirmSignature(
   rpc: {
-    getSignatureStatuses: (
-      signatures: Signature[],
-    ) => { send: (config?: { abortSignal?: AbortSignal }) => Promise<{ value: ({ confirmationStatus?: string | null } | null)[] }> };
+    getSignatureStatuses: (signatures: Signature[]) => {
+      send: (config?: {
+        abortSignal?: AbortSignal;
+      }) => Promise<{ value: ({ confirmationStatus?: string | null } | null)[] }>;
+    };
   },
   sig: Signature,
   abortSignal?: AbortSignal,
@@ -63,9 +65,7 @@ export function walletAwareSend() {
             value: Parameters<typeof setTransactionMessageLifetimeUsingBlockhash>[0];
           }>;
         };
-        getSignatureStatuses: (
-          signatures: Signature[],
-        ) => {
+        getSignatureStatuses: (signatures: Signature[]) => {
           send: (config?: { abortSignal?: AbortSignal }) => Promise<{
             value: ({ confirmationStatus?: string | null } | null)[];
           }>;
@@ -100,6 +100,7 @@ export function walletAwareSend() {
         if (payer && isTransactionSendingSigner(payer)) {
           const compiled = compileTransaction(prepared);
           const [signatureBytes] = await payer.signAndSendTransactions([compiled], executorConfig);
+          if (!signatureBytes) throw new Error('The wallet returned no signature');
           const sig = signature(getBase58Decoder().decode(signatureBytes));
           Object.assign(context, { signature: sig });
           await confirmSignature(c.rpc, sig, executorConfig?.abortSignal);

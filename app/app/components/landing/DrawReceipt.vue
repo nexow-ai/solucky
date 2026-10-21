@@ -8,6 +8,8 @@ import { computeRandomness, countryFromBytes, flagEmoji, formatDay, type Round, 
  * browser. Until a round is settled it prints blanks of the same length, so
  * the receipt keeps one height whether it is loading, empty or filled.
  */
+const { t } = useI18n();
+const localePath = useLocalePath();
 const { settled, loading } = useLottery();
 const { explorer } = useSolana();
 
@@ -60,51 +62,57 @@ async function verify() {
     >
       <header class="text-center">
         <p class="text-sm font-semibold tracking-[0.35em] text-highlighted">S☉LUCKY</p>
-        <p class="mt-1 tracking-[0.25em] text-muted">DRAW RECEIPT</p>
+        <p class="mt-1 tracking-[0.25em] text-muted uppercase">{{ t('receipt.title') }}</p>
       </header>
       <hr class="my-4 border-dashed border-accented" />
 
       <dl class="space-y-1.5">
         <div class="flex justify-between gap-4">
-          <dt>ROUND</dt>
+          <dt class="uppercase">{{ t('receipt.round') }}</dt>
           <dd class="font-semibold text-highlighted">
-            {{ last ? formatDay(last.data.day) : loading ? '…' : 'none settled yet' }}
+            {{ last ? formatDay(last.data.day) : loading ? '…' : t('receipt.noneYet') }}
           </dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt>TICKETS</dt>
+          <dt class="uppercase">{{ t('receipt.tickets') }}</dt>
           <dd class="text-highlighted">{{ last ? formatNumber(last.data.ticketCount) : '—' }}</dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt>POT</dt>
+          <dt class="uppercase">{{ t('receipt.pot') }}</dt>
           <dd class="text-highlighted">{{ last ? `◎${formatSol(last.data.pot)}` : '—' }}</dd>
         </div>
       </dl>
       <hr class="my-4 border-dashed border-accented" />
 
-      <p class="text-muted">ENTROPY</p>
+      <p class="text-muted uppercase">{{ t('receipt.entropy') }}</p>
       <p class="break-all" :class="last ? 'text-highlighted' : 'text-dimmed'">
         {{ last ? hex(last.data.entropy) : BLANK }}
       </p>
-      <p class="mt-3 text-muted">SLOT HASH · SLOT {{ last ? last.data.drawSlot : '—' }}</p>
+      <p class="mt-3 text-muted uppercase">
+        {{ t('receipt.slotHash', { slot: last ? String(last.data.drawSlot) : '—' }) }}
+      </p>
       <p class="break-all" :class="last ? 'text-highlighted' : 'text-dimmed'">
         {{ last ? hex(last.data.slotHash) : BLANK }}
       </p>
       <hr class="my-4 border-dashed border-accented" />
 
-      <p class="text-muted">sha256(entropy ‖ slot hash ‖ slot ‖ round) =</p>
+      <p class="text-muted">{{ t('receipt.formula') }}</p>
       <p class="break-all font-semibold" :class="last ? 'text-secondary' : 'text-dimmed'">
         {{ last ? hex(last.data.randomness) : BLANK }}
       </p>
-      <p class="mt-3 text-muted">
-        first 8 bytes as u64 mod {{ last ? last.data.ticketCount : 'tickets' }} =
-        <span class="font-semibold text-highlighted">ticket #{{ last ? last.data.winningIndex : '—' }}</span>
-      </p>
+      <i18n-t keypath="receipt.mod" tag="p" scope="global" class="mt-3 text-muted">
+        <template #count>{{ last ? last.data.ticketCount : t('receipt.ticketCount') }}</template>
+        <template #ticket>
+          <span class="font-semibold text-highlighted">{{
+            t('receipt.ticket', { index: last ? last.data.winningIndex : '—' })
+          }}</span>
+        </template>
+      </i18n-t>
       <hr class="my-4 border-dashed border-accented" />
 
       <dl class="space-y-1.5">
         <div class="flex justify-between gap-4">
-          <dt>NUMBER</dt>
+          <dt class="uppercase">{{ t('receipt.number') }}</dt>
           <dd class="font-semibold text-highlighted">
             <template v-if="last">
               {{ flagEmoji(countryFromBytes(last.data.winnerCountry)) }} {{ formatNumber(last.data.winningNumber) }}
@@ -113,7 +121,7 @@ async function verify() {
           </dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt>PAID TO</dt>
+          <dt class="uppercase">{{ t('receipt.paidTo') }}</dt>
           <dd>
             <ULink
               v-if="last"
@@ -127,7 +135,7 @@ async function verify() {
           </dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt>PAYOUT</dt>
+          <dt class="uppercase">{{ t('receipt.payout') }}</dt>
           <dd class="font-semibold text-highlighted">{{ last ? `◎${formatSol(last.data.payout)}` : '—' }}</dd>
         </div>
       </dl>
@@ -144,7 +152,7 @@ async function verify() {
 
       <div class="mt-5 flex flex-wrap items-center justify-between gap-2">
         <UButton
-          label="Check this draw"
+          :label="t('receipt.check')"
           icon="i-lucide-cpu"
           size="sm"
           color="neutral"
@@ -155,20 +163,21 @@ async function verify() {
         />
         <UButton
           v-if="last"
-          :to="`/rounds/${formatDay(last.data.day)}`"
-          label="Round page"
+          :to="localePath(`/rounds/${formatDay(last.data.day)}`)"
+          :label="t('receipt.roundPage')"
           trailing-icon="i-lucide-arrow-right"
+          :ui="{ trailingIcon: 'rtl:-scale-x-100' }"
           size="sm"
           color="neutral"
           variant="ghost"
         />
-        <span v-else class="py-1.5 text-muted">Next draw after 00:00 UTC</span>
+        <span v-else class="py-1.5 text-muted">{{ t('receipt.nextDraw') }}</span>
       </div>
       <p v-if="last && check === 'ok'" class="mt-3 text-success" role="status">
-        Recomputed in your browser: same hash, ticket #{{ last.data.winningIndex }} wins.
+        {{ t('receipt.ok', { index: last.data.winningIndex }) }}
       </p>
       <p v-else-if="last && check === 'mismatch'" class="mt-3 text-error" role="status">
-        The hash recomputed in your browser does not match this round.
+        {{ t('receipt.mismatch') }}
       </p>
     </div>
   </div>

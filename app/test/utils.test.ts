@@ -3,7 +3,17 @@ import { describe, expect, it } from 'vitest';
 
 import { COUNTRY_CODES, countryName, countryOptions } from '../app/utils/countries';
 import { friendlyError, isUserRejection } from '../app/utils/errors';
-import { formatNumber, formatPercent, formatSol, formatUsd, formatUtcTime, shortAddress } from '../app/utils/format';
+import {
+  formatDate,
+  formatNumber,
+  formatPercent,
+  formatSol,
+  formatUnit,
+  formatUsd,
+  formatUtcTime,
+  shortAddress,
+} from '../app/utils/format';
+import { matchLocale } from '../i18n/languages';
 
 function programError(code: number) {
   const inner = new SolanaError(SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM, { code, index: 1 });
@@ -38,6 +48,30 @@ describe('format', () => {
     expect(formatPercent(0.225)).toBe('22.5%');
     expect(formatPercent(1)).toBe('100.0%');
   });
+
+  it("writes dollars, odds, units and dates the way the page's language does", () => {
+    expect(formatUsd(2_000_000_000n, 105.5, 'de')).toBe('211\u00a0$');
+    expect(formatPercent(0.225, 'fr')).toBe('22,5\u00a0%');
+    expect(formatUnit(3, 'minute', 'en-US', 'long')).toBe('3 minutes');
+    expect(formatDate('2026-10-21')).toBe('October 21, 2026');
+    expect(formatDate('2026-10-21', 'th-u-ca-gregory')).toContain('2026');
+  });
+
+  it('keeps lottery numbers and SOL in one style for every language', () => {
+    expect(formatNumber(1_000_000_000)).toBe('1 000 000 000');
+    expect(formatSol(1_500_000_000n)).toBe('1.5');
+  });
+});
+
+describe('languages', () => {
+  it("matches browser language tags to the site's languages", () => {
+    expect(matchLocale('fr-CA')).toBe('fr');
+    expect(matchLocale('pt-BR')).toBe('pt');
+    expect(matchLocale('zh-Hant-HK')).toBe('zh-tw');
+    expect(matchLocale('zh')).toBe('zh-cn');
+    expect(matchLocale('iw')).toBe('he');
+    expect(matchLocale('sw')).toBeUndefined();
+  });
 });
 
 describe('countries', () => {
@@ -45,6 +79,14 @@ describe('countries', () => {
     expect(COUNTRY_CODES).toHaveLength(249);
     expect(new Set(COUNTRY_CODES).size).toBe(COUNTRY_CODES.length);
     expect(COUNTRY_CODES.every((code) => /^[A-Z]{2}$/.test(code))).toBe(true);
+  });
+
+  it("names and sorts countries in the page's language", () => {
+    expect(countryName('ES', 'es')).toBe('España');
+    expect(countryName(null, 'fr', 'Privé')).toBe('Privé');
+    const options = countryOptions('de', 'Privat');
+    expect(options[0]).toMatchObject({ value: null, label: 'Privat' });
+    expect(options.find((o) => o.value === 'DE')?.label).toBe('Deutschland');
   });
 
   it('names countries and keeps "private" first', () => {
@@ -64,6 +106,14 @@ describe('errors', () => {
 
   it('explains a taken number', () => {
     expect(friendlyError(programError(0))).toMatch(/already holds this number/);
+  });
+
+  it("explains errors in the page's language", () => {
+    const t = (key: string) => `[${key}]`;
+    expect(friendlyError(programError(6004), t)).toBe('[errors.program.paused]');
+    expect(friendlyError(programError(0), t)).toBe('[errors.taken]');
+    expect(friendlyError(Object.assign(new Error('User rejected'), { code: 4001 }), t)).toBe('[errors.rejected]');
+    expect(friendlyError(new Error('RPC is down'), t)).toBe('RPC is down');
   });
 
   it('recognises a cancelled wallet prompt', () => {

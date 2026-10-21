@@ -1,7 +1,9 @@
 <script setup lang="ts">
+const { t } = useI18n();
+
 useSeoMeta({
-  title: 'Play · S☉Lucky',
-  description: "Pick today's number and watch the pot grow live on Solana.",
+  title: () => `${t('play.title')} · S☉Lucky`,
+  description: () => t('play.description'),
 });
 
 const { error, refresh, loading } = useLottery();
@@ -11,14 +13,17 @@ const { feed } = useTableFeed();
 const testFunds = computed(() =>
   cluster === 'localnet'
     ? {
-        text: 'Point your wallet at http://127.0.0.1:8899, then fund it with: solana airdrop 5 <address> -u localhost',
+        text: t('play.localFunds', {
+          url: 'http://127.0.0.1:8899',
+          command: 'solana airdrop 5 <address> -u localhost',
+        }),
         action: [],
       }
     : {
-        text: `In Phantom: Settings → Developer Settings → enable Testnet Mode → select ${clusterLabel}. Then get free test SOL from the faucet.`,
+        text: t('play.phantomFunds', { cluster: clusterLabel }),
         action: [
           {
-            label: 'Open faucet',
+            label: t('play.openFaucet'),
             to: 'https://faucet.solana.com',
             target: '_blank',
             color: 'warning' as const,
@@ -39,7 +44,7 @@ const testFunds = computed(() =>
         variant="subtle"
         icon="i-lucide-flask-conical"
         class="glass-alert"
-        :title="`You are playing on Solana ${clusterLabel}: tickets cost test SOL with no real value.`"
+        :title="t('play.testMoney', { cluster: clusterLabel })"
         :description="testFunds.text"
         :actions="testFunds.action"
       />
@@ -50,7 +55,7 @@ const testFunds = computed(() =>
         icon="i-lucide-cloud-off"
         class="glass-alert"
         :title="error"
-        :actions="[{ label: 'Retry', color: 'error', variant: 'outline', loading, onClick: refresh }]"
+        :actions="[{ label: t('play.retry'), color: 'error', variant: 'outline', loading, onClick: refresh }]"
       />
 
       <LotteryLiveBar :feed="feed" />

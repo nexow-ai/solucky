@@ -192,7 +192,7 @@
   );
 }
 
-:global(:root:not(.dark)) .floor {
+:root:not(.dark) .floor {
   opacity: 0.45;
 }
 

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 defineProps<{ block?: boolean }>();
 
+const { t } = useI18n();
+const localePath = useLocalePath();
+const intl = useIntlLocale();
 const { wallets, connected, address, ready, status, balance, connect, disconnect, refreshBalance } = useWallet();
 const { explorer, clusterLabel, isMainnet } = useSolana();
 const { myTickets, tickets: dayTickets, ticketPrice, pot, prize } = useLottery();
@@ -19,7 +22,7 @@ const INSTALL = [
 const chance = computed(() => (myTickets.value.length ? myTickets.value.length / dayTickets.value.length : null));
 const ticketNumbers = computed(() =>
   [...myTickets.value]
-    .map((t) => t.data.number)
+    .map((ticket) => ticket.data.number)
     .sort((a, b) => a - b)
     .slice(0, 8),
 );
@@ -36,7 +39,7 @@ async function choose(wallet: (typeof wallets.value)[number]) {
     open.value = false;
   } catch (error) {
     if ((error as Error).name !== 'AbortError') {
-      toast.add({ title: `Could not connect ${wallet.name}`, description: friendlyError(error), color: 'error' });
+      toast.add({ title: t('wallet.failed', { wallet: wallet.name }), description: friendlyError(error, t), color: 'error' });
     }
   } finally {
     connecting.value = null;
@@ -45,7 +48,7 @@ async function choose(wallet: (typeof wallets.value)[number]) {
 
 async function copyAddress() {
   await navigator.clipboard.writeText(address.value ?? '');
-  toast.add({ title: 'Address copied', icon: 'i-lucide-check', color: 'success', duration: 2_000 });
+  toast.add({ title: t('wallet.copied'), icon: 'i-lucide-check', color: 'success', duration: 2_000 });
 }
 
 async function signOut() {
@@ -63,7 +66,7 @@ async function signOut() {
   >
     <UButton color="neutral" variant="outline" :block="block" trailing-icon="i-lucide-chevron-down">
       <img v-if="connected.wallet.icon" :src="connected.wallet.icon" alt="" class="size-5 rounded" />
-      <span class="font-mono">{{ shortAddress(address) }}</span>
+      <span class="font-mono" dir="ltr">{{ shortAddress(address) }}</span>
       <span v-if="balance !== null" class="text-muted">◎{{ formatSol(balance, 2) }}</span>
     </UButton>
 
@@ -78,7 +81,7 @@ async function signOut() {
             </div>
             <button
               type="button"
-              class="mt-1 flex w-full items-center gap-1.5 text-left font-mono text-xs text-muted hover:text-highlighted"
+              class="mt-1 flex w-full items-center gap-1.5 text-start font-mono text-xs text-muted hover:text-highlighted"
               @click="copyAddress()"
             >
               <span class="truncate">{{ address }}</span>
@@ -88,31 +91,35 @@ async function signOut() {
         </div>
 
         <div class="rounded-lg bg-elevated px-4 py-3">
-          <p class="kicker text-[0.65rem]">Balance</p>
+          <p class="kicker text-[0.65rem]">{{ t('wallet.balance') }}</p>
           <p class="led mt-1 font-mono text-3xl font-semibold tabular-nums text-highlighted">
             {{ balance === null ? '—' : `◎${formatSol(balance, 4)}` }}
           </p>
           <p class="mt-0.5 font-mono text-xs text-muted tabular-nums">
-            {{ balance === null ? '—' : formatUsd(balance, solUsd) }}
+            {{ balance === null ? '—' : formatUsd(balance, solUsd, intl) }}
             <span v-if="ticketPrice !== null && balance !== null" class="text-toned">
               ·
               {{
                 balance >= ticketPrice
-                  ? `${formatNumber(balance / ticketPrice)} ticket${balance / ticketPrice === 1n ? '' : 's'} left`
-                  : 'need more SOL to play'
+                  ? t(
+                      'wallet.ticketsLeft',
+                      { n: formatNumber(balance / ticketPrice) },
+                      Number(balance / ticketPrice),
+                    )
+                  : t('wallet.needMore')
               }}
             </span>
           </p>
         </div>
 
         <div class="grid grid-cols-3 gap-2">
-          <LotteryStat label="Your tickets" :value="`×${myTickets.length}`" />
-          <LotteryStat label="Chance" :value="formatPercent(chance)" />
-          <LotteryStat label="Today's pot" :value="pot === 0n ? '—' : `◎${formatSol(prize, 2)}`" />
+          <LotteryStat :label="t('stat.yourTickets')" :value="`×${myTickets.length}`" />
+          <LotteryStat :label="t('stat.chance')" :value="formatPercent(chance, intl)" />
+          <LotteryStat :label="t('stat.todaysPot')" :value="pot === 0n ? '—' : `◎${formatSol(prize, 2)}`" />
         </div>
 
         <div v-if="ticketNumbers.length" class="space-y-2">
-          <p class="kicker text-[0.65rem]">Your numbers today</p>
+          <p class="kicker text-[0.65rem]">{{ t('wallet.numbers') }}</p>
           <div class="flex flex-wrap gap-1.5">
             <UBadge
               v-for="n in ticketNumbers"
@@ -128,7 +135,7 @@ async function signOut() {
 
         <div class="grid grid-cols-2 gap-2">
           <UButton
-            label="Copy address"
+            :label="t('wallet.copy')"
             icon="i-lucide-copy"
             color="neutral"
             variant="soft"
@@ -137,7 +144,7 @@ async function signOut() {
             @click="copyAddress()"
           />
           <UButton
-            label="Explorer"
+            :label="t('wallet.explorer')"
             icon="i-lucide-external-link"
             color="neutral"
             variant="soft"
@@ -148,7 +155,7 @@ async function signOut() {
           />
           <UButton
             v-if="!isMainnet"
-            label="Get SOL"
+            :label="t('header.getSol')"
             icon="i-lucide-droplets"
             color="success"
             variant="soft"
@@ -158,20 +165,20 @@ async function signOut() {
             target="_blank"
           />
           <UButton
-            label="Play"
+            :label="t('wallet.play')"
             icon="i-lucide-ticket"
             color="primary"
             variant="soft"
             size="sm"
             block
             :class="isMainnet ? 'col-span-2' : undefined"
-            to="/play"
+            :to="localePath('/play')"
             @click="dashOpen = false"
           />
         </div>
 
         <UButton
-          label="Disconnect"
+          :label="t('wallet.disconnect')"
           icon="i-lucide-log-out"
           color="error"
           variant="ghost"
@@ -186,11 +193,11 @@ async function signOut() {
   <UModal
     v-else
     v-model:open="open"
-    title="Connect a wallet"
-    description="Any Solana wallet that supports the Wallet Standard works."
+    :title="t('wallet.title')"
+    :description="t('wallet.description')"
   >
     <UButton
-      label="Connect wallet"
+      :label="t('wallet.connect')"
       icon="i-lucide-wallet"
       :block="block"
       :loading="!ready || status === 'connecting'"
@@ -216,7 +223,7 @@ async function signOut() {
         </UButton>
       </div>
       <div v-else class="space-y-3 text-sm text-muted">
-        <p>No Solana wallet was found in this browser. Install one, then reload the page:</p>
+        <p>{{ t('wallet.none') }}</p>
         <div class="flex flex-wrap gap-2">
           <UButton
             v-for="wallet in INSTALL"

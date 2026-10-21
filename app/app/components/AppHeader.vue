@@ -6,6 +6,8 @@ import { lamports } from '@solana/kit';
 const AIRDROP_LAMPORTS = 1_000_000_000n;
 
 const route = useRoute();
+const { t } = useI18n();
+const localePath = useLocalePath();
 const { client, cluster, clusterLabel, isMainnet } = useSolana();
 const { address, balance, refreshBalance } = useWallet();
 const sound = useSound();
@@ -13,10 +15,10 @@ const toast = useToast();
 const airdropping = ref(false);
 
 const items = computed<NavigationMenuItem[]>(() => [
-  { label: 'Play', to: '/play', icon: 'i-lucide-ticket', active: route.path === '/play' },
-  { label: 'How it works', to: '/#how-it-works', exactHash: true },
-  { label: 'Fairness', to: '/#fairness', exactHash: true },
-  { label: 'FAQ', to: '/#faq', exactHash: true },
+  { label: t('nav.play'), to: localePath('/play'), icon: 'i-lucide-ticket', active: route.path === localePath('/play') },
+  { label: t('nav.how'), to: localePath({ path: '/', hash: '#how-it-works' }), exactHash: true },
+  { label: t('nav.fairness'), to: localePath({ path: '/', hash: '#fairness' }), exactHash: true },
+  { label: t('nav.faq'), to: localePath({ path: '/', hash: '#faq' }), exactHash: true },
 ]);
 
 function faucetUrl(owner: string) {
@@ -40,15 +42,15 @@ async function waitForAirdrop(before: bigint | null) {
     if (next !== null && (before === null || next > before)) return;
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
-  throw new Error('The airdrop was accepted but the balance has not updated yet. Refresh in a moment.');
+  throw new Error(t('faucet.slow'));
 }
 
 async function airdropSol() {
   const owner = address.value;
   if (!owner) {
     toast.add({
-      title: 'Connect a wallet first',
-      description: 'Then tap Get SOL to fund it with test SOL.',
+      title: t('faucet.connectFirst'),
+      description: t('faucet.connectFirstHint'),
       color: 'warning',
       icon: 'i-lucide-wallet',
     });
@@ -62,11 +64,11 @@ async function airdropSol() {
     if (cluster !== 'localnet') {
       await openWebFaucet(owner);
       toast.add({
-        title: 'Request test SOL in the faucet',
-        description: 'Your wallet address is copied. Paste it if the field is empty, then confirm.',
+        title: t('faucet.request'),
+        description: t('faucet.requestHint'),
         color: 'success',
         icon: 'i-lucide-external-link',
-        actions: [{ label: 'Open again', onClick: () => void openWebFaucet(owner) }],
+        actions: [{ label: t('faucet.openAgain'), onClick: () => void openWebFaucet(owner) }],
       });
       return;
     }
@@ -75,15 +77,15 @@ async function airdropSol() {
     await client.rpc.requestAirdrop(owner, lamports(AIRDROP_LAMPORTS), { commitment: 'confirmed' }).send();
     await waitForAirdrop(before);
     toast.add({
-      title: 'Airdropped ◎1',
-      description: `Test SOL landed on ${clusterLabel}. You can buy tickets now.`,
+      title: t('faucet.airdropped'),
+      description: t('faucet.airdroppedHint', { cluster: clusterLabel }),
       color: 'success',
       icon: 'i-lucide-sparkles',
     });
   } catch (error) {
     toast.add({
-      title: 'Airdrop failed',
-      description: friendlyError(error),
+      title: t('faucet.failed'),
+      description: friendlyError(error, t),
       color: 'error',
       icon: 'i-lucide-cloud-off',
     });
@@ -95,7 +97,7 @@ async function airdropSol() {
 
 <template>
   <UHeader
-    to="/"
+    :to="localePath('/')"
     title="S☉Lucky"
     :ui="{
       root: 'border-b-0 bg-default/60 backdrop-blur-md after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-linear-to-r after:from-transparent after:via-primary/70 after:to-transparent',
@@ -105,7 +107,7 @@ async function airdropSol() {
       <span class="flex items-center gap-2">
         <AppLogo />
         <UBadge
-          label="Beta"
+          :label="t('header.beta')"
           color="primary"
           variant="subtle"
           size="sm"
@@ -122,10 +124,10 @@ async function airdropSol() {
 
     <template #right>
       <UBadge v-if="!isMainnet" :label="clusterLabel" color="warning" variant="subtle" class="hidden sm:inline-flex" />
-      <UTooltip v-if="!isMainnet" text="Provisional beta faucet: get free test SOL to play">
+      <UTooltip v-if="!isMainnet" :text="t('header.faucetTip')">
         <UButton
-          label="Get SOL"
-          aria-label="Get SOL"
+          :label="t('header.getSol')"
+          :aria-label="t('header.getSol')"
           icon="i-lucide-droplets"
           :ui="{ label: 'hidden sm:inline' }"
           size="xs"
@@ -136,15 +138,16 @@ async function airdropSol() {
           @click="airdropSol()"
         />
       </UTooltip>
-      <UTooltip :text="sound.enabled.value ? 'Mute sounds' : 'Play sounds'">
+      <UTooltip :text="sound.enabled.value ? t('header.mute') : t('header.unmute')">
         <UButton
           :icon="sound.enabled.value ? 'i-lucide-volume-2' : 'i-lucide-volume-x'"
           color="neutral"
           variant="ghost"
-          :aria-label="sound.enabled.value ? 'Mute sounds' : 'Play sounds'"
+          :aria-label="sound.enabled.value ? t('header.mute') : t('header.unmute')"
           @click="sound.toggle()"
         />
       </UTooltip>
+      <AppLangMenu />
       <UColorModeButton />
       <ClientOnly>
         <LazyWalletButton class="hidden sm:inline-flex" />
@@ -158,7 +161,7 @@ async function airdropSol() {
       <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
       <UButton
         v-if="!isMainnet"
-        label="Get SOL"
+        :label="t('header.getSol')"
         icon="i-lucide-droplets"
         color="success"
         variant="soft"
