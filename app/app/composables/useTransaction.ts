@@ -1,3 +1,5 @@
+import { ensureWalletCluster } from '../utils/ensureCluster';
+
 /**
  * Runs a transaction with progress, success and error toasts.
  * Returns the signature, or `null` when it failed or was cancelled.

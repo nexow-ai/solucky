@@ -10,9 +10,12 @@ const { feed } = useTableFeed();
 
 const testFunds = computed(() =>
   cluster === 'localnet'
-    ? { text: 'Fund your wallet with: solana airdrop 5 <address> -u localhost', action: [] }
+    ? {
+        text: 'Point your wallet at http://127.0.0.1:8899, then fund it with: solana airdrop 5 <address> -u localhost',
+        action: [],
+      }
     : {
-        text: 'Get some for free from the Solana faucet.',
+        text: `In Phantom: Settings → Developer Settings → enable Testnet Mode → select ${clusterLabel}. Then get free test SOL from the faucet.`,
         action: [
           {
             label: 'Open faucet',
