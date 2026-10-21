@@ -4,7 +4,7 @@
  */
 export function useTransaction() {
   const toast = useToast();
-  const { explorer } = useSolana();
+  const { explorer, cluster } = useSolana();
 
   async function run(
     label: string,
@@ -21,6 +21,7 @@ export function useTransaction() {
       ui: { icon: 'animate-spin' },
     });
     try {
+      await ensureWalletCluster(cluster);
       const { context } = await send();
       toast.update(pending.id, {
         title: success ?? `${label}: done`,
