@@ -14,6 +14,7 @@ const ja: Dict = {
     how: '仕組み',
     fairness: '公平性',
     faq: 'FAQ',
+    skip: 'メインコンテンツへ移動',
   },
 
   lang: {

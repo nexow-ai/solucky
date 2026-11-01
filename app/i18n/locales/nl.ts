@@ -14,6 +14,7 @@ const nl: Dict = {
     how: 'Zo werkt het',
     fairness: 'Eerlijkheid',
     faq: 'FAQ',
+    skip: 'Naar de inhoud',
   },
 
   lang: {

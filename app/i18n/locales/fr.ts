@@ -14,6 +14,7 @@ const fr: Dict = {
     how: 'Comment ça marche',
     fairness: 'Équité',
     faq: 'FAQ',
+    skip: 'Aller au contenu',
   },
 
   lang: {

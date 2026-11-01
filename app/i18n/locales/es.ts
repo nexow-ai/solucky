@@ -14,6 +14,7 @@ const es: Dict = {
     how: 'Cómo funciona',
     fairness: 'Juego limpio',
     faq: 'Preguntas',
+    skip: 'Saltar al contenido',
   },
 
   lang: {

@@ -14,6 +14,7 @@ const vi: Dict = {
     how: 'Cách hoạt động',
     fairness: 'Công bằng',
     faq: 'Hỏi đáp',
+    skip: 'Chuyển đến nội dung',
   },
 
   lang: {

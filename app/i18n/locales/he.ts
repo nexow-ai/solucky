@@ -14,6 +14,7 @@ const he: Dict = {
     how: 'איך זה עובד',
     fairness: 'הוגנות',
     faq: 'שאלות נפוצות',
+    skip: 'דלג לתוכן',
   },
 
   lang: {

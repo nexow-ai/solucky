@@ -14,6 +14,7 @@ const zhtw: Dict = {
     how: '運作方式',
     fairness: '公平性',
     faq: '常見問題',
+    skip: '跳到主要內容',
   },
 
   lang: {

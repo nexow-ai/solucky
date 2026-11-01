@@ -14,6 +14,7 @@ const tr: Dict = {
     how: 'Nasıl çalışır',
     fairness: 'Adillik',
     faq: 'SSS',
+    skip: 'İçeriğe geç',
   },
 
   lang: {

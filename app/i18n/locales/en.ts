@@ -25,6 +25,8 @@ const en = {
     how: 'How it works',
     fairness: 'Fairness',
     faq: 'FAQ',
+    // The keyboard's first stop on every page: past the header to the page itself.
+    skip: 'Skip to content',
   },
 
   lang: {

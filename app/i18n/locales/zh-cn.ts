@@ -14,6 +14,7 @@ const zhcn: Dict = {
     how: '运作方式',
     fairness: '公平性',
     faq: '常见问题',
+    skip: '跳到主要内容',
   },
 
   lang: {

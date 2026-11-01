@@ -14,6 +14,7 @@ const it: Dict = {
     how: 'Come funziona',
     fairness: 'Equità',
     faq: 'FAQ',
+    skip: 'Vai al contenuto',
   },
 
   lang: {

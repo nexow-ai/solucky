@@ -14,6 +14,7 @@ const id: Dict = {
     how: 'Cara kerja',
     fairness: 'Keadilan',
     faq: 'FAQ',
+    skip: 'Langsung ke konten',
   },
 
   lang: {

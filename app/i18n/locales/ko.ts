@@ -14,6 +14,7 @@ const ko: Dict = {
     how: '작동 방식',
     fairness: '공정성',
     faq: 'FAQ',
+    skip: '본문으로 건너뛰기',
   },
 
   lang: {
