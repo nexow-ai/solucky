@@ -302,6 +302,7 @@ const ar: Dict = {
     openFaucet: 'افتح الصنبور',
     retry: 'أعد المحاولة',
     rpcError: 'تعذّر الوصول إلى نقطة نهاية Solana RPC ({reason})',
+    fundHow: 'احصل على SOL تجريبي',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -331,6 +332,12 @@ const ar: Dict = {
     full: 'هذه الجولة ممتلئة',
     keys: 'اكتب بالمفاتيح 0–9، واحذف بمفتاح ⌫، واشترِ بمفتاح Enter.',
     rent: 'تحتجز التذكرة أيضًا ◎{rent} إيجارًا للحساب، وتستردها بعد السحب.',
+    best: 'أفضل موضع',
+    bestHint: 'يختار الرقم الحر صاحب أكبر حصة من السحب الآن',
+    share: 'فرصة الفوز بالرقم {number}',
+    wins: 'يفوز إذا وقع السحب بين {lo} و{hi}. التذاكر التي تُشترى لاحقًا بالقرب منه تقلّص ذلك.',
+    yourPick: 'رقمك',
+    line: 'المس الخط أو اسحب عليه لاختيار رقم',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -381,6 +388,32 @@ const ar: Dict = {
     foundByYou: 'وجدته! كان الرقم {number}',
     foundByOther: 'وجد لاعب آخر الرقم',
     nextRound: 'جولة جديدة برقم جديد مطروحة للبيع.',
+    perGuess: 'كل تخمين: 1 من {n} في الفحص التالي',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'جولة {round}',
+    winnerTakes: 'الفائز يأخذ ◎{prize}',
+    lastDraw: 'آخر سحب',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'لا تذاكر لك في هذه الجولة بعد. اختر رقمًا لتحصل على تذكرة.',
+    connect: 'اربط محفظة لتلعب. تظهر تذاكرك هنا.',
+    missed: 'لم يصب',
+    won: 'فاز',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'تم سحب جولة {round}',
+    number: 'الرقم الفائز',
+    youWon: 'ربحت ◎{amount}!',
+    winner: 'الفائز يأخذ ◎{amount}',
+    see: 'شاهد السحب',
+    close: 'إغلاق',
   },
 
   /** The right panel of the play page: past rounds. */

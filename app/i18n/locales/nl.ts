@@ -307,6 +307,7 @@ const nl: Dict = {
     openFaucet: 'Faucet openen',
     retry: 'Opnieuw proberen',
     rpcError: 'Kan het Solana-RPC-endpoint niet bereiken ({reason})',
+    fundHow: 'Test-SOL halen',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -336,6 +337,12 @@ const nl: Dict = {
     full: 'Deze ronde is vol',
     keys: 'Typ met 0–9, ⌫ wist, Enter koopt.',
     rent: 'Een lot houdt ook ◎{rent} aan rent voor zijn account vast, die je na de trekking terugkrijgt.',
+    best: 'Beste plek',
+    bestHint: 'Kiest het vrije getal met het grootste deel van de trekking op dit moment',
+    share: 'Winkans met {number}',
+    wins: 'Wint als de trekking tussen {lo} en {hi} valt. Loten die later dichtbij worden gekocht, verkleinen dat.',
+    yourPick: 'Jouw getal',
+    line: 'Tik of sleep langs de lijn om een getal te kiezen',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -390,6 +397,32 @@ const nl: Dict = {
     foundByYou: 'Je hebt het gevonden! {number} was het getal',
     foundByOther: 'Een andere speler heeft het getal gevonden',
     nextRound: 'Er is een nieuwe ronde met een nieuw getal te koop.',
+    perGuess: 'Elke gok: 1 op {n} bij de volgende controle',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Ronde {round}',
+    winnerTakes: 'De winnaar krijgt ◎{prize}',
+    lastDraw: 'Laatste trekking',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Nog geen loten in deze ronde. Kies een getal om er een te krijgen.',
+    connect: 'Koppel een wallet om te spelen. Je loten verschijnen hier.',
+    missed: 'Mis',
+    won: 'Gewonnen',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Ronde {round} is getrokken',
+    number: 'Winnend getal',
+    youWon: 'Je hebt ◎{amount} gewonnen!',
+    winner: 'De winnaar krijgt ◎{amount}',
+    see: 'Bekijk de trekking',
+    close: 'Sluiten',
   },
 
   /** The right panel of the play page: past rounds. */

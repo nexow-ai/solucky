@@ -305,6 +305,7 @@ const hi: Dict = {
     openFaucet: 'फ़ॉसेट खोलें',
     retry: 'फिर से कोशिश करें',
     rpcError: 'Solana RPC एंडपॉइंट तक नहीं पहुँच सके ({reason})',
+    fundHow: 'टेस्ट SOL पाएँ',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -334,6 +335,12 @@ const hi: Dict = {
     full: 'यह राउंड भर गया है',
     keys: '0–9 कुंजियों से टाइप करें, ⌫ से मिटाएँ, Enter से ख़रीदें।',
     rent: 'एक टिकट में ◎{rent} अकाउंट रेंट भी रहता है, जो ड्रॉ के बाद आपको वापस मिल जाता है।',
+    best: 'सबसे अच्छी जगह',
+    bestHint: 'वह ख़ाली नंबर चुनता है जिसके पास अभी ड्रॉ का सबसे बड़ा हिस्सा है',
+    share: '{number} के साथ जीत का मौक़ा',
+    wins: 'ड्रॉ {lo} से {hi} के बीच आए तो जीतता है। बाद में पास में ख़रीदे गए टिकट इसे छोटा करते हैं।',
+    yourPick: 'आपका नंबर',
+    line: 'नंबर चुनने के लिए लाइन पर टैप करें या खींचें',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -386,6 +393,32 @@ const hi: Dict = {
     foundByYou: 'आपने ढूँढ लिया! नंबर {number} था',
     foundByOther: 'किसी दूसरे खिलाड़ी ने नंबर ढूँढ लिया',
     nextRound: 'नए नंबर वाला नया राउंड बिक्री पर है।',
+    perGuess: 'हर अनुमान: अगली जाँच में {n} में 1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'राउंड {round}',
+    winnerTakes: 'विजेता को ◎{prize} मिलेंगे',
+    lastDraw: 'पिछला ड्रॉ',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'इस राउंड में अभी आपका कोई टिकट नहीं है। टिकट के लिए एक नंबर चुनें।',
+    connect: 'खेलने के लिए वॉलेट कनेक्ट करें। आपके टिकट यहाँ दिखेंगे।',
+    missed: 'चूक गया',
+    won: 'जीता',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'राउंड {round} का ड्रॉ हो गया',
+    number: 'जीतने वाला नंबर',
+    youWon: 'आपने ◎{amount} जीते!',
+    winner: 'विजेता को ◎{amount} मिलते हैं',
+    see: 'ड्रॉ देखें',
+    close: 'बंद करें',
   },
 
   /** The right panel of the play page: past rounds. */

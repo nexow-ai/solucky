@@ -298,6 +298,7 @@ const zhtw: Dict = {
     openFaucet: '開啟水龍頭',
     retry: '重試',
     rpcError: '無法連上 Solana RPC 節點（{reason}）',
+    fundHow: '領取測試 SOL',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -327,6 +328,12 @@ const zhtw: Dict = {
     full: '本期已滿',
     keys: '按 0–9 輸入，⌫ 刪除，Enter 購買。',
     rent: '每張彩券還會占用 ◎{rent} 的帳戶租金，開獎後可以取回。',
+    best: '最佳位置',
+    bestHint: '選出目前佔開獎份額最大的空閒號碼',
+    share: '選 {number} 的中獎機率',
+    wins: '開獎號碼落在 {lo} 到 {hi} 之間即中獎。之後有人在附近買號會縮小這個範圍。',
+    yourPick: '你選的號碼',
+    line: '點按或沿著數線拖曳來選號',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -376,6 +383,32 @@ const zhtw: Dict = {
     foundByYou: '你猜中了！號碼就是 {number}',
     foundByOther: '另一位玩家找到了號碼',
     nextRound: '新的一期已開賣，號碼也是新的。',
+    perGuess: '每次猜測：下次檢查時的機率為 {n} 分之 1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: '第 {round} 期',
+    winnerTakes: '中獎者得 ◎{prize}',
+    lastDraw: '上期開獎',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: '本期你還沒有彩券。選一個號碼就能買一張。',
+    connect: '連接錢包即可遊戲。你的彩券會顯示在這裡。',
+    missed: '未中',
+    won: '中獎',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: '第 {round} 期已開獎',
+    number: '中獎號碼',
+    youWon: '你贏得了 ◎{amount}！',
+    winner: '中獎者獲得 ◎{amount}',
+    see: '查看開獎',
+    close: '關閉',
   },
 
   /** The right panel of the play page: past rounds. */

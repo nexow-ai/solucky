@@ -304,6 +304,7 @@ const vi: Dict = {
     openFaucet: 'Mở faucet',
     retry: 'Thử lại',
     rpcError: 'Không thể kết nối đến endpoint RPC của Solana ({reason})',
+    fundHow: 'Nhận SOL thử nghiệm',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -333,6 +334,12 @@ const vi: Dict = {
     full: 'Vòng này đã đầy',
     keys: 'Phím 0–9 để nhập, ⌫ để xóa, Enter để mua.',
     rent: 'Mỗi vé còn giữ ◎{rent} tiền thuê tài khoản, bạn sẽ nhận lại sau khi quay số.',
+    best: 'Vị trí tốt nhất',
+    bestHint: 'Chọn số còn trống đang chiếm phần lớn nhất của lần quay lúc này',
+    share: 'Cơ hội thắng với số {number}',
+    wins: 'Thắng nếu kết quả rơi vào khoảng {lo} đến {hi}. Vé mua sau ở gần đó sẽ thu hẹp khoảng này.',
+    yourPick: 'Số của bạn',
+    line: 'Chạm hoặc kéo dọc đường kẻ để chọn số',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -385,6 +392,32 @@ const vi: Dict = {
     foundByYou: 'Bạn đã tìm ra! Con số là {number}',
     foundByOther: 'Một người chơi khác đã tìm ra con số',
     nextRound: 'Một vòng mới với con số mới đang mở bán.',
+    perGuess: 'Mỗi lượt đoán: 1 trên {n} ở lần kiểm tra tới',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Vòng {round}',
+    winnerTakes: 'Người thắng nhận ◎{prize}',
+    lastDraw: 'Lần quay gần nhất',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Bạn chưa có vé trong vòng này. Chọn một số để có vé.',
+    connect: 'Kết nối ví để chơi. Vé của bạn hiện ở đây.',
+    missed: 'Trượt',
+    won: 'Thắng',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Vòng {round} đã quay số',
+    number: 'Số trúng thưởng',
+    youWon: 'Bạn đã thắng ◎{amount}!',
+    winner: 'Người thắng nhận ◎{amount}',
+    see: 'Xem lần quay',
+    close: 'Đóng',
   },
 
   /** The right panel of the play page: past rounds. */

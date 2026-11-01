@@ -306,6 +306,7 @@ const it: Dict = {
     openFaucet: 'Apri il faucet',
     retry: 'Riprova',
     rpcError: 'Impossibile raggiungere l’endpoint RPC di Solana ({reason})',
+    fundHow: 'Ottieni SOL di prova',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -335,6 +336,12 @@ const it: Dict = {
     full: 'Questo round è al completo',
     keys: 'Tasti 0–9 per digitare, ⌫ per cancellare, Invio per comprare.',
     rent: 'Un biglietto trattiene anche ◎{rent} di rent dell’account, che recuperi dopo l’estrazione.',
+    best: 'Posto migliore',
+    bestHint: 'Sceglie il numero libero con la quota più grande dell’estrazione in questo momento',
+    share: 'Prob. di vincita con il {number}',
+    wins: 'Vince se l’estrazione cade tra {lo} e {hi}. I biglietti comprati più tardi lì vicino la riducono.',
+    yourPick: 'Il tuo numero',
+    line: 'Tocca o trascina lungo la linea per scegliere un numero',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -389,6 +396,32 @@ const it: Dict = {
     foundByYou: 'L’hai trovato! Il numero era il {number}',
     foundByOther: 'Un altro giocatore ha trovato il numero',
     nextRound: 'È in vendita un nuovo round con un nuovo numero.',
+    perGuess: 'Ogni tentativo: 1 su {n} alla prossima verifica',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Round {round}',
+    winnerTakes: 'Il vincitore prende ◎{prize}',
+    lastDraw: 'Ultima estrazione',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Ancora nessun biglietto in questo round. Scegli un numero per averne uno.',
+    connect: 'Collega un wallet per giocare. I tuoi biglietti compaiono qui.',
+    missed: 'Mancato',
+    won: 'Vincente',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Il round {round} è stato estratto',
+    number: 'Numero vincente',
+    youWon: 'Hai vinto ◎{amount}!',
+    winner: 'Il vincitore prende ◎{amount}',
+    see: 'Vedi l’estrazione',
+    close: 'Chiudi',
   },
 
   /** The right panel of the play page: past rounds. */

@@ -308,6 +308,7 @@ const de: Dict = {
     openFaucet: 'Faucet öffnen',
     retry: 'Erneut versuchen',
     rpcError: 'Der Solana-RPC-Endpunkt ist nicht erreichbar ({reason})',
+    fundHow: 'Test-SOL holen',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -337,6 +338,12 @@ const de: Dict = {
     full: 'Diese Runde ist voll',
     keys: 'Mit 0–9 tippen, ⌫ löscht, Enter kauft.',
     rent: 'Ein Ticket bindet außerdem ◎{rent} an Rent für sein Konto, die du nach der Ziehung zurückbekommst.',
+    best: 'Bester Platz',
+    bestHint: 'Wählt die freie Zahl mit dem größten Anteil an der Ziehung, Stand jetzt',
+    share: 'Gewinnchance mit {number}',
+    wins: 'Gewinnt, wenn die Ziehung zwischen {lo} und {hi} landet. Später in der Nähe gekaufte Lose verkleinern das.',
+    yourPick: 'Deine Zahl',
+    line: 'Tippe oder ziehe auf der Linie, um eine Zahl zu wählen',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -391,6 +398,32 @@ const de: Dict = {
     foundByYou: 'Du hast sie gefunden! {number} war die Zahl',
     foundByOther: 'Ein anderer Spieler hat die Zahl gefunden',
     nextRound: 'Eine neue Runde mit einer neuen Zahl ist im Verkauf.',
+    perGuess: 'Jeder Tipp: 1 zu {n} bei der nächsten Prüfung',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Runde {round}',
+    winnerTakes: 'Der Gewinner erhält ◎{prize}',
+    lastDraw: 'Letzte Ziehung',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Noch keine Lose in dieser Runde. Wähle eine Zahl, um eins zu bekommen.',
+    connect: 'Verbinde eine Wallet, um zu spielen. Deine Lose erscheinen hier.',
+    missed: 'Daneben',
+    won: 'Gewonnen',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Runde {round} ist gezogen',
+    number: 'Gewinnzahl',
+    youWon: 'Du hast ◎{amount} gewonnen!',
+    winner: 'Der Gewinner erhält ◎{amount}',
+    see: 'Ziehung ansehen',
+    close: 'Schließen',
   },
 
   /** The right panel of the play page: past rounds. */

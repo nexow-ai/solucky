@@ -307,6 +307,7 @@ const ru: Dict = {
     openFaucet: 'Открыть кран',
     retry: 'Повторить',
     rpcError: 'Не удалось подключиться к RPC-эндпоинту Solana ({reason})',
+    fundHow: 'Получить тестовые SOL',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -336,6 +337,12 @@ const ru: Dict = {
     full: 'Раунд заполнен',
     keys: 'Клавиши 0–9 вводят цифры, ⌫ удаляет, Enter покупает.',
     rent: 'Билет также удерживает ◎{rent} ренты аккаунта, которые вы получите обратно после розыгрыша.',
+    best: 'Лучшее место',
+    bestHint: 'Выбирает свободное число с наибольшей долей розыгрыша на этот момент',
+    share: 'Шанс выигрыша с {number}',
+    wins: 'Выигрывает, если розыгрыш выпадет на число от {lo} до {hi}. Билеты, купленные позже рядом, уменьшают этот отрезок.',
+    yourPick: 'Ваше число',
+    line: 'Коснитесь линии или проведите по ней, чтобы выбрать число',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -388,6 +395,32 @@ const ru: Dict = {
     foundByYou: 'Вы нашли его! Загаданное число — {number}',
     foundByOther: 'Другой игрок нашёл число',
     nextRound: 'В продаже новый раунд с новым числом.',
+    perGuess: 'Каждая догадка: 1 из {n} при следующей проверке',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Раунд {round}',
+    winnerTakes: 'Победитель получит ◎{prize}',
+    lastDraw: 'Последний розыгрыш',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'В этом раунде у вас пока нет билетов. Выберите число, чтобы купить билет.',
+    connect: 'Подключите кошелёк, чтобы играть. Ваши билеты появятся здесь.',
+    missed: 'Мимо',
+    won: 'Выигрыш',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Раунд {round} разыгран',
+    number: 'Выигрышное число',
+    youWon: 'Вы выиграли ◎{amount}!',
+    winner: 'Победитель получает ◎{amount}',
+    see: 'Посмотреть розыгрыш',
+    close: 'Закрыть',
   },
 
   /** The right panel of the play page: past rounds. */

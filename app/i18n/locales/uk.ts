@@ -305,6 +305,7 @@ const uk: Dict = {
     openFaucet: 'Відкрити кран',
     retry: 'Повторити',
     rpcError: 'Не вдалося під’єднатися до RPC-ендпоінта Solana ({reason})',
+    fundHow: 'Отримати тестові SOL',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -334,6 +335,12 @@ const uk: Dict = {
     full: 'Раунд заповнено',
     keys: 'Клавіші 0–9 вводять цифри, ⌫ видаляє, Enter купує.',
     rent: 'Квиток також утримує ◎{rent} ренти акаунта, які ви отримаєте назад після розіграшу.',
+    best: 'Найкраще місце',
+    bestHint: 'Вибирає вільне число з найбільшою часткою розіграшу на цю мить',
+    share: 'Шанс виграшу з {number}',
+    wins: 'Виграє, якщо розіграш випаде на число від {lo} до {hi}. Квитки, куплені пізніше поруч, зменшують цей відрізок.',
+    yourPick: 'Ваше число',
+    line: 'Торкніться лінії або проведіть по ній, щоб вибрати число',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -386,6 +393,32 @@ const uk: Dict = {
     foundByYou: 'Ви знайшли його! Загадане число — {number}',
     foundByOther: 'Інший гравець знайшов число',
     nextRound: 'У продажу новий раунд із новим числом.',
+    perGuess: 'Кожна здогадка: 1 з {n} під час наступної перевірки',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Раунд {round}',
+    winnerTakes: 'Переможець отримає ◎{prize}',
+    lastDraw: 'Останній розіграш',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'У цьому раунді у вас поки немає квитків. Виберіть число, щоб купити квиток.',
+    connect: 'Під’єднайте гаманець, щоб грати. Ваші квитки з’являться тут.',
+    missed: 'Повз',
+    won: 'Виграш',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Раунд {round} розіграно',
+    number: 'Виграшне число',
+    youWon: 'Ви виграли ◎{amount}!',
+    winner: 'Переможець отримує ◎{amount}',
+    see: 'Переглянути розіграш',
+    close: 'Закрити',
   },
 
   /** The right panel of the play page: past rounds. */

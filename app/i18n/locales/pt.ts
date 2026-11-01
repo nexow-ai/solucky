@@ -307,6 +307,7 @@ const pt: Dict = {
     openFaucet: 'Abrir faucet',
     retry: 'Tentar de novo',
     rpcError: 'Não foi possível acessar o endpoint RPC da Solana ({reason})',
+    fundHow: 'Obter SOL de teste',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -336,6 +337,12 @@ const pt: Dict = {
     full: 'Esta rodada está cheia',
     keys: 'Teclas 0–9 digitam, ⌫ apaga, Enter compra.',
     rent: 'Um bilhete também guarda ◎{rent} de aluguel da conta, que você recebe de volta depois do sorteio.',
+    best: 'Melhor lugar',
+    bestHint: 'Escolhe o número livre com a maior fatia do sorteio agora',
+    share: 'Chance de ganhar com o {number}',
+    wins: 'Ganha se o sorteio cair entre {lo} e {hi}. Bilhetes comprados perto depois diminuem isso.',
+    yourPick: 'Seu número',
+    line: 'Toque ou arraste ao longo da linha para escolher um número',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -388,6 +395,32 @@ const pt: Dict = {
     foundByYou: 'Você acertou! O número era {number}',
     foundByOther: 'Outro jogador acertou o número',
     nextRound: 'Uma nova rodada com um novo número está à venda.',
+    perGuess: 'Cada palpite: 1 em {n} na próxima verificação',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Rodada {round}',
+    winnerTakes: 'O vencedor leva ◎{prize}',
+    lastDraw: 'Último sorteio',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Ainda sem bilhetes nesta rodada. Escolha um número para ter um.',
+    connect: 'Conecte uma carteira para jogar. Seus bilhetes aparecem aqui.',
+    missed: 'Errou',
+    won: 'Ganhou',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Rodada {round} sorteada',
+    number: 'Número vencedor',
+    youWon: 'Você ganhou ◎{amount}!',
+    winner: 'O vencedor leva ◎{amount}',
+    see: 'Ver o sorteio',
+    close: 'Fechar',
   },
 
   /** The right panel of the play page: past rounds. */

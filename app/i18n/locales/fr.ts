@@ -308,6 +308,7 @@ const fr: Dict = {
     openFaucet: 'Ouvrir le faucet',
     retry: 'Réessayer',
     rpcError: 'Impossible de joindre l’endpoint RPC de Solana ({reason})',
+    fundHow: 'Obtenir des SOL de test',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -337,6 +338,12 @@ const fr: Dict = {
     full: 'Cette manche est complète',
     keys: 'Touches 0–9 pour saisir, ⌫ pour effacer, Entrée pour acheter.',
     rent: 'Un ticket immobilise aussi ◎{rent} de loyer de compte, que tu récupères après le tirage.',
+    best: 'Meilleure place',
+    bestHint: 'Choisit le numéro libre qui couvre la plus grande part du tirage en ce moment',
+    share: 'Chance de gain avec le {number}',
+    wins: 'Gagne si le tirage tombe entre {lo} et {hi}. Les tickets achetés plus tard tout près la réduisent.',
+    yourPick: 'Votre numéro',
+    line: 'Touchez ou glissez le long de la ligne pour choisir un numéro',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -389,6 +396,32 @@ const fr: Dict = {
     foundByYou: 'Tu l’as trouvé ! Le numéro était le {number}',
     foundByOther: 'Un autre joueur a trouvé le numéro',
     nextRound: 'Une nouvelle manche avec un nouveau numéro est en vente.',
+    perGuess: 'Chaque essai : 1 sur {n} à la prochaine vérification',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Manche {round}',
+    winnerTakes: 'Le gagnant remporte ◎{prize}',
+    lastDraw: 'Dernier tirage',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Aucun ticket dans cette manche pour l’instant. Choisissez un numéro pour en avoir un.',
+    connect: 'Connectez un wallet pour jouer. Vos tickets s’affichent ici.',
+    missed: 'Raté',
+    won: 'Gagnant',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'La manche {round} est tirée',
+    number: 'Numéro gagnant',
+    youWon: 'Vous avez gagné ◎{amount} !',
+    winner: 'Le gagnant remporte ◎{amount}',
+    see: 'Voir le tirage',
+    close: 'Fermer',
   },
 
   /** The right panel of the play page: past rounds. */

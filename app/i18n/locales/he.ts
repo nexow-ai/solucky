@@ -299,6 +299,7 @@ const he: Dict = {
     openFaucet: 'לפתוח את הברז',
     retry: 'לנסות שוב',
     rpcError: 'לא ניתן להגיע לנקודת הקצה Solana RPC ({reason})',
+    fundHow: 'קבלת SOL לבדיקה',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -328,6 +329,12 @@ const he: Dict = {
     full: 'הסבב הזה מלא',
     keys: 'המקשים 0–9 מקלידים, ⌫ מוחק, Enter קונה.',
     rent: 'כרטיס מחזיק גם ◎{rent} של דמי שכירות לחשבון, שתקבלו בחזרה אחרי ההגרלה.',
+    best: 'המקום הטוב ביותר',
+    bestHint: 'בוחר את המספר הפנוי עם הנתח הגדול ביותר בהגרלה כרגע',
+    share: 'סיכוי לזכות עם {number}',
+    wins: 'זוכה אם ההגרלה נופלת בין {lo} ל־{hi}. כרטיסים שנקנים אחר כך בקרבת מקום מקטינים את זה.',
+    yourPick: 'המספר שלך',
+    line: 'הקישו או גררו לאורך הקו כדי לבחור מספר',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -378,6 +385,32 @@ const he: Dict = {
     foundByYou: 'מצאתם אותו! המספר היה {number}',
     foundByOther: 'שחקן אחר מצא את המספר',
     nextRound: 'סבב חדש עם מספר חדש פתוח למכירה.',
+    perGuess: 'כל ניחוש: 1 מתוך {n} בבדיקה הבאה',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'סבב {round}',
+    winnerTakes: 'הזוכה מקבל ◎{prize}',
+    lastDraw: 'ההגרלה האחרונה',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'עדיין אין לך כרטיסים בסבב הזה. בחרו מספר כדי לקבל כרטיס.',
+    connect: 'חברו ארנק כדי לשחק. הכרטיסים שלך יופיעו כאן.',
+    missed: 'לא פגע',
+    won: 'זכה',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'סבב {round} הוגרל',
+    number: 'המספר הזוכה',
+    youWon: 'זכית ב־◎{amount}!',
+    winner: 'הזוכה מקבל ◎{amount}',
+    see: 'לצפייה בהגרלה',
+    close: 'סגירה',
   },
 
   /** The right panel of the play page: past rounds. */

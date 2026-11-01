@@ -37,12 +37,11 @@ const options = computed(() => {
 <template>
   <nav
     :aria-label="t('network.label')"
-    class="glass-pill grid-cols-2 gap-0.5 rounded-full p-0.5 font-mono text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
+    class="glass-pill shrink-0 grid-cols-[repeat(2,minmax(max-content,1fr))] gap-0.5 rounded-full p-0.5 font-mono text-[0.65rem] font-semibold tracking-[0.12em] uppercase"
     :class="block ? 'grid w-full' : 'inline-grid'"
   >
     <UTooltip v-for="option in options" :key="option.key" :text="option.tip" :content="{ sideOffset: 10 }">
       <a v-if="option.href" :href="option.href" class="segment" :data-network="option.key">
-        <span class="dot" aria-hidden="true" />
         {{ option.label }}
       </a>
       <span
@@ -53,7 +52,7 @@ const options = computed(() => {
         :aria-disabled="option.current ? undefined : 'true'"
         tabindex="0"
       >
-        <span class="dot" aria-hidden="true" />
+        <span v-if="option.current" class="dot" aria-hidden="true" />
         {{ option.label }}
         <UIcon v-if="!option.current" name="i-lucide-lock" class="size-3 opacity-70" />
       </span>
@@ -68,9 +67,9 @@ const options = computed(() => {
   min-height: 1.75rem;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   border-radius: 9999px;
-  padding-inline: 0.8rem;
+  padding-inline: 0.7rem;
   color: var(--ui-text-muted);
   white-space: nowrap;
   outline: none;
@@ -124,16 +123,11 @@ a.segment:hover {
   flex-shrink: 0;
   border-radius: 9999px;
   background: currentColor;
-  opacity: 0.4;
-}
-
-.segment[aria-current] .dot {
-  opacity: 1;
   box-shadow: 0 0 8px currentColor;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .segment[aria-current] .dot {
+  .dot {
     animation: var(--animate-twinkle);
   }
 }

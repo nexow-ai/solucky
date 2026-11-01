@@ -304,6 +304,7 @@ const th: Dict = {
     openFaucet: 'เปิดฟอเซ็ต',
     retry: 'ลองอีกครั้ง',
     rpcError: 'เชื่อมต่อเอนด์พอยต์ RPC ของ Solana ไม่ได้ ({reason})',
+    fundHow: 'รับ SOL ทดสอบ',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -333,6 +334,12 @@ const th: Dict = {
     full: 'รอบนี้เต็มแล้ว',
     keys: 'กด 0–9 เพื่อพิมพ์ ⌫ เพื่อลบ Enter เพื่อซื้อ',
     rent: 'ตั๋วแต่ละใบยังเก็บค่าเช่าบัญชี ◎{rent} ไว้ด้วย ซึ่งคุณจะได้คืนหลังออกรางวัล',
+    best: 'ตำแหน่งดีที่สุด',
+    bestHint: 'เลือกเลขว่างที่ครองส่วนแบ่งการออกรางวัลมากที่สุดในตอนนี้',
+    share: 'โอกาสชนะด้วยเลข {number}',
+    wins: 'ชนะถ้าผลออกระหว่าง {lo} ถึง {hi} ตั๋วที่ซื้อใกล้ๆ ภายหลังจะทำให้ช่วงนี้แคบลง',
+    yourPick: 'เลขของคุณ',
+    line: 'แตะหรือลากไปตามเส้นเพื่อเลือกเลข',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -384,6 +391,32 @@ const th: Dict = {
     foundByYou: 'คุณเจอแล้ว! ตัวเลขคือ {number}',
     foundByOther: 'ผู้เล่นคนอื่นเจอตัวเลขแล้ว',
     nextRound: 'รอบใหม่พร้อมตัวเลขใหม่เปิดขายแล้ว',
+    perGuess: 'แต่ละการทาย: 1 ใน {n} ในการตรวจครั้งถัดไป',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'รอบ {round}',
+    winnerTakes: 'ผู้ชนะได้ ◎{prize}',
+    lastDraw: 'ผลรอบล่าสุด',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'ยังไม่มีตั๋วในรอบนี้ เลือกเลขเพื่อรับตั๋ว',
+    connect: 'เชื่อมต่อวอลเล็ตเพื่อเล่น ตั๋วของคุณจะแสดงที่นี่',
+    missed: 'ไม่ถูก',
+    won: 'ชนะ',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'รอบ {round} ออกผลแล้ว',
+    number: 'เลขที่ชนะ',
+    youWon: 'คุณชนะ ◎{amount}!',
+    winner: 'ผู้ชนะได้ ◎{amount}',
+    see: 'ดูการออกรางวัล',
+    close: 'ปิด',
   },
 
   /** The right panel of the play page: past rounds. */

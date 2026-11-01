@@ -303,6 +303,7 @@ const ja: Dict = {
     openFaucet: 'フォーセットを開く',
     retry: '再試行',
     rpcError: 'SolanaのRPCエンドポイントに接続できませんでした（{reason}）',
+    fundHow: 'テスト用SOLをもらう',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -332,6 +333,12 @@ const ja: Dict = {
     full: 'このラウンドは満員です',
     keys: '0〜9キーで入力、⌫で削除、Enterで購入。',
     rent: 'チケットにはアカウントのレントとして◎{rent}も預けられ、抽選後に取り戻せます。',
+    best: 'ベストな位置',
+    bestHint: '今いちばん大きな当選範囲を持てる空き番号を選びます',
+    share: '{number}の当選確率',
+    wins: '抽選結果が{lo}〜{hi}なら当選。あとから近くの番号が買われると範囲は狭くなります。',
+    yourPick: 'あなたの番号',
+    line: 'ライン上をタップまたはドラッグして番号を選べます',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -383,6 +390,32 @@ const ja: Dict = {
     foundByYou: '見つけました！正解は{number}でした',
     foundByOther: 'ほかのプレイヤーが番号を見つけました',
     nextRound: '新しい番号で、新しいラウンドが販売中です。',
+    perGuess: '1回の予想ごとに、次の判定で{n}分の1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'ラウンド {round}',
+    winnerTakes: '当選者の賞金 ◎{prize}',
+    lastDraw: '前回の抽選',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'このラウンドのチケットはまだありません。番号を選んで購入しましょう。',
+    connect: 'ウォレットを接続して遊べます。チケットはここに表示されます。',
+    missed: 'はずれ',
+    won: '当選',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'ラウンド {round} の抽選結果',
+    number: '当選番号',
+    youWon: '◎{amount}が当たりました！',
+    winner: '当選者の賞金は◎{amount}',
+    see: '抽選を見る',
+    close: '閉じる',
   },
 
   /** The right panel of the play page: past rounds. */

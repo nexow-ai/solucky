@@ -307,6 +307,7 @@ const es: Dict = {
     openFaucet: 'Abrir faucet',
     retry: 'Reintentar',
     rpcError: 'No se pudo conectar con el endpoint RPC de Solana ({reason})',
+    fundHow: 'Conseguir SOL de prueba',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -336,6 +337,12 @@ const es: Dict = {
     full: 'Esta ronda está llena',
     keys: 'Teclas 0–9 para escribir, ⌫ para borrar, Enter para comprar.',
     rent: 'Un boleto también guarda ◎{rent} de renta de la cuenta, que recuperas después del sorteo.',
+    best: 'Mejor hueco',
+    bestHint: 'Elige el número libre con la mayor parte del sorteo ahora mismo',
+    share: 'Probabilidad con el {number}',
+    wins: 'Gana si el sorteo cae entre {lo} y {hi}. Los boletos comprados cerca más tarde la reducen.',
+    yourPick: 'Tu número',
+    line: 'Toca o arrastra por la línea para elegir un número',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -388,6 +395,32 @@ const es: Dict = {
     foundByYou: '¡Lo encontraste! El número era el {number}',
     foundByOther: 'Otro jugador encontró el número',
     nextRound: 'Ya está a la venta una nueva ronda con un nuevo número.',
+    perGuess: 'Cada intento: 1 entre {n} en la próxima comprobación',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Ronda {round}',
+    winnerTakes: 'El ganador se lleva ◎{prize}',
+    lastDraw: 'Último sorteo',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Aún no tienes boletos en esta ronda. Elige un número para conseguir uno.',
+    connect: 'Conecta una billetera para jugar. Tus boletos aparecen aquí.',
+    missed: 'Fallado',
+    won: 'Ganador',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Ronda {round} sorteada',
+    number: 'Número ganador',
+    youWon: '¡Has ganado ◎{amount}!',
+    winner: 'El ganador se lleva ◎{amount}',
+    see: 'Ver el sorteo',
+    close: 'Cerrar',
   },
 
   /** The right panel of the play page: past rounds. */

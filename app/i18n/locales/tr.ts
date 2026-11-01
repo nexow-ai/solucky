@@ -305,6 +305,7 @@ const tr: Dict = {
     openFaucet: 'Faucet’i açın',
     retry: 'Tekrar deneyin',
     rpcError: 'Solana RPC uç noktasına ulaşılamadı ({reason})',
+    fundHow: 'Test SOL’ü alın',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -334,6 +335,12 @@ const tr: Dict = {
     full: 'Bu tur doldu',
     keys: '0–9 tuşları yazar, ⌫ siler, Enter satın alır.',
     rent: 'Bir bilet ayrıca ◎{rent} hesap kirası tutar; bunu çekilişten sonra geri alırsınız.',
+    best: 'En iyi yer',
+    bestHint: 'Şu anda çekilişin en büyük payına sahip boş sayıyı seçer',
+    share: '{number} ile kazanma şansı',
+    wins: 'Çekiliş {lo} ile {hi} arasına düşerse kazanır. Yakına sonradan alınan biletler bunu küçültür.',
+    yourPick: 'Seçtiğiniz sayı',
+    line: 'Sayı seçmek için çizgiye dokunun veya üzerinde sürükleyin',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -386,6 +393,32 @@ const tr: Dict = {
     foundByYou: 'Buldunuz! Sayı {number} idi',
     foundByOther: 'Başka bir oyuncu sayıyı buldu',
     nextRound: 'Yeni bir sayıyla yeni bir tur satışta.',
+    perGuess: 'Her tahmin: sonraki kontrolde {n} ihtimalde 1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: '{round} turu',
+    winnerTakes: 'Kazanan ◎{prize} alır',
+    lastDraw: 'Son çekiliş',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Bu turda henüz biletiniz yok. Bir bilet için sayı seçin.',
+    connect: 'Oynamak için bir cüzdan bağlayın. Biletleriniz burada görünür.',
+    missed: 'Tutmadı',
+    won: 'Kazandı',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: '{round} turunun çekilişi yapıldı',
+    number: 'Kazanan sayı',
+    youWon: '◎{amount} kazandınız!',
+    winner: 'Kazanan ◎{amount} alır',
+    see: 'Çekilişi görün',
+    close: 'Kapat',
   },
 
   /** The right panel of the play page: past rounds. */

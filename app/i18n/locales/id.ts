@@ -306,6 +306,7 @@ const id: Dict = {
     openFaucet: 'Buka faucet',
     retry: 'Coba lagi',
     rpcError: 'Tidak dapat menjangkau endpoint RPC Solana ({reason})',
+    fundHow: 'Dapatkan SOL uji',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -335,6 +336,12 @@ const id: Dict = {
     full: 'Ronde ini sudah penuh',
     keys: 'Tombol 0–9 untuk mengetik, ⌫ untuk menghapus, Enter untuk membeli.',
     rent: 'Satu tiket juga menyimpan ◎{rent} sewa akun, yang kamu dapatkan kembali setelah undian.',
+    best: 'Posisi terbaik',
+    bestHint: 'Memilih angka kosong dengan bagian undian terbesar saat ini',
+    share: 'Peluang menang dengan {number}',
+    wins: 'Menang jika undian jatuh di {lo} sampai {hi}. Tiket yang dibeli di dekatnya nanti akan memperkecilnya.',
+    yourPick: 'Angka Anda',
+    line: 'Ketuk atau geser di sepanjang garis untuk memilih angka',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -389,6 +396,32 @@ const id: Dict = {
     foundByYou: 'Kamu menemukannya! Angkanya {number}',
     foundByOther: 'Pemain lain menemukan angkanya',
     nextRound: 'Ronde baru dengan angka baru sedang dijual.',
+    perGuess: 'Setiap tebakan: 1 dari {n} pada pemeriksaan berikutnya',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Ronde {round}',
+    winnerTakes: 'Pemenang mendapat ◎{prize}',
+    lastDraw: 'Undian terakhir',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Belum ada tiket di ronde ini. Pilih angka untuk mendapatkannya.',
+    connect: 'Hubungkan dompet untuk bermain. Tiket Anda muncul di sini.',
+    missed: 'Meleset',
+    won: 'Menang',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Ronde {round} sudah diundi',
+    number: 'Angka pemenang',
+    youWon: 'Anda menang ◎{amount}!',
+    winner: 'Pemenang mendapat ◎{amount}',
+    see: 'Lihat undian',
+    close: 'Tutup',
   },
 
   /** The right panel of the play page: past rounds. */

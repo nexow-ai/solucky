@@ -316,6 +316,7 @@ const en = {
     openFaucet: 'Open faucet',
     retry: 'Retry',
     rpcError: 'Could not reach the Solana RPC endpoint ({reason})',
+    fundHow: 'Get test SOL',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -345,6 +346,12 @@ const en = {
     full: 'This round is full',
     keys: 'Keys 0–9 type, ⌫ deletes, Enter buys.',
     rent: 'A ticket also holds ◎{rent} of account rent, which you get back after the draw.',
+    best: 'Best spot',
+    bestHint: 'Picks the free number with the biggest share of the draw right now',
+    share: 'Win chance with {number}',
+    wins: 'Wins if the draw lands on {lo} to {hi}. Tickets bought nearby later shrink it.',
+    yourPick: 'Your pick',
+    line: 'Tap or drag along the line to pick a number',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -396,6 +403,32 @@ const en = {
     foundByYou: 'You found it! {number} was the number',
     foundByOther: 'Another player found the number',
     nextRound: 'A new round with a new number is on sale.',
+    perGuess: 'Each guess: 1 in {n} at the next check',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Round {round}',
+    winnerTakes: 'Winner takes ◎{prize}',
+    lastDraw: 'Last draw',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'No tickets in this round yet. Pick a number to get one.',
+    connect: 'Connect a wallet to play. Your tickets show up here.',
+    missed: 'Missed',
+    won: 'Won',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Round {round} is drawn',
+    number: 'Winning number',
+    youWon: 'You won ◎{amount}!',
+    winner: 'The winner takes ◎{amount}',
+    see: 'See the draw',
+    close: 'Close',
   },
 
   /** The right panel of the play page: past rounds. */

@@ -305,6 +305,7 @@ const ko: Dict = {
     openFaucet: '포셋 열기',
     retry: '다시 시도',
     rpcError: 'Solana RPC 엔드포인트에 연결할 수 없어요({reason})',
+    fundHow: '테스트 SOL 받기',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -334,6 +335,12 @@ const ko: Dict = {
     full: '이번 라운드가 가득 찼어요',
     keys: '0–9 키로 입력, ⌫로 삭제, Enter로 구매.',
     rent: '티켓에는 계정 렌트 ◎{rent}도 들어가며, 추첨 후 돌려받을 수 있어요.',
+    best: '최적 위치',
+    bestHint: '지금 추첨에서 가장 큰 몫을 차지하는 빈 번호를 골라요',
+    share: '{number}번의 당첨 확률',
+    wins: '추첨 결과가 {lo}~{hi} 사이면 당첨이에요. 나중에 근처 번호가 팔리면 범위가 줄어요.',
+    yourPick: '내 번호',
+    line: '선을 탭하거나 드래그해서 번호를 고르세요',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -385,6 +392,32 @@ const ko: Dict = {
     foundByYou: '찾았어요! 정답은 {number}번이었어요',
     foundByOther: '다른 플레이어가 번호를 찾았어요',
     nextRound: '새 번호로 새 라운드를 판매 중이에요.',
+    perGuess: '추측마다: 다음 확인에서 {n}분의 1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: '{round} 라운드',
+    winnerTakes: '당첨자 상금 ◎{prize}',
+    lastDraw: '지난 추첨',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: '이번 라운드에 아직 티켓이 없어요. 번호를 골라 티켓을 받으세요.',
+    connect: '지갑을 연결하면 플레이할 수 있어요. 내 티켓은 여기에 표시돼요.',
+    missed: '꽝',
+    won: '당첨',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: '{round} 라운드 추첨 완료',
+    number: '당첨 번호',
+    youWon: '◎{amount}에 당첨됐어요!',
+    winner: '당첨자 상금 ◎{amount}',
+    see: '추첨 보기',
+    close: '닫기',
   },
 
   /** The right panel of the play page: past rounds. */
