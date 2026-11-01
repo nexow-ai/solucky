@@ -104,7 +104,7 @@ import {
 import { findConfigPda, findGamePda, findRoundPda, findSessionPda, findTicketPda } from '../pdas';
 
 export const SOLUCKY_PROGRAM_ADDRESS =
-  'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>;
+  'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF' as Address<'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF'>;
 
 export enum SoluckyAccount {
   Config,
@@ -378,7 +378,7 @@ export function identifySoluckyInstruction(
   });
 }
 
-export type ParsedSoluckyInstruction<TProgram extends string = 'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'> =
+export type ParsedSoluckyInstruction<TProgram extends string = 'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF'> =
   | ({ instructionType: SoluckyInstruction.BuyTicket } & ParsedBuyTicketInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.BuyTickets } & ParsedBuyTicketsInstruction<TProgram>)
   | ({ instructionType: SoluckyInstruction.ClaimPrize } & ParsedClaimPrizeInstruction<TProgram>)

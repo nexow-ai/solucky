@@ -55,7 +55,7 @@ export type InitializeInstruction<
   TAccountAuthority extends string | AccountMeta<string> = string,
   TAccountConfig extends string | AccountMeta<string> = string,
   TAccountTreasury extends string | AccountMeta<string> = string,
-  TAccountProgram extends string | AccountMeta<string> = 'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux',
+  TAccountProgram extends string | AccountMeta<string> = 'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF',
   TAccountProgramData extends string | AccountMeta<string> = string,
   TAccountSystemProgram extends string | AccountMeta<string> = '11111111111111111111111111111111',
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
@@ -180,7 +180,7 @@ export async function getInitializeInstructionAsync<
   }
   if (!accounts.program.value) {
     accounts.program.value =
-      'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>;
+      'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF' as Address<'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF'>;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value = '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
@@ -280,7 +280,7 @@ export function getInitializeInstruction<
   // Resolve default values.
   if (!accounts.program.value) {
     accounts.program.value =
-      'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>;
+      'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF' as Address<'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF'>;
   }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value = '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;

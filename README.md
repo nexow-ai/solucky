@@ -118,7 +118,7 @@ NUXT_PUBLIC_CLUSTER=localnet bun run dev
 
 `localnet` and `e2e` only run against a local RPC. They load `target/deploy/solucky.so` at the program address with your keypair (or a throwaway one) as upgrade authority, and open the three games with ◎0.1 tickets, a 5% fee and numbers from 0 to `SOLUCKY_MAX_NUMBER`. Point your wallet at `http://127.0.0.1:8899` to play.
 
-The program address in the code, `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` (2.0; 1.0 ran at `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`), belongs to a keypair that Nexow keeps out of the repository. On a fresh clone, `anchor build` creates a new `target/deploy/solucky-keypair.json`; run `anchor keys sync` and `bun run program:build` once to switch the code, IDL and client to your own address. Keep that keypair backed up and never commit it.
+The program address in the code, `JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF` (earlier versions ran at `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` and, for 1.0, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`), belongs to a keypair that Nexow keeps out of the repository. On a fresh clone, `anchor build` creates a new `target/deploy/solucky-keypair.json`; run `anchor keys sync` and `bun run program:build` once to switch the code, IDL and client to your own address. Keep that keypair backed up and never commit it.
 
 ## Deploying
 
@@ -129,7 +129,7 @@ The program address in the code, `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` 
    ```
    To **upgrade** a program that is already deployed, name it by address and sign with its upgrade authority; the program keypair is not needed. Check first that `solana-keygen pubkey target/deploy/solucky-keypair.json` prints the address in `declare_id!`: if it does not (a checkout that once built 1.0 still holds the `8uiVK…` key), do not run `anchor keys sync`, which would switch the code to that address.
    ```bash
-   solana program deploy -u devnet --program-id GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux \
+   solana program deploy -u devnet --program-id JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF \
      --upgrade-authority <AUTHORITY KEYPAIR> target/verifiable/solucky.so
    ```
 2. **Config and games.** Copy [`.env.example`](.env.example) to `.env` and set `SOLUCKY_MAX_NUMBER` (21 000 000 by default). As the upgrade authority, create the config and open the three games at one price and fee (tickets cost at least ◎0.002, the fee is at most 2000 bps). Fund the treasury with at least ◎0.001 first, so it can receive small fees:
@@ -167,7 +167,7 @@ To check a deployed program against a commit, rebuild that commit (or download t
 ```bash
 git checkout <COMMIT> && bun run program:build:verifiable
 solana-verify get-executable-hash target/verifiable/solucky.so
-solana-verify get-program-hash -u devnet GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux   # must print the same hash
+solana-verify get-program-hash -u devnet JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF   # must print the same hash
 ```
 
 To show the program as verified in Solana explorers, the upgrade authority can publish the check with `solana-verify verify-from-repo --remote`, passing `--base-image quay.io/ottersec/anchor:v1.2.1` so it builds exactly like `program:build:verifiable`.

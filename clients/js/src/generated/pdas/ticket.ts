@@ -27,7 +27,7 @@ export async function findTicketPda(
 ): Promise<ProgramDerivedAddress> {
   const {
     programAddress:
-      programAddressInput = 'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux' as Address<'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux'>,
+      programAddressInput = 'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF' as Address<'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF'>,
   } = config;
   const programAddress = typeof programAddressInput === 'string' ? programAddressInput : programAddressInput.address;
   return await getProgramDerivedAddress({
