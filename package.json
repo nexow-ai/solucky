@@ -51,16 +51,16 @@
     "og": "bun scripts/og.ts"
   },
   "dependencies": {
-    "@solana/kit": "8.5.0",
+    "@solana/kit": "8.6.0",
     "@solana/kit-plugin-rpc": "0.22.0",
     "@solana/kit-plugin-signer": "0.19.0",
-    "@solana/sysvars": "8.5.0",
+    "@solana/sysvars": "8.6.0",
     "@solucky/client": "workspace:*"
   },
   "devDependencies": {
     "@codama/nodes-from-anchor": "1.5.6",
     "@codama/renderers-js": "2.8.0",
-    "@types/bun": "1.4.3",
+    "@types/bun": "1.4.4",
     "codama": "1.11.0",
     "prettier": "3.9.10",
     "sharp": "0.35.5",
