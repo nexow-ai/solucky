@@ -3,8 +3,8 @@
  * The celebration when a ticket lands: a shockwave off the buy button, coins
  * and sparks flying out, confetti arcing up and falling, and a ticket that
  * flies from the button into the pot panel's list (`[data-ticket-well]`) when
- * that list is on screen. Call `fire()` through a template ref. Nothing
- * happens with reduced motion.
+ * that list is on screen. Call `fire()` through a template ref (`fire(n,
+ * false)` keeps the ticket home). Nothing happens with reduced motion.
  */
 interface Particle {
   id: number;
@@ -123,7 +123,8 @@ function flyTicket() {
     .finally(() => ticket.remove());
 }
 
-function fire(count = 26) {
+/** Throws `count` coins and sparks; `fly` also sends a ticket into the list of tickets in play. */
+function fire(count = 26, fly = true) {
   if (!import.meta.client || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const batch = [...burst(count), ...confetti(Math.round(count * 1.2))];
   particles.value = [...particles.value, ...batch];
@@ -134,7 +135,7 @@ function fire(count = 26) {
   waves.value = [...waves.value, wave];
   setTimeout(() => (waves.value = waves.value.filter((w) => w !== wave)), 900);
 
-  flyTicket();
+  if (fly) flyTicket();
 }
 
 defineExpose({ fire });

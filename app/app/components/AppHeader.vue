@@ -47,7 +47,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     />
 
     <template #right>
-      <AppNetwork class="hidden sm:inline-grid" />
+      <AppNetwork class="max-lg:hidden" />
       <!-- The wallet's address lives in the browser, so the faucet button does too. -->
       <ClientOnly>
         <UTooltip
