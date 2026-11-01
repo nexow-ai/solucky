@@ -58,7 +58,7 @@ function columnPath(bar: { x: number; y: number; width: number; height: number }
 <template>
   <!-- Time runs left to right on the chart in every language; its tooltip is placed the same way. -->
   <figure class="relative" dir="ltr">
-    <figcaption class="kicker mb-2 text-center">{{ t('history.chart') }}</figcaption>
+    <figcaption class="kicker mb-3">{{ t('history.chart') }}</figcaption>
     <p v-if="!bars.length" class="py-10 text-center text-sm text-muted">{{ t('history.chartEmpty') }}</p>
     <svg
       v-else
@@ -112,7 +112,7 @@ function columnPath(bar: { x: number; y: number; width: number; height: number }
     </svg>
     <div
       v-if="active"
-      class="pointer-events-none absolute top-6 rounded-md border border-default bg-default px-2 py-1 text-xs shadow-lg"
+      class="pointer-events-none absolute top-6 rounded-xl bg-default px-2.5 py-1.5 text-xs shadow-(--neu-sm)"
       :style="{ left: `${((active.x + active.width / 2) / WIDTH) * 100}%`, transform: 'translateX(-50%)' }"
     >
       <p class="text-muted">{{ active.label }}</p>

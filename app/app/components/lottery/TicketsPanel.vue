@@ -39,8 +39,8 @@ const stubs = computed(() => {
 </script>
 
 <template>
-  <LotteryGlass tint="secondary">
-    <div class="flex h-full flex-col gap-6 p-5 sm:p-6">
+  <LotterySurface>
+    <div class="flex h-full flex-col gap-7 p-6 sm:p-7">
       <section>
         <header class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
           <h2 class="kicker flex items-center gap-2">
@@ -50,11 +50,11 @@ const stubs = computed(() => {
           </h2>
           <p v-if="myChance !== null" class="flex items-baseline gap-2">
             <span class="kicker text-[0.65rem]">{{ t('stat.winChance') }}</span>
-            <span class="chance font-mono text-lg font-semibold tabular-nums">{{ formatPercent(myChance, intl) }}</span>
+            <span class="chance font-mono text-lg tabular-nums">{{ formatPercent(myChance, intl) }}</span>
           </p>
         </header>
 
-        <div v-if="stubs.length" class="stubs mt-3" role="group" :aria-label="t('stat.yourTickets')">
+        <div v-if="stubs.length" class="stubs mt-4" role="group" :aria-label="t('stat.yourTickets')">
           <TransitionGroup name="stub">
             <div
               v-for="(stub, i) in stubs"
@@ -64,9 +64,7 @@ const stubs = computed(() => {
               :style="{ '--i': Math.min(i, 8) }"
             >
               <span class="stub-flag" aria-hidden="true">{{ flagEmoji(stub.cc) }}</span>
-              <span class="stub-number font-mono font-semibold tabular-nums" dir="ltr">{{
-                formatNumber(stub.number)
-              }}</span>
+              <span class="stub-number font-mono tabular-nums" dir="ltr">{{ formatNumber(stub.number) }}</span>
               <span v-if="stub.share !== null" class="stub-meta font-mono tabular-nums">
                 {{ formatPercent(stub.share, intl) }}
               </span>
@@ -82,7 +80,7 @@ const stubs = computed(() => {
             </div>
           </TransitionGroup>
         </div>
-        <div v-else class="empty table-tray mt-3">
+        <div v-else class="empty mt-4">
           <span class="empty-stub" aria-hidden="true">
             <UIcon name="i-lucide-ticket-plus" class="size-5" />
           </span>
@@ -96,7 +94,7 @@ const stubs = computed(() => {
           {{ t('pot.inPlay') }}
           <span class="ms-auto font-mono tabular-nums">{{ formatNumber(tickets.length) }}</span>
         </h2>
-        <div class="table-well h-80 flex-1 overflow-y-auto p-2 lg:h-0 lg:min-h-72" data-ticket-well>
+        <div class="well h-80 flex-1 overflow-y-auto p-2.5 lg:h-0 lg:min-h-72" data-ticket-well>
           <div v-if="loading" class="space-y-2 p-1">
             <USkeleton v-for="i in 6" :key="i" class="h-5 w-full" />
           </div>
@@ -113,7 +111,7 @@ const stubs = computed(() => {
               v-for="ticket in newestFirst"
               :key="ticket.address"
               class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
-              :class="ticket.data.owner === address ? 'mine font-semibold text-primary' : 'text-toned'"
+              :class="ticket.data.owner === address ? 'mine text-primary' : 'text-toned'"
             >
               <span class="col-span-3 font-mono text-muted">{{ formatUtcTime(ticket.data.createdAt) }}</span>
               <ULink
@@ -131,88 +129,62 @@ const stubs = computed(() => {
               >
                 {{ flagEmoji(countryFromBytes(ticket.data.country)) }}
               </span>
-              <span class="col-span-4 text-end font-mono font-semibold">{{ formatNumber(ticket.data.number) }}</span>
+              <span class="col-span-4 text-end font-mono text-highlighted">{{ formatNumber(ticket.data.number) }}</span>
             </li>
           </TransitionGroup>
         </div>
       </section>
     </div>
-  </LotteryGlass>
+  </LotterySurface>
 </template>
 
 <style scoped>
 .count {
-  padding: 0.05rem 0.45rem;
+  padding: 0.05rem 0.5rem;
   border-radius: 9999px;
   color: var(--ui-text-highlighted);
-  background: color-mix(in oklab, var(--ui-primary) 22%, transparent);
+  box-shadow: var(--neu-in-sm);
   letter-spacing: 0;
 }
 
 .chance {
   color: var(--ui-secondary);
-  text-shadow: 0 0 12px color-mix(in oklab, var(--ui-secondary) 50%, transparent);
-}
-
-:root:not(.dark) .chance {
-  text-shadow: none;
 }
 
 .stubs {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
-  gap: 0.5rem;
-  max-height: 13.5rem;
+  gap: 0.75rem;
+  max-height: 14rem;
   overflow-y: auto;
-  padding: 0.15rem;
+  padding: 0.5rem;
+  margin: -0.5rem;
   scrollbar-width: thin;
 }
 
-/* A ticket stub: brand card with a notch on each side and a dashed tear line. */
+/* A ticket of yours: a small key standing out of the panel. */
 .stub {
-  --edge: var(--ui-primary);
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
-  column-gap: 0.4rem;
+  column-gap: 0.5rem;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.7rem;
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--color-purple-500) 26%, transparent),
-      color-mix(in oklab, var(--color-pink-600) 16%, transparent)
-    ),
-    color-mix(in oklab, black 20%, transparent);
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 18%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--edge) 38%, transparent);
-  mask:
-    radial-gradient(circle at 0 50%, transparent 0.3rem, #000 0.33rem) left / 51% 100% no-repeat,
-    radial-gradient(circle at 100% 50%, transparent 0.3rem, #000 0.33rem) right / 51% 100% no-repeat;
-}
-
-:root:not(.dark) .stub {
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--color-purple-500) 12%, white),
-    color-mix(in oklab, var(--color-pink-600) 8%, white)
-  );
+  padding: 0.55rem 0.85rem;
+  border-radius: 1rem;
+  background: var(--ui-bg);
+  box-shadow: var(--neu-sm);
 }
 
 .stub[data-state='missed'] {
-  --edge: var(--ui-border-accented);
-  opacity: 0.6;
-  filter: saturate(0.4);
+  opacity: 0.55;
+  box-shadow: var(--neu-in-sm);
 }
 
 .stub[data-state='won'] {
-  --edge: var(--ui-secondary);
   box-shadow:
-    inset 0 0 0 1px var(--ui-secondary),
-    0 0 20px -6px var(--ui-secondary);
+    var(--neu-sm),
+    inset 0 0 0 1.5px var(--ui-secondary);
 }
 
 .stub-flag {
@@ -239,26 +211,28 @@ const stubs = computed(() => {
   color: var(--ui-secondary);
 }
 
-/* A new stub is torn off and dropped in. */
+/* A new ticket rises out of the panel. */
 @media (prefers-reduced-motion: no-preference) {
   .stub-enter-active {
-    animation: stub-in 0.8s var(--ease-spring);
+    animation: stub-in 0.7s var(--ease-spring);
   }
 }
 
 @keyframes stub-in {
   from {
     opacity: 0;
-    transform: translateY(-0.8rem) rotate(-6deg) scale(0.85);
-    filter: brightness(2);
+    transform: translateY(-0.6rem) scale(0.9);
+    box-shadow: none;
   }
 }
 
 .empty {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.85rem 1rem;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1.25rem;
+  box-shadow: var(--neu-in-sm);
 }
 
 .empty-stub {
@@ -267,9 +241,16 @@ const stubs = computed(() => {
   flex-shrink: 0;
   width: 2.6rem;
   height: 2.6rem;
-  border-radius: 0.7rem;
+  border-radius: 9999px;
   color: var(--ui-primary);
-  border: 1.5px dashed color-mix(in oklab, var(--ui-primary) 50%, transparent);
+  background: var(--ui-bg);
+  box-shadow: var(--neu-xs);
+}
+
+.well {
+  border-radius: 1.4rem;
+  box-shadow: var(--neu-in);
+  scrollbar-width: thin;
 }
 
 .row {
@@ -277,20 +258,11 @@ const stubs = computed(() => {
 }
 
 .row:hover {
-  background: color-mix(in oklab, white 5%, transparent);
-}
-
-:root:not(.dark) .row:hover {
-  background: color-mix(in oklab, var(--ui-primary) 6%, transparent);
+  background: color-mix(in oklab, var(--ui-text-muted) 7%, transparent);
 }
 
 .row.mine {
-  background: color-mix(in oklab, var(--ui-primary) 12%, transparent);
-  box-shadow: inset 2px 0 0 var(--ui-primary);
-}
-
-.row.mine:dir(rtl) {
-  box-shadow: inset -2px 0 0 var(--ui-primary);
+  background: color-mix(in oklab, var(--ui-primary) 9%, transparent);
 }
 
 /* A new ticket drops in at the top with a flash. */
@@ -306,12 +278,11 @@ const stubs = computed(() => {
   0% {
     opacity: 0;
     transform: translateY(-12px) scale(0.98);
-    background: color-mix(in oklab, var(--ui-secondary) 45%, transparent);
-    box-shadow: 0 0 24px -4px var(--ui-secondary);
+    background: color-mix(in oklab, var(--ui-secondary) 30%, transparent);
   }
   40% {
     opacity: 1;
-    background: color-mix(in oklab, var(--ui-secondary) 22%, transparent);
+    background: color-mix(in oklab, var(--ui-secondary) 14%, transparent);
   }
 }
 
@@ -321,12 +292,6 @@ const stubs = computed(() => {
   border-radius: 9999px;
   background: var(--ui-secondary);
   box-shadow: 0 0 8px var(--ui-secondary);
-  animation: blink 1.6s ease-in-out infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0.3;
-  }
+  animation: var(--animate-breathe);
 }
 </style>

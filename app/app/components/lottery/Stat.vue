@@ -19,7 +19,7 @@ watch(
     <p class="kicker text-[0.65rem]">{{ label }}</p>
     <p
       :key="changes"
-      class="mt-1 font-mono text-lg font-semibold tabular-nums text-highlighted"
+      class="mt-1 font-mono text-lg text-highlighted tabular-nums"
       :class="{ 'stat-flash': changes > 0 }"
     >
       {{ value }}
@@ -37,8 +37,7 @@ watch(
 @keyframes stat-flash {
   from {
     color: var(--ui-secondary);
-    scale: 1.18;
-    text-shadow: 0 0 14px var(--ui-secondary);
+    scale: 1.12;
   }
 }
 </style>

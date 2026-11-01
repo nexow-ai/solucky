@@ -75,12 +75,11 @@ let leftAt = 0;
 
 <template>
   <div class="relative" :class="{ arriving }">
-    <LotteryFloor />
-    <UContainer class="space-y-5 py-5 sm:py-7">
+    <UContainer class="space-y-7 py-6 sm:py-9">
       <!-- Test money: one line, with the way to get some a tap away. -->
       <div
         v-if="!isMainnet"
-        class="glass-alert enter flex items-center gap-3 px-3.5 py-2 text-sm text-warning sm:px-4 sm:py-2.5"
+        class="enter flex items-center gap-3 rounded-full py-1.5 ps-4 pe-1.5 text-sm text-warning shadow-(--neu-in-sm)"
         style="--i: 0"
         role="note"
       >
@@ -103,12 +102,12 @@ let leftAt = 0;
         color="error"
         variant="subtle"
         icon="i-lucide-cloud-off"
-        class="glass-alert glass-alert-error"
+        class="shadow-(--neu-in-sm)"
         :title="error"
         :actions="[{ label: t('play.retry'), color: 'error', variant: 'outline', loading: retrying, onClick: retry }]"
       />
 
-      <div class="enter flex items-center justify-center gap-2" style="--i: 1">
+      <div class="enter flex items-center justify-center gap-3" style="--i: 1">
         <LotteryGameTabs />
         <LotteryNotifyButton />
       </div>
@@ -116,7 +115,7 @@ let leftAt = 0;
       <LotteryStage class="enter" style="--i: 2" />
       <LotteryLiveBar class="enter" style="--i: 3" :feed="feed" />
 
-      <div class="grid items-start gap-5 lg:grid-cols-12 lg:items-stretch">
+      <div class="grid items-start gap-7 lg:grid-cols-12 lg:items-stretch">
         <LotteryPlayPanel class="enter lg:col-span-7" style="--i: 4" />
         <LotteryTicketsPanel class="enter lg:col-span-5" style="--i: 5" />
       </div>
@@ -127,63 +126,33 @@ let leftAt = 0;
 </template>
 
 <style scoped>
-/*
- * Arriving at the table: the bar, then the panels, rise into place one after
- * the other. Opacity and movement only, on the glass itself, so the glass keeps
- * refracting the floor while it fades in.
- */
+/* Arriving at the table: the bar, then the panels, rise into place one after the other. */
 @media (prefers-reduced-motion: no-preference) {
   .arriving .enter {
-    animation: deal 0.95s var(--ease-out-expo) backwards;
-    animation-delay: calc(var(--i, 0) * 110ms + 60ms);
+    animation: deal 0.8s var(--ease-out-expo) backwards;
+    animation-delay: calc(var(--i, 0) * 90ms + 60ms);
   }
 }
 
 @keyframes deal {
   from {
     opacity: 0;
-    transform: translateY(2rem) scale(0.97);
+    transform: translateY(1.25rem);
   }
 }
 </style>
 
 <style>
 /*
- * Glass for the table's own toasts (useTableFeed) and the page's alerts. Not
- * scoped: toasts render in the app's toaster. Unlayered, so they win over the
- * component's utility classes.
+ * The table's own toasts (useTableFeed): a lit dot of the news' color at the
+ * start. Not scoped: toasts render in the app's toaster.
  */
-.glass-toast,
-.glass-alert {
+.table-toast {
   --tint: var(--ui-primary);
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in oklab, white 12%, transparent),
-      color-mix(in oklab, white 2%, transparent) 45%,
-      color-mix(in oklab, var(--tint) 12%, transparent)
-    ),
-    color-mix(in oklab, var(--ui-bg) 55%, transparent);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  backdrop-filter: blur(20px) saturate(1.8);
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 30%, transparent),
-    inset 0 -1px 0 color-mix(in oklab, black 45%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--tint) 28%, transparent),
-    0 24px 50px -24px rgb(0 0 0 / 0.85),
-    0 0 40px -18px color-mix(in oklab, var(--tint) 70%, transparent);
-  border-radius: 1.1rem;
+  border-inline-start: 3px solid var(--tint);
 }
 
-.glass-toast-join {
+.table-toast-join {
   --tint: var(--ui-secondary);
-}
-
-.glass-alert {
-  --tint: var(--ui-warning);
-}
-
-.glass-alert-error {
-  --tint: var(--ui-error);
 }
 </style>

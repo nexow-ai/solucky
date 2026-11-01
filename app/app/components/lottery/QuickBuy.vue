@@ -86,7 +86,7 @@ watch(open, (shown) => {
 </script>
 
 <template>
-  <div class="quick table-tray flex items-center gap-3 px-3.5 py-2.5">
+  <div class="flex items-center gap-3 rounded-2xl py-2 ps-4 pe-2 shadow-(--neu-in-sm)">
     <UIcon
       name="i-lucide-zap"
       class="size-4 shrink-0"
@@ -203,9 +203,3 @@ watch(open, (shown) => {
     </UPopover>
   </div>
 </template>
-
-<style scoped>
-.quick {
-  border-radius: 0.95rem;
-}
-</style>

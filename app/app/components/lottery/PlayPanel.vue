@@ -276,28 +276,22 @@ watch(buyArea, (el) => {
 });
 onBeforeUnmount(() => observer?.disconnect());
 
-// The ticket's foil catches the light as the pointer moves over it.
-const ticket = useTemplateRef<HTMLElement>('ticket');
-useTilt(ticket);
-
 const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 </script>
 
 <template>
-  <LotteryGlass hero>
-    <div ref="panel" class="grid gap-5 p-5 sm:p-6 md:grid-cols-[1.25fr_1fr] md:gap-6">
+  <LotterySurface hero>
+    <div ref="panel" class="grid gap-6 p-6 sm:p-7 md:grid-cols-[1.25fr_1fr] md:gap-7">
       <header class="flex items-end justify-between gap-3 md:col-span-2">
         <h2 class="leading-none">
           <span class="kicker block">{{ t('pick.kicker') }}</span>
-          <span class="title mt-1 block text-3xl font-semibold tracking-[0.2em] text-highlighted uppercase">
+          <span class="mt-1.5 block text-3xl font-light tracking-[0.24em] text-highlighted uppercase">
             {{ t('pick.title') }}
           </span>
         </h2>
         <p class="text-end leading-none">
           <span class="kicker block">{{ t('pick.win') }}</span>
-          <span class="text-lucky glow-primary mt-1 block font-mono text-3xl font-semibold tabular-nums" dir="ltr">
-            ◎{{ formatSol(Math.round(prizeShown), 3) }}
-          </span>
+          <span class="readout mt-1.5 block text-3xl" dir="ltr"> ◎{{ formatSol(Math.round(prizeShown), 3) }} </span>
         </p>
       </header>
 
@@ -309,15 +303,13 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         size="sm"
         color="neutral"
         class="md:col-span-2"
-        :ui="{ list: 'table-tray' }"
       />
 
       <LotteryBatchPicker v-if="mode === 'many'" class="md:col-span-2" />
 
       <div v-if="mode === 'one'" class="min-w-0 space-y-4">
-        <!-- The ticket: the number on reels, between a header stub and a torn-off foot. -->
-        <div ref="ticket" class="ticket" :class="{ bad: taken || tooBig, rolling: spinning }">
-          <span class="foil" aria-hidden="true" />
+        <!-- The ticket: the number on reels in a window pressed into it, between its header and its foot. -->
+        <div class="ticket" :class="{ bad: taken || tooBig, rolling: spinning }">
           <div class="ticket-head">
             <span class="font-mono font-semibold tracking-[0.2em]">S☉LUCKY</span>
             <span class="truncate font-mono" dir="ltr">
@@ -346,15 +338,19 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
             @pick="fromLine"
             @done="sound.play('click')"
           />
-          <div class="odds table-tray" :class="{ off: !preview }">
+          <div class="odds" :class="{ off: !preview }">
             <div class="flex items-baseline justify-between gap-3">
               <span class="kicker text-[0.65rem]">{{ t('pick.share', { number: formatNumber(number) }) }}</span>
-              <span class="odds-value font-mono text-2xl font-semibold tabular-nums">
+              <span class="odds-value font-mono text-2xl tabular-nums">
                 {{ preview ? formatPercent(shareShown, intl) : '—' }}
               </span>
             </div>
-            <div class="odds-bar mt-2" aria-hidden="true">
-              <i :style="{ width: `${Math.max(preview ? 1.5 : 0, shareShown * 100)}%` }" />
+            <div
+              class="gauge mt-3"
+              :style="{ '--p': preview ? shareShown : 0, '--c': 'var(--ui-secondary)' }"
+              aria-hidden="true"
+            >
+              <i />
             </div>
             <p class="mt-2 text-xs text-pretty text-muted">
               <template v-if="preview">
@@ -366,10 +362,10 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         </template>
 
         <!-- Guess: every guess has the same odds at the next check. -->
-        <div v-else class="odds table-tray space-y-2">
+        <div v-else class="odds space-y-2">
           <p class="flex items-baseline justify-between gap-3">
             <span class="kicker text-[0.65rem]">{{ t('stat.winChance') }}</span>
-            <span class="odds-value font-mono text-lg font-semibold tabular-nums" dir="ltr">
+            <span class="odds-value font-mono text-lg tabular-nums" dir="ltr">
               1 : {{ formatNumber(numbersLeft) }}
             </span>
           </p>
@@ -394,7 +390,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
       <div v-if="mode === 'one'" class="flex min-w-0 flex-col gap-3">
         <!-- A keypad: 1 2 3 on top, read left to right, in every language. -->
-        <div class="keypad grid flex-1 grid-cols-3 gap-2" dir="ltr" role="group" :aria-label="t('pick.pad')">
+        <div class="keypad grid flex-1 grid-cols-3 gap-3" dir="ltr" role="group" :aria-label="t('pick.pad')">
           <UButton
             v-for="key in KEYS"
             :key="key"
@@ -403,7 +399,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
             variant="soft"
             size="lg"
             block
-            class="keycap py-3 font-mono text-xl font-semibold"
+            class="keycap py-3 font-mono text-xl"
             @click="press(key)"
           />
           <UButton
@@ -422,7 +418,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
             variant="soft"
             size="lg"
             block
-            class="keycap py-3 font-mono text-xl font-semibold"
+            class="keycap py-3 font-mono text-xl"
             @click="press(0)"
           />
           <UButton
@@ -497,7 +493,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
               block
               :loading="busy"
               :disabled="block !== null && block !== 'busy'"
-              class="bg-lucky shine shadow-neon buy py-4 text-base font-semibold text-white hover:opacity-95 disabled:opacity-50"
+              class="bg-lucky buy rounded-2xl py-4 text-base font-medium text-white shadow-(--neu-accent) hover:opacity-95 active:shadow-(--neu-in-sm) disabled:opacity-50"
               icon="i-lucide-rocket"
               @click="buy()"
             >
@@ -512,10 +508,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
             <Transition name="bar">
               <div v-if="buyBelow && mode === 'one'" class="buy-bar lg:hidden">
                 <div class="flex items-center gap-3">
-                  <span
-                    class="min-w-0 shrink-0 font-mono text-lg font-semibold text-highlighted tabular-nums"
-                    dir="ltr"
-                  >
+                  <span class="readout min-w-0 shrink-0 font-mono text-lg" dir="ltr">
                     {{ formatNumber(number) }}
                   </span>
                   <div class="relative min-w-0 flex-1">
@@ -525,7 +518,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
                       block
                       :loading="busy"
                       :disabled="block !== null && block !== 'busy'"
-                      class="bg-lucky shadow-neon buy truncate font-semibold text-white disabled:opacity-50"
+                      class="bg-lucky buy truncate rounded-xl font-medium text-white shadow-(--neu-accent) disabled:opacity-50"
                       icon="i-lucide-rocket"
                       @click="buy(true)"
                     >
@@ -548,106 +541,35 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         </p>
       </div>
     </div>
-  </LotteryGlass>
+  </LotterySurface>
 </template>
 
 <style scoped>
-.title {
-  text-shadow:
-    0 0 18px color-mix(in oklab, var(--ui-primary) 60%, transparent),
-    0 0 2px color-mix(in oklab, white 40%, transparent);
-}
-
-:root:not(.dark) .title {
-  text-shadow: none;
-}
-
-/*
- * The ticket: a stub of brand-tinted card with notches cut on both sides at
- * the tear line, a foil that shifts its colors with the pointer, and the reel
- * window sunk in the middle.
- */
+/* The ticket: a card standing out of the panel, its number in a window pressed into it. */
 .ticket {
-  --edge: var(--ui-primary);
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  border-radius: 1.25rem;
-  background:
-    radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--ui-primary) 22%, transparent), transparent 65%),
-    linear-gradient(
-      160deg,
-      color-mix(in oklab, var(--color-purple-500) 22%, transparent),
-      color-mix(in oklab, var(--color-pink-600) 14%, transparent)
-    ),
-    color-mix(in oklab, black 30%, transparent);
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 22%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--edge) 40%, transparent),
-    0 18px 40px -22px color-mix(in oklab, var(--edge) 80%, transparent);
-  /* Two notches at the tear line, 2.4rem from the bottom. */
-  mask:
-    radial-gradient(circle at 0 calc(100% - 2.4rem), transparent 0.55rem, #000 0.6rem) left / 51% 100% no-repeat,
-    radial-gradient(circle at 100% calc(100% - 2.4rem), transparent 0.55rem, #000 0.6rem) right / 51% 100% no-repeat;
-  transform: perspective(900px) rotateX(calc(var(--tilt-y, 0) * -4deg)) rotateY(calc(var(--tilt-x, 0) * 5deg));
-  transition:
-    transform 0.6s var(--ease-out-expo),
-    box-shadow 0.3s;
-}
-
-.ticket[data-tilting] {
-  transition-duration: 0.2s, 0.3s;
+  --edge: transparent;
+  border-radius: 1.5rem;
+  background: var(--ui-bg);
+  box-shadow: var(--neu-sm);
 }
 
 .ticket.rolling {
-  --edge: var(--ui-secondary);
+  --edge: color-mix(in oklab, var(--ui-secondary) 60%, transparent);
 }
 
 .ticket.bad {
-  --edge: var(--ui-error);
-}
-
-:root:not(.dark) .ticket {
-  background:
-    radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--ui-primary) 14%, transparent), transparent 65%),
-    linear-gradient(
-      160deg,
-      color-mix(in oklab, var(--color-purple-500) 10%, white),
-      color-mix(in oklab, var(--color-pink-600) 8%, white)
-    );
-}
-
-/* Holographic foil: a band of color that slides and turns with the pointer. */
-.foil {
-  position: absolute;
-  inset: -50%;
-  z-index: -1;
-  background: conic-gradient(
-    from calc(var(--tilt-x, 0) * 90deg + 200deg) at var(--glare-x, 50%) var(--glare-y, 30%),
-    transparent 0deg,
-    color-mix(in oklab, var(--color-cyan-400) 18%, transparent) 40deg,
-    color-mix(in oklab, var(--color-pink-500) 18%, transparent) 80deg,
-    color-mix(in oklab, var(--ui-color-secondary-400) 14%, transparent) 120deg,
-    transparent 160deg
-  );
-  mix-blend-mode: plus-lighter;
-  opacity: 0.5;
-  transition: opacity 0.4s;
-  pointer-events: none;
-}
-
-.ticket[data-tilting] .foil {
-  opacity: 1;
+  --edge: color-mix(in oklab, var(--ui-error) 70%, transparent);
 }
 
 .ticket-head {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.7rem 1rem 0;
+  padding: 0.85rem 1.1rem 0;
+  font-family: var(--font-mono);
   font-size: 0.625rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   color: var(--ui-text-muted);
 }
 
@@ -656,18 +578,13 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
   display: grid;
   place-items: center;
   min-height: 6.5rem;
-  margin: 0.6rem 0.85rem 0;
+  margin: 0.7rem 0.9rem 0;
   padding: 0.9rem 0.75rem;
-  border-radius: 0.9rem;
-  background: color-mix(in oklab, black 40%, transparent);
+  border-radius: 1.1rem;
   box-shadow:
-    inset 0 2px 10px color-mix(in oklab, black 70%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, white 6%, transparent);
+    var(--neu-in),
+    inset 0 0 0 1.5px var(--edge);
   transition: box-shadow 0.3s;
-}
-
-:root:not(.dark) .ticket-window {
-  background: color-mix(in oklab, var(--ui-color-neutral-950) 88%, transparent);
 }
 
 /* The reels fill the window: as large as the number's width allows. */
@@ -675,33 +592,17 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
   font-size: min(4.25rem, calc(100cqw / (var(--n) * 1.02 + 0.6)));
 }
 
-.rolling .ticket-window {
-  box-shadow:
-    inset 0 2px 10px color-mix(in oklab, black 70%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-secondary) 45%, transparent),
-    0 0 40px -10px var(--ui-secondary);
-}
-
-.bad .ticket-window {
-  box-shadow:
-    inset 0 2px 10px color-mix(in oklab, black 70%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-error) 60%, transparent),
-    0 0 30px -12px var(--ui-error);
-}
-
-/* The foot, below a dashed tear line between the notches. */
 .ticket-foot {
-  margin-top: 0.85rem;
-  padding: 0.6rem 1rem 0.75rem;
-  border-top: 1.5px dashed color-mix(in oklab, var(--ui-text-muted) 40%, transparent);
-  margin-inline: 0.75rem;
+  padding: 0.7rem 1rem 0.85rem;
   text-align: center;
   font-size: 0.75rem;
   color: var(--ui-text-muted);
 }
 
 .odds {
-  padding: 0.8rem 0.95rem;
+  padding: 0.9rem 1.05rem;
+  border-radius: 1.25rem;
+  box-shadow: var(--neu-in-sm);
   transition: opacity 0.3s;
 }
 
@@ -711,80 +612,27 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
 .odds-value {
   color: var(--ui-secondary);
-  text-shadow: 0 0 14px color-mix(in oklab, var(--ui-secondary) 55%, transparent);
 }
 
-:root:not(.dark) .odds-value {
-  text-shadow: none;
-}
-
-.odds-bar {
-  height: 0.3rem;
-  overflow: hidden;
-  border-radius: 9999px;
-  background: color-mix(in oklab, var(--ui-secondary) 14%, transparent);
-}
-
-.odds-bar > i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, color-mix(in oklab, var(--ui-secondary) 55%, transparent), var(--ui-secondary));
-  box-shadow: 0 0 10px var(--ui-secondary);
-}
-
-/* Keys as glass chips: lit edge on top, they sink when pressed. */
+/* Keys standing out of the panel: they sink when pressed. */
 .keycap {
   justify-content: center;
-  border-radius: 0.95rem;
+  border-radius: 1.1rem;
   color: var(--ui-text-highlighted);
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, white 11%, transparent),
-    color-mix(in oklab, white 3%, transparent)
-  );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 28%, transparent),
-    inset 0 -2px 0 color-mix(in oklab, black 40%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, white 6%, transparent),
-    0 6px 14px -8px rgb(0 0 0 / 0.8);
+  background: var(--ui-bg);
+  box-shadow: var(--neu-sm);
   transition:
-    transform 0.08s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+    box-shadow 0.15s ease,
+    color 0.2s ease;
 }
 
 .keycap:hover {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--ui-primary) 26%, transparent),
-    color-mix(in oklab, var(--ui-primary) 8%, transparent)
-  );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 30%, transparent),
-    inset 0 -2px 0 color-mix(in oklab, black 40%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 45%, transparent),
-    0 0 22px -6px var(--ui-primary);
+  color: var(--ui-primary);
+  background: var(--ui-bg);
 }
 
 .keycap:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow:
-    inset 0 2px 6px color-mix(in oklab, black 55%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 55%, transparent),
-    0 0 28px -4px var(--ui-primary);
-}
-
-:root:not(.dark) .keycap {
-  background: linear-gradient(180deg, white, color-mix(in oklab, var(--ui-primary) 5%, white));
-  box-shadow:
-    inset 0 -2px 0 color-mix(in oklab, var(--ui-primary) 14%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 14%, transparent),
-    0 6px 14px -10px color-mix(in oklab, var(--ui-primary) 60%, transparent);
-}
-
-:root:not(.dark) .keycap:hover {
-  background: linear-gradient(180deg, white, color-mix(in oklab, var(--ui-primary) 14%, white));
+  box-shadow: var(--neu-in-sm);
 }
 
 .keypad {
@@ -795,36 +643,27 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
   color: var(--ui-text-muted);
 }
 
-.quick {
+.quick,
+.buy {
   justify-content: center;
-  box-shadow: 0 0 22px -10px var(--ui-secondary);
-}
-
-.quick-best {
-  box-shadow: 0 0 22px -10px var(--ui-primary);
 }
 
 .buy {
-  justify-content: center;
   letter-spacing: 0.02em;
 }
 
-/* The phone buy bar: frosted, at the bottom edge, above the home indicator. */
+/* The phone buy bar: a panel floating at the bottom edge, above the home indicator. */
 .buy-bar {
   position: fixed;
   inset-inline: 0.75rem;
   bottom: calc(0.75rem + env(safe-area-inset-bottom));
   z-index: 40;
-  padding: 0.6rem 0.6rem 0.6rem 1rem;
-  border-radius: 1.25rem;
-  background: color-mix(in oklab, var(--ui-bg) 72%, transparent);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  backdrop-filter: blur(18px) saturate(1.6);
+  padding: 0.6rem 0.6rem 0.6rem 1.1rem;
+  border-radius: 1.5rem;
+  background: var(--ui-bg);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 18%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 30%, transparent),
-    0 18px 40px -12px rgb(0 0 0 / 0.7),
-    0 0 40px -16px var(--ui-primary);
+    var(--neu-lg),
+    0 0 0 1px var(--ui-border-muted);
 }
 
 /*

@@ -109,7 +109,7 @@ onBeforeUnmount(() => {
     <Transition name="reveal">
       <div v-if="open && data" class="reveal-layer">
         <div class="reveal-backdrop" aria-hidden="true" @click="close" />
-        <LotteryGlass
+        <LotterySurface
           hero
           as="div"
           role="dialog"
@@ -117,17 +117,13 @@ onBeforeUnmount(() => {
           :aria-labelledby="titleId"
           class="reveal-card w-full max-w-md"
         >
-          <div class="relative space-y-5 p-6 text-center sm:p-7">
+          <div class="relative space-y-6 p-7 text-center sm:p-8">
             <div>
               <p class="kicker">{{ t(`games.${GAME_SLUGS[data.kind as GameKind]}.name`) }}</p>
-              <h2 :id="titleId" class="mt-1 text-2xl font-semibold text-highlighted" dir="auto">{{ title }}</h2>
+              <h2 :id="titleId" class="mt-1 text-2xl font-light text-highlighted" dir="auto">{{ title }}</h2>
             </div>
 
-            <div
-              class="reveal-window table-well"
-              :class="{ landed: !rolling }"
-              :style="{ '--n': formatNumber(reelValue).length }"
-            >
+            <div class="reveal-window" :class="{ landed: !rolling }" :style="{ '--n': formatNumber(reelValue).length }">
               <p class="kicker mb-2 text-[0.65rem]">{{ t('reveal.number') }}</p>
               <LotteryReels :value="reelValue" :spinning="rolling" />
             </div>
@@ -135,7 +131,7 @@ onBeforeUnmount(() => {
             <div class="min-h-16" aria-live="polite">
               <Transition name="result">
                 <div v-if="!rolling" class="space-y-2">
-                  <p v-if="mine" class="text-lucky glow-primary text-3xl font-semibold">
+                  <p v-if="mine" class="text-lucky text-3xl font-medium">
                     {{ t('reveal.youWon', { amount }) }}
                   </p>
                   <template v-else>
@@ -164,7 +160,7 @@ onBeforeUnmount(() => {
             </div>
             <LotteryBurst ref="burst" />
           </div>
-        </LotteryGlass>
+        </LotterySurface>
       </div>
     </Transition>
   </Teleport>
@@ -183,14 +179,16 @@ onBeforeUnmount(() => {
 .reveal-backdrop {
   position: absolute;
   inset: 0;
-  background: color-mix(in oklab, var(--ui-bg) 55%, transparent);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: color-mix(in oklab, var(--ui-bg) 60%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .reveal-window {
   container-type: inline-size;
   padding: 1rem 0.75rem 1.1rem;
+  border-radius: 1.4rem;
+  box-shadow: var(--neu-in);
   transition: box-shadow 0.5s;
 }
 
@@ -200,9 +198,8 @@ onBeforeUnmount(() => {
 
 .reveal-window.landed {
   box-shadow:
-    inset 0 2px 12px color-mix(in oklab, black 65%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-secondary) 55%, transparent),
-    0 0 50px -12px var(--ui-secondary);
+    var(--neu-in),
+    inset 0 0 0 1.5px color-mix(in oklab, var(--ui-secondary) 60%, transparent);
 }
 
 /* The card rises in over the dimming table. */

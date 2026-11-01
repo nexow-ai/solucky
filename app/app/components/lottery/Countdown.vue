@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
- * Time until today's round closes, as three LED segments whose digits roll
- * like an odometer as they change. It warms up in the last hour and pulses in
- * the last ten minutes. Screen readers get the time in words, once a minute,
+ * Time until today's round closes, as three cells pressed into the panel
+ * whose digits roll like an odometer as they change. It warms up in the last
+ * hour and pulses in the last ten minutes. Screen readers get the time in words, once a minute,
  * rather than every second.
  */
 const props = defineProps<{ ms: number; size?: 'md' | 'lg' }>();
@@ -34,7 +34,7 @@ const spoken = computed(() => {
     <template v-for="(part, i) in parts" :key="part.key">
       <span v-if="i" class="colon" aria-hidden="true">:</span>
       <span class="segment" aria-hidden="true">
-        <span class="led digits font-mono font-semibold tabular-nums [--led-pitch:0.085em]">
+        <span class="digits font-mono tabular-nums">
           <span v-for="(digit, d) in part.value" :key="d" class="digit">
             <Transition name="roll">
               <span :key="digit">{{ digit }}</span>
@@ -49,10 +49,10 @@ const spoken = computed(() => {
 
 <style scoped>
 .countdown {
-  --c: var(--ui-secondary);
+  --c: var(--ui-text-highlighted);
   display: inline-flex;
   align-items: center;
-  gap: 0.2em;
+  gap: 0.18em;
   line-height: 1;
 }
 
@@ -69,21 +69,17 @@ const spoken = computed(() => {
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  gap: 0.08em;
-  padding: 0.18em 0.3em 0.14em;
-  border-radius: 0.22em;
+  gap: 0.1em;
+  padding: 0.22em 0.32em 0.18em;
+  border-radius: 0.3em;
   color: var(--c);
-  background: color-mix(in oklab, var(--ui-bg) 65%, transparent);
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 10%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--c) 25%, transparent),
-    0 0 18px -6px color-mix(in oklab, var(--c) 70%, transparent);
-  filter: drop-shadow(0 0 0.12em color-mix(in oklab, var(--c) 70%, transparent));
+  box-shadow: var(--neu-in-sm);
 }
 
 /* Each digit sits in its own window: the old one rolls up and out as the new one rolls in from below. */
 .digits {
   display: inline-flex;
+  font-weight: 400;
 }
 
 .digit {
@@ -117,28 +113,28 @@ const spoken = computed(() => {
 
 .unit {
   font-family: var(--font-mono);
-  font-size: 0.36em;
-  font-weight: 600;
+  font-size: 0.34em;
+  font-weight: 500;
   text-transform: uppercase;
-  opacity: 0.7;
+  color: var(--ui-text-muted);
 }
 
 .colon {
-  color: var(--c);
+  color: var(--ui-text-dimmed);
   font-family: var(--font-mono);
-  font-weight: 600;
+  font-weight: 300;
   animation: blink 1s steps(1) infinite;
 }
 
 @keyframes blink {
   50% {
-    opacity: 0.2;
+    opacity: 0.25;
   }
 }
 
 @keyframes pulse {
   50% {
-    filter: brightness(1.5);
+    opacity: 0.6;
   }
 }
 </style>
