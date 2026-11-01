@@ -72,9 +72,10 @@ export function isUserRejection(error: unknown): boolean {
 
 /**
  * Turns a wallet, RPC or program error into one sentence for a toast, in the
- * page's language when given its `t`, in English otherwise.
+ * page's language when given its `t`, in English otherwise. `cluster` names
+ * the app's network (Devnet…) for advice about the wallet's own network.
  */
-export function friendlyError(error: unknown, t?: Translate): string {
+export function friendlyError(error: unknown, t?: Translate, cluster?: { label: string; mainnet: boolean }): string {
   if (!t) return isUserRejection(error) ? 'You cancelled the request in your wallet.' : describeError(error);
   if (isUserRejection(error)) return t('errors.rejected');
   const reason = errorReason(error);
@@ -87,8 +88,21 @@ export function friendlyError(error: unknown, t?: Translate): string {
       return t('errors.taken');
     case 'insufficient-funds':
       return t('errors.funds');
+    case 'no-sol':
+      return t('errors.noSol');
+    case 'wrong-cluster':
+      return t('errors.wrongCluster', { network: cluster?.label ?? 'Mainnet' });
+    case 'not-set-up':
+      return t('errors.notSetUp');
+    case 'outdated':
+      return t('errors.outdated');
+    case 'expired':
+      return t('errors.expired');
     case 'wallet-failed':
-      return t('errors.walletFailed');
+      // Off mainnet, wallets fail most often because their own network setting differs.
+      return cluster && !cluster.mainnet
+        ? `${t('errors.walletFailed')} ${t('errors.walletNetwork', { network: cluster.label })}`
+        : t('errors.walletFailed');
     case 'rate-limited':
       return t('errors.rateLimited');
     case 'rpc-http':

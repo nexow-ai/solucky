@@ -312,6 +312,11 @@ const es: Dict = {
     takenToday: 'El {number} ya está ocupado',
     outOfRange: 'Número fuera de rango',
     notEnough: 'SOL insuficiente',
+    loading: 'Cargando la ronda…',
+    unavailable: 'Ronda no disponible',
+    closing: 'Esta ronda está cerrando',
+    over: 'Esta ronda terminó',
+    full: 'Esta ronda está llena',
     keys: 'Teclas 0–9 para escribir, ⌫ para borrar, Enter para comprar.',
     rent: 'Un boleto también guarda ◎{rent} de renta de la cuenta, que recuperas después del sorteo.',
   },
@@ -421,6 +426,7 @@ const es: Dict = {
   tx: {
     confirm: 'Confirma en tu billetera…',
     cancel: 'Cancelar',
+    otherWay: 'Probar de otra forma',
     abandoned: 'La página dejó de esperar a tu billetera. Si la billetera aún muestra la solicitud, recházala allí.',
     done: '{label}: hecho',
     cancelled: '{label}: cancelado',
@@ -506,8 +512,16 @@ const es: Dict = {
     rejected: 'Cancelaste la solicitud en tu billetera.',
     taken: 'Alguien ya tiene este número en esta ronda. Elige otro.',
     funds: 'No hay suficiente SOL en la billetera.',
+    noSol: 'Esta billetera aún no tiene SOL en esta red. Añade un poco y vuelve a intentarlo.',
+    wrongCluster: 'Tu billetera envió la transacción a otra red. Cámbiala a {network} y vuelve a intentarlo.',
+    notSetUp: 'Este juego aún no está configurado en esta red.',
+    outdated: 'La app está desactualizada. Recarga la página y vuelve a intentarlo.',
+    expired:
+      'La transacción caducó antes de confirmarse. Revisa la actividad de tu billetera antes de volver a intentarlo.',
     walletFailed:
       'Tu billetera informó «Unexpected error» y no firmó. Cierra su ventana, bloquéala y desbloquéala o reinicia la extensión, y vuelve a intentarlo.',
+    walletNetwork:
+      'Asegúrate de que tu billetera esté en {network} (en Phantom: Settings → Developer Settings → Testnet Mode) o prueba otra billetera.',
     rateLimited: 'El endpoint RPC está limitando las solicitudes (HTTP 429). Espera un minuto y vuelve a intentarlo.',
     rpcHttp: 'El endpoint RPC respondió con el error HTTP {status}.',
     unknown: 'Algo salió mal.',

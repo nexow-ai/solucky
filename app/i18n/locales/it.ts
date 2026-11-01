@@ -311,6 +311,11 @@ const it: Dict = {
     takenToday: 'Il numero {number} è preso',
     outOfRange: 'Numero fuori intervallo',
     notEnough: 'SOL insufficienti',
+    loading: 'Caricamento del round…',
+    unavailable: 'Round non disponibile',
+    closing: 'Questo round sta chiudendo',
+    over: 'Questo round è finito',
+    full: 'Questo round è al completo',
     keys: 'Tasti 0–9 per digitare, ⌫ per cancellare, Invio per comprare.',
     rent: 'Un biglietto trattiene anche ◎{rent} di rent dell’account, che recuperi dopo l’estrazione.',
   },
@@ -422,6 +427,7 @@ const it: Dict = {
   tx: {
     confirm: 'Conferma nel tuo wallet…',
     cancel: 'Annulla',
+    otherWay: 'Prova in un altro modo',
     abandoned: 'La pagina ha smesso di attendere il tuo wallet. Se il wallet mostra ancora la richiesta, rifiutala lì.',
     done: '{label}: fatto',
     cancelled: '{label}: annullato',
@@ -507,8 +513,16 @@ const it: Dict = {
     rejected: 'Hai annullato la richiesta nel tuo wallet.',
     taken: 'Qualcuno ha già questo numero in questo round. Scegline un altro.',
     funds: 'SOL insufficienti nel wallet.',
+    noSol: 'Questo wallet non ha ancora SOL su questa rete. Aggiungine un po’, poi riprova.',
+    wrongCluster: 'Il tuo wallet ha inviato la transazione su un’altra rete. Passalo a {network}, poi riprova.',
+    notSetUp: 'Questo gioco non è ancora configurato su questa rete.',
+    outdated: 'L’app non è aggiornata. Ricarica la pagina, poi riprova.',
+    expired:
+      'La transazione è scaduta prima di essere confermata. Controlla l’attività del tuo wallet prima di riprovare.',
     walletFailed:
       'Il tuo wallet ha segnalato «Unexpected error» e non ha firmato. Chiudi la sua finestra, bloccalo e sbloccalo o riavvia l’estensione, poi riprova.',
+    walletNetwork:
+      'Assicurati che il tuo wallet sia su {network} (in Phantom: Settings → Developer Settings → Testnet Mode), oppure prova un altro wallet.',
     rateLimited: 'L’endpoint RPC sta limitando le richieste (HTTP 429). Aspetta un minuto e riprova.',
     rpcHttp: 'L’endpoint RPC ha risposto con l’errore HTTP {status}.',
     unknown: 'Qualcosa è andato storto.',

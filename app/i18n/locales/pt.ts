@@ -312,6 +312,11 @@ const pt: Dict = {
     takenToday: 'O {number} já foi escolhido',
     outOfRange: 'Número fora do intervalo',
     notEnough: 'SOL insuficiente',
+    loading: 'Carregando a rodada…',
+    unavailable: 'Rodada indisponível',
+    closing: 'Esta rodada está fechando',
+    over: 'Esta rodada acabou',
+    full: 'Esta rodada está cheia',
     keys: 'Teclas 0–9 digitam, ⌫ apaga, Enter compra.',
     rent: 'Um bilhete também guarda ◎{rent} de aluguel da conta, que você recebe de volta depois do sorteio.',
   },
@@ -421,6 +426,7 @@ const pt: Dict = {
   tx: {
     confirm: 'Confirme na sua carteira…',
     cancel: 'Cancelar',
+    otherWay: 'Tentar de outro jeito',
     abandoned: 'A página parou de esperar pela sua carteira. Se a carteira ainda mostrar o pedido, recuse-o nela.',
     done: '{label}: concluído',
     cancelled: '{label}: cancelado',
@@ -505,8 +511,16 @@ const pt: Dict = {
     rejected: 'Você cancelou a solicitação na sua carteira.',
     taken: 'Alguém já tem este número nesta rodada. Escolha outro.',
     funds: 'Não há SOL suficiente na carteira.',
+    noSol: 'Esta carteira ainda não tem SOL nesta rede. Adicione um pouco e tente de novo.',
+    wrongCluster: 'Sua carteira enviou a transação para outra rede. Mude para {network} e tente de novo.',
+    notSetUp: 'Este jogo ainda não está configurado nesta rede.',
+    outdated: 'O app está desatualizado. Recarregue a página e tente de novo.',
+    expired:
+      'A transação expirou antes de ser confirmada. Verifique a atividade da sua carteira antes de tentar de novo.',
     walletFailed:
       'Sua carteira informou “Unexpected error” e não assinou. Feche a janela dela, bloqueie e desbloqueie a carteira ou reinicie a extensão, depois tente de novo.',
+    walletNetwork:
+      'Confira se a sua carteira está na {network} (no Phantom: Settings → Developer Settings → Testnet Mode) ou tente outra carteira.',
     rateLimited: 'O endpoint RPC está limitando as requisições (HTTP 429). Espere um minuto e tente de novo.',
     rpcHttp: 'O endpoint RPC respondeu com o erro HTTP {status}.',
     unknown: 'Algo deu errado.',

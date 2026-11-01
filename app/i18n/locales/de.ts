@@ -312,6 +312,11 @@ const de: Dict = {
     takenToday: '{number} ist vergeben',
     outOfRange: 'Zahl außerhalb des Bereichs',
     notEnough: 'Nicht genug SOL',
+    loading: 'Runde wird geladen…',
+    unavailable: 'Runde nicht verfügbar',
+    closing: 'Diese Runde schließt gleich',
+    over: 'Diese Runde ist vorbei',
+    full: 'Diese Runde ist voll',
     keys: 'Mit 0–9 tippen, ⌫ löscht, Enter kauft.',
     rent: 'Ein Ticket bindet außerdem ◎{rent} an Rent für sein Konto, die du nach der Ziehung zurückbekommst.',
   },
@@ -423,6 +428,7 @@ const de: Dict = {
   tx: {
     confirm: 'In deiner Wallet bestätigen…',
     cancel: 'Abbrechen',
+    otherWay: 'Anders versuchen',
     abandoned:
       'Die Seite wartet nicht mehr auf deine Wallet. Wenn die Wallet die Anfrage noch zeigt, lehne sie dort ab.',
     done: '{label}: erledigt',
@@ -509,8 +515,17 @@ const de: Dict = {
     rejected: 'Du hast die Anfrage in deiner Wallet abgebrochen.',
     taken: 'Jemand hat diese Zahl in dieser Runde schon. Wähle eine andere.',
     funds: 'Nicht genug SOL in der Wallet.',
+    noSol: 'Diese Wallet hat in diesem Netzwerk noch kein SOL. Lade etwas auf, dann versuche es noch einmal.',
+    wrongCluster:
+      'Deine Wallet hat die Transaktion in ein anderes Netzwerk gesendet. Stelle sie auf {network} um, dann versuche es noch einmal.',
+    notSetUp: 'Dieses Spiel ist in diesem Netzwerk noch nicht eingerichtet.',
+    outdated: 'Die App ist veraltet. Lade die Seite neu, dann versuche es noch einmal.',
+    expired:
+      'Die Transaktion ist abgelaufen, bevor sie bestätigt wurde. Prüfe die Aktivität deiner Wallet, bevor du es noch einmal versuchst.',
     walletFailed:
       'Deine Wallet meldete „Unexpected error“ und hat nicht signiert. Schließe ihr Fenster, sperre und entsperre sie oder starte die Erweiterung neu, dann versuche es noch einmal.',
+    walletNetwork:
+      'Achte darauf, dass deine Wallet auf {network} steht (in Phantom: Settings → Developer Settings → Testnet Mode), oder nimm eine andere Wallet.',
     rateLimited: 'Der RPC-Endpunkt begrenzt die Anfragen (HTTP 429). Warte eine Minute und versuche es noch einmal.',
     rpcHttp: 'Der RPC-Endpunkt antwortete mit dem HTTP-Fehler {status}.',
     unknown: 'Etwas ist schiefgelaufen.',

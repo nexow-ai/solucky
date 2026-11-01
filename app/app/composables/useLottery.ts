@@ -96,7 +96,9 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     state.gameMissing.value = !account.exists;
     // A Guess round ends when a guess finds the number; the next one is on sale at once.
     if (!isLottery(k) && account.exists && state.period.value !== account.data.currentRound) {
-      const moved = state.period.value !== null;
+      // The first load reads the round itself; after it (even a failed one),
+      // a new round number means loading and watching that round.
+      const moved = state.period.value !== null || !state.loading.value;
       state.period.value = account.data.currentRound;
       if (moved) {
         await loadRound(k);
@@ -195,7 +197,15 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     if (isLottery(k)) state.period.value = periodOf(k, now.value);
     void refreshGame(k).then(() => watchRound(k));
     setInterval(() => void loadRound(k).catch(() => {}), 15_000);
-    setInterval(() => void Promise.all([loadConfig(), loadGame(k), loadHistory(k)]).catch(() => {}), 30_000);
+    // A poll that gets through clears the error a failed load left on the page.
+    setInterval(
+      () =>
+        void Promise.all([loadConfig(), loadGame(k), loadHistory(k)]).then(
+          () => (state.error.value = null),
+          () => {},
+        ),
+      30_000,
+    );
     // The watchers live in their own scope so they outlive the component that
     // first showed the game.
     effectScope(true).run(() => {
@@ -278,7 +288,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     const k = kind.value;
     const period = s.value.period.value;
     const price = ticketPrice.value;
-    if (!wallet.value || price === null || period === null) return null;
+    // One transaction at a time: a second click or Enter must not start another.
+    if (busy.value || !wallet.value || price === null || period === null) return null;
     busy.value = true;
     try {
       const signature = await run(

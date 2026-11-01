@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { flagEmoji, getTicketSize, type LotteryKind, msUntilClose, prizeFor } from '@solucky/client';
+import {
+  flagEmoji,
+  getRoundSize,
+  getTicketSize,
+  type LotteryKind,
+  MAX_LOTTERY_TICKETS,
+  msUntilClose,
+  prizeFor,
+  RoundStatus,
+} from '@solucky/client';
 
 const { t } = useI18n();
 const intl = useIntlLocale();
@@ -21,6 +30,8 @@ const {
   config,
   configMissing,
   busy,
+  loading,
+  error,
 } = lottery;
 const { connected, balance } = useWallet();
 const { country, set: setCountry } = useCountry();
@@ -41,27 +52,86 @@ const left = computed(() =>
 const prizeIfYouWin = computed(() => prizeFor(pot.value + (ticketPrice.value ?? 0n)));
 const prizeShown = useTween(() => Number(prizeIfYouWin.value));
 
-const notEnoughSol = computed(
-  () => balance.value !== null && ticketPrice.value !== null && balance.value < ticketPrice.value,
-);
 const paused = computed(() => config.value?.data.paused ?? false);
 
-const buyLabel = computed(() => {
-  if (taken.value) return t('pick.takenToday', { number: formatNumber(number.value) });
-  if (tooBig.value) return t('pick.outOfRange');
-  if (notEnoughSol.value) return t('pick.notEnough');
-  const price = ticketPrice.value === null ? '…' : formatSol(ticketPrice.value);
-  return t('pick.buy', { number: formatNumber(number.value), price });
-});
-
-// Each ticket is its own account; its rent comes back when it is closed.
+// Each ticket is its own account; its rent comes back when it is closed. Rent
+// is linear in an account's size plus 128 bytes, so one lookup prices it all.
 const { client } = useSolana();
-const ticketRent = ref<bigint | null>(null);
+const rentPerByte = ref<bigint | null>(null);
 onMounted(async () => {
-  ticketRent.value = await client.rpc
-    .getMinimumBalanceForRentExemption(BigInt(getTicketSize()))
+  const empty = await client.rpc
+    .getMinimumBalanceForRentExemption(0n)
     .send()
     .catch(() => null);
+  rentPerByte.value = empty === null ? null : empty / 128n;
+});
+const ticketRent = computed(() =>
+  rentPerByte.value === null ? null : (128n + BigInt(getTicketSize())) * rentPerByte.value,
+);
+const cost = computed(() =>
+  ticketPrice.value === null || rentPerByte.value === null
+    ? null
+    : purchaseCost({
+        price: ticketPrice.value,
+        lottery: isLottery.value,
+        roundExists: !!round.value,
+        ticketSize: getTicketSize(),
+        roundSize: getRoundSize(),
+        rentPerByte: rentPerByte.value,
+      }),
+);
+
+const spinning = ref(false);
+
+// A Guess round takes guesses while its last batch waits for the check (the
+// program refuses them once the check's slot is out); a found number ends it.
+const roundOpen = computed(() => {
+  const status = round.value?.data.status;
+  return status === undefined || status === RoundStatus.Open || (!isLottery.value && status === RoundStatus.Closed);
+});
+
+const block = computed(() =>
+  buyBlock({
+    price: ticketPrice.value,
+    period: period.value,
+    loading: loading.value,
+    failed: !!error.value,
+    notSetUp: configMissing.value,
+    paused: paused.value,
+    taken: taken.value,
+    tooBig: tooBig.value,
+    lottery: isLottery.value,
+    msLeft: left.value,
+    open: roundOpen.value,
+    full: isLottery.value && (round.value?.data.ticketCount ?? 0) >= MAX_LOTTERY_TICKETS,
+    balance: balance.value,
+    cost: cost.value,
+    busy: busy.value,
+    spinning: spinning.value,
+  }),
+);
+
+const buyLabel = computed(() => {
+  switch (block.value) {
+    case 'taken':
+      return t('pick.takenToday', { number: formatNumber(number.value) });
+    case 'outOfRange':
+      return t('pick.outOfRange');
+    case 'notEnough':
+      return t('pick.notEnough');
+    case 'loading':
+      return t('pick.loading');
+    case 'unavailable':
+      return t('pick.unavailable');
+    case 'closing':
+      return t('pick.closing');
+    case 'over':
+      return t('pick.over');
+    case 'full':
+      return t('pick.full');
+  }
+  const price = ticketPrice.value === null ? '…' : formatSol(ticketPrice.value);
+  return t('pick.buy', { number: formatNumber(number.value), price });
 });
 
 const countries = computed(() => countryOptions(intl.value, t('country.private')));
@@ -70,7 +140,6 @@ const selectedCountry = computed({
   set: (option) => setCountry(option?.value ?? null),
 });
 
-const spinning = ref(false);
 const burst = ref<{ fire: () => void }>();
 
 function press(digit: number) {
@@ -120,23 +189,31 @@ async function luckyDip() {
 }
 
 async function buy() {
-  if (taken.value || tooBig.value || spinning.value) {
+  if (block.value !== null) {
     sound.play('wrong');
     return;
   }
   sound.play('commit');
-  const signature = await lottery.buy(number.value, country.value);
+  // A code the picker doesn't know (the host may report one) stays private.
+  const code = country.value && COUNTRY_CODES.includes(country.value) ? country.value : null;
+  const signature = await lottery.buy(number.value, code);
   sound.play(signature ? 'committed' : 'wrong');
   if (signature) burst.value?.fire();
 }
 
+const panel = ref<HTMLElement>();
+
 function onKey(event: KeyboardEvent) {
   const target = event.target as HTMLElement | null;
   if (target?.closest('input, textarea, [contenteditable], [role="combobox"], [role="dialog"]')) return;
+  // Enter belongs to whatever control has focus outside the panel (a link, a
+  // toast's Cancel…); in the panel, or with nothing focused, it buys.
+  const elsewhere =
+    !!target && target !== document.body && !panel.value?.contains(target) && !!target.closest('a, button, [role]');
   if (/^\d$/.test(event.key)) press(Number(event.key));
   else if (event.key === 'Backspace') backspace();
   else if (event.key === 'Escape') reset();
-  else if (event.key === 'Enter' && connected.value) void buy();
+  else if (event.key === 'Enter' && !elsewhere && connected.value) void buy();
   else return;
   event.preventDefault();
 }
@@ -149,7 +226,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
 <template>
   <LotteryGlass hero>
-    <div class="space-y-6 p-5 sm:p-7">
+    <div ref="panel" class="space-y-6 p-5 sm:p-7">
       <header class="text-center">
         <p class="kicker">{{ t('pick.kicker') }}</p>
         <h2 class="title text-4xl font-semibold tracking-[0.28em] text-highlighted uppercase">{{ t('pick.title') }}</h2>
@@ -292,7 +369,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
               size="xl"
               block
               :loading="busy"
-              :disabled="taken || tooBig || paused || configMissing || notEnoughSol || spinning"
+              :disabled="block !== null && block !== 'busy'"
               class="bg-lucky shine shadow-neon buy py-4 text-base font-semibold text-white hover:opacity-95 disabled:opacity-50"
               icon="i-lucide-rocket"
               @click="buy"

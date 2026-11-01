@@ -313,6 +313,11 @@ const fr: Dict = {
     takenToday: 'Le {number} est pris',
     outOfRange: 'Numéro hors limites',
     notEnough: 'Pas assez de SOL',
+    loading: 'Chargement de la manche…',
+    unavailable: 'Manche indisponible',
+    closing: 'Cette manche se termine',
+    over: 'Cette manche est finie',
+    full: 'Cette manche est complète',
     keys: 'Touches 0–9 pour saisir, ⌫ pour effacer, Entrée pour acheter.',
     rent: 'Un ticket immobilise aussi ◎{rent} de loyer de compte, que tu récupères après le tirage.',
   },
@@ -423,6 +428,7 @@ const fr: Dict = {
   tx: {
     confirm: 'Confirme dans ton portefeuille…',
     cancel: 'Annuler',
+    otherWay: 'Essayer autrement',
     abandoned:
       'La page n’attend plus ton portefeuille. S’il affiche encore la demande, refuse-la dans le portefeuille.',
     done: '{label} : terminé',
@@ -509,8 +515,17 @@ const fr: Dict = {
     rejected: 'Tu as annulé la demande dans ton portefeuille.',
     taken: 'Quelqu’un détient déjà ce numéro dans cette manche. Choisis-en un autre.',
     funds: 'Pas assez de SOL dans le portefeuille.',
+    noSol: 'Ce portefeuille n’a pas encore de SOL sur ce réseau. Ajoutes-en, puis réessaie.',
+    wrongCluster:
+      'Ton portefeuille a envoyé la transaction sur un autre réseau. Passe-le sur {network}, puis réessaie.',
+    notSetUp: 'Ce jeu n’est pas encore configuré sur ce réseau.',
+    outdated: 'L’app n’est plus à jour. Recharge la page, puis réessaie.',
+    expired:
+      'La transaction a expiré avant d’être confirmée. Vérifie l’activité de ton portefeuille avant de réessayer.',
     walletFailed:
       'Ton portefeuille a signalé « Unexpected error » et n’a pas signé. Ferme sa fenêtre, verrouille-le puis déverrouille-le ou redémarre l’extension, puis réessaie.',
+    walletNetwork:
+      'Vérifie que ton portefeuille est sur {network} (dans Phantom : Settings → Developer Settings → Testnet Mode), ou essaie un autre portefeuille.',
     rateLimited: 'L’endpoint RPC limite les requêtes (HTTP 429). Attends une minute et réessaie.',
     rpcHttp: 'L’endpoint RPC a répondu avec l’erreur HTTP {status}.',
     unknown: 'Une erreur s’est produite.',

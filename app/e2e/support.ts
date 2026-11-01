@@ -100,6 +100,11 @@ export interface TestWalletOptions {
   hangConnect?: boolean;
   /** Never answer signing requests. */
   hangSign?: boolean;
+  /**
+   * Fail every sign-and-send inside the "extension", the way Phantom answers
+   * `-32603 Unexpected error`; signing alone still works.
+   */
+  failSignAndSend?: boolean;
 }
 
 /**
@@ -118,13 +123,35 @@ export async function installTestWallet(
     noAccounts = false,
     hangConnect = false,
     hangSign = false,
+    failSignAndSend = false,
   }: TestWalletOptions = {},
 ): Promise<void> {
   if (signAndSend)
     await page.exposeFunction('__testWalletSignAndSend', (wire: number[]) => signAndSendLikePhantom(wallet, wire));
-  const init = { ...wallet, signAndSend, name, twin, restoresSession, noAccounts, hangConnect, hangSign };
+  const init = {
+    ...wallet,
+    signAndSend,
+    name,
+    twin,
+    restoresSession,
+    noAccounts,
+    hangConnect,
+    hangSign,
+    failSignAndSend,
+  };
   await page.addInitScript(
-    ({ address, jwk, signAndSend, name, twin, restoresSession, noAccounts, hangConnect, hangSign }) => {
+    ({
+      address,
+      jwk,
+      signAndSend,
+      name,
+      twin,
+      restoresSession,
+      noAccounts,
+      hangConnect,
+      hangSign,
+      failSignAndSend,
+    }) => {
       const never = () => new Promise<never>(() => {});
       const sessionKey = `__testWalletSession:${name}`;
       const base64url = (value: string) =>
@@ -133,7 +160,7 @@ export async function installTestWallet(
       const account = {
         address,
         publicKey: base64url(jwk.x!),
-        chains: ['solana:localnet'],
+        chains: ['solana:mainnet', 'solana:devnet', 'solana:testnet', 'solana:localnet'],
         features: signAndSend
           ? ['solana:signTransaction', 'solana:signAndSendTransaction']
           : ['solana:signTransaction'],
@@ -157,7 +184,7 @@ export async function installTestWallet(
         version: '1.0.0',
         name,
         icon,
-        chains: ['solana:localnet'],
+        chains: ['solana:mainnet', 'solana:devnet', 'solana:testnet', 'solana:localnet'],
         accounts: (restoresSession && localStorage.getItem(sessionKey) ? [account] : []) as (typeof account)[],
         features: {
           'standard:connect': {
@@ -211,14 +238,16 @@ export async function installTestWallet(
               signAndSendTransaction: (...inputs: { transaction: Uint8Array }[]) =>
                 hangSign
                   ? never()
-                  : Promise.all(
-                      inputs.map(async ({ transaction }) => {
-                        const send = (
-                          window as unknown as { __testWalletSignAndSend: (wire: number[]) => Promise<number[]> }
-                        ).__testWalletSignAndSend;
-                        return { signature: Uint8Array.from(await send([...transaction])) };
-                      }),
-                    ),
+                  : failSignAndSend
+                    ? Promise.reject(Object.assign(new Error('Unexpected error'), { code: -32603 }))
+                    : Promise.all(
+                        inputs.map(async ({ transaction }) => {
+                          const send = (
+                            window as unknown as { __testWalletSignAndSend: (wire: number[]) => Promise<number[]> }
+                          ).__testWalletSignAndSend;
+                          return { signature: Uint8Array.from(await send([...transaction])) };
+                        }),
+                      ),
             },
           }),
         },
@@ -251,6 +280,14 @@ export function watchForPageErrors(page: Page): string[] {
   });
   page.on('pageerror', (error) => errors.push(error.message));
   return errors;
+}
+
+/**
+ * The toasts on the page. Match toast text inside it: the screen-reader
+ * announcer repeats a new toast's text in a hidden element outside it.
+ */
+export function toasts(page: Page) {
+  return page.getByLabel(/^Notifications/);
 }
 
 /** `482613957` → `482 613 957`, as the app shows numbers. */

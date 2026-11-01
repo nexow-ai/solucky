@@ -97,10 +97,16 @@ export default defineNuxtConfig({
       vapidKey: '',
       /** devnet, testnet, mainnet or localnet. */
       cluster: 'devnet',
-      /** RPC endpoint. Defaults to the public endpoint of the cluster. */
+      /** RPC endpoint, without its auth token. Defaults to the public endpoint of the cluster. */
       rpcUrl: '',
-      /** RPC websocket endpoint. Defaults to `rpcUrl` with ws(s)://. */
+      /** RPC websocket endpoint, without its auth token. Defaults to `rpcUrl` with ws(s)://. */
       rpcWsUrl: '',
+      /**
+       * The RPC provider's auth token (QuickNode), added as the last path segment
+       * of both URLs: browsers cannot send it as a header. It reaches every
+       * visitor, so restrict the endpoint to the site's domains at the provider.
+       */
+      rpcToken: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
       /** Highest ticket number, shown until the on-chain config loads. */

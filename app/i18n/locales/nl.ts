@@ -312,6 +312,11 @@ const nl: Dict = {
     takenToday: '{number} is bezet',
     outOfRange: 'Getal buiten bereik',
     notEnough: 'Niet genoeg SOL',
+    loading: 'Ronde laden…',
+    unavailable: 'Ronde niet beschikbaar',
+    closing: 'Deze ronde sluit zo',
+    over: 'Deze ronde is voorbij',
+    full: 'Deze ronde is vol',
     keys: 'Typ met 0–9, ⌫ wist, Enter koopt.',
     rent: 'Een lot houdt ook ◎{rent} aan rent voor zijn account vast, die je na de trekking terugkrijgt.',
   },
@@ -423,6 +428,7 @@ const nl: Dict = {
   tx: {
     confirm: 'Bevestig in je wallet…',
     cancel: 'Annuleren',
+    otherWay: 'Op een andere manier proberen',
     abandoned: 'De pagina wacht niet meer op je wallet. Toont de wallet het verzoek nog, wijs het daar dan af.',
     done: '{label}: klaar',
     cancelled: '{label}: geannuleerd',
@@ -508,8 +514,17 @@ const nl: Dict = {
     rejected: 'Je hebt het verzoek in je wallet geannuleerd.',
     taken: 'Iemand heeft dit getal in deze ronde al. Kies een ander.',
     funds: 'Niet genoeg SOL in de wallet.',
+    noSol: 'Deze wallet heeft nog geen SOL op dit netwerk. Zet er wat op en probeer het dan opnieuw.',
+    wrongCluster:
+      'Je wallet heeft de transactie naar een ander netwerk gestuurd. Zet hem op {network} en probeer het dan opnieuw.',
+    notSetUp: 'Dit spel is op dit netwerk nog niet ingesteld.',
+    outdated: 'De app is verouderd. Herlaad de pagina en probeer het dan opnieuw.',
+    expired:
+      'De transactie is verlopen voordat ze werd bevestigd. Bekijk de activiteit van je wallet voordat je het opnieuw probeert.',
     walletFailed:
       'Je wallet meldde „Unexpected error” en heeft niet ondertekend. Sluit het venster, vergrendel en ontgrendel de wallet of herstart de extensie, en probeer het dan opnieuw.',
+    walletNetwork:
+      'Zorg dat je wallet op {network} staat (in Phantom: Settings → Developer Settings → Testnet Mode), of probeer een andere wallet.',
     rateLimited: 'Het RPC-endpoint beperkt het aantal verzoeken (HTTP 429). Wacht een minuut en probeer het opnieuw.',
     rpcHttp: 'Het RPC-endpoint antwoordde met HTTP-fout {status}.',
     unknown: 'Er is iets misgegaan.',

@@ -1,6 +1,6 @@
 import { expect, type Page, test } from '@playwright/test';
 
-import { airdrop, createTestWallet, installTestWallet, spaced, watchForPageErrors } from './support';
+import { airdrop, createTestWallet, installTestWallet, spaced, toasts, watchForPageErrors } from './support';
 
 // Wallet behaviour seen in real extensions: MetaMask registers a Bitcoin
 // wallet under the same name and may have no Solana account, and a wallet
@@ -67,7 +67,7 @@ test('MetaMask-like: a wallet without a Solana account says so', async ({ page }
 
   await expect(page.getByText('Could not connect MetaMask')).toBeVisible();
   await expect(
-    page.getByText(
+    toasts(page).getByText(
       'MetaMask did not share a Solana account. Add or select a Solana account in MetaMask, then connect again.',
     ),
   ).toBeVisible();
@@ -106,5 +106,61 @@ test('a purchase the wallet never answers can be cancelled', async ({ page }) =>
 
   await expect(page.getByText(`Buying number ${spaced(number)}: cancelled`)).toBeVisible();
   await expect(buy).toBeEnabled();
+  expect(errors).toEqual([]);
+});
+
+test('Phantom-like "Unexpected error": the toast explains it and buying the other way works', async ({ page }) => {
+  const errors = watchForPageErrors(page);
+  const wallet = createTestWallet();
+  await airdrop(wallet.address, 2_000_000_000);
+  await installTestWallet(page, wallet, { signAndSend: true, failSignAndSend: true });
+  await page.goto('/play');
+  await chooseWallet(page, 'Test Wallet');
+  await expect(banner(page).getByText(wallet.address.slice(0, 4))).toBeVisible();
+
+  const number = pick();
+  await startBuying(page, number);
+  await expect(toasts(page).getByText(`Buying number ${spaced(number)} failed`)).toBeVisible();
+  await expect(
+    toasts(page).getByText(/reported “Unexpected error”.*Make sure your wallet is on Localnet/),
+  ).toBeVisible();
+
+  // The wallet signs, the app sends: the purchase goes through.
+  await page.getByRole('button', { name: 'Try another way' }).click();
+  await expect(toasts(page).getByText(`Number ${spaced(number)} is yours. Good luck!`)).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('Enter on the toast’s Cancel cancels instead of buying a second ticket', async ({ page }) => {
+  const errors = watchForPageErrors(page);
+  const wallet = createTestWallet();
+  await airdrop(wallet.address, 2_000_000_000);
+  await installTestWallet(page, wallet, { signAndSend: true, hangSign: true });
+  await page.goto('/play');
+  await chooseWallet(page, 'Test Wallet');
+  await expect(banner(page).getByText(wallet.address.slice(0, 4))).toBeVisible();
+
+  const number = pick();
+  const buy = await startBuying(page, number);
+  await expect(page.getByText('Confirm in your wallet…')).toBeVisible();
+  await page.getByRole('button', { name: 'Cancel' }).focus();
+  await page.keyboard.press('Enter');
+
+  await expect(toasts(page).getByText(`Buying number ${spaced(number)}: cancelled`)).toBeVisible();
+  await expect(toasts(page).getByText(`Buying number ${spaced(number)}`, { exact: true })).toHaveCount(0);
+  await expect(buy).toBeEnabled();
+  expect(errors).toEqual([]);
+});
+
+test('a wallet without SOL is told so before it signs anything', async ({ page }) => {
+  const errors = watchForPageErrors(page);
+  const wallet = createTestWallet();
+  await installTestWallet(page, wallet, { signAndSend: true });
+  await page.goto('/play');
+  await chooseWallet(page, 'Test Wallet');
+  await expect(banner(page).getByText(wallet.address.slice(0, 4))).toBeVisible();
+
+  await page.keyboard.type('7');
+  await expect(page.getByRole('button', { name: 'Not enough SOL' })).toBeDisabled();
   expect(errors).toEqual([]);
 });
