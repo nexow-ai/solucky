@@ -18,10 +18,7 @@ const links = computed(() =>
 </script>
 
 <template>
-  <UFooter
-    class="relative bg-default/60 backdrop-blur-sm before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-secondary/50 before:to-transparent"
-    :ui="{ top: 'p-0', right: 'flex-wrap gap-y-3' }"
-  >
+  <UFooter class="relative mt-16" :ui="{ top: 'p-0', right: 'flex-wrap gap-y-3' }">
     <!-- The neon city from the original landing hero, at the foot of every page. -->
     <template #top>
       <CitySkyline />
@@ -34,7 +31,7 @@ const links = computed(() =>
           <ULink
             to="https://nexow.studio"
             target="_blank"
-            class="text-default underline decoration-primary/50 underline-offset-4 hover:text-primary"
+            class="text-default underline decoration-primary/40 underline-offset-4 hover:text-primary"
           >
             Nexow, Inc.
           </ULink>
@@ -129,7 +126,7 @@ const links = computed(() =>
         variant="ghost"
       />
       <!-- The page's settings: sound effects and the light or dark theme. -->
-      <div class="glass-pill flex items-center gap-0.5 rounded-full p-0.5">
+      <div class="flex items-center gap-1 rounded-full p-1 shadow-(--neu-in-sm)">
         <!-- The sound setting is remembered in the browser, so it renders there. -->
         <ClientOnly>
           <UTooltip :text="sound.enabled.value ? t('footer.mute') : t('footer.unmute')">
