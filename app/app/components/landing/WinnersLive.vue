@@ -19,57 +19,41 @@ const totals = computed(() => winTotals(all.value));
 
 <template>
   <div class="space-y-8">
-    <dl
-      class="grid grid-cols-2 gap-px overflow-hidden rounded-(--ui-radius) bg-(--ui-border) ring ring-default lg:grid-cols-4"
-    >
-      <div class="bg-default/85 p-5 backdrop-blur-md">
+    <dl class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div class="rounded-3xl p-5 shadow-(--neu-in-sm)">
         <dt class="kicker text-[0.6rem]">{{ t('home.winners.paid') }}</dt>
-        <dd
-          class="led mt-2 font-mono text-3xl font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em]"
-          dir="ltr"
-        >
-          ◎{{ formatSol(totals.paid, 3) }}
-        </dd>
+        <dd class="readout mt-2 text-3xl" dir="ltr">◎{{ formatSol(totals.paid, 3) }}</dd>
         <dd class="font-mono text-xs text-muted">{{ formatUsd(totals.paid, price, intl) }}</dd>
       </div>
-      <div class="bg-default/85 p-5 backdrop-blur-md">
+      <div class="rounded-3xl p-5 shadow-(--neu-in-sm)">
         <dt class="kicker text-[0.6rem]">{{ t('home.winners.rounds') }}</dt>
-        <dd class="led mt-2 font-mono text-3xl font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em]">
-          {{ formatNumber(totals.rounds) }}
-        </dd>
+        <dd class="readout mt-2 text-3xl">{{ formatNumber(totals.rounds) }}</dd>
       </div>
-      <div class="bg-default/85 p-5 backdrop-blur-md">
+      <div class="rounded-3xl p-5 shadow-(--neu-in-sm)">
         <dt class="kicker text-[0.6rem]">{{ t('stat.winners') }}</dt>
-        <dd class="led mt-2 font-mono text-3xl font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em]">
-          {{ formatNumber(totals.winners) }}
-        </dd>
+        <dd class="readout mt-2 text-3xl">{{ formatNumber(totals.winners) }}</dd>
       </div>
-      <div class="bg-default/85 p-5 backdrop-blur-md">
+      <div class="rounded-3xl p-5 shadow-(--neu-in-sm)">
         <dt class="kicker text-[0.6rem]">{{ t('stat.countries') }}</dt>
-        <dd class="led mt-2 font-mono text-3xl font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em]">
-          {{ formatNumber(totals.countries) }}
-        </dd>
+        <dd class="readout mt-2 text-3xl">{{ formatNumber(totals.countries) }}</dd>
       </div>
     </dl>
 
-    <div v-if="loading && !wins.length" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      <USkeleton v-for="i in 6" :key="i" class="h-28" />
+    <div v-if="loading && !wins.length" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <USkeleton v-for="i in 6" :key="i" class="h-32 rounded-3xl" />
     </div>
-    <p
-      v-else-if="!wins.length"
-      class="rounded-(--ui-radius) bg-default/80 px-6 py-10 text-center text-muted ring ring-default backdrop-blur-md"
-    >
+    <p v-else-if="!wins.length" class="rounded-3xl px-6 py-10 text-center text-muted shadow-(--neu-in-sm)">
       {{ t('home.winners.empty') }}
     </p>
-    <ol v-else class="reveal-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <ol v-else class="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="(win, i) in wins" :key="win.round.address" :style="{ '--i': i % 3 }">
         <NuxtLink
           :to="localePath(roundPath(win.kind, win.round.data.period))"
-          class="win group flex h-full flex-col gap-3 rounded-(--ui-radius) bg-default/85 p-4 ring ring-default backdrop-blur-md transition hover:-translate-y-0.5 hover:ring-primary/50"
+          class="group flex h-full flex-col gap-4 rounded-3xl bg-default p-5 shadow-(--neu-sm) transition-shadow duration-300 hover:shadow-(--neu-xs) active:shadow-(--neu-in-sm)"
         >
           <div class="flex items-center justify-between gap-3">
             <span class="inline-flex min-w-0 items-center gap-2">
-              <LandingGameEmblem :kind="win.kind" size="size-6" />
+              <LandingGameEmblem :kind="win.kind" size="size-5" />
               <span class="kicker truncate text-[0.6rem]">{{
                 t(`games.${GAME_SLUGS[win.kind as GameKind]}.short`)
               }}</span>
@@ -81,14 +65,12 @@ const totals = computed(() => winTotals(all.value));
           <div class="flex items-end justify-between gap-3">
             <span class="flex items-center gap-2">
               <span class="text-2xl leading-none">{{ flagEmoji(countryFromBytes(win.round.data.winnerCountry)) }}</span>
-              <span
-                class="led font-mono text-2xl leading-none font-extrabold text-secondary tabular-nums [--led-pitch:0.1em]"
-                dir="ltr"
-                >{{ formatNumber(win.round.data.winningNumber) }}</span
-              >
+              <span class="readout font-mono text-2xl leading-none" dir="ltr">{{
+                formatNumber(win.round.data.winningNumber)
+              }}</span>
             </span>
             <span class="text-end">
-              <span class="block font-mono text-sm font-semibold text-highlighted tabular-nums" dir="ltr">
+              <span class="block font-mono text-sm text-secondary tabular-nums" dir="ltr">
                 ◎{{ formatSol(win.round.data.payout, 4) }}
               </span>
               <span class="block font-mono text-[0.65rem] text-muted">{{

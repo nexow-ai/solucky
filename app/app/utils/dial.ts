@@ -1,18 +1,4 @@
-/** Radii of the landing's solar dial, in its SVG units (viewBox `-300 -300 600 600`). */
-export const DIAL = {
-  /** Outer edge, and the band the bezel text runs in. */
-  bezel: 296,
-  bezelText: 281,
-  /** The hour ring: ticks point inwards from it, the sun rides on it. */
-  ring: 264,
-  labels: 240,
-  /** Tickets sit between `inner` (number 0) and `outer` (the highest number). */
-  outer: 218,
-  inner: 126,
-  /** The disc in the middle holding the pot. */
-  core: 112,
-} as const;
-
+/** The landing's dial (`HeroDial`): where a moment of the UTC day sits on it. */
 const DAY_MS = 86_400_000;
 
 /** Share of its UTC day a moment has reached, from 0 (00:00) to 1 (24:00). */
