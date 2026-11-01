@@ -57,13 +57,33 @@ self.addEventListener('fetch', (event) => {
 // Draw notifications (server/api/push/draw.post.ts): the result, in the
 // language the browser subscribed in, and the round's page to open.
 self.addEventListener('push', (event) => {
-  const { title, body, url, tag } = event.data.json();
+  // A push without a readable draw (a push service's test, a malformed one) shows nothing.
+  let draw;
+  try {
+    draw = event.data?.json();
+  } catch {
+    return;
+  }
+  if (!draw?.title) return;
+  const { title, body, url, tag } = draw;
   event.waitUntil(
     self.registration.showNotification(title, { body, tag, renotify: true, icon: '/favicon.png', data: { url } }),
   );
 });
 
+// Opens the round's page in a S☉Lucky tab that is already open, or in a new one.
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(self.clients.openWindow(event.notification.data.url));
+  const url = new URL(event.notification.data?.url ?? '/', self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
+      const open = windows.find((client) => new URL(client.url).origin === self.location.origin);
+      // `navigate` only works on a tab this worker controls; any other opens a new one.
+      if (!open) return self.clients.openWindow(url);
+      return open
+        .navigate(url)
+        .then((client) => (client ?? open).focus())
+        .catch(() => self.clients.openWindow(url));
+    }),
+  );
 });
