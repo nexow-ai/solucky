@@ -388,6 +388,78 @@ const de: Dict = {
     line: 'Tippe oder ziehe auf der Linie, um eine Zahl zu wählen',
   },
 
+  batch: {
+    one: 'Eine Zahl',
+    many: 'Mehrere Zahlen',
+    from: 'Von',
+    to: 'Bis',
+    count: 'Wie viele',
+    upTo: 'Bis zu {n}',
+    random: 'Zufällig',
+    spread: 'Verteilt',
+    randomHint: 'Freie Zahlen, zufällig aus dem Bereich gewählt.',
+    spreadHint:
+      'Freie Zahlen, gleichmäßig über den Bereich verteilt. Das nächstgelegene Ticket gewinnt, darum decken verteilte Zahlen mehr von der Linie ab.',
+    onlyFree: 'Nur {n} freie Zahl in diesem Bereich | Nur {n} freie Zahlen in diesem Bereich',
+    again: 'Neu wählen',
+    whole: 'Ganzer Bereich',
+    picked: '{n} Zahl gewählt | {n} Zahlen gewählt',
+    share: 'Gewinnchance mit diesen',
+    shareHint: 'Ihr Anteil an der Linie, Stand jetzt. Später in der Nähe gekaufte Tickets verkleinern ihn.',
+    chance: 'Chance, dass eine davon die Zahl ist',
+    none: 'Keine freie Zahl zum Kaufen',
+    buy: '{n} Ticket für ◎{price} kaufen | {n} Tickets für ◎{price} kaufen',
+    viaQuick: 'Der Schnellkauf zahlt: keine Wallet-Abfrage.',
+    viaWallet:
+      '{n} Transaktion, mit einer einzigen Freigabe in deiner Wallet. | {n} Transaktionen, mit einer einzigen Freigabe in deiner Wallet.',
+    total: 'Insgesamt etwa ◎{sol}, mit Rent und Gebühren.',
+    buying: 'Kauf von {n} Ticket | Kauf von {n} Tickets',
+    bought: '{n} Ticket gekauft | {n} Tickets gekauft',
+    boughtSome: '{n} von {count} Tickets gekauft: Jemand war bei den anderen Zahlen schneller',
+    oneApproval:
+      'Gib {n} Transaktion in deiner Wallet frei, in einem Schritt. | Gib {n} Transaktionen in deiner Wallet frei, alle auf einmal.',
+  },
+
+  quick: {
+    title: 'Schnellkauf',
+    statusOff: 'Tickets kaufen ohne Wallet-Abfrage bei jedem Kauf',
+    statusOn: 'aktiv · noch ◎{sol} · endet {when}',
+    statusLow: 'aktiv · noch ◎{sol} · lade Guthaben auf, um seine Netzwerkgebühren aufzufüllen',
+    statusEnded: 'beendet · noch ◎{sol} zurückzuholen',
+    statusElsewhere: 'aktiv in einem anderen Browser · noch ◎{sol}',
+    setUp: 'Einrichten',
+    manage: 'Verwalten',
+    explain:
+      'Gib einmal frei und lege ein Budget fest. Dieser Browser behält dann einen Schlüssel, der aus diesem Budget Tickets für deine Wallet kauft, ohne Wallet-Abfrage. Die Tickets und jeder Gewinn gehören dir.',
+    safety:
+      'Das Programm lässt den Schlüssel das Budget nur für Tickets für deine Wallet ausgeben. Alle, die diesen Browser nutzen, können es so ausgeben, also halte das Budget klein. Wenn du den Schnellkauf ausschaltest, geht der Rest an deine Wallet zurück.',
+    budget: 'Budget (SOL)',
+    tickets: 'Bis zu {n} Ticket | Bis zu {n} Tickets',
+    lasts: 'Laufzeit',
+    days: '{n} Tag | {n} Tage',
+    float:
+      'Der Schlüssel bekommt außerdem ◎{sol} für Netzwerkgebühren, und die Sitzung bindet etwas Rent. Beides kommt zurück, wenn du den Schnellkauf ausschaltest.',
+    turnOn: 'Mit ◎{sol} einschalten',
+    useHere: 'In diesem Browser nutzen',
+    elsewhereHint:
+      'Der Schnellkauf ist für einen Schlüssel in einem anderen Browser aktiv. Hol ihn mit einer einzigen Freigabe in der Wallet hierher, oder schalte ihn aus, um sein Budget zurückzubekommen.',
+    add: 'Zum Budget hinzufügen (SOL)',
+    addButton: '◎{sol} hinzufügen',
+    renew: 'Verlängern',
+    turnOff: 'Ausschalten',
+    turnOffReturn: 'Ausschalten und ◎{sol} zurückholen',
+    returnFloat: '◎{sol} an Gebühren aus diesem Browser zurückholen',
+    unsupported: 'Dieser Browser kann keinen Schnellkauf-Schlüssel behalten.',
+    opening: 'Einschalten des Schnellkaufs',
+    funding: 'Hinzufügen von ◎{sol} zum Schnellkauf',
+    on: 'Der Schnellkauf ist aktiv',
+    closing: 'Ausschalten des Schnellkaufs',
+    off: 'Der Schnellkauf ist aus. Alles ist zurück in deiner Wallet.',
+    returning: 'Rückholung der Gebühren',
+    returned: 'Die Gebühren sind zurück in deiner Wallet',
+    noPrompt: 'Der Schnellkauf signiert: keine Wallet-Abfrage.',
+  },
+
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
@@ -651,6 +723,14 @@ const de: Dict = {
       nothingToCheck: 'Es gibt keine neuen Tipps zu prüfen.',
       batchSealed: 'Die letzten Tipps werden gerade geprüft; versuch es in ein paar Sekunden noch einmal.',
       invalidGame: 'Unbekanntes Spiel.',
+      ticketsMismatch: 'Gib mindestens eine Zahl an, und für jede Zahl ein Ticketkonto.',
+      wrongTicketAccount: 'Ein Ticketkonto passt nicht zu seiner Zahl.',
+      allTaken: 'Alle Zahlen waren schon vergeben. Wähle andere.',
+      notSessionKey: 'Dieser Schlüssel kann nicht aus dieser Schnellkauf-Sitzung ausgeben.',
+      sessionExpired: 'Der Schnellkauf ist beendet. Verlängere ihn oder schalte ihn aus.',
+      sessionBudgetLow:
+        'Im Schnellkauf ist für diese Tickets zu wenig übrig. Lade Guthaben auf oder kaufe mit deiner Wallet.',
+      invalidSessionExpiry: 'Der Schnellkauf muss in der Zukunft enden, innerhalb von 30 Tagen.',
     },
   },
 

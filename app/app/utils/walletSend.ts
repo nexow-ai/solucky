@@ -9,12 +9,16 @@
  * either path ("Unexpected error"), so `run` offers the other one.
  */
 import {
+  appendTransactionMessageInstructions,
   assertIsTransactionWithBlockhashLifetime,
+  assertIsTransactionWithinSizeLimit,
   compileTransaction,
+  createTransactionMessage,
   createTransactionPlanExecutor,
   estimateAndSetResourceLimitsFactory,
   estimateResourceLimitsFactory,
   getBase58Decoder,
+  getBase64EncodedWireTransaction,
   getSignatureFromTransaction,
   getSolanaErrorFromTransactionError,
   isSolanaError,
@@ -28,8 +32,13 @@ import {
   signTransactionMessageWithSigners,
   SOLANA_ERROR__BLOCK_HEIGHT_EXCEEDED,
   SolanaError,
+  setTransactionMessageFeePayerSigner,
+  type Instruction,
   type Signature,
+  type Transaction,
   type TransactionSigner,
+  type TransactionWithinSizeLimit,
+  type TransactionWithLifetime,
 } from '@solana/kit';
 import { transactionPlanSendingExecutor } from '@solana/kit-plugin-instruction-plan';
 
@@ -153,13 +162,7 @@ export function walletAwareSend() {
       rpc: c.rpc as unknown as Parameters<typeof sendAndConfirmTransactionFactory>[0]['rpc'],
       rpcSubscriptions: c.rpcSubscriptions,
     });
-    const estimateResourceLimits = estimateResourceLimitsFactory({
-      rpc: c.rpc as unknown as Parameters<typeof estimateResourceLimitsFactory>[0]['rpc'],
-    });
-    const estimateAndSetResourceLimits = estimateAndSetResourceLimitsFactory(async (message, config) => {
-      const estimate = await estimateResourceLimits(message, config);
-      return { ...estimate, computeUnitLimit: withComputeUnitMargin(estimate.computeUnitLimit) };
-    });
+    const estimateAndSetResourceLimits = resourceLimitsSetter(c.rpc);
 
     const executor = createTransactionPlanExecutor({
       executeTransactionMessage: async (context, transactionMessage, executorConfig) => {
@@ -200,4 +203,114 @@ export function walletAwareSend() {
 
     return transactionPlanSendingExecutor(executor)(client as never) as T;
   };
+}
+
+type BatchRpc = StatusRpc & {
+  getLatestBlockhash: () => {
+    send: (config?: { abortSignal?: AbortSignal }) => Promise<{
+      value: Parameters<typeof setTransactionMessageLifetimeUsingBlockhash>[0];
+    }>;
+  };
+  sendTransaction: (
+    wire: ReturnType<typeof getBase64EncodedWireTransaction>,
+    config: { encoding: 'base64'; preflightCommitment: 'confirmed' },
+  ) => { send: (config?: { abortSignal?: AbortSignal }) => Promise<Signature> };
+};
+
+/** Whether `signer` can sign without sending, which lets a wallet approve many transactions at once. */
+export function canSignOnly(signer: TransactionSigner | null): boolean {
+  return !!signer && (isTransactionModifyingSigner(signer) || isTransactionPartialSigner(signer));
+}
+
+/** Signs every transaction in one request to `signer`: one wallet prompt for all of them. */
+type Sendable = Transaction & TransactionWithinSizeLimit & TransactionWithLifetime;
+
+async function signAll(
+  signer: TransactionSigner,
+  transactions: Sendable[],
+  config: { abortSignal?: AbortSignal },
+): Promise<readonly Transaction[]> {
+  if (isTransactionModifyingSigner(signer)) return await signer.modifyAndSignTransactions(transactions, config);
+  if (isTransactionPartialSigner(signer)) {
+    const dictionaries = await signer.signTransactions(transactions, config);
+    return transactions.map((transaction, i) =>
+      Object.freeze({
+        ...transaction,
+        signatures: Object.freeze({ ...transaction.signatures, ...dictionaries[i] }),
+      }),
+    );
+  }
+  throw new Error('This wallet cannot sign transactions');
+}
+
+/**
+ * Sends one transaction per instruction set, all paid by `signer`, and waits
+ * until every one is confirmed. Signed in one request (one wallet prompt)
+ * unless `route` is `wallet` and the wallet sends them itself; a quick-buy
+ * key signs without any prompt. Throws the first failure once all are
+ * settled, after the others had their chance to land.
+ */
+export async function sendInstructionSets(
+  rpc: BatchRpc,
+  signer: TransactionSigner,
+  sets: readonly (readonly Instruction[])[],
+  { abortSignal, route }: { abortSignal?: AbortSignal; route?: SendRoute } = {},
+): Promise<Signature[]> {
+  abortSignal?.throwIfAborted();
+  const { value: latestBlockhash } = await rpc.getLatestBlockhash().send({ abortSignal });
+  const setLimits = resourceLimitsSetter(rpc);
+  const messages = await Promise.all(
+    sets.map((instructions) =>
+      pipe(
+        createTransactionMessage({ version: 0 }),
+        (tx) => setTransactionMessageFeePayerSigner(signer, tx),
+        (tx) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
+        (tx) => appendTransactionMessageInstructions(instructions, tx),
+        (tx) => setLimits(tx, { abortSignal }),
+      ),
+    ),
+  );
+  const transactions = messages.map((message) => {
+    const transaction = compileTransaction(message);
+    assertIsTransactionWithinSizeLimit(transaction);
+    return transaction;
+  });
+  const via = route ?? (abortSignal && routes.get(abortSignal)) ?? (canSignOnly(signer) ? 'app' : 'wallet');
+
+  let signatures: Signature[];
+  if ((via === 'wallet' || !canSignOnly(signer)) && isTransactionSendingSigner(signer)) {
+    const sent = await signer.signAndSendTransactions(transactions, { abortSignal });
+    signatures = sent.map((bytes) => signature(getBase58Decoder().decode(bytes)));
+  } else {
+    const signed = await signAll(signer, transactions, { abortSignal });
+    signatures = await Promise.all(
+      signed.map(async (transaction) => {
+        const sig = getSignatureFromTransaction(transaction);
+        await rpc
+          .sendTransaction(getBase64EncodedWireTransaction(transaction), {
+            encoding: 'base64',
+            preflightCommitment: 'confirmed',
+          })
+          .send({ abortSignal });
+        return sig;
+      }),
+    );
+  }
+  const results = await Promise.allSettled(
+    signatures.map((sig) => confirmSignature(rpc, sig, latestBlockhash.lastValidBlockHeight, { abortSignal })),
+  );
+  const failed = results.find((result) => result.status === 'rejected');
+  if (failed) throw failed.reason;
+  return signatures;
+}
+
+type LimitsRpc = Parameters<typeof estimateResourceLimitsFactory>[0]['rpc'];
+
+/** Sets a message's compute unit limit from a simulation, with Kit's margin (see `withComputeUnitMargin`). */
+function resourceLimitsSetter(rpc: unknown) {
+  const estimateResourceLimits = estimateResourceLimitsFactory({ rpc: rpc as LimitsRpc });
+  return estimateAndSetResourceLimitsFactory(async (message, config) => {
+    const estimate = await estimateResourceLimits(message, config);
+    return { ...estimate, computeUnitLimit: withComputeUnitMargin(estimate.computeUnitLimit) };
+  });
 }

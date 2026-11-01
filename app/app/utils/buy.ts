@@ -73,15 +73,7 @@ export const FEE_ALLOWANCE = 100_000n;
  * closed. `rentPerByte` is the rent of one byte, `overhead` the bytes every
  * account is charged for on top of its data.
  */
-export function purchaseCost({
-  price,
-  lottery,
-  roundExists,
-  ticketSize,
-  roundSize,
-  rentPerByte,
-  overhead = 128n,
-}: {
+export function purchaseCost(args: {
   price: bigint;
   lottery: boolean;
   roundExists: boolean;
@@ -90,8 +82,36 @@ export function purchaseCost({
   rentPerByte: bigint;
   overhead?: bigint;
 }): bigint {
+  return batchCost({ ...args, count: 1, transactions: 1 });
+}
+
+/**
+ * What buying `count` tickets in `transactions` transactions takes, counted
+ * like `purchaseCost`. With `transactions: 0` it leaves out the fees: what a
+ * quick-buy session pays, while its key pays the fees.
+ */
+export function batchCost({
+  price,
+  count,
+  transactions,
+  lottery,
+  roundExists,
+  ticketSize,
+  roundSize,
+  rentPerByte,
+  overhead = 128n,
+}: {
+  price: bigint;
+  count: number;
+  transactions: number;
+  lottery: boolean;
+  roundExists: boolean;
+  ticketSize: number;
+  roundSize: number;
+  rentPerByte: bigint;
+  overhead?: bigint;
+}): bigint {
   const rent = (bytes: number) => (overhead + BigInt(bytes)) * rentPerByte;
-  return (
-    price + rent(ticketSize) + (lottery ? 4n * rentPerByte : 0n) + (roundExists ? 0n : rent(roundSize)) + FEE_ALLOWANCE
-  );
+  const each = price + rent(ticketSize) + (lottery ? 4n * rentPerByte : 0n);
+  return BigInt(count) * each + (roundExists ? 0n : rent(roundSize)) + BigInt(transactions) * FEE_ALLOWANCE;
 }

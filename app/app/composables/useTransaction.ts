@@ -31,18 +31,23 @@ export function useTransaction() {
     }
   }
 
+  /**
+   * `success` may be worked out once the transaction landed; `pending`
+   * replaces the "confirm in your wallet" line when no wallet prompt comes.
+   */
   async function run(
     label: string,
     send: (config: SendConfig) => Promise<{ context: { signature: string } }>,
-    success?: string,
+    success?: string | (() => string),
     route?: SendRoute,
+    pending?: string,
   ): Promise<string | null> {
     const controller = new AbortController();
     const via = route ?? defaultRoute(payer());
     setSendRoute(controller.signal, via);
-    const pending = toast.add({
+    const progress = toast.add({
       title: label,
-      description: t('tx.confirm'),
+      description: pending ?? t('tx.confirm'),
       icon: 'i-lucide-loader-circle',
       color: 'neutral',
       duration: 0,
@@ -60,8 +65,8 @@ export function useTransaction() {
     });
     try {
       const { context } = await abortable(send({ abortSignal: controller.signal }), controller.signal);
-      toast.update(pending.id, {
-        title: success ?? t('tx.done', { label }),
+      toast.update(progress.id, {
+        title: (typeof success === 'function' ? success() : success) ?? t('tx.done', { label }),
         description: undefined,
         icon: 'i-lucide-circle-check',
         color: 'success',
@@ -93,7 +98,7 @@ export function useTransaction() {
           settled = true;
           resolve(value);
         };
-        toast.update(pending.id, {
+        toast.update(progress.id, {
           title: cancelled ? t('tx.cancelled', { label }) : t('tx.failed', { label }),
           description: controller.signal.aborted ? t('tx.abandoned') : friendlyError(error, t, cluster),
           icon: cancelled ? 'i-lucide-circle-x' : 'i-lucide-triangle-alert',
@@ -122,7 +127,7 @@ export function useTransaction() {
                     icon: 'i-lucide-refresh-cw',
                     color: 'primary' as const,
                     variant: 'solid' as const,
-                    onClick: () => settle(run(label, send, success, retry)),
+                    onClick: () => settle(run(label, send, success, retry, pending)),
                   },
                 ]
               : []),

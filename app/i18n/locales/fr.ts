@@ -388,6 +388,78 @@ const fr: Dict = {
     line: 'Touchez ou glissez le long de la ligne pour choisir un numéro',
   },
 
+  batch: {
+    one: 'Un numéro',
+    many: 'Plusieurs numéros',
+    from: 'De',
+    to: 'À',
+    count: 'Combien',
+    upTo: 'Jusqu’à {n}',
+    random: 'Au hasard',
+    spread: 'Répartis',
+    randomHint: 'Des numéros libres choisis au hasard dans la plage.',
+    spreadHint:
+      'Des numéros libres espacés régulièrement sur toute la plage. Le ticket le plus proche gagne, donc les espacer couvre une plus grande partie de la ligne.',
+    onlyFree: 'Seulement {n} numéro libre dans cette plage | Seulement {n} numéros libres dans cette plage',
+    again: 'Choisir à nouveau',
+    whole: 'Toute la plage',
+    picked: '{n} numéro choisi | {n} numéros choisis',
+    share: 'Chance de gain avec ceux-ci',
+    shareHint: 'Leur part de la ligne en ce moment. Les tickets achetés plus tard tout près la réduisent.',
+    chance: 'Chance que l’un d’eux soit le numéro',
+    none: 'Aucun numéro libre à acheter',
+    buy: 'Acheter {n} ticket pour ◎{price} | Acheter {n} tickets pour ◎{price}',
+    viaQuick: 'L’achat rapide paie : sans confirmation dans ton portefeuille.',
+    viaWallet:
+      '{n} transaction, avec une seule approbation dans ton portefeuille. | {n} transactions, avec une seule approbation dans ton portefeuille.',
+    total: 'Environ ◎{sol} au total, loyer et frais compris.',
+    buying: 'Achat de {n} ticket | Achat de {n} tickets',
+    bought: '{n} ticket acheté | {n} tickets achetés',
+    boughtSome: 'Tu as acheté {n} des {count} tickets : quelqu’un a pris les autres numéros avant toi',
+    oneApproval:
+      'Approuve {n} transaction dans ton portefeuille, en une seule fois. | Approuve {n} transactions dans ton portefeuille, toutes en une fois.',
+  },
+
+  quick: {
+    title: 'Achat rapide',
+    statusOff: 'achète des tickets sans confirmer dans ton portefeuille à chaque fois',
+    statusOn: 'activé · reste ◎{sol} · se termine {when}',
+    statusLow: 'activé · reste ◎{sol} · ajoute des fonds pour recharger ses frais de réseau',
+    statusEnded: 'terminé · ◎{sol} à récupérer',
+    statusElsewhere: 'activé dans un autre navigateur · reste ◎{sol}',
+    setUp: 'Configurer',
+    manage: 'Gérer',
+    explain:
+      'Approuve une fois et fixe un budget. Ce navigateur garde ensuite une clé qui achète des tickets pour ton portefeuille avec ce budget, sans demande de confirmation. Les tickets et tout gain sont à toi.',
+    safety:
+      'Le programme ne laisse la clé dépenser le budget qu’en tickets pour ton portefeuille. Toute personne qui utilise ce navigateur peut le dépenser de cette façon, alors garde un petit budget. Désactiver l’achat rapide renvoie ce qui reste vers ton portefeuille.',
+    budget: 'Budget (SOL)',
+    tickets: 'Jusqu’à {n} ticket | Jusqu’à {n} tickets',
+    lasts: 'Se termine après',
+    days: '{n} jour | {n} jours',
+    float:
+      'La clé reçoit aussi ◎{sol} pour les frais de réseau, et la session immobilise un peu de loyer. Les deux te reviennent quand tu désactives l’achat rapide.',
+    turnOn: 'Activer avec ◎{sol}',
+    useHere: 'L’utiliser dans ce navigateur',
+    elsewhereHint:
+      'L’achat rapide est activé pour une clé dans un autre navigateur. Déplace-le ici avec une seule approbation dans ton portefeuille, ou désactive-le pour récupérer son budget.',
+    add: 'Ajouter au budget (SOL)',
+    addButton: 'Ajouter ◎{sol}',
+    renew: 'Renouveler',
+    turnOff: 'Désactiver',
+    turnOffReturn: 'Désactiver et récupérer ◎{sol}',
+    returnFloat: 'Renvoyer ◎{sol} de frais depuis ce navigateur',
+    unsupported: 'Ce navigateur ne peut pas garder de clé d’achat rapide.',
+    opening: 'Activation de l’achat rapide',
+    funding: 'Ajout de ◎{sol} à l’achat rapide',
+    on: 'L’achat rapide est activé',
+    closing: 'Désactivation de l’achat rapide',
+    off: 'L’achat rapide est désactivé. Tout est revenu dans ton portefeuille.',
+    returning: 'Restitution des frais',
+    returned: 'Les frais sont revenus dans ton portefeuille',
+    noPrompt: 'L’achat rapide signe à ta place : sans confirmation dans ton portefeuille.',
+  },
+
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
@@ -650,6 +722,14 @@ const fr: Dict = {
       nothingToCheck: 'Il n’y a aucune nouvelle proposition à vérifier.',
       batchSealed: 'Les dernières propositions sont en cours de vérification ; réessaie dans quelques secondes.',
       invalidGame: 'Jeu inconnu.',
+      ticketsMismatch: 'Donne un compte de ticket pour chaque numéro, et au moins un numéro.',
+      wrongTicketAccount: 'Un compte de ticket ne correspond pas à son numéro.',
+      allTaken: 'Tous les numéros étaient déjà pris. Choisis-en d’autres.',
+      notSessionKey: 'Cette clé ne peut pas dépenser depuis cette session d’achat rapide.',
+      sessionExpired: 'L’achat rapide est terminé. Renouvelle-le ou désactive-le.',
+      sessionBudgetLow:
+        'Il reste trop peu dans l’achat rapide pour ces tickets. Ajoute des fonds, ou achète avec ton portefeuille.',
+      invalidSessionExpiry: 'L’achat rapide doit se terminer dans le futur, d’ici 30 jours au plus.',
     },
   },
 

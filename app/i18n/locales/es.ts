@@ -387,6 +387,78 @@ const es: Dict = {
     line: 'Toca o arrastra por la línea para elegir un número',
   },
 
+  batch: {
+    one: 'Un número',
+    many: 'Varios números',
+    from: 'Desde',
+    to: 'Hasta',
+    count: 'Cuántos',
+    upTo: 'Hasta {n}',
+    random: 'Al azar',
+    spread: 'Repartidos',
+    randomHint: 'Números libres elegidos al azar dentro del rango.',
+    spreadHint:
+      'Números libres repartidos de forma uniforme por el rango. Gana el boleto más cercano, así que separarlos cubre más parte de la línea.',
+    onlyFree: 'Solo hay {n} número libre en este rango | Solo hay {n} números libres en este rango',
+    again: 'Volver a elegir',
+    whole: 'Todo el rango',
+    picked: '{n} número elegido | {n} números elegidos',
+    share: 'Probabilidad con estos',
+    shareHint: 'Su parte de la línea ahora mismo. Los boletos comprados cerca más tarde la reducen.',
+    chance: 'Probabilidad de que uno de estos sea el número',
+    none: 'No hay ningún número libre para comprar',
+    buy: 'Comprar {n} boleto por ◎{price} | Comprar {n} boletos por ◎{price}',
+    viaQuick: 'Paga la compra rápida: sin confirmar en la billetera.',
+    viaWallet:
+      '{n} transacción, con una sola aprobación en tu billetera. | {n} transacciones, con una sola aprobación en tu billetera.',
+    total: 'Unos ◎{sol} en total, con renta y comisiones.',
+    buying: 'Comprando {n} boleto | Comprando {n} boletos',
+    bought: '{n} boleto comprado | {n} boletos comprados',
+    boughtSome: 'Compraste {n} de {count} boletos: alguien se quedó antes con los demás números',
+    oneApproval:
+      'Aprueba {n} transacción en tu billetera, todo de una vez. | Aprueba {n} transacciones en tu billetera, todas de una vez.',
+  },
+
+  quick: {
+    title: 'Compra rápida',
+    statusOff: 'compra boletos sin confirmar en la billetera cada vez',
+    statusOn: 'activada · quedan ◎{sol} · termina {when}',
+    statusLow: 'activada · quedan ◎{sol} · añade fondos para reponer sus comisiones de red',
+    statusEnded: 'terminada · quedan ◎{sol} por recuperar',
+    statusElsewhere: 'activada en otro navegador · quedan ◎{sol}',
+    setUp: 'Configurar',
+    manage: 'Gestionar',
+    explain:
+      'Aprueba una vez y fija un presupuesto. Después, este navegador guarda una clave que compra boletos para tu billetera con ese presupuesto, sin confirmar en la billetera. Los boletos y cualquier premio son tuyos.',
+    safety:
+      'El programa solo deja que la clave gaste el presupuesto en boletos para tu billetera. Cualquiera que use este navegador puede gastarlo de esa forma, así que mantén un presupuesto pequeño. Al desactivar la compra rápida, lo que quede vuelve a tu billetera.',
+    budget: 'Presupuesto (SOL)',
+    tickets: 'Hasta {n} boleto | Hasta {n} boletos',
+    lasts: 'Termina tras',
+    days: '{n} día | {n} días',
+    float:
+      'La clave también recibe ◎{sol} para comisiones de red, y la sesión guarda un poco de renta. Ambos importes vuelven cuando la desactivas.',
+    turnOn: 'Activar con ◎{sol}',
+    useHere: 'Usarla en este navegador',
+    elsewhereHint:
+      'La compra rápida está activada para una clave de otro navegador. Tráela aquí con una sola aprobación en la billetera, o desactívala para recuperar su presupuesto.',
+    add: 'Añadir al presupuesto (SOL)',
+    addButton: 'Añadir ◎{sol}',
+    renew: 'Renovar',
+    turnOff: 'Desactivar',
+    turnOffReturn: 'Desactivar y recuperar ◎{sol}',
+    returnFloat: 'Devolver ◎{sol} de comisiones desde este navegador',
+    unsupported: 'Este navegador no puede guardar una clave de compra rápida.',
+    opening: 'Activando la compra rápida',
+    funding: 'Añadiendo ◎{sol} a la compra rápida',
+    on: 'La compra rápida está activada',
+    closing: 'Desactivando la compra rápida',
+    off: 'La compra rápida está desactivada. Todo volvió a tu billetera.',
+    returning: 'Devolviendo las comisiones',
+    returned: 'Las comisiones volvieron a tu billetera',
+    noPrompt: 'La compra rápida firma por ti: sin confirmar en la billetera.',
+  },
+
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
@@ -646,6 +718,14 @@ const es: Dict = {
       nothingToCheck: 'No hay nuevos intentos que comprobar.',
       batchSealed: 'Se están comprobando los últimos intentos; inténtalo de nuevo en unos segundos.',
       invalidGame: 'Juego desconocido.',
+      ticketsMismatch: 'Indica una cuenta de boleto por cada número, y al menos un número.',
+      wrongTicketAccount: 'Una cuenta de boleto no corresponde a su número.',
+      allTaken: 'Todos los números ya estaban ocupados. Elige otros.',
+      notSessionKey: 'Esta clave no puede gastar de esta sesión de compra rápida.',
+      sessionExpired: 'La compra rápida ha terminado. Renuévala o desactívala.',
+      sessionBudgetLow:
+        'A la compra rápida le queda muy poco para estos boletos. Añade fondos o compra con tu billetera.',
+      invalidSessionExpiry: 'La compra rápida debe terminar en el futuro, dentro de 30 días como máximo.',
     },
   },
 
