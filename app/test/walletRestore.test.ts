@@ -1,7 +1,7 @@
 import type { WalletState } from '@solana/kit-plugin-wallet';
 import { describe, expect, it } from 'vitest';
 
-import { walletToRestore } from '../app/utils/walletRestore';
+import { connectionKey, visibleConnection, walletToRestore } from '../app/utils/walletRestore';
 
 const ADDRESS = '4ZsU5fuagtKnizPosGgyhL6RQJ9bEEMUCzdzyafyzncG';
 
@@ -45,5 +45,24 @@ describe('walletToRestore', () => {
         `MetaMask:${ADDRESS}`,
       ),
     ).toBeNull();
+  });
+});
+
+describe('visibleConnection', () => {
+  const phantom = { wallet: { name: 'Phantom' }, account: { address: ADDRESS } } as unknown as NonNullable<
+    WalletState['connected']
+  >;
+  const connectedTo = (connection: typeof phantom) => snapshot([], { connected: connection, status: 'connected' });
+
+  it('shows the connection the wallet reports', () => {
+    expect(visibleConnection(connectedTo(phantom), null)).toBe(phantom);
+    expect(visibleConnection(snapshot([]), null)).toBeNull();
+  });
+
+  it('hides a connection the player dropped while its wallet never confirmed the disconnect', () => {
+    expect(connectionKey(phantom)).toBe(`Phantom:${ADDRESS}`);
+    expect(visibleConnection(connectedTo(phantom), `Phantom:${ADDRESS}`)).toBeNull();
+    const solflare = { ...phantom, wallet: { name: 'Solflare' } } as typeof phantom;
+    expect(visibleConnection(connectedTo(solflare), `Phantom:${ADDRESS}`)).toBe(solflare);
   });
 });

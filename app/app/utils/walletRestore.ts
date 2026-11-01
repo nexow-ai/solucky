@@ -24,3 +24,16 @@ export function walletToRestore(snapshot: WalletState, saved: string | null): Wa
   const wallet = matches.length === 1 ? matches[0]! : null;
   return wallet?.accounts.some((a) => a.address === account) ? wallet : null;
 }
+
+type Connection = NonNullable<WalletState['connected']>;
+
+/** One wallet's account, as `name:address`, the way the storage key saves it. */
+export function connectionKey(connection: Connection): string {
+  return `${connection.wallet.name}:${connection.account.address}`;
+}
+
+/** The connection the page shows: none while it is the one the player dropped (`dropped`, a `connectionKey`). */
+export function visibleConnection(snapshot: WalletState | null, dropped: string | null): Connection | null {
+  const connection = snapshot?.connected ?? null;
+  return connection && connectionKey(connection) !== dropped ? connection : null;
+}

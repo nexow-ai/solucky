@@ -1,7 +1,7 @@
 import { type Address, address as toAddress, lamports } from '@solana/kit';
 import { isWalletWarmingUp, type WalletState } from '@solana/kit-plugin-wallet';
 
-import { WALLET_STORAGE_KEY, walletToRestore } from '../utils/walletRestore';
+import { connectionKey, visibleConnection, WALLET_STORAGE_KEY, walletToRestore } from '../utils/walletRestore';
 
 const state = shallowRef<WalletState | null>(null);
 const balance = ref<bigint | null>(null);
@@ -9,6 +9,14 @@ let subscribed = false;
 let balanceTimer: ReturnType<typeof setInterval> | undefined;
 /** Set once the page restored a wallet itself, or the player picked or dropped one. */
 let restoreSettled = false;
+/**
+ * The connection (wallet and account) the player disconnected but whose wallet
+ * never confirmed it: a stuck extension never answers `standard:disconnect`,
+ * which would keep the page "connected" to it for good. The page forgets it.
+ */
+const dropped = ref<string | null>(null);
+/** How long a wallet gets to confirm a disconnect before the page forgets it anyway. */
+const DISCONNECT_TIMEOUT_MS = 3_000;
 
 type Wallet = WalletState['wallets'][number];
 
@@ -43,14 +51,14 @@ export function useWallet() {
     balanceTimer ??= setInterval(() => void refreshBalance(), 20_000);
   }
 
-  const connected = computed(() => state.value?.connected ?? null);
+  const connected = computed(() => visibleConnection(state.value, dropped.value));
   const address = computed<Address | null>(() => {
     const account = connected.value?.account.address;
     return account ? toAddress(account) : null;
   });
 
   async function refreshBalance() {
-    const owner = client.wallet.getState().connected?.account.address;
+    const owner = visibleConnection(client.wallet.getState(), dropped.value)?.account.address;
     if (!owner) {
       balance.value = null;
       return;
@@ -73,11 +81,26 @@ export function useWallet() {
     refreshBalance,
     connect: (wallet: Wallet) => {
       restoreSettled = true;
+      dropped.value = null;
       return client.wallet.connect(wallet);
     },
-    disconnect: () => {
+    disconnect: async () => {
       restoreSettled = true;
-      return client.wallet.disconnect();
+      const current = client.wallet.getState().connected;
+      const finished = client.wallet.disconnect().then(
+        () => true,
+        () => true,
+      );
+      const timeout = new Promise<false>((resolve) => setTimeout(() => resolve(false), DISCONNECT_TIMEOUT_MS));
+      if ((await Promise.race([finished, timeout])) || !current) return;
+      dropped.value = connectionKey(current);
+      balance.value = null;
+      try {
+        // Or the next visit would reconnect to it.
+        localStorage.removeItem(WALLET_STORAGE_KEY);
+      } catch {
+        // Nothing saved to forget.
+      }
     },
   };
 }

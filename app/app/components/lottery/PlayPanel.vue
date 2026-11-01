@@ -809,6 +809,15 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
     0 0 40px -16px var(--ui-primary);
 }
 
+/*
+ * A dialog (the header's menu, the wallet picker) hides the rest of the page
+ * from assistive tech with `aria-hidden`; the bar, which sits above the page,
+ * steps aside on screen too instead of floating over the dialog.
+ */
+.buy-bar[aria-hidden='true'] {
+  visibility: hidden;
+}
+
 .bar-enter-active,
 .bar-leave-active {
   transition:

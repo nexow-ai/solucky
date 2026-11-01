@@ -403,8 +403,15 @@ useHead(() => ({
           class="bg-lucky shadow-neon shine mt-10 font-semibold tracking-wide text-white transition-transform hover:-translate-y-0.5 hover:opacity-90"
         />
       </UContainer>
-      <!-- The night sky running down into the city at the foot of the page. -->
-      <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-(--ui-bg)" />
+      <!-- The night sky running down into the city at the foot of the page (dark theme), and the horizon. -->
+      <div
+        aria-hidden="true"
+        class="night-fade absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-(--ui-bg)"
+      />
+      <div
+        aria-hidden="true"
+        class="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary/70 to-transparent shadow-[0_0_24px_2px_var(--ui-primary)]"
+      />
     </section>
   </div>
 </template>
@@ -422,6 +429,11 @@ useHead(() => ({
 
 .landing[data-orrery] .dial-tilt {
   opacity: var(--orrery-face, 1);
+}
+
+/* In the light theme the footer below is light: the midnight panel ends on its horizon instead. */
+:root:not(.dark) .night-fade {
+  display: none;
 }
 
 .landing[data-orrery] :deep(.orrery-veil) {

@@ -16,7 +16,15 @@ const slug = computed(() => GAME_SLUGS[props.kind] ?? 'daily');
 
 const card = useTemplateRef<HTMLElement>('card');
 useTilt(card);
-const seen = useSeen(card);
+// The tickets come into view together; their games start loading a moment apart, so the
+// RPC endpoint gets no burst (the daily lottery's state is already loaded by the dial).
+const near = useSeen(card);
+const seen = ref(false);
+let wait: ReturnType<typeof setTimeout> | undefined;
+watch(near, (yes) => {
+  if (yes) wait = setTimeout(() => (seen.value = true), props.kind * 1500);
+});
+onBeforeUnmount(() => clearTimeout(wait));
 </script>
 
 <template>

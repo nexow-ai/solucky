@@ -8,14 +8,17 @@
 const { t } = useI18n();
 const localePath = useLocalePath();
 
-const sectionIds = ['how-it-works', 'fairness', 'faq'] as const;
+// The numbers match the sections' own heads in pages/index.vue.
+const sectionIds = ['games', 'how-it-works', 'winners', 'fairness', 'faq'] as const;
 const activeSection = useSectionSpy(sectionIds);
 
 const items = computed(() => [
   { key: 'play' as const, label: t('nav.play'), to: localePath('/play'), icon: 'i-lucide-ticket' },
+  { key: 'games' as const, label: t('games.tag'), hash: '#games', index: '01' },
   { key: 'how-it-works' as const, label: t('nav.how'), hash: '#how-it-works', index: '02' },
-  { key: 'fairness' as const, label: t('nav.fairness'), hash: '#fairness', index: '03' },
-  { key: 'faq' as const, label: t('nav.faq'), hash: '#faq', index: '04' },
+  { key: 'winners' as const, label: t('home.winners.tag'), hash: '#winners', index: '03' },
+  { key: 'fairness' as const, label: t('nav.fairness'), hash: '#fairness', index: '04' },
+  { key: 'faq' as const, label: t('nav.faq'), hash: '#faq', index: '05' },
 ]);
 
 const activeKey = computed(() => activeSection.value ?? 'play');
@@ -59,12 +62,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', syncMarker));
       <span class="marker" :style="{ top: `${markerY}px` }" />
     </div>
     <ol class="items">
-      <li
-        v-for="(item, index) in items"
-        :key="item.key"
-        class="item"
-        :style="{ '--i': index }"
-      >
+      <li v-for="(item, index) in items" :key="item.key" class="item" :style="{ '--i': index }">
         <ULink
           v-if="'to' in item"
           :to="item.to"
@@ -127,12 +125,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', syncMarker));
   top: 0;
   height: 100%;
   transform-origin: top center;
-  background: linear-gradient(
-    180deg,
-    var(--ui-color-primary-500),
-    var(--color-pink-600),
-    var(--ui-secondary)
-  );
+  background: linear-gradient(180deg, var(--ui-color-primary-500), var(--color-pink-600), var(--ui-secondary));
   opacity: 0.35;
   pointer-events: none;
 }
