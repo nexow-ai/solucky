@@ -17,13 +17,13 @@ const clock = computed(() => {
 </script>
 
 <template>
-  <dl class="mx-auto grid max-w-lg grid-cols-2 gap-6">
+  <dl class="mx-auto grid max-w-lg grid-cols-2 gap-4 sm:gap-6">
     <div>
-      <dt class="kicker text-[0.6rem]">{{ t('dial.pot') }}</dt>
+      <dt class="kicker text-[0.6rem]">{{ t('stat.todaysPot') }}</dt>
       <dd v-if="loading"><USkeleton class="mx-auto mt-2 h-9 w-32" /></dd>
       <dd
         v-else
-        class="led mt-1 font-mono text-4xl font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em]"
+        class="led mt-1 font-mono text-3xl font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em] sm:text-4xl"
         dir="ltr"
       >
         ◎{{ formatSol(pot, 3) }}
@@ -32,7 +32,10 @@ const clock = computed(() => {
     </div>
     <div>
       <dt class="kicker text-[0.6rem]">{{ t('home.live.drawIn') }}</dt>
-      <dd class="led mt-1 font-mono text-4xl font-extrabold text-primary tabular-nums [--led-pitch:0.1em]" dir="ltr">
+      <dd
+        class="led mt-1 font-mono text-3xl font-extrabold text-primary tabular-nums [--led-pitch:0.1em] sm:text-4xl"
+        dir="ltr"
+      >
         {{ clock }}
       </dd>
       <dd class="font-mono text-xs text-secondary">00:00 UTC</dd>

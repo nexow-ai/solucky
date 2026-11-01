@@ -98,8 +98,11 @@ export function dampPose(current: Pose, target: Pose, k: number): Pose {
 }
 
 /** A pose centred on an element of the page (the hero's dial, the finale's eclipse), as big as it is. */
-export function anchoredPose(rect: { left: number; top: number; width: number; height: number }, rest: Omit<Pose, 'x' | 'y' | 'radius'>): Pose {
-  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, radius: rect.width / 2, ...rest };
+export function anchoredPose(
+  rect: { left: number; top: number; width: number; height: number },
+  rest: Omit<Pose, 'x' | 'y' | 'radius'>,
+): Pose {
+  return { ...rest, x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, radius: rect.width / 2 };
 }
 
 /**
@@ -148,13 +151,14 @@ export function viewPoses(width: number, height: number, rtl: boolean) {
       stars: 0.4,
       light: 1,
     },
+    // Pulled far back, below the wall's words, among the winners' stars.
     winners: {
       x: side(0.5),
-      y: height * 0.42,
+      y: height * 0.9,
       radius: short * 0.15,
       tilt: 0.95,
       spin: 2.1,
-      dim: 0.9,
+      dim: 0.75,
       face: 0,
       eclipse: 0,
       stars: 1,

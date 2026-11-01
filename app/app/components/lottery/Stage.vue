@@ -80,7 +80,7 @@ watch(pot, (to, from) => {
       <!-- The game and its round. -->
       <div class="flex items-center justify-center gap-4 lg:justify-start">
         <span class="stage-emblem size-16 shrink-0 sm:size-20">
-          <LandingGameEmblem :kind="kind" />
+          <LandingGameEmblem :kind="kind" size="size-full" />
         </span>
         <div class="min-w-0">
           <p class="kicker truncate">
@@ -196,11 +196,6 @@ watch(pot, (to, from) => {
 </template>
 
 <style scoped>
-.stage-emblem :deep(svg) {
-  width: 100%;
-  height: 100%;
-}
-
 /* Phones get a smaller clock, so the pot and the buy button come up sooner. */
 .stage-clock :deep(.countdown) {
   font-size: 1.75rem;

@@ -46,7 +46,7 @@ const games = computed(() =>
       >
         <span v-if="g.current" class="game-pill" aria-hidden="true" />
         <span class="tab-emblem relative hidden size-9 shrink-0 sm:block" :class="{ dim: !g.current }">
-          <LandingGameEmblem :kind="g.kind" />
+          <LandingGameEmblem :kind="g.kind" size="size-full" />
         </span>
         <span class="relative min-w-0 text-center sm:text-start">
           <span class="block truncate text-sm font-semibold">{{ t(`games.${g.slug}.short`) }}</span>
@@ -72,12 +72,7 @@ const games = computed(() =>
   outline-offset: 2px;
 }
 
-/* The sign fills its box; the other games' signs rest dimmer until hovered. */
-.tab-emblem :deep(svg) {
-  width: 100%;
-  height: 100%;
-}
-
+/* The other games' signs rest dimmer until hovered. */
 .tab-emblem {
   transition:
     opacity 0.4s,

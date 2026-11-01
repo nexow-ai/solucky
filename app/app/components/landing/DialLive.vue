@@ -74,9 +74,21 @@ const countdown = computed(() => {
         </linearGradient>
       </defs>
 
-      <!-- The day so far, from 00:00 UTC to now. -->
-      <path :d="sun.arc" class="fill-none stroke-(--ui-primary)/25" stroke-width="12" stroke-linecap="round" />
-      <path :d="sun.arc" fill="none" stroke="url(#dial-arc)" stroke-width="3" stroke-linecap="round" />
+      <!-- The day so far, from 00:00 UTC to now (drawn by the 3D orrery instead when it runs: .orrery-2d). -->
+      <path
+        :d="sun.arc"
+        class="orrery-2d fill-none stroke-(--ui-primary)/25"
+        stroke-width="12"
+        stroke-linecap="round"
+      />
+      <path
+        :d="sun.arc"
+        class="orrery-2d"
+        fill="none"
+        stroke="url(#dial-arc)"
+        stroke-width="3"
+        stroke-linecap="round"
+      />
       <line
         :x1="sun.hand.from.x"
         :y1="sun.hand.from.y"
@@ -108,7 +120,7 @@ const countdown = computed(() => {
           :cx="dot.x"
           :cy="dot.y"
           r="7"
-          class="fill-none stroke-(--ui-secondary)"
+          class="orrery-2d fill-none stroke-(--ui-secondary)"
           stroke-width="1.5"
         />
         <circle
@@ -116,7 +128,7 @@ const countdown = computed(() => {
           :cy="dot.y"
           r="3.4"
           :class="dot.mine ? 'fill-(--ui-secondary)' : 'fill-(--ui-primary)'"
-          class="animate-twinkle"
+          class="orrery-2d animate-twinkle"
           :style="{ animationDelay: `${-((index * 0.37) % 4)}s` }"
         />
       </g>
@@ -131,7 +143,7 @@ const countdown = computed(() => {
       />
 
       <!-- The sun, riding the ring at the current time. -->
-      <g :transform="`translate(${sun.x} ${sun.y})`" aria-hidden="true">
+      <g :transform="`translate(${sun.x} ${sun.y})`" class="orrery-2d" aria-hidden="true">
         <circle r="16" class="animate-ping fill-(--ui-primary)/30 [transform-box:fill-box] origin-center" />
         <circle r="10" class="fill-(--ui-color-primary-300) glow-primary" />
         <circle r="10" class="fill-none stroke-(--ui-bg)" stroke-width="2" />

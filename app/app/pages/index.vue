@@ -45,6 +45,9 @@ const faq = computed(() =>
 const dial = useTemplateRef<HTMLElement>('dial');
 useTilt(dial);
 
+// The 3D orrery, once it runs, takes over the 2D dial's sun, tickets and corona, and the finale's eclipse.
+const orrery = ref(false);
+
 // The bento of games: the daily lottery is the big ticket.
 const machines = [GameKind.Daily, GameKind.Hourly, GameKind.Guess];
 
@@ -90,11 +93,15 @@ useHead(() => ({
 </script>
 
 <template>
-  <div class="landing">
+  <div class="landing" :data-orrery="orrery ? '' : undefined">
     <div class="scroll-meter" aria-hidden="true" />
+    <ClientOnly>
+      <LazyLandingOrrery @active="orrery = $event" />
+    </ClientOnly>
 
     <!-- Hero: the headline, the pots right now and the solar dial. -->
-    <section data-beat="hero" class="dark relative isolate overflow-hidden">
+    <!-- Not isolated: the orrery's canvas sits between this background and the content. -->
+    <section data-beat="hero" class="dark relative overflow-hidden">
       <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 bg-default">
         <div class="bg-dots absolute inset-0 mask-[radial-gradient(ellipse_at_70%_50%,black,transparent_70%)]" />
         <div
@@ -153,7 +160,7 @@ useHead(() => ({
         <div class="dial-rise relative mx-auto w-full max-w-[34rem]">
           <div ref="dial" class="dial-stage relative" data-dial>
             <div aria-hidden="true" class="corona-layer absolute inset-x-0 top-0 -z-10 aspect-square">
-              <LandingCorona class="absolute -top-[45%] -left-[45%] size-[190%]" />
+              <LandingCorona v-if="!orrery" class="absolute -top-[45%] -left-[45%] size-[190%]" />
             </div>
             <div class="dial-tilt @container relative aspect-square">
               <LandingDialFace />
@@ -360,14 +367,14 @@ useHead(() => ({
     </section>
 
     <!-- Midnight: the sun eclipsed, its corona turning around the disc and a bead of light running round its rim. -->
-    <section data-beat="finale" class="finale dark relative isolate overflow-hidden">
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+    <section data-beat="finale" class="finale dark relative overflow-hidden">
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 bg-default">
         <div class="bg-dots absolute inset-0 mask-[radial-gradient(circle_at_center,black,transparent_70%)]" />
-        <div class="eclipse-wrap absolute top-1/2 left-1/2 size-[30rem] -translate-1/2 sm:size-[40rem]">
+        <div class="eclipse-wrap absolute top-1/2 left-1/2 size-[26rem] -translate-1/2 sm:size-[40rem]">
           <div
             class="absolute inset-0 animate-spin-slow rounded-full bg-[conic-gradient(var(--ui-color-primary-400),transparent_18%,var(--ui-color-primary-700)_34%,transparent_50%,var(--ui-color-primary-500)_64%,var(--ui-secondary)_69%,transparent_76%,var(--ui-color-primary-400))] opacity-60 blur-2xl"
           />
-          <div class="eclipse absolute inset-[11%] rounded-full bg-default" />
+          <div class="eclipse absolute inset-[11%] rounded-full bg-default" data-eclipse />
           <div class="absolute inset-[11%] rounded-full ring-1 ring-primary/70" />
           <div class="bead-orbit absolute inset-[11%]">
             <span class="bead" />
@@ -400,6 +407,24 @@ useHead(() => ({
 </template>
 
 <style scoped>
+/*
+ * While the 3D orrery runs, it draws the sun, the day's arc, the tickets and
+ * the eclipse. The dial's face and words stay on the page, fading as the
+ * orrery leaves the hero; the 2D layers it replaces go.
+ */
+.landing[data-orrery] :deep(.orrery-2d),
+.landing[data-orrery] .eclipse-wrap {
+  opacity: 0;
+}
+
+.landing[data-orrery] .dial-tilt {
+  opacity: var(--orrery-face, 1);
+}
+
+.landing[data-orrery] :deep(.orrery-veil) {
+  fill: color-mix(in oklab, var(--ui-bg) 20%, transparent);
+}
+
 /* The dial arrives after the headline, growing out of its own glow. */
 @media (prefers-reduced-motion: no-preference) {
   .dial-rise {

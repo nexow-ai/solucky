@@ -50,7 +50,8 @@ const circle = (r: number) => `M 0 ${-r} a ${r} ${r} 0 1 1 0 ${2 * r} a ${r} ${r
   <!-- A clock face: it turns the same way in every language. -->
   <div aria-hidden="true" dir="ltr" class="pointer-events-none absolute inset-0 select-none">
     <svg viewBox="-300 -300 600 600" class="absolute inset-0 size-full">
-      <circle :r="DIAL.bezel" class="fill-(--ui-bg)/70 stroke-(--ui-border)" stroke-width="1" />
+      <!-- The face's glass: thinner while the 3D orrery draws the sun and tickets under it (.orrery-veil). -->
+      <circle :r="DIAL.bezel" class="orrery-veil fill-(--ui-bg)/70 stroke-(--ui-border)" stroke-width="1" />
       <circle :r="DIAL.ring + 8" class="fill-none stroke-(--ui-border)" stroke-width="1" />
       <circle :r="DIAL.ring" class="fill-none stroke-(--ui-border-accented)" stroke-width="1" />
 
