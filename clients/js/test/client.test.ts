@@ -4,8 +4,11 @@ import {
   type Blockhash,
   getAddressEncoder,
   getBase64Decoder,
+  getSolanaErrorFromTransactionError,
+  SOLANA_ERROR__BLOCK_HEIGHT_EXCEEDED,
   SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM,
   SOLANA_ERROR__RPC__TRANSPORT_HTTP_ERROR,
+  SOLANA_ERROR__TRANSACTION__FAILED_WHEN_SIMULATING_TO_ESTIMATE_COMPUTE_LIMIT,
   SolanaError,
 } from '@solana/kit';
 import { getSysvarSlotHashesEncoder } from '@solana/sysvars';
@@ -288,6 +291,31 @@ describe('errors', () => {
     expect(errorReason(http(403))).toEqual({ kind: 'rpc-http', status: 403 });
     expect(describeError(http(429))).toMatch(/rate-limiting requests \(HTTP 429\)/);
     expect(errorReason(new Error('boom'))).toEqual({ kind: 'other', message: 'boom' });
+  });
+
+  test('explain a wallet without SOL, on another cluster, or an app out of date', () => {
+    // A 0-SOL fee payer fails the compute-unit estimate with AccountNotFound.
+    const unfunded = new SolanaError(SOLANA_ERROR__TRANSACTION__FAILED_WHEN_SIMULATING_TO_ESTIMATE_COMPUTE_LIMIT, {
+      cause: getSolanaErrorFromTransactionError('AccountNotFound'),
+      unitsConsumed: 0,
+    } as never);
+    expect(errorReason(unfunded)).toEqual({ kind: 'no-sol' });
+    expect(errorReason(getSolanaErrorFromTransactionError('BlockhashNotFound'))).toEqual({ kind: 'wrong-cluster' });
+    expect(errorReason(getSolanaErrorFromTransactionError('ProgramAccountNotFound'))).toEqual({
+      kind: 'wrong-cluster',
+    });
+    expect(errorReason(new Error('Transaction simulation failed: Blockhash not found'))).toEqual({
+      kind: 'wrong-cluster',
+    });
+    expect(errorReason(failed(3012))).toEqual({ kind: 'not-set-up' });
+    expect(errorReason(failed(4100))).toEqual({ kind: 'outdated' });
+    expect(errorReason(failed(2006))).toEqual({ kind: 'outdated' });
+    const expired = new SolanaError(SOLANA_ERROR__BLOCK_HEIGHT_EXCEEDED, {
+      currentBlockHeight: 10n,
+      lastValidBlockHeight: 9n,
+    });
+    expect(errorReason(new Error('send failed', { cause: expired }))).toEqual({ kind: 'expired' });
+    expect(describeError(unfunded)).toMatch(/no SOL on this network/);
   });
 
   test('describe them in English', () => {
