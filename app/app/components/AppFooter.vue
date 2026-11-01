@@ -125,6 +125,8 @@ const links = computed(() =>
         color="neutral"
         variant="ghost"
       />
+      <!-- The header shows the network from lg. -->
+      <AppNetwork class="lg:hidden" />
       <!-- The page's settings: sound effects and the light or dark theme. -->
       <div class="flex items-center gap-1 rounded-full p-1 shadow-(--neu-in-sm)">
         <!-- The sound setting is remembered in the browser, so it renders there. -->

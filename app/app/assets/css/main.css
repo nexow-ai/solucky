@@ -176,7 +176,7 @@ html {
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--ui-text-highlighted);
-    scroll-margin-top: calc(var(--ui-header-height) + 1.5rem);
+    scroll-margin-top: calc(var(--ui-header-height) + var(--app-header-row) + 1.5rem);
   }
   & > h2:first-child {
     margin-top: 0;
@@ -282,15 +282,29 @@ html {
   }
 }
 
+/*
+ * Below xl the game tabs take a row of their own under the header's bar
+ * (AppHeader), so the sticky header is that much taller.
+ */
+:root {
+  --app-header-row: 3.4rem;
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --app-header-row: 0rem;
+  }
+}
+
 /* Anchored sections stop below the sticky header (the router reads this too). */
 html {
-  scroll-padding-top: calc(var(--ui-header-height) + 0.5rem);
+  scroll-padding-top: calc(var(--ui-header-height) + var(--app-header-row) + 0.5rem);
 }
 
 /*
  * Page changes cross-fade (Nuxt's view transitions): the old page dims away
  * quickly, the new one settles in. The header is the same on both sides, so
- * only the content seems to move. The play page's game pill glides from one
+ * only the content seems to move. The header's game pill glides from one
  * game to the next.
  */
 @media (prefers-reduced-motion: no-preference) {

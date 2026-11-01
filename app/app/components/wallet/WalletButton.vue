@@ -80,9 +80,11 @@ async function signOut() {
     :ui="{ content: 'w-[min(100vw-2rem,22rem)] p-0' }"
   >
     <UButton color="neutral" variant="outline" :block="block" trailing-icon="i-lucide-chevron-down">
-      <img v-if="connected.wallet.icon" :src="connected.wallet.icon" alt="" class="size-5 rounded" />
+      <!-- No max-width: a percentage one lets the button size itself without the icon, and the chevron spills out. -->
+      <img v-if="connected.wallet.icon" :src="connected.wallet.icon" alt="" class="size-5 max-w-none rounded" />
       <span class="font-mono" dir="ltr">{{ shortAddress(address) }}</span>
-      <span v-if="balance !== null" class="text-muted">◎{{ formatSol(balance, 2) }}</span>
+      <!-- On phones the bar is tight: the balance waits in the popover. -->
+      <span v-if="balance !== null" class="hidden text-muted sm:inline">◎{{ formatSol(balance, 2) }}</span>
     </UButton>
 
     <template #content>

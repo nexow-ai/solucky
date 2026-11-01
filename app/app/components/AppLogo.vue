@@ -11,7 +11,8 @@
         height="32"
       />
     </span>
-    <span class="text-base font-medium tracking-[0.28em] text-highlighted">
+    <!-- On phones the bar has room for the mark only; the name stays for screen readers. -->
+    <span class="text-base font-medium tracking-[0.28em] text-highlighted max-sm:sr-only">
       S<span class="text-lucky">☉</span>LUCKY
     </span>
   </span>

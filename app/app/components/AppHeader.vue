@@ -1,46 +1,29 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui';
-
-const route = useRoute();
 const { t } = useI18n();
 const localePath = useLocalePath();
 const faucet = useFaucet();
 
-/** Under a section: the section itself or any page below it. */
-const within = (path: string) => route.path === path || route.path.startsWith(`${path}/`);
-
-// The bar is the same on every page, the landing's: logo, network, language
-// and wallet. The links live in the menu. UHeader names the logo's link after
-// the plain text in its title slot (comments included, in development), so
-// the slot holds components only: the Beta badge is a UBadge.
-const menuItems = computed<NavigationMenuItem[]>(() => [
-  {
-    label: t('nav.play'),
-    to: localePath('/play'),
-    icon: 'i-lucide-ticket',
-    // Every game's table and its past rounds.
-    active: within(localePath('/play')) || within(localePath('/rounds')),
-  },
-  { label: t('nav.how'), to: localePath({ path: '/', hash: '#how-it-works' }), exactHash: true },
-  { label: t('nav.fairness'), to: localePath({ path: '/', hash: '#fairness' }), exactHash: true },
-  { label: t('nav.faq'), to: localePath({ path: '/', hash: '#faq' }), exactHash: true },
-]);
+// The bar is the same on every page: logo, the game tabs, network, language
+// and wallet, with no menu behind a toggle. The game tabs sit in its middle
+// on wide screens and get a row of their own under it below xl. UHeader
+// names the logo's link after the plain text in its title slot (comments
+// included, in development), so the slot holds components only: the Beta
+// badge is a UBadge.
 </script>
 
 <template>
   <UHeader
     :to="localePath('/')"
     title="S☉Lucky"
+    :toggle="false"
     :ui="{
+      // The bar keeps its height; the game tabs' row (below xl) adds to it.
+      root: 'h-auto',
+      container: 'h-(--ui-header-height)',
+      // Nuxt UI shows the middle from lg; the game tabs need it from xl only.
+      center: 'hidden lg:hidden xl:flex',
       // Button labels never wrap: a tight bar hides them first (below).
       right: 'whitespace-nowrap',
-      // The links are in the menu at every width (Nuxt UI hides it from lg).
-      toggle: 'lg:inline-flex',
-      overlay: 'lg:block',
-      content: 'lg:flex',
-      // The open menu repeats the bar: keep it in the bar's container, so nothing shifts.
-      header: 'mx-auto w-full max-w-(--ui-container) lg:px-8',
-      body: 'mx-auto w-full max-w-(--ui-container) lg:px-8',
     }"
   >
     <template #title>
@@ -56,12 +39,20 @@ const menuItems = computed<NavigationMenuItem[]>(() => [
       </span>
     </template>
 
+    <AppGameTabs />
+
+    <template #bottom>
+      <UContainer class="pb-2.5 xl:hidden">
+        <AppGameTabs wide />
+      </UContainer>
+    </template>
+
     <template #right>
       <AppNetwork class="max-lg:hidden" />
-      <!-- The wallet's address lives in the browser, so the faucet button does too. -->
+      <!-- Only for a connected wallet under ◎0.1; its balance lives in the browser, so the button does too. -->
       <ClientOnly>
         <UTooltip
-          v-if="faucet.available.value"
+          v-if="faucet.low.value"
           :text="t('header.faucetTip', { amount: FAUCET_SOL })"
           :disabled="!faucet.url.value"
         >
@@ -86,34 +77,10 @@ const menuItems = computed<NavigationMenuItem[]>(() => [
       </ClientOnly>
       <AppLangMenu />
       <ClientOnly>
-        <LazyWalletButton class="hidden sm:inline-flex" />
+        <LazyWalletButton />
         <template #fallback>
-          <USkeleton class="hidden h-8 w-36 sm:block" />
+          <USkeleton class="h-8 w-36" />
         </template>
-      </ClientOnly>
-    </template>
-
-    <template #body>
-      <AppNetwork block class="mb-4 lg:hidden" />
-      <UNavigationMenu :items="menuItems" orientation="vertical" class="-mx-2.5 sm:max-w-sm" />
-      <!-- From sm the bar shows both. -->
-      <ClientOnly>
-        <div class="sm:hidden">
-          <UButton
-            v-if="faucet.available.value"
-            :label="t('header.getSol')"
-            icon="i-lucide-droplets"
-            color="success"
-            variant="soft"
-            block
-            :to="faucet.url.value ?? undefined"
-            :target="faucet.url.value ? '_blank' : undefined"
-            :loading="faucet.busy.value"
-            class="mt-4 font-mono tracking-wider uppercase"
-            @click="faucet.request()"
-          />
-          <LazyWalletButton block class="mt-4" />
-        </div>
       </ClientOnly>
     </template>
   </UHeader>
