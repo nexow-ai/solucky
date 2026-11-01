@@ -30,6 +30,15 @@ const items = computed(() => (isHome.value ? [] : drawerItems.value));
     title="S☉Lucky"
     :ui="{
       root: 'border-b-0 bg-default/60 backdrop-blur-md after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-linear-to-r after:from-transparent after:via-primary/70 after:to-transparent',
+      // The links, the network selector and the wallet only fit side by side
+      // from xl on; below that the links stay in the menu.
+      center: 'lg:max-xl:hidden',
+      // The sides split the bar evenly to center the links; when the buttons
+      // need more than half, the links move over instead of the labels wrapping.
+      right: 'whitespace-nowrap',
+      toggle: 'lg:max-xl:inline-flex',
+      overlay: 'lg:max-xl:block',
+      content: 'lg:max-xl:flex',
     }"
   >
     <template #title>
@@ -40,7 +49,7 @@ const items = computed(() => (isHome.value ? [] : drawerItems.value));
           color="primary"
           variant="subtle"
           size="sm"
-          class="hidden font-mono tracking-wider uppercase sm:max-lg:inline-flex xl:inline-flex"
+          class="hidden font-mono tracking-wider uppercase sm:max-xl:inline-flex"
         />
       </span>
     </template>
@@ -50,7 +59,7 @@ const items = computed(() => (isHome.value ? [] : drawerItems.value));
       :items="items"
       variant="link"
       :ui="{
-        link: 'font-mono text-xs tracking-[0.16em] uppercase lg:max-xl:tracking-[0.06em]',
+        link: 'font-mono text-xs tracking-[0.16em] uppercase',
         linkLeadingIcon: 'size-4',
       }"
     />
@@ -68,7 +77,7 @@ const items = computed(() => (isHome.value ? [] : drawerItems.value));
             :label="t('header.getSol')"
             :aria-label="t('header.getSol')"
             icon="i-lucide-droplets"
-            :ui="{ label: 'hidden sm:max-lg:inline xl:inline' }"
+            :ui="{ label: 'hidden md:max-xl:inline' }"
             size="xs"
             color="success"
             variant="soft"
@@ -93,7 +102,7 @@ const items = computed(() => (isHome.value ? [] : drawerItems.value));
     </template>
 
     <template #body>
-      <AppNetwork block class="mb-4" />
+      <AppNetwork block class="mb-4 lg:hidden" />
       <UNavigationMenu :items="drawerItems" orientation="vertical" class="-mx-2.5" />
       <ClientOnly>
         <UButton

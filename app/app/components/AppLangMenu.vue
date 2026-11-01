@@ -26,7 +26,7 @@ function choose(code: string) {
       :aria-label="t('lang.choose', { name: current.name })"
       class="font-mono text-xs tracking-wider uppercase"
     >
-      <span aria-hidden="true" class="hidden xl:inline">{{ current.code }}</span>
+      <span aria-hidden="true" class="hidden lg:inline">{{ current.code }}</span>
     </UButton>
 
     <template #content>
