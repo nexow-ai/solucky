@@ -5,6 +5,7 @@ import {
   getAddressEncoder,
   getBase64Decoder,
   SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM,
+  SOLANA_ERROR__RPC__TRANSPORT_HTTP_ERROR,
   SolanaError,
 } from '@solana/kit';
 import { getSysvarSlotHashesEncoder } from '@solana/sysvars';
@@ -280,7 +281,12 @@ describe('errors', () => {
     expect(errorReason(failed(6004))).toEqual({ kind: 'program', code: SOLUCKY_ERROR__PAUSED });
     expect(errorReason(failed(0))).toEqual({ kind: 'number-taken' });
     expect(errorReason(failed(1))).toEqual({ kind: 'insufficient-funds' });
-    expect(errorReason(new Error('Unexpected error'))).toEqual({ kind: 'wallet-cluster' });
+    expect(errorReason(new Error('Unexpected error'))).toEqual({ kind: 'wallet-failed' });
+    const http = (statusCode: number) =>
+      new SolanaError(SOLANA_ERROR__RPC__TRANSPORT_HTTP_ERROR, { headers: new Headers(), message: '', statusCode });
+    expect(errorReason(new Error('load failed', { cause: http(429) }))).toEqual({ kind: 'rate-limited' });
+    expect(errorReason(http(403))).toEqual({ kind: 'rpc-http', status: 403 });
+    expect(describeError(http(429))).toMatch(/rate-limiting requests \(HTTP 429\)/);
     expect(errorReason(new Error('boom'))).toEqual({ kind: 'other', message: 'boom' });
   });
 

@@ -1,6 +1,7 @@
 import {
   isSolanaError,
   SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM,
+  SOLANA_ERROR__RPC__TRANSPORT_HTTP_ERROR,
   SOLANA_ERROR__TRANSACTION_ERROR__INSUFFICIENT_FUNDS_FOR_FEE,
   SOLANA_ERROR__TRANSACTION_ERROR__INSUFFICIENT_FUNDS_FOR_RENT,
 } from '@solana/kit';
@@ -36,8 +37,15 @@ export type ErrorReason =
   | { kind: 'program'; code: SoluckyError }
   | { kind: 'number-taken' }
   | { kind: 'insufficient-funds' }
-  /** Phantom hides the real cause behind "Unexpected error" when it is on another cluster. */
-  | { kind: 'wallet-cluster' }
+  /**
+   * The wallet failed inside its own extension and only said "Unexpected error"
+   * (Phantom does this for any internal failure, even when signing a plain message).
+   */
+  | { kind: 'wallet-failed' }
+  /** The RPC endpoint turned the request away with HTTP 429: too many requests. */
+  | { kind: 'rate-limited' }
+  /** The RPC endpoint answered with another HTTP error, such as 401 or 403 for a bad key. */
+  | { kind: 'rpc-http'; status: number }
   | { kind: 'other'; message: string };
 
 export function errorReason(error: unknown): ErrorReason {
@@ -54,10 +62,16 @@ export function errorReason(error: unknown): ErrorReason {
     }
   }
   for (const cause of causes(error)) {
+    if (isSolanaError(cause, SOLANA_ERROR__RPC__TRANSPORT_HTTP_ERROR)) {
+      const status = cause.context.statusCode;
+      return status === 429 ? { kind: 'rate-limited' } : { kind: 'rpc-http', status };
+    }
+  }
+  for (const cause of causes(error)) {
     const message = cause instanceof Error ? cause.message : String(cause);
     if (/already in use/i.test(message)) return { kind: 'number-taken' };
     if (/insufficient (funds|lamports)/i.test(message)) return { kind: 'insufficient-funds' };
-    if (/unexpected error/i.test(message)) return { kind: 'wallet-cluster' };
+    if (/unexpected error/i.test(message)) return { kind: 'wallet-failed' };
   }
   return { kind: 'other', message: error instanceof Error ? error.message : String(error) };
 }
@@ -72,8 +86,12 @@ export function describeError(error: unknown): string {
       return 'Someone already holds this number in this round. Pick another one.';
     case 'insufficient-funds':
       return 'Not enough SOL in the wallet.';
-    case 'wallet-cluster':
-      return 'Your wallet could not sign. In Phantom: Settings → Developer Settings → enable Testnet Mode → select Devnet, then reconnect and try again.';
+    case 'rate-limited':
+      return 'The RPC endpoint is rate-limiting requests (HTTP 429). Wait a minute and try again.';
+    case 'rpc-http':
+      return `The RPC endpoint answered with HTTP error ${reason.status}.`;
+    case 'wallet-failed':
+      return 'Your wallet reported “Unexpected error” and did not sign. Close its window, lock and unlock it or restart the extension, then try again.';
     case 'other':
       return reason.message || 'Something went wrong.';
   }
