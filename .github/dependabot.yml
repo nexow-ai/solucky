@@ -26,9 +26,11 @@ updates:
       anchor-and-solana:
         patterns: ['anchor-*', 'solana-*', 'litesvm']
     ignore:
-      # 3.0.0 is a deliberate compile_error! release; bincode is no longer developed.
+      # The program tests write the ProgramData header with bincode 1's
+      # `serialize`, which 2.x removed (CI broke on the 2.0.1 bump); 3.0.0 is a
+      # deliberate compile_error! release. bincode is no longer developed.
       - dependency-name: bincode
-        versions: ['>= 3']
+        versions: ['>= 2']
       # The test crates must share LiteSVM's Solana majors (and Anchor's), so
       # major versions move together, by hand, when LiteSVM moves.
       - dependency-name: 'solana-*'
