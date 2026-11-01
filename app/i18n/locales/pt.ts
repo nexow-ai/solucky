@@ -14,6 +14,7 @@ const pt: Dict = {
     how: 'Como funciona',
     fairness: 'Jogo limpo',
     faq: 'Dúvidas',
+    skip: 'Pular para o conteúdo',
   },
 
   lang: {
@@ -386,6 +387,78 @@ const pt: Dict = {
     line: 'Toque ou arraste ao longo da linha para escolher um número',
   },
 
+  batch: {
+    one: 'Um número',
+    many: 'Vários números',
+    from: 'De',
+    to: 'Até',
+    count: 'Quantos',
+    upTo: 'Até {n}',
+    random: 'Aleatórios',
+    spread: 'Espalhados',
+    randomHint: 'Números livres escolhidos ao acaso no intervalo.',
+    spreadHint:
+      'Números livres espaçados por igual em todo o intervalo. O bilhete mais próximo ganha, então espaçá-los cobre mais da linha.',
+    onlyFree: 'Só {n} número livre neste intervalo | Só {n} números livres neste intervalo',
+    again: 'Escolher de novo',
+    whole: 'Intervalo inteiro',
+    picked: '{n} número escolhido | {n} números escolhidos',
+    share: 'Chance de ganhar com estes',
+    shareHint: 'A fatia deles na linha agora. Bilhetes comprados perto depois diminuem isso.',
+    chance: 'Chance de um destes ser o número',
+    none: 'Nenhum número livre para comprar',
+    buy: 'Comprar {n} bilhete por ◎{price} | Comprar {n} bilhetes por ◎{price}',
+    viaQuick: 'A compra rápida paga: sem confirmação na carteira.',
+    viaWallet:
+      '{n} transação, com uma única aprovação na sua carteira. | {n} transações, com uma única aprovação na sua carteira.',
+    total: 'Cerca de ◎{sol} no total, com aluguel e taxas.',
+    buying: 'Comprando {n} bilhete | Comprando {n} bilhetes',
+    bought: '{n} bilhete comprado | {n} bilhetes comprados',
+    boughtSome: 'Você comprou {n} de {count} bilhetes: alguém pegou os outros números antes',
+    oneApproval:
+      'Aprove {n} transação na sua carteira, de uma vez só. | Aprove {n} transações na sua carteira, todas de uma vez.',
+  },
+
+  quick: {
+    title: 'Compra rápida',
+    statusOff: 'compre bilhetes sem confirmar na carteira toda vez',
+    statusOn: 'ativada · restam ◎{sol} · termina {when}',
+    statusLow: 'ativada · restam ◎{sol} · adicione fundos para repor suas taxas de rede',
+    statusEnded: 'encerrada · ◎{sol} para recuperar',
+    statusElsewhere: 'ativada em outro navegador · restam ◎{sol}',
+    setUp: 'Configurar',
+    manage: 'Gerenciar',
+    explain:
+      'Aprove uma vez e defina um orçamento. Depois, este navegador guarda uma chave que compra bilhetes para a sua carteira com esse orçamento, sem confirmação na carteira. Os bilhetes e qualquer prêmio são seus.',
+    safety:
+      'O programa só deixa a chave gastar o orçamento em bilhetes para a sua carteira. Qualquer pessoa que use este navegador pode gastá-lo assim, então mantenha o orçamento pequeno. Desativar a compra rápida devolve o que sobrar para a sua carteira.',
+    budget: 'Orçamento (SOL)',
+    tickets: 'Até {n} bilhete | Até {n} bilhetes',
+    lasts: 'Termina depois de',
+    days: '{n} dia | {n} dias',
+    float:
+      'A chave também recebe ◎{sol} para as taxas de rede, e a sessão guarda um pouco de aluguel. Os dois voltam quando você desativa a compra rápida.',
+    turnOn: 'Ativar com ◎{sol}',
+    useHere: 'Usar neste navegador',
+    elsewhereHint:
+      'A compra rápida está ativada para uma chave em outro navegador. Traga-a para cá com uma única aprovação na carteira, ou desative-a para recuperar o orçamento dela.',
+    add: 'Adicionar ao orçamento (SOL)',
+    addButton: 'Adicionar ◎{sol}',
+    renew: 'Renovar',
+    turnOff: 'Desativar',
+    turnOffReturn: 'Desativar e recuperar ◎{sol}',
+    returnFloat: 'Devolver ◎{sol} de taxas deste navegador',
+    unsupported: 'Este navegador não consegue guardar uma chave de compra rápida.',
+    opening: 'Ativando a compra rápida',
+    funding: 'Adicionando ◎{sol} à compra rápida',
+    on: 'A compra rápida está ativada',
+    closing: 'Desativando a compra rápida',
+    off: 'A compra rápida está desativada. Tudo voltou para a sua carteira.',
+    returning: 'Devolvendo as taxas',
+    returned: 'As taxas voltaram para a sua carteira',
+    noPrompt: 'A compra rápida assina por você: sem confirmação na carteira.',
+  },
+
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
@@ -644,6 +717,14 @@ const pt: Dict = {
       nothingToCheck: 'Não há novos palpites para verificar.',
       batchSealed: 'Os últimos palpites estão sendo verificados; tente de novo em alguns segundos.',
       invalidGame: 'Jogo desconhecido.',
+      ticketsMismatch: 'Informe uma conta de bilhete para cada número, e pelo menos um número.',
+      wrongTicketAccount: 'Uma conta de bilhete não corresponde ao seu número.',
+      allTaken: 'Todos os números já tinham sido escolhidos. Escolha outros.',
+      notSessionKey: 'Esta chave não pode gastar desta sessão de compra rápida.',
+      sessionExpired: 'A compra rápida terminou. Renove-a ou desative-a.',
+      sessionBudgetLow:
+        'Resta muito pouco na compra rápida para estes bilhetes. Adicione fundos ou compre com sua carteira.',
+      invalidSessionExpiry: 'A compra rápida deve terminar no futuro, em até 30 dias.',
     },
   },
 

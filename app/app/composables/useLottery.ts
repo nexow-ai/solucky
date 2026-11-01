@@ -1,5 +1,6 @@
-import type { Account, Address } from '@solana/kit';
+import { type Account, type Address, getAddressDecoder, getBase64Encoder } from '@solana/kit';
 import {
+  chunk,
   type Config,
   countryFromBytes,
   countryToBytes,
@@ -15,7 +16,10 @@ import {
   type Game,
   gameFromSlug,
   GameKind,
+  getBuyTicketsWithTicketsInstruction,
   getCloseTicketInstruction,
+  getRoundSize,
+  getTicketSize,
   isLottery,
   isPinnedSlotExpired,
   periodOf,
@@ -23,8 +27,12 @@ import {
   type Round,
   RoundStatus,
   type Ticket,
+  TICKET_OFFSETS,
   winShare,
 } from '@solucky/client';
+
+import { batchCost } from '../utils/buy';
+import { canSignOnly, sendInstructionSets } from '../utils/walletSend';
 
 /** One game's live state, shared by every component that shows that game. */
 function createState() {
@@ -77,6 +85,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
   const { client, programAddress } = useSolana();
   const { address: wallet, refreshBalance } = useWallet();
   const { run } = useTransaction();
+  const quick = useQuickBuy();
+  const { rentPerByte } = useRent();
   const toast = useToast();
   const { t } = useI18n();
   const now = useNow();
@@ -291,6 +301,115 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     await Promise.all([loadRound(k), loadGame(k), loadHistory(k), refreshBalance()]).catch(() => {});
   }
 
+  /**
+   * What quick buy would spend on `count` tickets in the round on sale (the
+   * key pays the fees), or `null` while unknown.
+   */
+  function sessionCost(count: number): bigint | null {
+    const price = ticketPrice.value;
+    if (price === null || rentPerByte.value === null) return null;
+    return batchCost({
+      price,
+      count,
+      transactions: 0,
+      lottery: lottery.value,
+      roundExists: !!round.value,
+      ticketSize: getTicketSize(),
+      roundSize: getRoundSize(),
+      rentPerByte: rentPerByte.value,
+    });
+  }
+
+  /** How many of `numbers` the wallet holds in a round, by the cluster's confirmed state. */
+  async function countHeld(k: GameKind, period: number, numbers: readonly number[], owner: Address) {
+    const [round] = await findRoundPda({ kind: k, period }, { programAddress });
+    const addresses = await Promise.all(
+      numbers.map(async (number) => (await findTicketPda({ round, number }, { programAddress }))[0]),
+    );
+    const base64 = getBase64Encoder();
+    const decoder = getAddressDecoder();
+    let held = 0;
+    for (const run of chunk(addresses, 100)) {
+      const { value } = await client.rpc
+        .getMultipleAccounts(run, {
+          encoding: 'base64',
+          commitment: 'confirmed',
+          dataSlice: { offset: TICKET_OFFSETS.owner, length: 32 },
+        })
+        .send();
+      for (const account of value) {
+        if (account && decoder.decode(base64.encode(account.data[0])) === owner) held++;
+      }
+    }
+    return held;
+  }
+
+  /**
+   * Buys `numbers` in the round on sale, 20 per transaction, never paying
+   * more than the price shown. Quick buy pays when it is on and its budget
+   * covers them; otherwise the wallet approves every transaction at once.
+   * The program skips numbers someone took meanwhile.
+   */
+  async function buyMany(numbers: readonly number[], country: string | null) {
+    const k = kind.value;
+    const period = s.value.period.value;
+    const price = ticketPrice.value;
+    const owner = wallet.value;
+    if (busy.value || !owner || price === null || period === null || numbers.length === 0) return null;
+    busy.value = true;
+    try {
+      const viaSession = quick.covers(sessionCost(numbers.length));
+      const signer = viaSession ? quick.key.value! : client.payer;
+      const sets = await Promise.all(
+        chunk(numbers).map(async (run) => [
+          await getBuyTicketsWithTicketsInstruction(
+            {
+              buyer: signer,
+              session: viaSession ? quick.session.value!.address : undefined,
+              kind: k,
+              period,
+              numbers: run,
+              country: countryToBytes(country),
+              maxPrice: price,
+            },
+            { programAddress },
+          ),
+        ]),
+      );
+      const count = numbers.length;
+      const single = count === 1 ? formatNumber(numbers[0]!) : null;
+      let held = count;
+      const signature = await run(
+        single === null ? t('batch.buying', { n: count }, count) : t('tx.buying', { number: single }),
+        async (config) => {
+          const signatures = await sendInstructionSets(client.rpc, signer, sets, {
+            abortSignal: config.abortSignal,
+            route: viaSession ? 'app' : undefined,
+          });
+          held = await countHeld(k, period, numbers, owner).catch(() => count);
+          return { context: { signature: signatures[0]! } };
+        },
+        () => {
+          if (held < count) return t('batch.boughtSome', { n: held, count });
+          if (single !== null) return t(isLottery(k) ? 'tx.bought' : 'guess.bought', { number: single });
+          return t('batch.bought', { n: count }, count);
+        },
+        // Several transactions: the wallet only signs them, all in one prompt.
+        !viaSession && sets.length > 1 && canSignOnly(client.payer) ? 'app' : undefined,
+        viaSession
+          ? t('quick.noPrompt')
+          : sets.length > 1
+            ? t('batch.oneApproval', { n: sets.length }, sets.length)
+            : undefined,
+      );
+      await after(k);
+      if (viaSession) await quick.refresh().catch(() => {});
+      return signature;
+    } finally {
+      busy.value = false;
+    }
+  }
+
   /** Buys `number` in the round on sale, never paying more than the price shown. */
   async function buy(number: number, country: string | null) {
     const k = kind.value;
@@ -298,6 +417,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     const price = ticketPrice.value;
     // One transaction at a time: a second click or Enter must not start another.
     if (busy.value || !wallet.value || price === null || period === null) return null;
+    if (quick.covers(sessionCost(1))) return buyMany([number], country);
     busy.value = true;
     try {
       const signature = await run(
@@ -467,7 +587,9 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     pending,
     totals,
     refresh: () => refreshGame(kind.value),
+    sessionCost,
     buy,
+    buyMany,
     settle,
     reclaimable,
     reclaim,

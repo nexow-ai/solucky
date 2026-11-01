@@ -14,6 +14,7 @@ const it: Dict = {
     how: 'Come funziona',
     fairness: 'Equità',
     faq: 'FAQ',
+    skip: 'Vai al contenuto',
   },
 
   lang: {
@@ -385,6 +386,78 @@ const it: Dict = {
     line: 'Tocca o trascina lungo la linea per scegliere un numero',
   },
 
+  batch: {
+    one: 'Un numero',
+    many: 'Più numeri',
+    from: 'Da',
+    to: 'A',
+    count: 'Quanti',
+    upTo: 'Fino a {n}',
+    random: 'A caso',
+    spread: 'Distribuiti',
+    randomHint: 'Numeri liberi scelti a caso nell’intervallo.',
+    spreadHint:
+      'Numeri liberi distribuiti in modo uniforme su tutto l’intervallo. Vince il biglietto più vicino, quindi distanziarli copre una parte più ampia della linea.',
+    onlyFree: 'Solo {n} numero libero in questo intervallo | Solo {n} numeri liberi in questo intervallo',
+    again: 'Scegli di nuovo',
+    whole: 'Tutto l’intervallo',
+    picked: '{n} numero scelto | {n} numeri scelti',
+    share: 'Prob. di vincita con questi',
+    shareHint: 'La loro quota della linea in questo momento. I biglietti comprati più tardi lì vicino la riducono.',
+    chance: 'Probabilità che uno di questi sia il numero',
+    none: 'Nessun numero libero da comprare',
+    buy: 'Compra {n} biglietto per ◎{price} | Compra {n} biglietti per ◎{price}',
+    viaQuick: 'Paga l’acquisto rapido: nessuna conferma nel wallet.',
+    viaWallet:
+      '{n} transazione, con una sola approvazione nel tuo wallet. | {n} transazioni, con una sola approvazione nel tuo wallet.',
+    total: 'Circa ◎{sol} in tutto, con rent e commissioni.',
+    buying: 'Acquisto di {n} biglietto | Acquisto di {n} biglietti',
+    bought: '{n} biglietto acquistato | {n} biglietti acquistati',
+    boughtSome: 'Acquistati {n} su {count} biglietti: qualcuno ha preso prima gli altri numeri',
+    oneApproval:
+      'Approva {n} transazione nel tuo wallet, in una volta sola. | Approva {n} transazioni nel tuo wallet, tutte in una volta.',
+  },
+
+  quick: {
+    title: 'Acquisto rapido',
+    statusOff: 'compra biglietti senza confermare ogni volta nel wallet',
+    statusOn: 'attivo · restano ◎{sol} · termina {when}',
+    statusLow: 'attivo · restano ◎{sol} · aggiungi fondi per ricaricare le sue commissioni di rete',
+    statusEnded: 'terminato · ◎{sol} da recuperare',
+    statusElsewhere: 'attivo in un altro browser · restano ◎{sol}',
+    setUp: 'Configura',
+    manage: 'Gestisci',
+    explain:
+      'Approva una volta e imposta un budget. Poi questo browser conserva una chiave che compra biglietti per il tuo wallet da quel budget, senza conferme nel wallet. I biglietti e qualsiasi premio sono tuoi.',
+    safety:
+      'Il programma permette alla chiave di spendere il budget solo in biglietti per il tuo wallet. Chiunque usi questo browser può spenderlo così, quindi tieni il budget basso. Disattivando l’acquisto rapido, quello che resta torna al tuo wallet.',
+    budget: 'Budget (SOL)',
+    tickets: 'Fino a {n} biglietto | Fino a {n} biglietti',
+    lasts: 'Termina dopo',
+    days: '{n} giorno | {n} giorni',
+    float:
+      'La chiave riceve anche ◎{sol} per le commissioni di rete, e la sessione trattiene un po’ di rent. Tornano entrambi quando disattivi l’acquisto rapido.',
+    turnOn: 'Attiva con ◎{sol}',
+    useHere: 'Usalo in questo browser',
+    elsewhereHint:
+      'L’acquisto rapido è attivo per una chiave in un altro browser. Spostalo qui con una sola approvazione nel wallet, oppure disattivalo per riavere il suo budget.',
+    add: 'Aggiungi al budget (SOL)',
+    addButton: 'Aggiungi ◎{sol}',
+    renew: 'Rinnova',
+    turnOff: 'Disattiva',
+    turnOffReturn: 'Disattiva e recupera ◎{sol}',
+    returnFloat: 'Restituisci ◎{sol} di commissioni da questo browser',
+    unsupported: 'Questo browser non può conservare una chiave per l’acquisto rapido.',
+    opening: 'Attivazione dell’acquisto rapido',
+    funding: 'Aggiunta di ◎{sol} all’acquisto rapido',
+    on: 'L’acquisto rapido è attivo',
+    closing: 'Disattivazione dell’acquisto rapido',
+    off: 'L’acquisto rapido è disattivato. Tutto è tornato al tuo wallet.',
+    returning: 'Restituzione delle commissioni',
+    returned: 'Le commissioni sono tornate nel tuo wallet',
+    noPrompt: 'L’acquisto rapido firma al posto tuo: nessuna conferma nel wallet.',
+  },
+
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
@@ -646,6 +719,14 @@ const it: Dict = {
       nothingToCheck: 'Non ci sono nuovi tentativi da verificare.',
       batchSealed: 'Gli ultimi tentativi sono in verifica; riprova tra qualche secondo.',
       invalidGame: 'Gioco sconosciuto.',
+      ticketsMismatch: 'Indica un account biglietto per ogni numero, e almeno un numero.',
+      wrongTicketAccount: 'Un account biglietto non corrisponde al suo numero.',
+      allTaken: 'Tutti i numeri erano già presi. Scegline altri.',
+      notSessionKey: 'Questa chiave non può spendere da questa sessione di acquisto rapido.',
+      sessionExpired: 'L’acquisto rapido è terminato. Rinnovalo o disattivalo.',
+      sessionBudgetLow:
+        'All’acquisto rapido resta troppo poco per questi biglietti. Aggiungi fondi, oppure compra con il tuo wallet.',
+      invalidSessionExpiry: 'L’acquisto rapido deve terminare nel futuro, entro 30 giorni.',
     },
   },
 

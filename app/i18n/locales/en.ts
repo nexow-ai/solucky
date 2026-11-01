@@ -25,6 +25,8 @@ const en = {
     how: 'How it works',
     fairness: 'Fairness',
     faq: 'FAQ',
+    // The keyboard's first stop on every page: past the header to the page itself.
+    skip: 'Skip to content',
   },
 
   lang: {
@@ -395,6 +397,77 @@ const en = {
     line: 'Tap or drag along the line to pick a number',
   },
 
+  batch: {
+    one: 'One number',
+    many: 'Many numbers',
+    from: 'From',
+    to: 'To',
+    count: 'How many',
+    upTo: 'Up to {n}',
+    random: 'Random',
+    spread: 'Spread out',
+    randomHint: 'Free numbers drawn at random from the range.',
+    spreadHint:
+      'Free numbers spaced evenly across the range. The closest ticket wins, so spacing them out covers more of the line.',
+    onlyFree: 'Only {n} free number in this range | Only {n} free numbers in this range',
+    again: 'Pick again',
+    whole: 'Whole range',
+    picked: '{n} number picked | {n} numbers picked',
+    share: 'Win chance with these',
+    shareHint: 'Their share of the line right now. Tickets bought nearby later shrink it.',
+    chance: 'Chance one of these is the number',
+    none: 'No free number to buy',
+    buy: 'Buy {n} ticket for ◎{price} | Buy {n} tickets for ◎{price}',
+    viaQuick: 'Quick buy pays: no wallet prompt.',
+    viaWallet: '{n} transaction, approved once in your wallet. | {n} transactions, approved once in your wallet.',
+    total: 'About ◎{sol} in all, with rent and fees.',
+    buying: 'Buying {n} ticket | Buying {n} tickets',
+    bought: 'Bought {n} ticket | Bought {n} tickets',
+    boughtSome: 'Bought {n} of {count} tickets: someone took the other numbers first',
+    oneApproval:
+      'Approve {n} transaction in your wallet, all at once. | Approve {n} transactions in your wallet, all at once.',
+  },
+
+  quick: {
+    title: 'Quick buy',
+    statusOff: 'buy tickets without a wallet prompt each time',
+    statusOn: 'on · ◎{sol} left · ends {when}',
+    statusLow: 'on · ◎{sol} left · add funds to refill its network fees',
+    statusEnded: 'ended · ◎{sol} left to get back',
+    statusElsewhere: 'on in another browser · ◎{sol} left',
+    setUp: 'Set up',
+    manage: 'Manage',
+    explain:
+      'Approve once and set a budget. This browser then keeps a key that buys tickets for your wallet from that budget, with no wallet prompt. The tickets and any prize are yours.',
+    safety:
+      'The program lets the key spend the budget only on tickets for your wallet. Anyone using this browser can spend it that way, so keep the budget small. Turning quick buy off sends what is left back to your wallet.',
+    budget: 'Budget (SOL)',
+    tickets: 'Up to {n} ticket | Up to {n} tickets',
+    lasts: 'Ends after',
+    days: '{n} day | {n} days',
+    float:
+      'The key also gets ◎{sol} for network fees, and the session holds a little rent. Both come back when you turn it off.',
+    turnOn: 'Turn on with ◎{sol}',
+    useHere: 'Use it in this browser',
+    elsewhereHint:
+      'Quick buy is on for a key in another browser. Move it here with one wallet approval, or turn it off to get its budget back.',
+    add: 'Add to the budget (SOL)',
+    addButton: 'Add ◎{sol}',
+    renew: 'Renew',
+    turnOff: 'Turn off',
+    turnOffReturn: 'Turn off and get ◎{sol} back',
+    returnFloat: 'Return ◎{sol} of fees from this browser',
+    unsupported: 'This browser cannot keep a quick-buy key.',
+    opening: 'Turning on quick buy',
+    funding: 'Adding ◎{sol} to quick buy',
+    on: 'Quick buy is on',
+    closing: 'Turning off quick buy',
+    off: 'Quick buy is off. Everything went back to your wallet.',
+    returning: 'Returning the fees',
+    returned: 'The fees are back in your wallet',
+    noPrompt: 'Quick buy signs it: no wallet prompt.',
+  },
+
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
@@ -651,6 +724,13 @@ const en = {
       nothingToCheck: 'There are no new guesses to check.',
       batchSealed: 'The latest guesses are being checked; try again in a few seconds.',
       invalidGame: 'Unknown game.',
+      ticketsMismatch: 'Give one ticket account for each number, and at least one number.',
+      wrongTicketAccount: 'A ticket account does not match its number.',
+      allTaken: 'Every number was already taken. Pick others.',
+      notSessionKey: 'This key cannot spend from this quick-buy session.',
+      sessionExpired: 'Quick buy has ended. Renew it or turn it off.',
+      sessionBudgetLow: 'Quick buy has too little left for these tickets. Add funds, or buy with your wallet.',
+      invalidSessionExpiry: 'Quick buy must end in the future, within 30 days.',
     },
   },
 

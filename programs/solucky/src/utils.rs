@@ -52,14 +52,29 @@ fn number(bytes: &[u8; NUMBER_LEN]) -> u32 {
 /// Inserts `n` into a lottery round's sorted numbers. `tail` holds them as
 /// u32 LE plus 4 free bytes at the end; numbers are unique.
 pub fn insert_sorted(tail: &mut [u8], n: u32) {
-    let end = tail.len() - NUMBER_LEN;
-    let (numbers, _) = tail[..end].as_chunks::<NUMBER_LEN>();
-    let at = numbers.partition_point(|x| number(x) < n) * NUMBER_LEN;
-    let ptr = tail.as_mut_ptr();
-    // SAFETY: `at..end` and `at + 4..end + 4` both lie inside `tail`. The
-    // syscall is far cheaper on-chain than a byte loop over a long list.
-    unsafe { sol_memmove(ptr.add(at + NUMBER_LEN), ptr.add(at), end - at) };
-    tail[at..at + NUMBER_LEN].copy_from_slice(&n.to_le_bytes());
+    insert_many_sorted(tail, &[n]);
+}
+
+/// Merges `new`, sorted and unique, into a lottery round's sorted numbers.
+/// `tail` holds them as u32 LE plus 4 free bytes per new number at the end;
+/// none of `new` is in the list yet. Each number in the list moves once, so
+/// a batch costs about what a single insert does.
+pub fn insert_many_sorted(tail: &mut [u8], new: &[u32]) {
+    // The numbers before `end` have not moved yet.
+    let mut end = tail.len() - new.len() * NUMBER_LEN;
+    for (j, &n) in new.iter().enumerate().rev() {
+        let (numbers, _) = tail[..end].as_chunks::<NUMBER_LEN>();
+        let at = numbers.partition_point(|x| number(x) < n) * NUMBER_LEN;
+        // `n` and the `j` smaller new numbers go before the ones from `at`.
+        let shift = (j + 1) * NUMBER_LEN;
+        let ptr = tail.as_mut_ptr();
+        // SAFETY: `at..end` and `at + shift..end + shift` both lie inside
+        // `tail`, since `end + shift` never passes its length. The syscall is
+        // far cheaper on-chain than a byte loop over a long list.
+        unsafe { sol_memmove(ptr.add(at + shift), ptr.add(at), end - at) };
+        tail[at + shift - NUMBER_LEN..at + shift].copy_from_slice(&n.to_le_bytes());
+        end = at;
+    }
 }
 
 /// The number in a sorted tail closest to `target`; a tie goes to the lower
@@ -174,6 +189,28 @@ mod tests {
             insert_sorted(&mut data, n);
         }
         assert_eq!(data, tail(&[0, 7, 8, 50, 21_000_000]));
+    }
+
+    #[test]
+    fn batches_merge_into_the_sorted_numbers() {
+        let mut data = tail(&[10, 30]);
+        data.extend_from_slice(&[0; 3 * NUMBER_LEN]);
+        insert_many_sorted(&mut data, &[5, 20, 40]);
+        assert_eq!(data, tail(&[5, 10, 20, 30, 40]));
+
+        let mut data = vec![0; 2 * NUMBER_LEN];
+        insert_many_sorted(&mut data, &[1, 2]);
+        assert_eq!(data, tail(&[1, 2]));
+
+        let mut data = tail(&[100]);
+        data.extend_from_slice(&[0; 2 * NUMBER_LEN]);
+        insert_many_sorted(&mut data, &[1, 2]);
+        assert_eq!(data, tail(&[1, 2, 100]));
+
+        let mut data = tail(&[0, 7, u32::MAX]);
+        data.extend_from_slice(&[0; 4 * NUMBER_LEN]);
+        insert_many_sorted(&mut data, &[3, 4, 8, 9]);
+        assert_eq!(data, tail(&[0, 3, 4, 7, 8, 9, u32::MAX]));
     }
 
     #[test]

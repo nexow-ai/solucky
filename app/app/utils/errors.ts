@@ -27,6 +27,13 @@ import {
   SOLUCKY_ERROR__NOTHING_TO_CHECK,
   SOLUCKY_ERROR__BATCH_SEALED,
   SOLUCKY_ERROR__INVALID_GAME,
+  SOLUCKY_ERROR__TICKETS_MISMATCH,
+  SOLUCKY_ERROR__WRONG_TICKET_ACCOUNT,
+  SOLUCKY_ERROR__ALL_TAKEN,
+  SOLUCKY_ERROR__NOT_SESSION_KEY,
+  SOLUCKY_ERROR__SESSION_EXPIRED,
+  SOLUCKY_ERROR__SESSION_BUDGET_LOW,
+  SOLUCKY_ERROR__INVALID_SESSION_EXPIRY,
 } from '@solucky/client';
 
 /** The program's errors, by code, to their key under `errors.program` in the dictionaries. */
@@ -56,6 +63,13 @@ const PROGRAM_ERRORS: Record<number, string> = {
   [SOLUCKY_ERROR__NOTHING_TO_CHECK]: 'nothingToCheck',
   [SOLUCKY_ERROR__BATCH_SEALED]: 'batchSealed',
   [SOLUCKY_ERROR__INVALID_GAME]: 'invalidGame',
+  [SOLUCKY_ERROR__TICKETS_MISMATCH]: 'ticketsMismatch',
+  [SOLUCKY_ERROR__WRONG_TICKET_ACCOUNT]: 'wrongTicketAccount',
+  [SOLUCKY_ERROR__ALL_TAKEN]: 'allTaken',
+  [SOLUCKY_ERROR__NOT_SESSION_KEY]: 'notSessionKey',
+  [SOLUCKY_ERROR__SESSION_EXPIRED]: 'sessionExpired',
+  [SOLUCKY_ERROR__SESSION_BUDGET_LOW]: 'sessionBudgetLow',
+  [SOLUCKY_ERROR__INVALID_SESSION_EXPIRY]: 'invalidSessionExpiry',
 };
 
 /** vue-i18n's `t`, or anything that turns a dictionary key into text. */

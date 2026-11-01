@@ -52,4 +52,18 @@ pub enum SoluckyError {
     BatchSealed,
     #[msg("Unknown game")]
     InvalidGame,
+    #[msg("Give one ticket account for each number, and at least one number")]
+    TicketsMismatch,
+    #[msg("A ticket account does not match its number")]
+    WrongTicketAccount,
+    #[msg("Every number was already taken")]
+    AllTaken,
+    #[msg("This key cannot spend from this session")]
+    NotSessionKey,
+    #[msg("The quick-buy session has ended")]
+    SessionExpired,
+    #[msg("The quick-buy session has too little left for these tickets")]
+    SessionBudgetLow,
+    #[msg("A quick-buy session must end in the future, within 30 days")]
+    InvalidSessionExpiry,
 }

@@ -70,17 +70,8 @@ const preview = computed(() => {
 });
 const shareShown = useTween(() => preview.value?.share ?? 0, 500);
 
-// Each ticket is its own account; its rent comes back when it is closed. Rent
-// is linear in an account's size plus 128 bytes, so one lookup prices it all.
-const { client } = useSolana();
-const rentPerByte = ref<bigint | null>(null);
-onMounted(async () => {
-  const empty = await client.rpc
-    .getMinimumBalanceForRentExemption(0n)
-    .send()
-    .catch(() => null);
-  rentPerByte.value = empty === null ? null : empty / 128n;
-});
+// Each ticket is its own account; its rent comes back when it is closed.
+const { rentPerByte } = useRent();
 const ticketRent = computed(() =>
   rentPerByte.value === null ? null : (128n + BigInt(getTicketSize())) * rentPerByte.value,
 );
@@ -98,6 +89,17 @@ const cost = computed(() =>
 );
 
 const spinning = ref(false);
+
+/** One number on the reels, or many picked from a range. */
+const mode = ref<'one' | 'many'>('one');
+const modes = computed(() => [
+  { label: t('batch.one'), value: 'one', icon: 'i-lucide-ticket' },
+  { label: t('batch.many'), value: 'many', icon: 'i-lucide-layers' },
+]);
+
+// Quick buy pays when it is on and covers this ticket: the wallet's balance doesn't matter then.
+const quick = useQuickBuy();
+const quickPays = computed(() => quick.covers(lottery.sessionCost(1)));
 
 // A Guess round takes guesses while its last batch waits for the check (the
 // program refuses them once the check's slot is out); a found number ends it.
@@ -120,7 +122,7 @@ const block = computed(() =>
     msLeft: left.value,
     open: roundOpen.value,
     full: isLottery.value && (round.value?.data.ticketCount ?? 0) >= MAX_LOTTERY_TICKETS,
-    balance: balance.value,
+    balance: quickPays.value ? null : balance.value,
     cost: cost.value,
     busy: busy.value,
     spinning: spinning.value,
@@ -241,6 +243,8 @@ async function buy(fromBar = false) {
 const panel = ref<HTMLElement>();
 
 function onKey(event: KeyboardEvent) {
+  // Many numbers are picked with their own fields.
+  if (mode.value !== 'one') return;
   const target = event.target as HTMLElement | null;
   if (target?.closest('input, textarea, [contenteditable], [role="combobox"], [role="dialog"]')) return;
   // Enter belongs to whatever control has focus outside the panel (a link, a
@@ -297,7 +301,20 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         </p>
       </header>
 
-      <div class="min-w-0 space-y-4">
+      <UTabs
+        v-model="mode"
+        :items="modes"
+        :content="false"
+        variant="pill"
+        size="sm"
+        color="neutral"
+        class="md:col-span-2"
+        :ui="{ list: 'table-tray' }"
+      />
+
+      <LotteryBatchPicker v-if="mode === 'many'" class="md:col-span-2" />
+
+      <div v-if="mode === 'one'" class="min-w-0 space-y-4">
         <!-- The ticket: the number on reels, between a header stub and a torn-off foot. -->
         <div ref="ticket" class="ticket" :class="{ bad: taken || tooBig, rolling: spinning }">
           <span class="foil" aria-hidden="true" />
@@ -375,7 +392,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         </div>
       </div>
 
-      <div class="flex min-w-0 flex-col gap-3">
+      <div v-if="mode === 'one'" class="flex min-w-0 flex-col gap-3">
         <!-- A keypad: 1 2 3 on top, read left to right, in every language. -->
         <div class="keypad grid flex-1 grid-cols-3 gap-2" dir="ltr" role="group" :aria-label="t('pick.pad')">
           <UButton
@@ -473,7 +490,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         <UAlert v-else-if="paused" color="warning" variant="subtle" icon="i-lucide-pause" :title="t('pick.paused')" />
 
         <ClientOnly>
-          <div ref="buyArea" class="relative">
+          <div v-if="mode === 'one'" ref="buyArea" class="relative">
             <UButton
               v-if="connected"
               size="xl"
@@ -493,7 +510,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
           <!-- Phones: the buy bar, until the button above scrolls into view. -->
           <Teleport to="body">
             <Transition name="bar">
-              <div v-if="buyBelow" class="buy-bar lg:hidden">
+              <div v-if="buyBelow && mode === 'one'" class="buy-bar lg:hidden">
                 <div class="flex items-center gap-3">
                   <span
                     class="min-w-0 shrink-0 font-mono text-lg font-semibold text-highlighted tabular-nums"
@@ -521,8 +538,9 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
               </div>
             </Transition>
           </Teleport>
+          <LotteryQuickBuy v-if="connected" />
         </ClientOnly>
-        <p class="text-center text-xs text-muted">
+        <p v-if="mode === 'one'" class="text-center text-xs text-muted">
           {{ t('pick.keys') }}
           <template v-if="ticketRent !== null">
             {{ t('pick.rent', { rent: formatSol(ticketRent, 5) }) }}

@@ -127,3 +127,19 @@ pub struct Ticket {
     pub created_at: i64,
     pub bump: u8,
 }
+
+/// A quick-buy session: lets a key the owner's browser keeps buy tickets for
+/// the owner without asking the owner's wallet each time. The budget is the
+/// lamports this account holds above its rent. The key can only spend it on
+/// tickets owned by the owner, and closing the session, which the owner or
+/// the key can do, sends every lamport back to the owner.
+#[account]
+#[derive(InitSpace)]
+pub struct Session {
+    pub owner: Pubkey,
+    /// The key that signs purchases paid from this session.
+    pub delegate: Pubkey,
+    /// Purchases stop at this time (cluster clock, Unix seconds).
+    pub expires_at: i64,
+    pub bump: u8,
+}
