@@ -1,5 +1,5 @@
 {
-  "address": "GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux",
+  "address": "JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF",
   "metadata": {
     "name": "solucky",
     "version": "1.0.0",
@@ -775,7 +775,7 @@
         },
         {
           "name": "program",
-          "address": "GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux"
+          "address": "JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF"
         },
         {
           "name": "program_data"

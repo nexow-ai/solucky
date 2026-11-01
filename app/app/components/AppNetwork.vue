@@ -37,7 +37,7 @@ const options = computed(() => {
 <template>
   <nav
     :aria-label="t('network.label')"
-    class="glass-pill shrink-0 grid-cols-[repeat(2,minmax(max-content,1fr))] gap-0.5 rounded-full p-0.5 font-mono text-[0.65rem] font-semibold tracking-[0.12em] uppercase"
+    class="shrink-0 grid-cols-[repeat(2,minmax(max-content,1fr))] gap-1 rounded-full p-1 font-mono shadow-(--neu-in-sm) text-[0.65rem] font-semibold tracking-[0.12em] uppercase"
     :class="block ? 'grid w-full' : 'inline-grid'"
   >
     <UTooltip v-for="option in options" :key="option.key" :text="option.tip" :content="{ sideOffset: 10 }">
@@ -64,7 +64,7 @@ const options = computed(() => {
 .segment {
   --tint: var(--ui-warning);
   display: inline-flex;
-  min-height: 1.75rem;
+  min-height: 1.6rem;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
@@ -75,7 +75,6 @@ const options = computed(() => {
   outline: none;
   transition:
     color 0.2s,
-    background-color 0.2s,
     box-shadow 0.2s;
 }
 
@@ -95,7 +94,6 @@ const options = computed(() => {
 
 a.segment:hover {
   color: var(--ui-text-highlighted);
-  background: color-mix(in oklab, var(--tint) 12%, transparent);
 }
 
 .segment[aria-disabled='true'] {
@@ -103,23 +101,16 @@ a.segment:hover {
   cursor: not-allowed;
 }
 
-/* The network in use: a lit, tinted pane of glass inside the pill. */
+/* The network in use stands out of the track. */
 .segment[aria-current] {
   color: var(--tint);
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--tint) 24%, transparent),
-    color-mix(in oklab, var(--tint) 8%, transparent)
-  );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 28%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--tint) 45%, transparent),
-    0 0 18px -6px color-mix(in oklab, var(--tint) 75%, transparent);
+  background: var(--ui-bg);
+  box-shadow: var(--neu-xs);
 }
 
 .segment[aria-current]:focus-visible {
   box-shadow:
-    inset 0 0 0 1px color-mix(in oklab, var(--tint) 45%, transparent),
+    var(--neu-xs),
     0 0 0 2px var(--ui-primary);
 }
 
@@ -134,7 +125,7 @@ a.segment:hover {
 
 @media (prefers-reduced-motion: no-preference) {
   .dot {
-    animation: var(--animate-twinkle);
+    animation: var(--animate-breathe);
   }
 }
 </style>

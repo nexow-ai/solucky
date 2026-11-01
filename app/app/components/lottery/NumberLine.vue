@@ -139,7 +139,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   <div class="number-line" dir="ltr">
     <div
       ref="track"
-      class="track table-well"
+      class="track"
       :class="{ dragging }"
       :title="t('pick.line')"
       aria-hidden="true"
@@ -163,7 +163,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
       <div v-if="lens" class="lens">
         <div
           ref="lensTrack"
-          class="lens-track table-well"
+          class="lens-track"
           :class="{ dragging: lensDragging }"
           aria-hidden="true"
           @pointerdown="onLensDown"
@@ -201,7 +201,8 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   position: relative;
   height: 3.25rem;
   overflow: hidden;
-  border-radius: 0.9rem;
+  border-radius: 1rem;
+  box-shadow: var(--neu-in);
   cursor: crosshair;
   /* Vertical swipes still scroll the page; sideways ones pick. */
   touch-action: pan-y;
@@ -210,7 +211,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
 
 .bars {
   position: absolute;
-  inset: 0.5rem 0.4rem 0.35rem;
+  inset: 0.55rem 0.5rem 0.4rem;
   display: flex;
   align-items: flex-end;
   gap: 1px;
@@ -220,11 +221,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   flex: 1;
   height: calc(var(--h) * 100%);
   border-radius: 1px 1px 0 0;
-  background: linear-gradient(
-    to top,
-    color-mix(in oklab, var(--ui-primary) 25%, transparent),
-    color-mix(in oklab, var(--ui-primary) 65%, transparent)
-  );
+  background: color-mix(in oklab, var(--ui-text-muted) 45%, transparent);
   transition: height 0.6s var(--ease-out-expo);
 }
 
@@ -233,14 +230,10 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   position: absolute;
   inset-block: 0;
   min-width: 3px;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in oklab, var(--ui-secondary) 22%, transparent),
-    color-mix(in oklab, var(--ui-secondary) 5%, transparent)
-  );
+  background: color-mix(in oklab, var(--ui-secondary) 12%, transparent);
   box-shadow:
-    inset 1px 0 0 color-mix(in oklab, var(--ui-secondary) 70%, transparent),
-    inset -1px 0 0 color-mix(in oklab, var(--ui-secondary) 70%, transparent);
+    inset 1px 0 0 color-mix(in oklab, var(--ui-secondary) 60%, transparent),
+    inset -1px 0 0 color-mix(in oklab, var(--ui-secondary) 60%, transparent);
   transition:
     left 0.45s var(--ease-out-expo),
     width 0.45s var(--ease-out-expo);
@@ -249,14 +242,13 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
 /* The player's own tickets: pins along the top edge. */
 .pin {
   position: absolute;
-  top: 0.2rem;
-  width: 0.45rem;
-  height: 0.45rem;
+  top: 0.3rem;
+  width: 0.4rem;
+  height: 0.4rem;
   translate: -50% 0;
-  rotate: 45deg;
-  border-radius: 1px;
-  background: var(--color-pink-500);
-  box-shadow: 0 0 8px var(--color-pink-500);
+  border-radius: 9999px;
+  background: var(--ui-primary);
+  box-shadow: 0 0 6px var(--ui-primary);
 }
 
 /* The picked number: a needle with a knob, gliding when it changes. */
@@ -266,48 +258,45 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   width: 2px;
   translate: -50% 0;
   background: var(--ui-secondary);
-  box-shadow: 0 0 10px var(--ui-secondary);
   transition: left 0.45s var(--ease-out-expo);
 }
 
 .needle > b {
   position: absolute;
-  bottom: 0.25rem;
+  bottom: 0.3rem;
   left: 50%;
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.8rem;
+  height: 0.8rem;
   translate: -50% 0;
   border-radius: 9999px;
-  background: var(--ui-secondary);
+  background: var(--ui-bg);
   box-shadow:
-    0 0 0 2px color-mix(in oklab, var(--ui-bg) 70%, transparent),
-    0 0 14px var(--ui-secondary);
+    var(--neu-xs),
+    inset 0 0 0 2.5px var(--ui-secondary);
 }
 
-.needle.bad,
-.needle.bad > b {
+.needle.bad {
   background: var(--ui-error);
-  box-shadow: 0 0 10px var(--ui-error);
 }
 
-/* Where the lens below looks: a bright bracket around its stretch of the line. */
+.needle.bad > b {
+  box-shadow:
+    var(--neu-xs),
+    inset 0 0 0 2.5px var(--ui-error);
+}
+
+/* Where the lens below looks: a bracket around its stretch of the line. */
 .bracket {
   position: absolute;
-  inset-block: 0.15rem;
+  inset-block: 0.2rem;
   min-width: 6px;
   translate: -1px 0;
-  border: 1px solid color-mix(in oklab, white 70%, transparent);
-  border-radius: 3px;
-  box-shadow: 0 0 10px color-mix(in oklab, white 35%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ui-text-highlighted) 55%, transparent);
+  border-radius: 4px;
   pointer-events: none;
   transition:
     left 0.45s var(--ease-out-expo),
     width 0.45s var(--ease-out-expo);
-}
-
-:root:not(.dark) .bracket {
-  border-color: var(--ui-text-highlighted);
-  box-shadow: none;
 }
 
 .dragging .needle,
@@ -318,14 +307,15 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
 
 /* The lens: the picked number's neighborhood, magnified, picked number by number. */
 .lens {
-  margin-top: 0.6rem;
+  margin-top: 0.75rem;
 }
 
 .lens-track {
   position: relative;
   height: 2.75rem;
   overflow: hidden;
-  border-radius: 0.8rem;
+  border-radius: 0.9rem;
+  box-shadow: var(--neu-in-sm);
   cursor: ew-resize;
   touch-action: pan-y;
   user-select: none;
@@ -336,22 +326,21 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   transition-duration: 0.3s;
 }
 
-/* A ticket in the lens: a bar standing on the floor; your own carry a pink diamond. */
+/* A ticket in the lens: a bar standing on the floor; your own are lit. */
 .tick {
   position: absolute;
-  bottom: 0.35rem;
+  bottom: 0.4rem;
   width: 3px;
-  height: 55%;
+  height: 50%;
   translate: -50% 0;
   border-radius: 2px;
-  background: color-mix(in oklab, var(--ui-primary) 80%, transparent);
-  box-shadow: 0 0 8px color-mix(in oklab, var(--ui-primary) 60%, transparent);
+  background: color-mix(in oklab, var(--ui-text-muted) 60%, transparent);
   transition: left 0.3s var(--ease-out-expo);
 }
 
 .tick.mine {
-  background: var(--color-pink-500);
-  box-shadow: 0 0 8px var(--color-pink-500);
+  background: var(--ui-primary);
+  box-shadow: 0 0 6px var(--ui-primary);
 }
 
 .tick.mine::before {
@@ -359,19 +348,18 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   position: absolute;
   top: -0.55rem;
   left: 50%;
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.4rem;
+  height: 0.4rem;
   translate: -50% 0;
-  rotate: 45deg;
-  border-radius: 1px;
-  background: var(--color-pink-500);
+  border-radius: 9999px;
+  background: var(--ui-primary);
 }
 
 .zoom {
-  padding: 0 0.4rem;
+  padding: 0 0.45rem;
   border-radius: 9999px;
   color: var(--ui-text-toned);
-  background: color-mix(in oklab, var(--ui-text-muted) 14%, transparent);
+  box-shadow: var(--neu-in-sm);
 }
 
 .lens-enter-active,
@@ -390,8 +378,8 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
 .scale {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.3rem;
-  padding-inline: 0.15rem;
+  margin-top: 0.4rem;
+  padding-inline: 0.2rem;
   font-size: 0.625rem;
   color: var(--ui-text-dimmed);
 }
@@ -401,7 +389,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.25rem 1rem;
-  margin-top: 0.35rem;
+  margin-top: 0.4rem;
   font-size: 0.6875rem;
   color: var(--ui-text-muted);
 }
@@ -409,29 +397,28 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
 .legend li {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .key {
   display: inline-block;
-  width: 0.55rem;
-  height: 0.55rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 2px;
 }
 
 .key-play {
-  background: color-mix(in oklab, var(--ui-primary) 65%, transparent);
+  background: color-mix(in oklab, var(--ui-text-muted) 45%, transparent);
 }
 
 .key-mine {
-  rotate: 45deg;
-  background: var(--color-pink-500);
+  border-radius: 9999px;
+  background: var(--ui-primary);
 }
 
 .key-pick {
   width: 0.2rem;
   height: 0.75rem;
   background: var(--ui-secondary);
-  box-shadow: 0 0 6px var(--ui-secondary);
 }
 </style>

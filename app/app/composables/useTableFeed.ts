@@ -64,7 +64,7 @@ export function useTableFeed() {
           icon: 'i-lucide-user-round-plus',
           color: 'secondary',
           duration: 4_500,
-          ui: { root: 'glass-toast glass-toast-join' },
+          ui: { root: 'table-toast table-toast-join' },
         });
         batch = { id: shown.id, flags: [flagEmoji(peer.cc)], until: now + JOIN_BATCH_MS };
       });
@@ -102,7 +102,7 @@ export function useTableFeed() {
               icon: 'i-lucide-ticket',
               color: 'primary',
               duration: 5_000,
-              ui: { root: 'glass-toast glass-toast-ticket' },
+              ui: { root: 'table-toast' },
             });
           }
         },

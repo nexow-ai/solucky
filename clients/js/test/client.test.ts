@@ -326,9 +326,9 @@ describe('accounts', () => {
   test('PDA seeds match the program: fixed addresses on the deployed program', async () => {
     // Seeds: "round", kind as one byte, period as u32 LE (programs/solucky/src/instructions/buy_ticket.rs).
     const [round] = await findRoundPda({ kind: Daily, period: 20_758 });
-    expect(round).toBe(address('H9ukcLBatBGuWiBhrc6mTCehbLBEEjdAoyPXLhgD34s3'));
+    expect(round).toBe(address('A7oEkRPzkQzy1KZ6TUGwQ2d5Pyj4qQebyW5mGNPyZiHF'));
     const [game] = await findGamePda({ kind: Guess });
-    expect(game).toBe(address('51qixxK5d8myuYRki4254Bzf47Pd1AydHh79mNGBBBqv'));
+    expect(game).toBe(address('5riz7aRaC9627qZ33X7eSk5WxvxX1ZnFks5VVkymFMd9'));
   });
 
   test('PDAs are derived from the game, the period and the number', async () => {

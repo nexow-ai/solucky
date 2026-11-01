@@ -19,12 +19,11 @@ function skip(event: MouseEvent) {
     <!-- The keyboard's first stop on every page, shown only when focused. -->
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:start-3 focus:top-3 focus:z-[100] focus:rounded-md focus:bg-default focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-highlighted focus:shadow-lg focus:ring-2 focus:ring-primary"
+      class="sr-only focus:not-sr-only focus:fixed focus:start-3 focus:top-3 focus:z-[100] focus:rounded-xl focus:bg-default focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-highlighted focus:shadow-(--neu) focus:ring-2 focus:ring-primary"
       @click="skip"
     >
       {{ t('nav.skip') }}
     </a>
-    <AppBackdrop />
     <AppHeader />
     <UMain id="main" tabindex="-1" class="flex-1 outline-none">
       <slot />

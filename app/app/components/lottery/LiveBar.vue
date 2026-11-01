@@ -37,15 +37,15 @@ const duration = computed(() => `${Math.max(18, props.feed.length * 4)}s`);
 </script>
 
 <template>
-  <LotteryGlass as="div" rounded="rounded-full" class="livebar">
-    <div class="flex items-center gap-3 px-3 py-2 sm:gap-4 sm:px-4">
+  <LotterySurface as="div" sunken rounded="rounded-full">
+    <div class="flex items-center gap-3 px-2 py-2 sm:gap-4 sm:pe-5">
       <span class="status" :data-status="status">
         <span class="dot" />
         <span class="kicker text-[0.65rem] text-current">{{ label }}</span>
       </span>
 
       <span class="flex shrink-0 items-center gap-2">
-        <span class="flex -space-x-1.5 rtl:space-x-reverse" aria-hidden="true">
+        <span class="flex gap-1" aria-hidden="true">
           <span v-for="f in flags" :key="f.id" class="seat" :class="{ picking: f.pick }">{{ f.flag }}</span>
           <span v-if="more" class="seat seat-more font-mono">+{{ more }}</span>
         </span>
@@ -86,7 +86,7 @@ const duration = computed(() => `${Math.max(18, props.feed.length * 4)}s`);
         </p>
       </div>
     </div>
-  </LotteryGlass>
+  </LotterySurface>
 </template>
 
 <style scoped>
@@ -94,12 +94,12 @@ const duration = computed(() => `${Math.max(18, props.feed.length * 4)}s`);
   --c: var(--ui-text-muted);
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.65rem;
+  gap: 0.5rem;
+  padding: 0.35rem 0.8rem;
   border-radius: 9999px;
   color: var(--c);
-  background: color-mix(in oklab, var(--c) 12%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 35%, transparent);
+  background: var(--ui-bg);
+  box-shadow: var(--neu-xs);
   flex-shrink: 0;
 }
 
@@ -112,29 +112,16 @@ const duration = computed(() => `${Math.max(18, props.feed.length * 4)}s`);
 }
 
 .dot {
-  position: relative;
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.45rem;
+  height: 0.45rem;
   border-radius: 9999px;
   background: var(--c);
-  box-shadow: 0 0 10px var(--c);
+  box-shadow: 0 0 8px var(--c);
 }
 
-.status[data-status='live'] .dot::after,
-.status[data-status='connecting'] .dot::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 9999px;
-  border: 1px solid var(--c);
-  animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes ping {
-  to {
-    transform: scale(2.4);
-    opacity: 0;
-  }
+.status[data-status='live'] .dot,
+.status[data-status='connecting'] .dot {
+  animation: var(--animate-breathe);
 }
 
 .seat {
@@ -143,18 +130,16 @@ const duration = computed(() => `${Math.max(18, props.feed.length * 4)}s`);
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 9999px;
-  font-size: 0.85rem;
-  background: color-mix(in oklab, var(--ui-bg-elevated) 85%, transparent);
-  box-shadow:
-    0 0 0 2px color-mix(in oklab, var(--ui-bg) 80%, transparent),
-    inset 0 1px 0 color-mix(in oklab, white 15%, transparent);
+  font-size: 0.8rem;
+  background: var(--ui-bg);
+  box-shadow: var(--neu-xs);
   transition: box-shadow 0.3s;
 }
 
 .seat.picking {
   box-shadow:
-    0 0 0 2px var(--ui-secondary),
-    0 0 12px var(--ui-secondary);
+    var(--neu-xs),
+    0 0 0 1.5px var(--ui-secondary);
 }
 
 .seat-more {

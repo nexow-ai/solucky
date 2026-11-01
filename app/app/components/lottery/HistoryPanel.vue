@@ -30,24 +30,19 @@ async function reclaimAll() {
 </script>
 
 <template>
-  <LotteryGlass tint="secondary">
-    <div class="grid gap-6 p-5 sm:p-6 lg:grid-cols-2 lg:gap-8">
+  <LotterySurface>
+    <div class="grid gap-8 p-6 sm:p-8 lg:grid-cols-2 lg:gap-10">
       <div class="min-w-0 space-y-6">
-        <header class="text-center">
-          <p class="kicker">S☉Lucky</p>
-          <h2 class="text-3xl font-semibold tracking-[0.28em] text-muted uppercase">{{ t('history.title') }}</h2>
-          <p class="mt-4 flex items-baseline justify-center gap-3">
-            <span class="kicker text-sm">{{ t('history.total') }}</span>
-            <span
-              class="glow-secondary led font-mono text-5xl font-semibold text-secondary tabular-nums [--led-pitch:0.07em]"
-            >
-              {{ Math.round(roundsShown) }}
-            </span>
-            <span class="kicker text-sm">{{ t('history.games', totals.rounds) }}</span>
+        <header class="flex flex-wrap items-end justify-between gap-4">
+          <h2 class="text-3xl font-light tracking-[0.24em] text-highlighted uppercase">{{ t('history.title') }}</h2>
+          <p class="flex items-baseline gap-2.5">
+            <span class="kicker">{{ t('history.total') }}</span>
+            <span class="readout font-mono text-4xl leading-none">{{ Math.round(roundsShown) }}</span>
+            <span class="kicker">{{ t('history.games', totals.rounds) }}</span>
           </p>
         </header>
 
-        <div class="table-tray grid grid-cols-2 gap-3 px-2 py-3 sm:grid-cols-4">
+        <div class="grid grid-cols-2 gap-3 rounded-[1.5rem] px-2 py-4 shadow-(--neu-in-sm) sm:grid-cols-4">
           <LotteryStat :label="t('stat.tickets')" :value="formatNumber(totals.tickets)" />
           <LotteryStat :label="t('stat.winners')" :value="totals.winners" />
           <LotteryStat :label="t('stat.averagePot')" :value="`◎${formatSol(totals.averagePot, 2)}`" />
@@ -59,7 +54,7 @@ async function reclaimAll() {
 
       <div class="min-w-0 space-y-6">
         <div v-if="pending.length" class="space-y-2">
-          <p class="kicker text-center">{{ t('history.waiting') }}</p>
+          <p class="kicker">{{ t('history.waiting') }}</p>
           <div
             v-for="round in pending"
             :key="round.address"
@@ -118,8 +113,8 @@ async function reclaimAll() {
         />
 
         <div>
-          <p class="kicker mb-3 text-center">{{ t('history.winners') }}</p>
-          <div class="table-well h-72 overflow-y-auto p-2">
+          <p class="kicker mb-3">{{ t('history.winners') }}</p>
+          <div class="well h-72 overflow-y-auto p-2.5">
             <div v-if="loading" class="space-y-2 p-1">
               <USkeleton v-for="i in 5" :key="i" class="h-5 w-full" />
             </div>
@@ -136,14 +131,12 @@ async function reclaimAll() {
                 <NuxtLink
                   :to="localePath(roundPath(round.data.kind, round.data.period))"
                   class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
-                  :class="round.data.winner === address ? 'mine font-semibold text-primary' : 'text-toned'"
+                  :class="round.data.winner === address ? 'mine text-primary' : 'text-toned'"
                 >
                   <span class="col-span-3 truncate font-mono text-muted" dir="ltr">{{
                     shortTitle(round.data.kind, round.data.period)
                   }}</span>
-                  <span class="col-span-2 font-mono font-semibold text-secondary"
-                    >◎{{ formatSol(round.data.pot, 2) }}</span
-                  >
+                  <span class="col-span-2 font-mono text-secondary">◎{{ formatSol(round.data.pot, 2) }}</span>
                   <span class="col-span-3 truncate font-mono" dir="ltr">{{ shortAddress(round.data.winner) }}</span>
                   <span class="col-span-1 text-center">{{
                     flagEmoji(countryFromBytes(round.data.winnerCountry))
@@ -158,14 +151,28 @@ async function reclaimAll() {
         </div>
       </div>
     </div>
-  </LotteryGlass>
+  </LotterySurface>
 </template>
 
 <style scoped>
+/* A finished round waiting for its draw: a strip pressed into the panel, with a warm edge. */
 .pending {
-  border-radius: 1rem;
-  background: color-mix(in oklab, var(--ui-warning) 8%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-warning) 30%, transparent);
+  border-radius: 1.25rem;
+  box-shadow:
+    var(--neu-in-sm),
+    inset 3px 0 0 var(--ui-warning);
+}
+
+.pending:dir(rtl) {
+  box-shadow:
+    var(--neu-in-sm),
+    inset -3px 0 0 var(--ui-warning);
+}
+
+.well {
+  border-radius: 1.4rem;
+  box-shadow: var(--neu-in);
+  scrollbar-width: thin;
 }
 
 /* The winners list cascades in when it first fills. */
@@ -188,15 +195,10 @@ async function reclaimAll() {
 }
 
 .row:hover {
-  background: color-mix(in oklab, var(--ui-secondary) 8%, transparent);
+  background: color-mix(in oklab, var(--ui-text-muted) 7%, transparent);
 }
 
 .row.mine {
-  background: color-mix(in oklab, var(--ui-primary) 12%, transparent);
-  box-shadow: inset 2px 0 0 var(--ui-primary);
-}
-
-.row.mine:dir(rtl) {
-  box-shadow: inset -2px 0 0 var(--ui-primary);
+  background: color-mix(in oklab, var(--ui-primary) 9%, transparent);
 }
 </style>

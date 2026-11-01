@@ -75,18 +75,18 @@ watch(pot, (to, from) => {
 </script>
 
 <template>
-  <LotteryGlass hero class="stage">
-    <div class="grid items-center gap-5 p-5 sm:gap-6 sm:p-7 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+  <LotterySurface hero>
+    <div class="grid items-center gap-6 p-6 sm:gap-8 sm:p-8 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
       <!-- The game and its round. -->
-      <div class="flex items-center justify-center gap-4 lg:justify-start">
-        <span class="stage-emblem size-16 shrink-0 sm:size-20">
-          <LandingGameEmblem :kind="kind" size="size-full" />
+      <div class="flex items-center justify-center gap-5 lg:justify-start">
+        <span class="grid size-16 shrink-0 place-items-center rounded-full shadow-(--neu-in) sm:size-20">
+          <LandingGameEmblem :kind="kind" size="size-10 sm:size-12" />
         </span>
         <div class="min-w-0">
-          <p class="kicker truncate">
+          <p class="kicker truncate text-[0.65rem]">
             {{ period === null ? '…' : t('stage.round', { round: roundTitle(kind, period) }) }}
           </p>
-          <h1 class="mt-1 text-2xl font-semibold tracking-tight text-highlighted sm:text-3xl">
+          <h1 class="mt-1 text-2xl font-light tracking-tight text-highlighted sm:text-3xl">
             {{ t(`games.${slug}.name`) }}
           </h1>
           <p class="mt-1.5 hidden max-w-xs text-sm text-pretty text-muted sm:block">
@@ -95,31 +95,17 @@ watch(pot, (to, from) => {
         </div>
       </div>
 
-      <!-- The pot, in a frame of marquee bulbs that chase faster for a moment whenever it grows. -->
+      <!-- The pot, in a window pressed into the panel; a chip floats off it each time it grows. -->
       <div class="text-center">
         <p class="kicker">{{ t('pot.title') }}</p>
-        <div class="jackpot relative mx-auto mt-3 w-fit px-6 py-3 sm:px-8" :class="{ hot: gains.length }">
-          <svg class="bulbs" aria-hidden="true">
-            <rect class="bulbs-dim" x="3" y="3" rx="18" pathLength="300" />
-            <rect class="bulbs-lit" x="3" y="3" rx="18" pathLength="300" />
-          </svg>
-          <p
-            class="text-lucky glow-primary led font-mono text-4xl font-semibold tabular-nums [--led-pitch:0.065em] sm:text-6xl"
-            dir="ltr"
-          >
-            ◎{{ formatSol(Math.round(potShown), 3) }}
-          </p>
-          <span
-            v-for="g in gains"
-            :key="g.id"
-            class="gain font-mono text-sm font-semibold text-secondary"
-            aria-hidden="true"
-          >
+        <div class="relative mx-auto mt-3 w-fit rounded-[1.75rem] px-7 py-4 shadow-(--neu-in) sm:px-9">
+          <p class="readout text-5xl leading-none sm:text-6xl" dir="ltr">◎{{ formatSol(Math.round(potShown), 3) }}</p>
+          <span v-for="g in gains" :key="g.id" class="gain font-mono text-sm text-secondary" aria-hidden="true">
             +◎{{ formatSol(g.amount, 3) }}
           </span>
         </div>
         <p class="mt-3 flex flex-wrap items-baseline justify-center gap-x-2 text-sm">
-          <span class="font-mono font-semibold text-toned tabular-nums">{{ formatUsd(pot, price, intl) }}</span>
+          <span class="font-mono text-toned tabular-nums">{{ formatUsd(pot, price, intl) }}</span>
           <span class="text-dimmed" aria-hidden="true">·</span>
           <span class="text-muted">{{ t('stage.winnerTakes', { prize: formatSol(prize, 3) }) }}</span>
         </p>
@@ -133,24 +119,26 @@ watch(pot, (to, from) => {
         <template v-if="lottery && period !== null">
           <p class="kicker">{{ t('stage.closesIn') }}</p>
           <div class="stage-clock mt-3"><LotteryCountdown :ms="left" size="lg" /></div>
-          <div class="meter mt-4 w-full max-w-64" :style="{ '--p': elapsed }" aria-hidden="true"><i /></div>
+          <div
+            class="gauge mt-5 w-full max-w-64"
+            :style="{ '--p': elapsed, '--c': 'var(--ui-secondary)' }"
+            aria-hidden="true"
+          >
+            <i />
+          </div>
         </template>
         <template v-else-if="!lottery">
           <p class="kicker">{{ t('stat.numbersLeft') }}</p>
-          <p
-            class="glow-secondary led mt-2 font-mono text-4xl font-semibold text-secondary tabular-nums [--led-pitch:0.075em]"
-          >
-            {{ formatNumber(numbersLeft) }}
-          </p>
-          <div class="meter hunt mt-4 w-full max-w-64" :style="{ '--p': ruledOut }" aria-hidden="true"><i /></div>
-          <p class="kicker mt-2 text-[0.65rem]">{{ t('guess.noDeadline') }}</p>
+          <p class="readout mt-2 font-mono text-4xl">{{ formatNumber(numbersLeft) }}</p>
+          <div class="gauge mt-5 w-full max-w-64" :style="{ '--p': ruledOut }" aria-hidden="true"><i /></div>
+          <p class="kicker mt-2.5 text-[0.6rem]">{{ t('guess.noDeadline') }}</p>
         </template>
       </div>
     </div>
 
     <!-- The table's counters, the split, and the last draw. -->
     <div
-      class="stage-foot flex flex-wrap items-center justify-center gap-x-8 gap-y-3 px-5 py-3 sm:px-7 lg:justify-between"
+      class="mx-4 mb-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-[1.5rem] px-5 py-3 shadow-(--neu-in-sm) sm:mx-6 sm:mb-6 lg:justify-between"
     >
       <div class="flex gap-6 sm:gap-8">
         <LotteryStat :label="t('stat.tickets')" :value="tickets.length" />
@@ -162,29 +150,23 @@ watch(pot, (to, from) => {
       <NuxtLink
         v-if="drawing"
         :to="localePath(roundPath(drawing.data.kind, drawing.data.period))"
-        class="drawing flex items-center gap-2.5 rounded-full py-1.5 ps-3 pe-2 text-sm"
+        class="chip flex items-center gap-2.5 rounded-full py-1.5 ps-3.5 pe-2 text-sm"
       >
-        <span class="pulse" aria-hidden="true" />
+        <span class="led-dot animate-breathe text-warning" aria-hidden="true" />
         <span class="font-mono text-xs text-toned" dir="ltr">{{
           roundTitle(drawing.data.kind, drawing.data.period)
         }}</span>
-        <span class="font-mono font-semibold text-warning tabular-nums" dir="ltr"
-          >◎{{ formatSol(drawing.data.pot, 3) }}</span
-        >
+        <span class="font-mono text-warning tabular-nums" dir="ltr">◎{{ formatSol(drawing.data.pot, 3) }}</span>
         <LotteryStatusBadge :status="drawing.data.status" :lottery="lottery" />
       </NuxtLink>
       <NuxtLink
         v-else-if="last"
         :to="localePath(roundPath(last.data.kind, last.data.period))"
-        class="last-draw group flex items-center gap-2.5 rounded-full py-1.5 ps-3.5 pe-2.5 text-sm"
+        class="chip group flex items-center gap-2.5 rounded-full py-1.5 ps-4 pe-3 text-sm"
       >
-        <span class="kicker text-[0.65rem]">{{ t('stage.lastDraw') }}</span>
-        <span class="ball font-mono text-xs font-semibold tabular-nums" dir="ltr">{{
-          formatNumber(last.data.winningNumber)
-        }}</span>
-        <span class="font-mono font-semibold text-secondary tabular-nums" dir="ltr"
-          >◎{{ formatSol(last.data.payout, 3) }}</span
-        >
+        <span class="kicker text-[0.6rem]">{{ t('stage.lastDraw') }}</span>
+        <span class="ball font-mono text-xs tabular-nums" dir="ltr">{{ formatNumber(last.data.winningNumber) }}</span>
+        <span class="font-mono text-secondary tabular-nums" dir="ltr">◎{{ formatSol(last.data.payout, 3) }}</span>
         <span aria-hidden="true">{{ flagEmoji(countryFromBytes(last.data.winnerCountry)) }}</span>
         <UIcon
           name="i-lucide-arrow-right"
@@ -192,7 +174,7 @@ watch(pot, (to, from) => {
         />
       </NuxtLink>
     </div>
-  </LotteryGlass>
+  </LotterySurface>
 </template>
 
 <style scoped>
@@ -207,64 +189,10 @@ watch(pot, (to, from) => {
   }
 }
 
-.stage-foot {
-  border-top: 1px solid color-mix(in oklab, white 7%, transparent);
-  background: color-mix(in oklab, black 14%, transparent);
-}
-
-:root:not(.dark) .stage-foot {
-  border-top-color: color-mix(in oklab, var(--ui-primary) 12%, transparent);
-  background: color-mix(in oklab, white 35%, transparent);
-}
-
-/* Marquee bulbs: a dim ring, and every third one lit, stepping round. */
-.bulbs {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.bulbs rect {
-  width: calc(100% - 6px);
-  height: calc(100% - 6px);
-  fill: none;
-  stroke-width: 4.5;
-  stroke-linecap: round;
-}
-
-.bulbs-dim {
-  stroke: color-mix(in oklab, var(--ui-warning) 22%, transparent);
-  stroke-dasharray: 0 10;
-}
-
-.bulbs-lit {
-  --bulb: var(--ui-warning);
-  stroke: var(--bulb);
-  stroke-dasharray: 0 30;
-  filter: drop-shadow(0 0 3px var(--bulb)) drop-shadow(0 0 8px color-mix(in oklab, var(--bulb) 60%, transparent));
-  animation: chase 1.2s steps(3) infinite;
-  transition: stroke 0.3s;
-}
-
-.hot .bulbs-lit {
-  --bulb: var(--ui-secondary);
-  animation-duration: 0.36s;
-}
-
-@keyframes chase {
-  to {
-    stroke-dashoffset: -30;
-  }
-}
-
 .gain {
   position: absolute;
   inset-inline: 0;
-  top: -0.5rem;
-  text-shadow: 0 0 12px var(--ui-secondary);
+  top: -0.75rem;
   animation: gain 2.4s ease-out forwards;
 }
 
@@ -283,85 +211,22 @@ watch(pot, (to, from) => {
   }
 }
 
-/* A thin gauge: how far the round is through its time, or how much of the line the hunt has ruled out. */
-.meter {
-  --c: var(--ui-secondary);
-  position: relative;
-  height: 0.375rem;
-  overflow: hidden;
-  border-radius: 9999px;
-  background: color-mix(in oklab, var(--c) 14%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 22%, transparent);
+/* The last draw and the round being drawn: small keys standing out of the tray. */
+.chip {
+  background: var(--ui-bg);
+  box-shadow: var(--neu-xs);
+  transition: box-shadow 0.3s;
 }
 
-.meter > i {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  /* The hunt starts at a sliver: keep it visible. */
-  width: max(0.375rem, calc(var(--p) * 100%));
-  border-radius: inherit;
-  background: linear-gradient(90deg, color-mix(in oklab, var(--c) 50%, transparent), var(--c));
-  box-shadow: 0 0 12px var(--c);
-  transition: width 1s linear;
+.chip:hover {
+  box-shadow: var(--neu-in-sm);
 }
 
-.meter.hunt {
-  --c: var(--ui-primary);
-}
-
-.last-draw {
-  background: color-mix(in oklab, var(--ui-secondary) 8%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-secondary) 28%, transparent);
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-}
-
-.last-draw:hover {
-  background: color-mix(in oklab, var(--ui-secondary) 14%, transparent);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-secondary) 45%, transparent),
-    0 0 24px -8px var(--ui-secondary);
-}
-
-/* The round that just ended, waiting for its draw: a warm pill with a pulse. */
-.drawing {
-  background: color-mix(in oklab, var(--ui-warning) 8%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-warning) 30%, transparent);
-}
-
-.pulse {
-  position: relative;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 9999px;
-  background: var(--ui-warning);
-  box-shadow: 0 0 10px var(--ui-warning);
-}
-
-.pulse::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  border: 1px solid var(--ui-warning);
-  animation: pulse 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes pulse {
-  to {
-    transform: scale(2.4);
-    opacity: 0;
-  }
-}
-
-/* The winning number on a lottery ball. */
+/* The winning number, on a ball pressed into the key. */
 .ball {
-  padding: 0.2rem 0.55rem;
+  padding: 0.15rem 0.55rem;
   border-radius: 9999px;
-  color: var(--ui-bg);
-  background: radial-gradient(circle at 35% 30%, white, var(--ui-color-secondary-300) 45%, var(--ui-secondary));
-  box-shadow: 0 0 14px -2px var(--ui-secondary);
+  color: var(--ui-text-highlighted);
+  box-shadow: var(--neu-in-sm);
 }
 </style>

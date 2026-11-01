@@ -84,7 +84,7 @@ describe('llmsTxt', () => {
     cluster: 'devnet',
     clusterLabel: 'Devnet',
     explorerQuery: '?cluster=devnet',
-    programAddress: 'GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux',
+    programAddress: 'JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF',
     maxNumber: 21_000_000,
     githubUrl: 'https://github.com/nexow-ai/solucky',
   });

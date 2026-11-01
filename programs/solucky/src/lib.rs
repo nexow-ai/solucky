@@ -23,7 +23,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux");
+declare_id!("JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF");
 
 #[program]
 pub mod solucky {

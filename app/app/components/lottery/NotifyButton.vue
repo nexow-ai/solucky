@@ -71,9 +71,11 @@ async function toggle() {
       :aria-label="on ? t('push.off') : t('push.on')"
       :aria-pressed="on"
       :color="on ? 'primary' : 'neutral'"
-      variant="ghost"
+      variant="outline"
       size="lg"
       :loading="busy"
+      class="rounded-full p-3"
+      :class="{ 'shadow-(--neu-in-sm) active:shadow-(--neu-in-sm)': on }"
       @click="toggle"
     />
   </UTooltip>

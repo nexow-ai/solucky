@@ -58,7 +58,7 @@ export default defineNuxtConfig({
       // this title only stays on the shell of the browser-only pages until they load.
       title: 'S☉Lucky',
       meta: [
-        { name: 'theme-color', content: '#0c0716' },
+        { name: 'theme-color', content: '#1c1e23' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'S☉Lucky' },
         { name: 'twitter:card', content: 'summary_large_image' },
@@ -180,7 +180,7 @@ export default defineNuxtConfig({
 
   fonts: {
     families: [
-      { name: 'Space Grotesk', provider: 'google', weights: [400, 500, 600, 700] },
+      { name: 'Space Grotesk', provider: 'google', weights: [300, 400, 500, 600, 700] },
       { name: 'JetBrains Mono', provider: 'google', weights: [400, 600, 800] },
     ],
   },

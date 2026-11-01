@@ -10,7 +10,9 @@ const faucet = useFaucet();
 const within = (path: string) => route.path === path || route.path.startsWith(`${path}/`);
 
 // The bar is the same on every page, the landing's: logo, network, language
-// and wallet. The links live in the menu (and on the landing, in its side index).
+// and wallet. The links live in the menu. UHeader names the logo's link after
+// the plain text in its title slot (comments included, in development), so
+// the slot holds components only: the Beta badge is a UBadge.
 const menuItems = computed<NavigationMenuItem[]>(() => [
   {
     label: t('nav.play'),
@@ -30,7 +32,6 @@ const menuItems = computed<NavigationMenuItem[]>(() => [
     :to="localePath('/')"
     title="S☉Lucky"
     :ui="{
-      root: 'border-b-0 bg-default/60 backdrop-blur-md after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-linear-to-r after:from-transparent after:via-primary/70 after:to-transparent',
       // Button labels never wrap: a tight bar hides them first (below).
       right: 'whitespace-nowrap',
       // The links are in the menu at every width (Nuxt UI hides it from lg).
@@ -48,9 +49,9 @@ const menuItems = computed<NavigationMenuItem[]>(() => [
         <UBadge
           :label="t('header.beta')"
           color="primary"
-          variant="subtle"
+          variant="soft"
           size="sm"
-          class="hidden font-mono tracking-wider uppercase sm:inline-flex"
+          class="hidden bg-transparent px-2 font-mono text-[0.6rem] tracking-[0.18em] uppercase shadow-(--neu-in-sm) sm:inline-flex"
         />
       </span>
     </template>

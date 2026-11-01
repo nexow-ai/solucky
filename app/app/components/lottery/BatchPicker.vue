@@ -206,7 +206,7 @@ async function buy() {
 
 <template>
   <div class="grid gap-5 md:grid-cols-2 md:gap-6">
-    <div class="table-tray min-w-0 space-y-4 p-4">
+    <div class="min-w-0 space-y-4 rounded-[1.5rem] p-5 shadow-(--neu-in-sm)">
       <div class="grid grid-cols-2 gap-3">
         <UFormField :label="t('batch.from')">
           <UInputNumber v-model="from" :min="0" :max="maxNumber" class="w-full" />
@@ -283,10 +283,10 @@ async function buy() {
         </ul>
       </div>
 
-      <div class="table-tray space-y-1 px-4 py-3">
+      <div class="space-y-1 rounded-[1.25rem] px-4 py-3 shadow-(--neu-in-sm)">
         <p class="flex items-baseline justify-between gap-3">
           <span class="kicker text-[0.65rem]">{{ isLottery ? t('batch.share') : t('batch.chance') }}</span>
-          <span class="odds-value font-mono text-xl font-semibold tabular-nums">
+          <span class="odds-value font-mono text-xl tabular-nums">
             {{ chance === null ? '—' : formatPercent(chanceShown, intl) }}
           </span>
         </p>
@@ -321,7 +321,7 @@ async function buy() {
             block
             :loading="busy"
             :disabled="block !== null && block !== 'busy'"
-            class="bg-lucky shine shadow-neon buy py-4 text-base font-semibold text-white hover:opacity-95 disabled:opacity-50"
+            class="bg-lucky buy rounded-2xl py-4 text-base font-medium text-white shadow-(--neu-accent) hover:opacity-95 active:shadow-(--neu-in-sm) disabled:opacity-50"
             icon="i-lucide-layers"
             @click="buy"
           >
@@ -345,17 +345,16 @@ async function buy() {
 <style scoped>
 .strip {
   position: relative;
-  height: 2.25rem;
+  height: 2.5rem;
   overflow: hidden;
-  border-radius: 0.75rem;
-  background: color-mix(in oklab, var(--ui-bg-elevated) 70%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-border) 80%, transparent);
+  border-radius: 0.9rem;
+  box-shadow: var(--neu-in);
 }
 
 .strip-range {
   position: absolute;
   inset-block: 0;
-  background: color-mix(in oklab, var(--ui-primary) 18%, transparent);
+  background: color-mix(in oklab, var(--ui-primary) 12%, transparent);
   box-shadow:
     inset 1px 0 0 var(--ui-primary),
     inset -1px 0 0 var(--ui-primary);
@@ -373,38 +372,36 @@ async function buy() {
 }
 
 .strip-pick {
-  inset-block: 0.35rem;
+  inset-block: 0.45rem;
   background: var(--ui-secondary);
-  box-shadow: 0 0 6px var(--ui-secondary);
 }
 
 .strip-mine {
-  inset-block: 0.9rem;
+  inset-block: 1rem;
   background: var(--ui-primary);
 }
 
+/* The picked numbers, as small keys. */
 .pick {
-  padding: 0.15rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 9999px;
   color: var(--ui-text-highlighted);
-  background: color-mix(in oklab, var(--ui-secondary) 14%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-secondary) 35%, transparent);
+  background: var(--ui-bg);
+  box-shadow: var(--neu-xs);
 }
 
 .pick.gone {
   color: var(--ui-error);
   text-decoration: line-through;
-  background: color-mix(in oklab, var(--ui-error) 10%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-error) 35%, transparent);
+  box-shadow: var(--neu-in-sm);
+}
+
+.picks {
+  padding: 0.25rem;
 }
 
 .odds-value {
   color: var(--ui-secondary);
-  text-shadow: 0 0 14px color-mix(in oklab, var(--ui-secondary) 55%, transparent);
-}
-
-:root:not(.dark) .odds-value {
-  text-shadow: none;
 }
 
 .buy {

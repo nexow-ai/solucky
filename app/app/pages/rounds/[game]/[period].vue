@@ -154,7 +154,7 @@ const facts = computed(() => {
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p class="kicker">{{ t(`games.${GAME_SLUGS[kind]}.name`) }} · {{ t('round.kicker') }}</p>
-          <h1 class="text-3xl font-bold tracking-widest text-highlighted" dir="ltr">{{ title }}</h1>
+          <h1 class="mt-1 text-3xl font-light tracking-[0.12em] text-highlighted" dir="ltr">{{ title }}</h1>
         </div>
         <LotteryStatusBadge v-if="round" :status="round.data.status" :current="isCurrent" :lottery="lottery" />
       </div>
@@ -183,14 +183,14 @@ const facts = computed(() => {
           <div class="grid gap-6 sm:grid-cols-2">
             <div>
               <p class="kicker">{{ t('round.pot') }}</p>
-              <p class="text-lucky text-4xl font-bold tabular-nums">◎{{ formatSol(round.data.pot, 4) }}</p>
+              <p class="readout mt-1 text-4xl">◎{{ formatSol(round.data.pot, 4) }}</p>
               <p class="text-sm text-muted tabular-nums">
                 {{ t('round.usd', { usd: formatUsd(round.data.pot, price, intl) }) }}
               </p>
             </div>
             <div v-if="round.data.status === RoundStatus.Settled">
               <p class="kicker">{{ t('round.winner') }}</p>
-              <p class="text-2xl font-bold tabular-nums text-highlighted">
+              <p class="readout mt-1 font-mono text-2xl">
                 {{ flagEmoji(countryFromBytes(round.data.winnerCountry)) }} {{ formatNumber(round.data.winningNumber) }}
               </p>
               <ULink

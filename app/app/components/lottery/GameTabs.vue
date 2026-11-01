@@ -34,32 +34,30 @@ const games = computed(() =>
 </script>
 
 <template>
-  <LotteryGlass as="nav" rounded="rounded-[1.4rem]" :aria-label="t('games.tag')" class="w-full max-w-2xl">
-    <div class="grid grid-cols-3 gap-1 p-1">
+  <LotterySurface as="nav" sunken rounded="rounded-[1.6rem]" :aria-label="t('games.tag')" class="w-full max-w-2xl">
+    <div class="grid grid-cols-3 gap-1.5 p-1.5">
       <NuxtLink
         v-for="g in games"
         :key="g.slug"
         :to="localePath(playPath(g.slug))"
         :aria-current="g.current ? 'page' : undefined"
-        class="tab group relative flex items-center justify-center gap-2.5 rounded-[1.1rem] px-2 py-2 sm:justify-start sm:px-3.5"
+        class="tab group relative flex items-center justify-center gap-3 rounded-[1.2rem] px-2 py-2.5 sm:justify-start sm:px-3.5"
         :class="g.current ? 'text-highlighted' : 'text-muted hover:text-highlighted'"
       >
         <span v-if="g.current" class="game-pill" aria-hidden="true" />
-        <span class="tab-emblem relative hidden size-9 shrink-0 sm:block" :class="{ dim: !g.current }">
+        <span class="tab-emblem relative hidden size-8 shrink-0 sm:block" :class="{ dim: !g.current }">
           <LandingGameEmblem :kind="g.kind" size="size-full" />
         </span>
         <span class="relative min-w-0 text-center sm:text-start">
-          <span class="block truncate text-sm font-semibold">{{ t(`games.${g.slug}.short`) }}</span>
+          <span class="block truncate text-sm font-medium">{{ t(`games.${g.slug}.short`) }}</span>
           <span class="block truncate font-mono text-[0.7rem] text-muted tabular-nums" aria-hidden="true" dir="ltr">
-            <span :class="{ 'text-lucky font-semibold': g.current }"
-              >◎{{ g.pot === null ? '…' : formatSol(g.pot, 2) }}</span
-            >
+            <span :class="{ 'text-primary': g.current }">◎{{ g.pot === null ? '…' : formatSol(g.pot, 2) }}</span>
             <template v-if="g.clock"> · {{ g.clock }}</template>
           </span>
         </span>
       </NuxtLink>
     </div>
-  </LotteryGlass>
+  </LotterySurface>
 </template>
 
 <style scoped>
@@ -72,49 +70,26 @@ const games = computed(() =>
   outline-offset: 2px;
 }
 
-/* The other games' signs rest dimmer until hovered. */
+/* The other games' marks rest dimmer until hovered. */
 .tab-emblem {
-  transition:
-    opacity 0.4s,
-    filter 0.4s;
+  transition: opacity 0.4s;
 }
 
 .tab-emblem.dim {
-  opacity: 0.55;
-  filter: saturate(0.6);
+  opacity: 0.5;
 }
 
 .tab:hover .tab-emblem.dim {
   opacity: 1;
-  filter: none;
 }
 
-/* The current game's pill. It carries a view-transition name, so it glides to the next game on a switch. */
+/* The current game stands out of the track. It carries a view-transition name, so it glides to the next game on a switch. */
 .game-pill {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   view-transition-name: game-pill;
-  background:
-    linear-gradient(180deg, color-mix(in oklab, white 16%, transparent), transparent 60%),
-    linear-gradient(
-      120deg,
-      color-mix(in oklab, var(--ui-primary) 40%, transparent),
-      color-mix(in oklab, var(--color-pink-600) 30%, transparent)
-    );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 35%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 55%, transparent),
-    0 0 24px -6px var(--ui-primary);
-}
-
-:root:not(.dark) .game-pill {
-  background:
-    linear-gradient(180deg, color-mix(in oklab, white 70%, transparent), transparent 70%),
-    linear-gradient(
-      120deg,
-      color-mix(in oklab, var(--ui-primary) 22%, transparent),
-      color-mix(in oklab, var(--color-pink-600) 16%, transparent)
-    );
+  background: var(--ui-bg);
+  box-shadow: var(--neu-sm);
 }
 </style>

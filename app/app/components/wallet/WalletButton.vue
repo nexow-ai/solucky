@@ -105,9 +105,9 @@ async function signOut() {
           </div>
         </div>
 
-        <div class="rounded-lg bg-elevated px-4 py-3">
+        <div class="rounded-2xl px-4 py-3 shadow-(--neu-in-sm)">
           <p class="kicker text-[0.65rem]">{{ t('wallet.balance') }}</p>
-          <p class="led mt-1 font-mono text-3xl font-semibold tabular-nums text-highlighted">
+          <p class="readout mt-1 font-mono text-3xl">
             {{ balance === null ? '—' : `◎${formatSol(balance, 4)}` }}
           </p>
           <p class="mt-0.5 font-mono text-xs text-muted tabular-nums">
@@ -210,7 +210,7 @@ async function signOut() {
       :icon="!ready || status === 'connecting' ? 'i-lucide-loader-circle' : 'i-lucide-wallet'"
       :block="block"
       :ui="{ leadingIcon: !ready || status === 'connecting' ? 'animate-spin' : '' }"
-      class="bg-lucky text-white hover:opacity-90"
+      class="bg-lucky text-white shadow-(--neu-accent) hover:opacity-90 active:shadow-(--neu-in-sm)"
     />
 
     <template #body>
