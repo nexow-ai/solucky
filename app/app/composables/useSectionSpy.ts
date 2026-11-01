@@ -6,9 +6,7 @@ export function useSectionSpy(ids: readonly string[]) {
   const active = ref<string>();
 
   onMounted(() => {
-    const elements = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => !!el);
+    const elements = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
     if (!elements.length) return;
 
     const ratios = new Map<string, number>();
