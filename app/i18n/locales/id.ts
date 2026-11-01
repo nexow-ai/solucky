@@ -47,17 +47,23 @@ const id: Dict = {
   header: {
     beta: 'Beta',
     getSol: 'Dapatkan SOL',
-    faucetTip: 'Faucet beta sementara: dapatkan SOL uji coba gratis untuk bermain',
-    mute: 'Matikan suara',
-    unmute: 'Nyalakan suara',
+    faucetTip: 'Membuka faucet Solana dengan alamatmu dan ◎{amount} sudah terisi',
+  },
+
+  network: {
+    label: 'Jaringan',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: tiket dibayar dengan SOL uji coba yang tidak punya nilai sungguhan',
+    mainHere: 'Solana Mainnet: tiket dibayar dengan SOL sungguhan',
+    goTest: 'Main dengan SOL uji coba gratis',
+    goMain: 'Main dengan SOL sungguhan di Solana Mainnet',
+    notYet: 'S☉Lucky belum ada di {network}',
   },
 
   faucet: {
-    connectFirst: 'Hubungkan dompet dulu',
-    connectFirstHint: 'Lalu ketuk Dapatkan SOL untuk mengisinya dengan SOL uji coba.',
     request: 'Minta SOL uji coba di faucet',
-    requestHint: 'Alamat dompetmu sudah disalin. Tempel jika kolomnya kosong, lalu konfirmasi.',
-    openAgain: 'Buka lagi',
+    requestHint: 'Alamatmu dan ◎{amount} sudah terisi: selesaikan verifikasinya, lalu tekan Confirm Airdrop.',
     airdropped: '◎1 berhasil di-airdrop',
     airdroppedHint: 'SOL uji coba sudah masuk di {cluster}. Kamu bisa membeli tiket sekarang.',
     failed: 'Airdrop gagal',
@@ -73,6 +79,8 @@ const id: Dict = {
     source: 'Kode sumber',
     builtOn: 'Dibangun di atas {solana}',
     madeBy: 'Dibuat oleh {nexow}',
+    mute: 'Matikan suara',
+    unmute: 'Nyalakan suara',
   },
 
   home: {
@@ -82,9 +90,6 @@ const id: Dict = {
     lead: 'Undian setiap hari, undian setiap jam, dan angka tersembunyi untuk diburu. Pemenang mendapat 80% pot, dan sisanya dibawa ke ronde berikutnya. Setiap tiket, setiap lamport, dan setiap undian ada di Solana, tempat siapa pun bisa memeriksanya.',
     playNow: 'Main sekarang',
     howItWorks: 'Cara kerja',
-    program: 'Program',
-    cluster: 'Jaringan',
-    draw: 'Undian',
     dialCaption:
       'Setiap titik adalah salah satu tiket hari ini: posisinya di sekeliling dial menunjukkan waktu pembeliannya, dan jaraknya ke luar menunjukkan angkanya.',
 
@@ -168,6 +173,14 @@ const id: Dict = {
       description: 'Masih ragu? Program, aplikasi, dan skrip operator bersifat sumber terbuka.',
       readCode: 'Baca kodenya',
       items: {
+        what: {
+          q: 'Apa itu S☉Lucky?',
+          a: 'S☉Lucky adalah tiga permainan lotre di Solana buatan Nexow, Inc.: lotre harian, lotre per jam, dan Tebak Angka. Setiap tiket, setiap pot, dan setiap undian adalah akun dari program Solana sumber terbuka, jadi siapa pun bisa memeriksanya. Pemenang mendapat 80% pot; biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke ronde berikutnya dari permainan itu.',
+        },
+        guess: {
+          q: 'Bagaimana cara kerja Tebak Angka?',
+          a: 'Permainannya berjalan seolah setiap ronde menyembunyikan satu angka dari 0 sampai {max} yang tidak diketahui siapa pun, termasuk operator. Setiap tebakan adalah tiket pada angka yang belum dicoba di ronde itu. Setiap beberapa detik, tebakan baru disegel dan diperiksa dengan hash sebuah slot yang tidak bisa diketahui siapa pun sebelumnya. Jika salah satunya tepat, pemiliknya memenangkan 80% pot dan ronde baru langsung dimulai; jika tidak, angka-angka itu gugur dan ronde berlanjut, tanpa batas waktu.',
+        },
         real: {
           q: 'Apakah ini uang sungguhan?',
           a: 'Aplikasi publik berjalan di Solana devnet, tempat SOL adalah uang uji coba gratis dari faucet.solana.com. Program bekerja dengan cara yang sama di mainnet, tetapi menjalankan lotre dengan uang sungguhan memerlukan lisensi yang sesuai di tempat kamu beroperasi.',
@@ -195,6 +208,50 @@ const id: Dict = {
       },
     },
 
+    live: {
+      title: 'Pot saat ini',
+      drawIn: 'Undian dalam',
+      noDeadline: 'Tanpa tenggat',
+    },
+
+    practice: {
+      notice: 'Latihan: berjalan di browser-mu, tidak ada yang dikirim ke Solana',
+      title: 'Coba: angka terdekat yang menang',
+      lead: 'Tanda-tanda ini adalah tiket asli hari ini. Taruh punyamu: setiap angka yang lebih dekat ke angkamu daripada ke tiket lain jadi milikmu, dan undian memilih satu angka dari 0 sampai {max}.',
+      drawn: 'Angka yang keluar',
+      yourNumber: 'Angkamu',
+      best: 'Tempat kosong terbaik',
+      draw: 'Undian latihan',
+      share: 'Bagianmu dari undian',
+      today: 'Tiket hari ini',
+      record: 'Menang latihan',
+      won: '{drawn} keluar: angkamu yang paling dekat. Kamu menang!',
+      lost: '{drawn} keluar: {number} lebih dekat, jadi tiket itu yang menang.',
+      taken: 'Angka ini sudah dipegang orang lain hari ini. Di permainan sungguhan, pilih angka lain.',
+      alone: 'Belum ada tiket hari ini: sendirian, angkamu akan memenangkan undian apa pun.',
+    },
+
+    split: {
+      title: 'dari setiap pot untuk pemenang',
+      lead: 'Program membayarnya ke pemilik tiket pemenang saat ronde diselesaikan. Biaya pengelola diambil dari {rest} sisanya, dan yang tersisa dibawa ke ronde berikutnya dari permainan itu.',
+      winner: 'Pemenang',
+      fee: 'Biaya pengelola',
+      carry: 'Ronde berikutnya',
+      feeNote: 'Biaya lotere harian, ditetapkan on-chain: {fee}. Program membatasinya maksimal {cap}.',
+      example: 'Jumlah untuk pot hari ini sebesar {pot}.',
+    },
+
+    winners: {
+      tag: 'Pemenang',
+      title: 'Setiap pemenang, on-chain',
+      description:
+        'Ronde terbaru yang sudah diselesaikan dari ketiga permainan, dibaca dari akun program. Masing-masing tertaut ke rondenya, tempat undian bisa dihitung ulang.',
+      paid: 'Dibayar ke pemenang',
+      rounds: 'Ronde diselesaikan',
+      empty: 'Belum ada ronde yang diselesaikan.',
+      drawn: 'Keluar: {number}',
+      found: 'Angka ditemukan',
+    },
     cta: {
       title: 'Pot hari ini sudah menunggu',
       description: 'Pilih angka yang belum diambil siapa pun. Semoga beruntung!',
@@ -232,6 +289,7 @@ const id: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Terverifikasi',
     title: 'Struk undian',
     round: 'Ronde',
     noneYet: 'belum ada yang diselesaikan',
@@ -289,6 +347,7 @@ const id: Dict = {
     openFaucet: 'Buka faucet',
     retry: 'Coba lagi',
     rpcError: 'Tidak dapat menjangkau endpoint RPC Solana ({reason})',
+    fundHow: 'Dapatkan SOL uji',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -311,8 +370,19 @@ const id: Dict = {
     takenToday: '{number} sudah diambil',
     outOfRange: 'Angka di luar rentang',
     notEnough: 'SOL tidak cukup',
+    loading: 'Memuat ronde…',
+    unavailable: 'Ronde tidak tersedia',
+    closing: 'Ronde ini segera ditutup',
+    over: 'Ronde ini sudah selesai',
+    full: 'Ronde ini sudah penuh',
     keys: 'Tombol 0–9 untuk mengetik, ⌫ untuk menghapus, Enter untuk membeli.',
     rent: 'Satu tiket juga menyimpan ◎{rent} sewa akun, yang kamu dapatkan kembali setelah undian.',
+    best: 'Posisi terbaik',
+    bestHint: 'Memilih angka kosong dengan bagian undian terbesar saat ini',
+    share: 'Peluang menang dengan {number}',
+    wins: 'Menang jika undian jatuh di {lo} sampai {hi}. Tiket yang dibeli di dekatnya nanti akan memperkecilnya.',
+    yourPick: 'Angka Anda',
+    line: 'Ketuk atau geser di sepanjang garis untuk memilih angka',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -367,6 +437,33 @@ const id: Dict = {
     foundByYou: 'Kamu menemukannya! Angkanya {number}',
     foundByOther: 'Pemain lain menemukan angkanya',
     nextRound: 'Ronde baru dengan angka baru sedang dijual.',
+    perGuess: 'Setiap tebakan: 1 dari {n} pada pemeriksaan berikutnya',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Ronde {round}',
+    winnerTakes: 'Pemenang mendapat ◎{prize}',
+    lastDraw: 'Undian terakhir',
+    closesIn: 'Tutup dalam',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Belum ada tiket di ronde ini. Pilih angka untuk mendapatkannya.',
+    connect: 'Hubungkan dompet untuk bermain. Tiket Anda muncul di sini.',
+    missed: 'Meleset',
+    won: 'Menang',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Ronde {round} sudah diundi',
+    number: 'Angka pemenang',
+    youWon: 'Anda menang ◎{amount}!',
+    winner: 'Pemenang mendapat ◎{amount}',
+    see: 'Lihat undian',
+    close: 'Tutup',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -420,6 +517,9 @@ const id: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Konfirmasi di dompetmu…',
+    cancel: 'Batal',
+    otherWay: 'Coba cara lain',
+    abandoned: 'Halaman berhenti menunggu dompetmu. Jika dompet masih menampilkan permintaan, tolak di sana.',
     done: '{label}: selesai',
     cancelled: '{label}: dibatalkan',
     failed: '{label} gagal',
@@ -443,6 +543,8 @@ const id: Dict = {
     description: 'Dompet Solana apa pun yang mendukung Wallet Standard bisa dipakai.',
     none: 'Tidak ada dompet Solana di browser ini. Pasang salah satunya, lalu muat ulang halaman:',
     failed: 'Tidak dapat menghubungkan {wallet}',
+    noAccount:
+      '{wallet} tidak membagikan akun Solana. Tambahkan atau pilih akun Solana di {wallet}, lalu hubungkan ulang.',
     copied: 'Alamat disalin',
     balance: 'Saldo',
     ticketsLeft: 'cukup untuk {n} tiket',
@@ -502,8 +604,17 @@ const id: Dict = {
     rejected: 'Kamu membatalkan permintaan di dompetmu.',
     taken: 'Seseorang sudah memegang angka ini di ronde ini. Pilih angka lain.',
     funds: 'SOL di dompet tidak cukup.',
-    walletCluster:
-      'Dompetmu tidak dapat menandatangani. Di Phantom: Settings → Developer Settings → aktifkan Testnet Mode → pilih Devnet, lalu hubungkan ulang dan coba lagi.',
+    noSol: 'Dompet ini belum punya SOL di jaringan ini. Tambahkan sedikit, lalu coba lagi.',
+    wrongCluster: 'Dompetmu mengirim transaksi ke jaringan lain. Ganti ke {network}, lalu coba lagi.',
+    notSetUp: 'Permainan ini belum disiapkan di jaringan ini.',
+    outdated: 'Aplikasi sudah usang. Muat ulang halaman, lalu coba lagi.',
+    expired: 'Transaksi kedaluwarsa sebelum dikonfirmasi. Periksa aktivitas dompetmu sebelum mencoba lagi.',
+    walletFailed:
+      'Dompetmu melaporkan “Unexpected error” dan tidak menandatangani. Tutup jendelanya, kunci lalu buka kunci dompet atau mulai ulang ekstensinya, lalu coba lagi.',
+    walletNetwork:
+      'Pastikan dompetmu ada di {network} (di Phantom: Settings → Developer Settings → Testnet Mode), atau coba dompet lain.',
+    rateLimited: 'Endpoint RPC sedang membatasi permintaan (HTTP 429). Tunggu satu menit, lalu coba lagi.',
+    rpcHttp: 'Endpoint RPC menjawab dengan galat HTTP {status}.',
     unknown: 'Terjadi kesalahan.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

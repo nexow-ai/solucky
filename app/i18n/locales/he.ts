@@ -47,17 +47,23 @@ const he: Dict = {
   header: {
     beta: 'בטא',
     getSol: 'לקבל SOL',
-    faucetTip: 'ברז זמני לגרסת הבטא: קבלו SOL לבדיקה בחינם כדי לשחק',
-    mute: 'השתקת צלילים',
-    unmute: 'הפעלת צלילים',
+    faucetTip: 'פותח את הברז של Solana עם הכתובת שלכם ו־◎{amount} כבר ממולאים',
+  },
+
+  network: {
+    label: 'רשת',
+    test: 'רשת בדיקה',
+    main: 'רשת ראשית',
+    testHere: 'Solana {cluster}: הכרטיסים עולים SOL לבדיקה, בלי ערך אמיתי',
+    mainHere: 'Solana Mainnet: הכרטיסים עולים SOL אמיתי',
+    goTest: 'שחקו עם SOL לבדיקה בחינם',
+    goMain: 'שחקו עם SOL אמיתי ב־Solana Mainnet',
+    notYet: 'S☉Lucky עדיין לא זמין ב{network}',
   },
 
   faucet: {
-    connectFirst: 'קודם חברו ארנק',
-    connectFirstHint: 'אחר כך הקישו על "לקבל SOL" כדי להטעין אותו ב־SOL לבדיקה.',
     request: 'בקשו SOL לבדיקה בברז',
-    requestHint: 'כתובת הארנק שלכם הועתקה. הדביקו אותה אם השדה ריק, ואז אשרו.',
-    openAgain: 'לפתוח שוב',
+    requestHint: 'הכתובת שלכם ו־◎{amount} כבר ממולאים: השלימו את הבדיקה ואז לחצו על Confirm Airdrop.',
     airdropped: 'התקבל איירדרופ של ◎1',
     airdroppedHint: 'SOL לבדיקה הגיע לרשת {cluster}. אפשר לקנות כרטיסים עכשיו.',
     failed: 'האיירדרופ נכשל',
@@ -73,6 +79,8 @@ const he: Dict = {
     source: 'קוד מקור',
     builtOn: 'בנוי על {solana}',
     madeBy: 'מבית {nexow}',
+    mute: 'השתקת צלילים',
+    unmute: 'הפעלת צלילים',
   },
 
   home: {
@@ -82,9 +90,6 @@ const he: Dict = {
     lead: 'הגרלה כל יום, הגרלה כל שעה, ומספר נסתר לאתר. הזוכה לוקח 80% מהקופה, והשאר עובר לסבב הבא. כל כרטיס, כל למפורט וכל הגרלה נמצאים ב־Solana, שם כל אחד יכול לבדוק אותם.',
     playNow: 'לשחק עכשיו',
     howItWorks: 'איך זה עובד',
-    program: 'תוכנית',
-    cluster: 'רשת',
-    draw: 'הגרלה',
     dialCaption: 'כל נקודה היא אחד מהכרטיסים של היום: מסביב לחוגה לפי השעה שבה נקנה, והחוצה לפי המספר שלו.',
 
     how: {
@@ -162,6 +167,14 @@ const he: Dict = {
       description: 'עדיין לא בטוחים? התוכנית, האפליקציה וסקריפטי המפעיל הם קוד פתוח.',
       readCode: 'לקרוא את הקוד',
       items: {
+        what: {
+          q: 'מה זה S☉Lucky?',
+          a: 'S☉Lucky הוא אוסף של שלושה משחקי הגרלה ב־Solana, מבית Nexow, Inc.: ההגרלה היומית, ההגרלה השעתית ונחשו את המספר. כל כרטיס, כל קופה וכל הגרלה הם חשבון של תוכנית Solana בקוד פתוח, כך שכל אחד יכול לבדוק אותם. הזוכה לוקח 80% מהקופה; עמלת הבית יוצאת מהשאר, ומה שנותר עובר לסבב הבא של המשחק.',
+        },
+        guess: {
+          q: 'איך עובד נחשו את המספר?',
+          a: 'המשחק מתנהל כאילו כל סבב מסתיר מספר מ־0 עד {max} שאיש אינו יודע, כולל המפעיל. כל ניחוש הוא כרטיס על מספר שעוד לא נוסה בסבב. כל כמה שניות הניחושים החדשים נחתמים ונבדקים מול הגיבוב של סלוט שאיש לא יכול היה לדעת מראש. אם אחד מהם פוגע, בעליו זוכה ב־80% מהקופה וסבב חדש מתחיל מיד; אם לא, המספרים האלה יוצאים מהמשחק והסבב נמשך, בלי מועד אחרון.',
+        },
         real: {
           q: 'זה כסף אמיתי?',
           a: 'האפליקציה הציבורית פועלת ב־devnet של Solana, שבו SOL הוא כסף לבדיקה שמתקבל בחינם מ־faucet.solana.com. התוכנית פועלת באותו אופן ב־mainnet, אבל הפעלת הגרלה בכסף אמיתי מחייבת את הרישיונות המתאימים במקום שבו אתם פועלים.',
@@ -189,6 +202,50 @@ const he: Dict = {
       },
     },
 
+    live: {
+      title: 'הקופות עכשיו',
+      drawIn: 'הגרלה בעוד',
+      noDeadline: 'ללא מועד אחרון',
+    },
+
+    practice: {
+      notice: 'תרגול: רץ בדפדפן שלכם, ושום דבר לא נשלח ל־Solana',
+      title: 'נסו: המספר הקרוב ביותר זוכה',
+      lead: 'הסימונים הם הכרטיסים האמיתיים של היום. מקמו את שלכם: כל מספר שקרוב אליו יותר מאשר לכל כרטיס אחר הוא שלכם, וההגרלה בוחרת מספר אחד מ־0 עד {max}.',
+      drawn: 'המספר שהוגרל',
+      yourNumber: 'המספר שלכם',
+      best: 'המקום הפנוי הטוב ביותר',
+      draw: 'הגרלת תרגול',
+      share: 'החלק שלכם בהגרלה',
+      today: 'כרטיסים היום',
+      record: 'זכיות בתרגול',
+      won: 'הוגרל {drawn}: המספר שלכם הקרוב ביותר. זכיתם!',
+      lost: 'הוגרל {drawn}: {number} קרוב יותר, ולכן הכרטיס ההוא זוכה.',
+      taken: 'מישהו כבר מחזיק במספר הזה היום. במשחק האמיתי, בחרו מספר אחר.',
+      alone: 'עוד אין כרטיסים היום: לבדו, המספר שלכם היה זוכה בכל הגרלה.',
+    },
+
+    split: {
+      title: 'מכל קופה הולכים לזוכה',
+      lead: 'התוכנית משלמת אותם לבעלי הכרטיס הזוכה כשהסבב מסתיים. עמלת הבית יוצאת מה־{rest} הנותרים, ומה שנשאר עובר לסבב הבא של המשחק.',
+      winner: 'זוכה',
+      fee: 'עמלת הבית',
+      carry: 'הסבב הבא',
+      feeNote: 'עמלת ההגרלה היומית, שנקבעה על הבלוקצ׳יין: {fee}. התוכנית מגבילה אותה ל־{cap}.',
+      example: 'הסכומים לקופה של היום, {pot}.',
+    },
+
+    winners: {
+      tag: 'זוכים',
+      title: 'כל זוכה, על הבלוקצ׳יין',
+      description:
+        'הסבבים האחרונים שהושלמו בשלושת המשחקים, כפי שנקראו מהחשבונות של התוכנית. כל אחד מוביל לדף הסבב שלו, שבו אפשר לחשב את ההגרלה מחדש.',
+      paid: 'שולם לזוכים',
+      rounds: 'סבבים שהושלמו',
+      empty: 'אף סבב עוד לא הושלם.',
+      drawn: 'הוגרל: {number}',
+      found: 'המספר נמצא',
+    },
     cta: {
       title: 'הקופה של היום מחכה',
       description: 'בחרו מספר שאף אחד עוד לא לקח. בהצלחה!',
@@ -226,6 +283,7 @@ const he: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'אומת',
     title: 'קבלת הגרלה',
     round: 'סבב',
     noneYet: 'אף סבב עוד לא הושלם',
@@ -282,6 +340,7 @@ const he: Dict = {
     openFaucet: 'לפתוח את הברז',
     retry: 'לנסות שוב',
     rpcError: 'לא ניתן להגיע לנקודת הקצה Solana RPC ({reason})',
+    fundHow: 'קבלת SOL לבדיקה',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -304,8 +363,19 @@ const he: Dict = {
     takenToday: 'המספר {number} כבר נלקח',
     outOfRange: 'המספר מחוץ לטווח',
     notEnough: 'אין מספיק SOL',
+    loading: 'טוען את הסבב…',
+    unavailable: 'הסבב לא זמין',
+    closing: 'הסבב הזה נסגר',
+    over: 'הסבב הזה הסתיים',
+    full: 'הסבב הזה מלא',
     keys: 'המקשים 0–9 מקלידים, ⌫ מוחק, Enter קונה.',
     rent: 'כרטיס מחזיק גם ◎{rent} של דמי שכירות לחשבון, שתקבלו בחזרה אחרי ההגרלה.',
+    best: 'המקום הטוב ביותר',
+    bestHint: 'בוחר את המספר הפנוי עם הנתח הגדול ביותר בהגרלה כרגע',
+    share: 'סיכוי לזכות עם {number}',
+    wins: 'זוכה אם ההגרלה נופלת בין {lo} ל־{hi}. כרטיסים שנקנים אחר כך בקרבת מקום מקטינים את זה.',
+    yourPick: 'המספר שלך',
+    line: 'הקישו או גררו לאורך הקו כדי לבחור מספר',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -356,6 +426,33 @@ const he: Dict = {
     foundByYou: 'מצאתם אותו! המספר היה {number}',
     foundByOther: 'שחקן אחר מצא את המספר',
     nextRound: 'סבב חדש עם מספר חדש פתוח למכירה.',
+    perGuess: 'כל ניחוש: 1 מתוך {n} בבדיקה הבאה',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'סבב {round}',
+    winnerTakes: 'הזוכה מקבל ◎{prize}',
+    lastDraw: 'ההגרלה האחרונה',
+    closesIn: 'נסגר בעוד',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'עדיין אין לך כרטיסים בסבב הזה. בחרו מספר כדי לקבל כרטיס.',
+    connect: 'חברו ארנק כדי לשחק. הכרטיסים שלך יופיעו כאן.',
+    missed: 'לא פגע',
+    won: 'זכה',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'סבב {round} הוגרל',
+    number: 'המספר הזוכה',
+    youWon: 'זכית ב־◎{amount}!',
+    winner: 'הזוכה מקבל ◎{amount}',
+    see: 'לצפייה בהגרלה',
+    close: 'סגירה',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -410,6 +507,9 @@ const he: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'אשרו בארנק שלכם…',
+    cancel: 'ביטול',
+    otherWay: 'נסו בדרך אחרת',
+    abandoned: 'הדף הפסיק לחכות לארנק. אם הארנק עדיין מציג את הבקשה, דחו אותה שם.',
     done: '{label}: בוצע',
     cancelled: '{label}: בוטל',
     failed: '{label}: נכשל',
@@ -433,6 +533,7 @@ const he: Dict = {
     description: 'כל ארנק Solana שתומך ב־Wallet Standard עובד.',
     none: 'לא נמצא ארנק Solana בדפדפן הזה. התקינו אחד, ואז טענו מחדש את הדף:',
     failed: 'לא ניתן לחבר את {wallet}',
+    noAccount: '{wallet} לא שיתף אף חשבון Solana. הוסיפו או בחרו חשבון Solana ב־{wallet}, ואז התחברו מחדש.',
     copied: 'הכתובת הועתקה',
     balance: 'יתרה',
     ticketsLeft: 'נשאר כרטיס אחד | נשארו שני כרטיסים | נשארו {n} כרטיסים',
@@ -491,8 +592,17 @@ const he: Dict = {
     rejected: 'ביטלתם את הבקשה בארנק.',
     taken: 'מישהו כבר מחזיק במספר הזה בסבב הזה. בחרו מספר אחר.',
     funds: 'אין מספיק SOL בארנק.',
-    walletCluster:
-      'הארנק שלכם לא הצליח לחתום. ב־Phantom: Settings → Developer Settings → הפעילו את Testnet Mode → בחרו Devnet, ואז התחברו מחדש ונסו שוב.',
+    noSol: 'בארנק הזה עדיין אין SOL ברשת הזו. הוסיפו קצת ונסו שוב.',
+    wrongCluster: 'הארנק שלח את העסקה לרשת אחרת. העבירו אותו ל־{network} ונסו שוב.',
+    notSetUp: 'המשחק הזה עדיין לא הוגדר ברשת הזו.',
+    outdated: 'האפליקציה לא מעודכנת. טענו מחדש את הדף ונסו שוב.',
+    expired: 'תוקף העסקה פג לפני שאושרה. בדקו את הפעילות בארנק לפני שתנסו שוב.',
+    walletFailed:
+      'הארנק דיווח על „Unexpected error” ולא חתם. סגרו את החלון שלו, נעלו ופתחו אותו מחדש או הפעילו מחדש את התוסף, ונסו שוב.',
+    walletNetwork:
+      'ודאו שהארנק נמצא על {network} (ב־Phantom: Settings → Developer Settings → Testnet Mode), או נסו ארנק אחר.',
+    rateLimited: 'נקודת הקצה של ה־RPC מגבילה את הבקשות (HTTP 429). חכו דקה ונסו שוב.',
+    rpcHttp: 'נקודת הקצה של ה־RPC השיבה בשגיאת HTTP {status}.',
     unknown: 'משהו השתבש.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

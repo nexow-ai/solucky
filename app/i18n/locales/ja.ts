@@ -47,17 +47,23 @@ const ja: Dict = {
   header: {
     beta: 'ベータ',
     getSol: 'SOLを入手',
-    faucetTip: 'ベータ版の暫定フォーセット：プレイ用の無料テストSOLを入手',
-    mute: 'サウンドをオフ',
-    unmute: 'サウンドをオン',
+    faucetTip: 'アドレスと◎{amount}を入力済みの状態でSolanaのフォーセットを開きます',
+  },
+
+  network: {
+    label: 'ネットワーク',
+    test: 'テストネット',
+    main: 'メインネット',
+    testHere: 'Solana {cluster}：チケットの代金は、実際の価値がないテストSOLです',
+    mainHere: 'Solana Mainnet：チケットの代金は本物のSOLです',
+    goTest: '無料のテストSOLでプレイ',
+    goMain: 'Solana Mainnetで本物のSOLを使ってプレイ',
+    notYet: 'S☉Luckyはまだ{network}にありません',
   },
 
   faucet: {
-    connectFirst: 'まずウォレットを接続してください',
-    connectFirstHint: 'それから「SOLを入手」をタップして、テストSOLを入金してください。',
     request: 'フォーセットでテストSOLをリクエスト',
-    requestHint: 'ウォレットアドレスはコピー済みです。入力欄が空なら貼り付けてから、確定してください。',
-    openAgain: 'もう一度開く',
+    requestHint: 'アドレスと◎{amount}は入力済みです。認証を済ませてから「Confirm Airdrop」を押してください。',
     airdropped: '◎1をエアドロップしました',
     airdroppedHint: 'テストSOLが{cluster}に届きました。これでチケットを購入できます。',
     failed: 'エアドロップに失敗しました',
@@ -73,6 +79,8 @@ const ja: Dict = {
     source: 'ソースコード',
     builtOn: '{solana}で構築',
     madeBy: '制作：{nexow}',
+    mute: 'サウンドをオフ',
+    unmute: 'サウンドをオン',
   },
 
   home: {
@@ -82,9 +90,6 @@ const ja: Dict = {
     lead: '毎日の抽選、毎時の抽選、そして探し当てる隠された番号。当選者はポットの80%を獲得し、残りは次のラウンドに繰り越されます。すべてのチケット、すべてのlamport、すべての抽選がSolana上にあり、誰でも確認できます。',
     playNow: '今すぐプレイ',
     howItWorks: '仕組みを見る',
-    program: 'プログラム',
-    cluster: 'クラスター',
-    draw: '抽選',
     dialCaption: '点の一つひとつが今日のチケットです。文字盤を回る位置は購入時刻を、外側への距離は番号を表します。',
 
     how: {
@@ -165,6 +170,14 @@ const ja: Dict = {
       description: 'まだ不安ですか？プログラム、アプリ、運営用スクリプトはオープンソースです。',
       readCode: 'コードを読む',
       items: {
+        what: {
+          q: 'S☉Luckyとは？',
+          a: 'S☉Luckyは、Nexow, Inc.が作ったSolana上の3つの宝くじゲームです。毎日の宝くじ、毎時の宝くじ、そして数字当て。すべてのチケット、ポット、抽選はオープンソースのSolanaプログラムのアカウントなので、誰でも確認できます。当選者はポットの80%を獲得し、運営手数料は残りから差し引かれ、余った分はそのゲームの次のラウンドに繰り越されます。',
+        },
+        guess: {
+          q: '数字当てはどんなゲームですか？',
+          a: '各ラウンドが、運営者を含め誰も知らない0から{max}までの番号を1つ隠しているかのように進みます。予想はそれぞれ、そのラウンドでまだ誰も試していない番号へのチケットです。数秒ごとに新しい予想が封印され、事前には誰にも分からないスロットのハッシュで判定されます。どれかが当たれば、その持ち主がポットの80%を獲得し、すぐに新しいラウンドが始まります。外れれば、その番号は除外され、ラウンドは締め切りなしで続きます。',
+        },
         real: {
           q: 'これは本物のお金ですか？',
           a: '公開中のアプリはSolana devnetで動いており、そこでのSOLはfaucet.solana.comで無料で手に入るテスト用のお金です。プログラムはmainnetでも同じように動作しますが、実際のお金を使う宝くじを運営するには、運営する地域で適切な免許が必要です。',
@@ -192,6 +205,50 @@ const ja: Dict = {
       },
     },
 
+    live: {
+      title: '現在のポット',
+      drawIn: '抽選まで',
+      noDeadline: '期限なし',
+    },
+
+    practice: {
+      notice: '練習：ブラウザ内で動き、Solanaには何も送信されません',
+      title: '試してみよう：いちばん近い番号が勝ち',
+      lead: 'これらの印は今日の実際のチケットです。あなたの番号を置いてみましょう。ほかのどのチケットよりもあなたの番号に近い番号はすべてあなたのもので、抽選は0から{max}までの番号を1つ選びます。',
+      drawn: '抽選された番号',
+      yourNumber: 'あなたの番号',
+      best: 'いちばん良い空き位置',
+      draw: '練習抽選',
+      share: '抽選でのあなたの取り分',
+      today: '今日のチケット',
+      record: '練習での当選',
+      won: '{drawn}が出ました：あなたの番号がいちばん近いです。当選です！',
+      lost: '{drawn}が出ました：{number}のほうが近いので、そのチケットの当選です。',
+      taken: 'この番号は今日すでにほかの人が持っています。本番では別の番号を選んでください。',
+      alone: '今日はまだチケットがありません：1枚だけなら、あなたの番号がどの抽選でも勝ちます。',
+    },
+
+    split: {
+      title: 'がどのポットでも当選者のものに',
+      lead: 'ラウンドが精算されると、プログラムがこの分を当選チケットの持ち主に支払います。運営手数料は残りの{rest}から差し引かれ、余った分はそのゲームの次のラウンドに繰り越されます。',
+      winner: '当選者',
+      fee: '運営手数料',
+      carry: '次のラウンド',
+      feeNote: 'デイリー抽選の手数料（オンチェーンで設定）：{fee}。プログラムが上限を{cap}にしています。',
+      example: '今日のポット{pot}での金額です。',
+    },
+
+    winners: {
+      tag: '当選者',
+      title: 'すべての当選者がオンチェーンに',
+      description:
+        '3つのゲームで最近精算されたラウンドを、プログラムのアカウントから直接読み取っています。それぞれのラウンドページで抽選を再計算できます。',
+      paid: '当選者への支払い',
+      rounds: '精算済みラウンド',
+      empty: '精算済みのラウンドはまだありません。',
+      drawn: '抽選番号：{number}',
+      found: '番号が見つかりました',
+    },
     cta: {
       title: '今日のポットがあなたを待っています',
       description: 'まだ誰も選んでいない番号を選びましょう。幸運を祈ります！',
@@ -229,6 +286,7 @@ const ja: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: '検証済み',
     title: '抽選レシート',
     round: 'ラウンド',
     noneYet: '精算済みのラウンドはまだありません',
@@ -286,6 +344,7 @@ const ja: Dict = {
     openFaucet: 'フォーセットを開く',
     retry: '再試行',
     rpcError: 'SolanaのRPCエンドポイントに接続できませんでした（{reason}）',
+    fundHow: 'テスト用SOLをもらう',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -308,8 +367,19 @@ const ja: Dict = {
     takenToday: '{number}はすでに選ばれています',
     outOfRange: '番号が範囲外です',
     notEnough: 'SOLが足りません',
+    loading: 'ラウンドを読み込み中…',
+    unavailable: 'ラウンドを読み込めません',
+    closing: 'このラウンドはまもなく締め切り',
+    over: 'このラウンドは終了しました',
+    full: 'このラウンドは満員です',
     keys: '0〜9キーで入力、⌫で削除、Enterで購入。',
     rent: 'チケットにはアカウントのレントとして◎{rent}も預けられ、抽選後に取り戻せます。',
+    best: 'ベストな位置',
+    bestHint: '今いちばん大きな当選範囲を持てる空き番号を選びます',
+    share: '{number}の当選確率',
+    wins: '抽選結果が{lo}〜{hi}なら当選。あとから近くの番号が買われると範囲は狭くなります。',
+    yourPick: 'あなたの番号',
+    line: 'ライン上をタップまたはドラッグして番号を選べます',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -361,6 +431,33 @@ const ja: Dict = {
     foundByYou: '見つけました！正解は{number}でした',
     foundByOther: 'ほかのプレイヤーが番号を見つけました',
     nextRound: '新しい番号で、新しいラウンドが販売中です。',
+    perGuess: '1回の予想ごとに、次の判定で{n}分の1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'ラウンド {round}',
+    winnerTakes: '当選者の賞金 ◎{prize}',
+    lastDraw: '前回の抽選',
+    closesIn: '締め切りまで',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'このラウンドのチケットはまだありません。番号を選んで購入しましょう。',
+    connect: 'ウォレットを接続して遊べます。チケットはここに表示されます。',
+    missed: 'はずれ',
+    won: '当選',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'ラウンド {round} の抽選結果',
+    number: '当選番号',
+    youWon: '◎{amount}が当たりました！',
+    winner: '当選者の賞金は◎{amount}',
+    see: '抽選を見る',
+    close: '閉じる',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -414,6 +511,10 @@ const ja: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'ウォレットで承認してください…',
+    cancel: 'キャンセル',
+    otherWay: '別の方法で試す',
+    abandoned:
+      'ページはウォレットの応答を待つのをやめました。ウォレットにまだリクエストが表示されている場合は、そこで拒否してください。',
     done: '{label}：完了',
     cancelled: '{label}：キャンセルされました',
     failed: '{label}に失敗しました',
@@ -437,6 +538,8 @@ const ja: Dict = {
     description: 'Wallet Standardに対応したSolanaウォレットなら、どれでも使えます。',
     none: 'このブラウザにSolanaウォレットが見つかりません。ウォレットをインストールしてから、ページを再読み込みしてください：',
     failed: '{wallet}に接続できませんでした',
+    noAccount:
+      '{wallet}からSolanaアカウントが共有されませんでした。{wallet}でSolanaアカウントを追加または選択してから、もう一度接続してください。',
     copied: 'アドレスをコピーしました',
     balance: '残高',
     ticketsLeft: 'あとチケット{n}枚分',
@@ -495,8 +598,20 @@ const ja: Dict = {
     rejected: 'ウォレットでリクエストをキャンセルしました。',
     taken: 'この番号はこのラウンドですでに誰かが持っています。別の番号を選んでください。',
     funds: 'ウォレットのSOLが足りません。',
-    walletCluster:
-      'ウォレットで署名できませんでした。Phantomで：Settings → Developer Settings → Testnet Modeを有効化 → Devnetを選択し、再接続してからもう一度お試しください。',
+    noSol: 'このウォレットにはこのネットワークのSOLがまだありません。SOLを入れてから、もう一度お試しください。',
+    wrongCluster:
+      'ウォレットが別のネットワークにトランザクションを送信しました。{network}に切り替えてから、もう一度お試しください。',
+    notSetUp: 'このゲームはこのネットワークではまだ設定されていません。',
+    outdated: 'アプリが古くなっています。ページを再読み込みしてから、もう一度お試しください。',
+    expired:
+      'トランザクションは確認される前に期限切れになりました。もう一度試す前に、ウォレットの履歴を確認してください。',
+    walletFailed:
+      'ウォレットが「Unexpected error」を返し、署名しませんでした。ウォレットの画面を閉じ、ロックして再度ロック解除するか拡張機能を再起動してから、もう一度お試しください。',
+    walletNetwork:
+      'ウォレットが{network}になっているか確認してください（Phantomの場合：Settings → Developer Settings → Testnet Mode）。または別のウォレットをお試しください。',
+    rateLimited:
+      'RPCエンドポイントがリクエストを制限しています（HTTP 429）。1分ほど待ってから、もう一度お試しください。',
+    rpcHttp: 'RPCエンドポイントがHTTPエラー{status}を返しました。',
     unknown: '問題が発生しました。',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

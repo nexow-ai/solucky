@@ -1,11 +1,31 @@
 <!--
   The casino floor behind the play page's glass: a roulette halo turning
   slowly behind the table, neon orbs drifting under it, and a grid floor
-  running to the horizon. It is what the glass refracts, so it carries color
-  and motion; with reduced motion it holds still.
+  running to the horizon with streaks of light racing down it. It is what the
+  glass refracts, so it carries color and motion: its layers shift with the
+  pointer at different depths, and a shockwave rings out from the halo each
+  time a ticket lands. With reduced motion it holds still.
 -->
+<script setup lang="ts">
+const floor = useTemplateRef<HTMLElement>('floor');
+useTilt(floor, { window: true });
+
+const { tickets, loading } = useLottery();
+const shocks = ref<number[]>([]);
+let next = 0;
+watch(
+  () => tickets.value.length,
+  (count, previous) => {
+    if (loading.value || previous === undefined || count <= previous) return;
+    const id = next++;
+    shocks.value = [...shocks.value, id];
+    setTimeout(() => (shocks.value = shocks.value.filter((s) => s !== id)), 2_200);
+  },
+);
+</script>
+
 <template>
-  <div aria-hidden="true" class="floor pointer-events-none fixed inset-0 -z-[5] overflow-hidden">
+  <div ref="floor" aria-hidden="true" class="floor pointer-events-none fixed inset-0 -z-[5] overflow-hidden">
     <div class="orb orb-a" />
     <div class="orb orb-b" />
     <div class="orb orb-c" />
@@ -13,8 +33,15 @@
       <div class="wheel-ring" />
       <div class="wheel-ticks" />
     </div>
+    <div class="wheel wheel-shocks">
+      <span v-for="id in shocks" :key="id" class="shock" />
+    </div>
     <div class="horizon" />
-    <div class="grid-floor" />
+    <div class="grid-floor">
+      <span class="lane lane-a"><i /></span>
+      <span class="lane lane-b"><i /></span>
+      <span class="lane lane-c"><i /></span>
+    </div>
     <div class="scan" />
     <div class="vignette" />
   </div>
@@ -22,11 +49,22 @@
 
 <style scoped>
 .orb {
+  --depth: 28px;
   position: absolute;
   border-radius: 9999px;
   filter: blur(60px);
   opacity: 0.55;
   will-change: transform;
+  translate: calc(var(--tilt-x, 0) * var(--depth)) calc(var(--tilt-y, 0) * var(--depth));
+  transition: translate 1.6s var(--ease-out-expo);
+}
+
+.orb-b {
+  --depth: -36px;
+}
+
+.orb-c {
+  --depth: 18px;
 }
 
 .orb-a {
@@ -84,9 +122,39 @@
   top: 46%;
   width: min(118vh, 96vw);
   aspect-ratio: 1;
-  translate: -50% -50%;
+  translate: calc(-50% + var(--tilt-x, 0) * -14px) calc(-50% + var(--tilt-y, 0) * -10px);
+  transition: translate 1.4s var(--ease-out-expo);
   opacity: 0.32;
   filter: blur(1px);
+}
+
+/* Same place as the halo, at full strength. */
+.wheel-shocks {
+  opacity: 1;
+  filter: none;
+}
+
+/* A ticket landed: a ring of light rolls out from the halo's centre. */
+.shock {
+  position: absolute;
+  inset: 30%;
+  border-radius: 9999px;
+  box-shadow:
+    0 0 0 2px var(--ui-secondary),
+    0 0 40px 6px color-mix(in oklab, var(--ui-secondary) 55%, transparent),
+    inset 0 0 40px 2px color-mix(in oklab, var(--ui-secondary) 35%, transparent);
+  animation: shock 2.2s var(--ease-out-expo) forwards;
+}
+
+@keyframes shock {
+  from {
+    opacity: 1;
+    scale: 0.2;
+  }
+  to {
+    opacity: 0;
+    scale: 2.2;
+  }
 }
 
 .wheel-ring {
@@ -164,6 +232,64 @@
   mask-image: linear-gradient(to top, #000 10%, transparent 90%);
   animation: run 6s linear infinite;
   opacity: 0.55;
+}
+
+/* Streaks of light racing down the floor's grid lines, towards the viewer. */
+.lane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  overflow: hidden;
+}
+
+.lane-a {
+  left: calc(round(50%, 64px) - 192px);
+}
+
+.lane-b {
+  left: calc(round(50%, 64px) + 128px);
+}
+
+.lane-c {
+  left: calc(round(50%, 64px) - 448px);
+}
+
+.lane > i {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 14%;
+  background: linear-gradient(to bottom, transparent, var(--ui-secondary));
+  box-shadow: 0 0 10px var(--ui-secondary);
+  translate: 0 -100%;
+  animation: streak 4.2s cubic-bezier(0.5, 0, 0.9, 0.6) infinite;
+}
+
+.lane-b > i {
+  background: linear-gradient(to bottom, transparent, var(--ui-color-primary-300));
+  box-shadow: 0 0 10px var(--ui-primary);
+  animation-duration: 5.6s;
+  animation-delay: -2.1s;
+}
+
+.lane-c > i {
+  animation-duration: 7s;
+  animation-delay: -4.4s;
+}
+
+@keyframes streak {
+  0% {
+    translate: 0 -100%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    translate: 0 720%;
+    opacity: 0.2;
+  }
 }
 
 @keyframes run {

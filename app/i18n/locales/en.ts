@@ -58,17 +58,23 @@ const en = {
   header: {
     beta: 'Beta',
     getSol: 'Get SOL',
-    faucetTip: 'Provisional beta faucet: get free test SOL to play',
-    mute: 'Mute sounds',
-    unmute: 'Play sounds',
+    faucetTip: 'Opens the Solana faucet with your address and ◎{amount} filled in',
+  },
+
+  network: {
+    label: 'Network',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: tickets cost test SOL with no real value',
+    mainHere: 'Solana Mainnet: tickets cost real SOL',
+    goTest: 'Play with free test SOL',
+    goMain: 'Play with real SOL on Solana Mainnet',
+    notYet: 'S☉Lucky is not on {network} yet',
   },
 
   faucet: {
-    connectFirst: 'Connect a wallet first',
-    connectFirstHint: 'Then tap Get SOL to fund it with test SOL.',
     request: 'Request test SOL in the faucet',
-    requestHint: 'Your wallet address is copied. Paste it if the field is empty, then confirm.',
-    openAgain: 'Open again',
+    requestHint: 'Your address and ◎{amount} are filled in: complete the check, then press Confirm Airdrop.',
     airdropped: 'Airdropped ◎1',
     airdroppedHint: 'Test SOL landed on {cluster}. You can buy tickets now.',
     failed: 'Airdrop failed',
@@ -84,6 +90,8 @@ const en = {
     source: 'Source code',
     builtOn: 'Built on {solana}',
     madeBy: 'Made by {nexow}',
+    mute: 'Mute sounds',
+    unmute: 'Play sounds',
   },
 
   home: {
@@ -93,9 +101,6 @@ const en = {
     lead: 'A draw every day, a draw every hour, and a hidden number to hunt down. The winner takes 80% of the pot, and the rest carries over to the next round. Every ticket, every lamport and every draw lives on Solana, where anyone can check it.',
     playNow: 'Play now',
     howItWorks: 'How it works',
-    program: 'Program',
-    cluster: 'Cluster',
-    draw: 'Draw',
     dialCaption:
       'Each dot is one of today’s tickets: around the dial by the time it was bought, outwards by its number.',
 
@@ -178,6 +183,14 @@ const en = {
       description: 'Still unsure? The program, the app and the operator scripts are open source.',
       readCode: 'Read the code',
       items: {
+        what: {
+          q: 'What is S☉Lucky?',
+          a: 'S☉Lucky is a set of three lottery games on Solana, made by Nexow, Inc.: a daily lottery, an hourly lottery and Guess the number. Every ticket, pot and draw is an account of an open-source Solana program, so anyone can check it. The winner takes 80% of the pot; the house fee comes out of the rest, and what is left carries over to the game’s next round.',
+        },
+        guess: {
+          q: 'How does Guess the number work?',
+          a: 'It plays as if each round hid a number from 0 to {max} that nobody knows, the operator included. Each guess is a ticket on a number not yet tried in the round. Every few seconds, the new guesses are sealed and checked against the hash of a slot nobody could know in advance. If one of them hits, its owner wins 80% of the pot and a new round starts at once; if not, those numbers are out and the round goes on, with no deadline.',
+        },
         real: {
           q: 'Is this real money?',
           a: 'The public app runs on Solana devnet, where SOL is free test money from faucet.solana.com. The program works the same on mainnet, but running a real-money lottery needs the right licences where you operate.',
@@ -205,6 +218,50 @@ const en = {
       },
     },
 
+    live: {
+      title: 'Pots right now',
+      drawIn: 'Draw in',
+      noDeadline: 'No deadline',
+    },
+
+    practice: {
+      notice: 'Practice: it runs in your browser and nothing is sent to Solana',
+      title: 'Try it: the closest number wins',
+      lead: 'The marks are today’s real tickets. Place yours: every number closer to it than to any other ticket is yours, and the draw picks one number from 0 to {max}.',
+      drawn: 'Drawn number',
+      yourNumber: 'Your number',
+      best: 'Best free spot',
+      draw: 'Practice draw',
+      share: 'Your share of the draw',
+      today: 'Tickets today',
+      record: 'Practice wins',
+      won: '{drawn} was drawn: your number is the closest. You win!',
+      lost: '{drawn} was drawn: {number} is closer, so that ticket wins.',
+      taken: 'Someone already holds this number today. In the real game, pick another one.',
+      alone: 'No tickets yet today: on its own, your number would win any draw.',
+    },
+
+    split: {
+      title: 'of every pot goes to the winner',
+      lead: 'The program pays it to the winning ticket’s owner when the round is settled. The house fee comes out of the other {rest}, and what is left carries over to the game’s next round.',
+      winner: 'Winner',
+      fee: 'House fee',
+      carry: 'Next round',
+      feeNote: 'The daily lottery’s fee, set on-chain: {fee}. The program caps it at {cap}.',
+      example: 'Amounts for today’s pot of {pot}.',
+    },
+
+    winners: {
+      tag: 'Winners',
+      title: 'Every winner, on-chain',
+      description:
+        'The latest settled rounds of the three games, read from the program’s accounts. Each one links to its round, where the draw can be recomputed.',
+      paid: 'Paid to winners',
+      rounds: 'Rounds settled',
+      empty: 'No round has been settled yet.',
+      drawn: 'Drawn: {number}',
+      found: 'Number found',
+    },
     cta: {
       title: 'Today’s pot is waiting',
       description: 'Pick a number nobody has taken yet. Good luck!',
@@ -242,6 +299,7 @@ const en = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Verified',
     title: 'Draw receipt',
     round: 'Round',
     noneYet: 'none settled yet',
@@ -299,6 +357,7 @@ const en = {
     openFaucet: 'Open faucet',
     retry: 'Retry',
     rpcError: 'Could not reach the Solana RPC endpoint ({reason})',
+    fundHow: 'Get test SOL',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -321,8 +380,19 @@ const en = {
     takenToday: '{number} is taken',
     outOfRange: 'Number out of range',
     notEnough: 'Not enough SOL',
+    loading: 'Loading the round…',
+    unavailable: 'Round unavailable',
+    closing: 'This round is closing',
+    over: 'This round is over',
+    full: 'This round is full',
     keys: 'Keys 0–9 type, ⌫ deletes, Enter buys.',
     rent: 'A ticket also holds ◎{rent} of account rent, which you get back after the draw.',
+    best: 'Best spot',
+    bestHint: 'Picks the free number with the biggest share of the draw right now',
+    share: 'Win chance with {number}',
+    wins: 'Wins if the draw lands on {lo} to {hi}. Tickets bought nearby later shrink it.',
+    yourPick: 'Your pick',
+    line: 'Tap or drag along the line to pick a number',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -374,6 +444,33 @@ const en = {
     foundByYou: 'You found it! {number} was the number',
     foundByOther: 'Another player found the number',
     nextRound: 'A new round with a new number is on sale.',
+    perGuess: 'Each guess: 1 in {n} at the next check',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Round {round}',
+    winnerTakes: 'Winner takes ◎{prize}',
+    lastDraw: 'Last draw',
+    closesIn: 'Closes in',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'No tickets in this round yet. Pick a number to get one.',
+    connect: 'Connect a wallet to play. Your tickets show up here.',
+    missed: 'Missed',
+    won: 'Won',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Round {round} is drawn',
+    number: 'Winning number',
+    youWon: 'You won ◎{amount}!',
+    winner: 'The winner takes ◎{amount}',
+    see: 'See the draw',
+    close: 'Close',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -428,6 +525,9 @@ const en = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Confirm in your wallet…',
+    cancel: 'Cancel',
+    otherWay: 'Try another way',
+    abandoned: 'The page stopped waiting for your wallet. If the wallet still shows the request, reject it there.',
     done: '{label}: done',
     cancelled: '{label}: cancelled',
     failed: '{label} failed',
@@ -451,6 +551,8 @@ const en = {
     description: 'Any Solana wallet that supports the Wallet Standard works.',
     none: 'No Solana wallet was found in this browser. Install one, then reload the page:',
     failed: 'Could not connect {wallet}',
+    noAccount:
+      '{wallet} did not share a Solana account. Add or select a Solana account in {wallet}, then connect again.',
     copied: 'Address copied',
     balance: 'Balance',
     ticketsLeft: '{n} ticket left | {n} tickets left',
@@ -509,8 +611,17 @@ const en = {
     rejected: 'You cancelled the request in your wallet.',
     taken: 'Someone already holds this number in this round. Pick another one.',
     funds: 'Not enough SOL in the wallet.',
-    walletCluster:
-      'Your wallet could not sign. In Phantom: Settings → Developer Settings → enable Testnet Mode → select Devnet, then reconnect and try again.',
+    noSol: 'This wallet has no SOL on this network yet. Add some, then try again.',
+    wrongCluster: 'Your wallet sent the transaction to another network. Switch it to {network}, then try again.',
+    notSetUp: 'This game is not set up on this network yet.',
+    outdated: 'The app is out of date. Reload the page, then try again.',
+    expired: 'The transaction expired before it was confirmed. Check your wallet activity before you try again.',
+    walletFailed:
+      'Your wallet reported “Unexpected error” and did not sign. Close its window, lock and unlock it or restart the extension, then try again.',
+    walletNetwork:
+      'Make sure your wallet is on {network} (in Phantom: Settings → Developer Settings → Testnet Mode), or try another wallet.',
+    rateLimited: 'The RPC endpoint is rate-limiting requests (HTTP 429). Wait a minute and try again.',
+    rpcHttp: 'The RPC endpoint answered with HTTP error {status}.',
     unknown: 'Something went wrong.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

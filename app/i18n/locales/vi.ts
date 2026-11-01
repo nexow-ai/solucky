@@ -47,17 +47,23 @@ const vi: Dict = {
   header: {
     beta: 'Beta',
     getSol: 'Nhận SOL',
-    faucetTip: 'Faucet tạm thời cho bản beta: nhận SOL thử nghiệm miễn phí để chơi',
-    mute: 'Tắt âm thanh',
-    unmute: 'Bật âm thanh',
+    faucetTip: 'Mở faucet của Solana với địa chỉ của bạn và ◎{amount} đã điền sẵn',
+  },
+
+  network: {
+    label: 'Mạng',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: vé được trả bằng SOL thử nghiệm, không có giá trị thật',
+    mainHere: 'Solana Mainnet: vé được trả bằng SOL thật',
+    goTest: 'Chơi bằng SOL thử nghiệm miễn phí',
+    goMain: 'Chơi bằng SOL thật trên Solana Mainnet',
+    notYet: 'S☉Lucky chưa có trên {network}',
   },
 
   faucet: {
-    connectFirst: 'Hãy kết nối ví trước',
-    connectFirstHint: 'Sau đó chạm vào Nhận SOL để nạp SOL thử nghiệm vào ví.',
     request: 'Yêu cầu SOL thử nghiệm trên faucet',
-    requestHint: 'Địa chỉ ví của bạn đã được sao chép. Hãy dán vào nếu ô còn trống, rồi xác nhận.',
-    openAgain: 'Mở lại',
+    requestHint: 'Địa chỉ của bạn và ◎{amount} đã được điền sẵn: hoàn tất bước xác minh, rồi bấm Confirm Airdrop.',
     airdropped: 'Đã airdrop ◎1',
     airdroppedHint: 'SOL thử nghiệm đã về ví trên {cluster}. Giờ bạn có thể mua vé.',
     failed: 'Airdrop thất bại',
@@ -73,6 +79,8 @@ const vi: Dict = {
     source: 'Mã nguồn',
     builtOn: 'Xây dựng trên {solana}',
     madeBy: 'Được tạo bởi {nexow}',
+    mute: 'Tắt âm thanh',
+    unmute: 'Bật âm thanh',
   },
 
   home: {
@@ -82,9 +90,6 @@ const vi: Dict = {
     lead: 'Mỗi ngày một lượt quay số, mỗi giờ một lượt quay số, và một con số ẩn để truy tìm. Người thắng nhận 80% quỹ thưởng, phần còn lại được chuyển sang vòng tiếp theo. Mọi vé, mọi lamport và mọi lượt quay số đều nằm trên Solana, nơi ai cũng có thể kiểm tra.',
     playNow: 'Chơi ngay',
     howItWorks: 'Cách hoạt động',
-    program: 'Chương trình',
-    cluster: 'Cụm',
-    draw: 'Quay số',
     dialCaption:
       'Mỗi chấm là một vé của hôm nay: vị trí quanh mặt đồng hồ theo thời điểm mua, khoảng cách ra phía ngoài theo con số của vé.',
 
@@ -166,6 +171,14 @@ const vi: Dict = {
       description: 'Vẫn còn băn khoăn? Chương trình, ứng dụng và các script vận hành đều là mã nguồn mở.',
       readCode: 'Đọc mã nguồn',
       items: {
+        what: {
+          q: 'S☉Lucky là gì?',
+          a: 'S☉Lucky là bộ ba trò chơi xổ số trên Solana do Nexow, Inc. tạo ra: xổ số hằng ngày, xổ số hằng giờ và Đoán số. Mọi vé, mọi quỹ thưởng và mọi lượt quay số đều là một tài khoản của một chương trình Solana mã nguồn mở, nên ai cũng có thể kiểm tra. Người thắng nhận 80% quỹ thưởng; phí nhà cái được trừ từ phần còn lại, và phần dư được chuyển sang vòng tiếp theo của trò chơi.',
+        },
+        guess: {
+          q: 'Đoán số hoạt động thế nào?',
+          a: 'Trò chơi diễn ra như thể mỗi vòng giấu một con số từ 0 đến {max} mà không ai biết, kể cả nhà vận hành. Mỗi lượt đoán là một vé trên một con số chưa ai thử trong vòng. Cứ vài giây, các lượt đoán mới được niêm phong và kiểm tra với hash của một slot mà không ai có thể biết trước. Nếu một lượt trúng, chủ của nó nhận 80% quỹ thưởng và một vòng mới bắt đầu ngay; nếu không, những con số đó bị loại và vòng tiếp tục, không có hạn chót.',
+        },
         real: {
           q: 'Đây có phải tiền thật không?',
           a: 'Ứng dụng công khai chạy trên Solana devnet, nơi SOL là tiền thử nghiệm miễn phí từ faucet.solana.com. Chương trình hoạt động y hệt trên mainnet, nhưng vận hành một xổ số bằng tiền thật cần có giấy phép phù hợp ở nơi bạn hoạt động.',
@@ -193,6 +206,50 @@ const vi: Dict = {
       },
     },
 
+    live: {
+      title: 'Quỹ thưởng lúc này',
+      drawIn: 'Quay số sau',
+      noDeadline: 'Không có hạn chót',
+    },
+
+    practice: {
+      notice: 'Luyện tập: chạy trong trình duyệt của bạn, không có gì được gửi lên Solana',
+      title: 'Thử xem: số gần nhất sẽ thắng',
+      lead: 'Các vạch là vé thật của hôm nay. Đặt vé của bạn: mọi số gần vé của bạn hơn bất kỳ vé nào khác đều thuộc về bạn, và lần quay chọn một số từ 0 đến {max}.',
+      drawn: 'Số được quay',
+      yourNumber: 'Số của bạn',
+      best: 'Chỗ trống tốt nhất',
+      draw: 'Quay thử',
+      share: 'Phần của bạn trong lần quay',
+      today: 'Vé hôm nay',
+      record: 'Số lần thắng thử',
+      won: 'Quay ra {drawn}: số của bạn gần nhất. Bạn thắng!',
+      lost: 'Quay ra {drawn}: {number} gần hơn, nên vé đó thắng.',
+      taken: 'Hôm nay đã có người giữ số này. Trong trò chơi thật, hãy chọn số khác.',
+      alone: 'Hôm nay chưa có vé nào: một mình, số của bạn sẽ thắng mọi lần quay.',
+    },
+
+    split: {
+      title: 'của mỗi quỹ thưởng thuộc về người thắng',
+      lead: 'Chương trình trả phần này cho chủ vé thắng khi vòng được tất toán. Phí nhà cái được trừ từ {rest} còn lại, và phần dư được chuyển sang vòng tiếp theo của trò chơi.',
+      winner: 'Người thắng',
+      fee: 'Phí nhà cái',
+      carry: 'Vòng tiếp theo',
+      feeNote: 'Phí của xổ số hằng ngày, đặt trên chuỗi: {fee}. Chương trình giới hạn ở {cap}.',
+      example: 'Số tiền cho quỹ thưởng hôm nay là {pot}.',
+    },
+
+    winners: {
+      tag: 'Người thắng',
+      title: 'Mọi người thắng, trên chuỗi',
+      description:
+        'Các vòng đã tất toán gần nhất của ba trò chơi, đọc từ các tài khoản của chương trình. Mỗi vòng dẫn đến trang của nó, nơi có thể tính lại lần quay.',
+      paid: 'Đã trả cho người thắng',
+      rounds: 'Vòng đã tất toán',
+      empty: 'Chưa có vòng nào được tất toán.',
+      drawn: 'Quay ra: {number}',
+      found: 'Đã tìm thấy số',
+    },
     cta: {
       title: 'Quỹ thưởng hôm nay đang chờ',
       description: 'Chọn một con số chưa ai lấy. Chúc may mắn!',
@@ -230,6 +287,7 @@ const vi: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Đã xác minh',
     title: 'Biên nhận quay số',
     round: 'Vòng',
     noneYet: 'chưa có vòng nào được tất toán',
@@ -287,6 +345,7 @@ const vi: Dict = {
     openFaucet: 'Mở faucet',
     retry: 'Thử lại',
     rpcError: 'Không thể kết nối đến endpoint RPC của Solana ({reason})',
+    fundHow: 'Nhận SOL thử nghiệm',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -309,8 +368,19 @@ const vi: Dict = {
     takenToday: 'Số {number} đã có người chọn',
     outOfRange: 'Số nằm ngoài phạm vi',
     notEnough: 'Không đủ SOL',
+    loading: 'Đang tải vòng…',
+    unavailable: 'Vòng không khả dụng',
+    closing: 'Vòng này sắp đóng',
+    over: 'Vòng này đã kết thúc',
+    full: 'Vòng này đã đầy',
     keys: 'Phím 0–9 để nhập, ⌫ để xóa, Enter để mua.',
     rent: 'Mỗi vé còn giữ ◎{rent} tiền thuê tài khoản, bạn sẽ nhận lại sau khi quay số.',
+    best: 'Vị trí tốt nhất',
+    bestHint: 'Chọn số còn trống đang chiếm phần lớn nhất của lần quay lúc này',
+    share: 'Cơ hội thắng với số {number}',
+    wins: 'Thắng nếu kết quả rơi vào khoảng {lo} đến {hi}. Vé mua sau ở gần đó sẽ thu hẹp khoảng này.',
+    yourPick: 'Số của bạn',
+    line: 'Chạm hoặc kéo dọc đường kẻ để chọn số',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -363,6 +433,33 @@ const vi: Dict = {
     foundByYou: 'Bạn đã tìm ra! Con số là {number}',
     foundByOther: 'Một người chơi khác đã tìm ra con số',
     nextRound: 'Một vòng mới với con số mới đang mở bán.',
+    perGuess: 'Mỗi lượt đoán: 1 trên {n} ở lần kiểm tra tới',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Vòng {round}',
+    winnerTakes: 'Người thắng nhận ◎{prize}',
+    lastDraw: 'Lần quay gần nhất',
+    closesIn: 'Đóng sau',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Bạn chưa có vé trong vòng này. Chọn một số để có vé.',
+    connect: 'Kết nối ví để chơi. Vé của bạn hiện ở đây.',
+    missed: 'Trượt',
+    won: 'Thắng',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Vòng {round} đã quay số',
+    number: 'Số trúng thưởng',
+    youWon: 'Bạn đã thắng ◎{amount}!',
+    winner: 'Người thắng nhận ◎{amount}',
+    see: 'Xem lần quay',
+    close: 'Đóng',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -416,6 +513,9 @@ const vi: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Xác nhận trong ví của bạn…',
+    cancel: 'Hủy',
+    otherWay: 'Thử cách khác',
+    abandoned: 'Trang đã ngừng chờ ví của bạn. Nếu ví vẫn hiển thị yêu cầu, hãy từ chối trong ví.',
     done: '{label}: xong',
     cancelled: '{label}: đã hủy',
     failed: '{label} thất bại',
@@ -439,6 +539,8 @@ const vi: Dict = {
     description: 'Mọi ví Solana hỗ trợ Wallet Standard đều dùng được.',
     none: 'Không tìm thấy ví Solana nào trong trình duyệt này. Hãy cài một ví, rồi tải lại trang:',
     failed: 'Không thể kết nối {wallet}',
+    noAccount:
+      '{wallet} không chia sẻ tài khoản Solana nào. Hãy thêm hoặc chọn một tài khoản Solana trong {wallet}, rồi kết nối lại.',
     copied: 'Đã sao chép địa chỉ',
     balance: 'Số dư',
     ticketsLeft: 'Còn đủ mua {n} vé',
@@ -497,8 +599,17 @@ const vi: Dict = {
     rejected: 'Bạn đã hủy yêu cầu trong ví.',
     taken: 'Đã có người giữ số này trong vòng này. Hãy chọn số khác.',
     funds: 'Ví không đủ SOL.',
-    walletCluster:
-      'Ví của bạn không thể ký. Trong Phantom: Settings → Developer Settings → bật Testnet Mode → chọn Devnet, rồi kết nối lại và thử lại.',
+    noSol: 'Ví này chưa có SOL trên mạng này. Hãy nạp thêm rồi thử lại.',
+    wrongCluster: 'Ví của bạn đã gửi giao dịch sang mạng khác. Hãy chuyển ví sang {network} rồi thử lại.',
+    notSetUp: 'Trò chơi này chưa được thiết lập trên mạng này.',
+    outdated: 'Ứng dụng đã cũ. Hãy tải lại trang rồi thử lại.',
+    expired: 'Giao dịch đã hết hạn trước khi được xác nhận. Hãy kiểm tra hoạt động của ví trước khi thử lại.',
+    walletFailed:
+      'Ví của bạn báo “Unexpected error” và không ký. Hãy đóng cửa sổ ví, khóa rồi mở khóa ví hoặc khởi động lại tiện ích, rồi thử lại.',
+    walletNetwork:
+      'Hãy chắc chắn ví của bạn đang ở {network} (trong Phantom: Settings → Developer Settings → Testnet Mode), hoặc thử ví khác.',
+    rateLimited: 'Endpoint RPC đang giới hạn số yêu cầu (HTTP 429). Hãy đợi một phút rồi thử lại.',
+    rpcHttp: 'Endpoint RPC trả về lỗi HTTP {status}.',
     unknown: 'Đã xảy ra lỗi.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

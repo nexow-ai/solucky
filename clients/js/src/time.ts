@@ -56,7 +56,12 @@ export function formatPeriod(kind: number, period: number): string {
 
 /** Parses a label from `formatPeriod` back to its period, or `null`. */
 export function parsePeriod(kind: number, label: string): number | null {
-  if (!isLottery(kind)) return /^\d{1,10}$/.test(label) ? Number(label) : null;
+  if (!isLottery(kind)) {
+    // Guess rounds are numbered with a u32 on-chain.
+    if (!/^\d{1,10}$/.test(label)) return null;
+    const round = Number(label);
+    return round <= 0xffff_ffff ? round : null;
+  }
   const daily = kind === GameKind.Daily;
   if (!(daily ? /^\d{4}-\d{2}-\d{2}$/ : /^\d{4}-\d{2}-\d{2}T\d{2}$/).test(label)) return null;
   const ms = Date.parse(daily ? `${label}T00:00:00Z` : `${label}:00:00Z`);

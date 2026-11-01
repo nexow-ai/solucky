@@ -48,17 +48,23 @@ const nl: Dict = {
   header: {
     beta: 'Bèta',
     getSol: 'SOL halen',
-    faucetTip: 'Voorlopige bèta-faucet: haal gratis test-SOL om te spelen',
-    mute: 'Geluid uit',
-    unmute: 'Geluid aan',
+    faucetTip: 'Opent de Solana-faucet met je adres en ◎{amount} al ingevuld',
+  },
+
+  network: {
+    label: 'Netwerk',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: loten kosten test-SOL zonder echte waarde',
+    mainHere: 'Solana Mainnet: loten kosten echte SOL',
+    goTest: 'Speel met gratis test-SOL',
+    goMain: 'Speel met echte SOL op Solana Mainnet',
+    notYet: 'S☉Lucky staat nog niet op {network}',
   },
 
   faucet: {
-    connectFirst: 'Koppel eerst een wallet',
-    connectFirstHint: 'Tik daarna op “SOL halen” om hem met test-SOL te vullen.',
     request: 'Vraag test-SOL aan in de faucet',
-    requestHint: 'Je walletadres is gekopieerd. Plak het als het veld leeg is en bevestig dan.',
-    openAgain: 'Opnieuw openen',
+    requestHint: 'Je adres en ◎{amount} zijn al ingevuld: doorloop de controle en druk dan op Confirm Airdrop.',
     airdropped: '◎1 ontvangen via airdrop',
     airdroppedHint: 'Test-SOL is aangekomen op {cluster}. Je kunt nu loten kopen.',
     failed: 'Airdrop mislukt',
@@ -74,6 +80,8 @@ const nl: Dict = {
     source: 'Broncode',
     builtOn: 'Gebouwd op {solana}',
     madeBy: 'Gemaakt door {nexow}',
+    mute: 'Geluid uit',
+    unmute: 'Geluid aan',
   },
 
   home: {
@@ -83,9 +91,6 @@ const nl: Dict = {
     lead: 'Elke dag een trekking, elk uur een trekking, en een verborgen getal om op te sporen. De winnaar krijgt 80% van de pot, en de rest schuift door naar de volgende ronde. Elk lot, elke lamport en elke trekking staat op Solana, waar iedereen het kan controleren.',
     playNow: 'Nu spelen',
     howItWorks: 'Zo werkt het',
-    program: 'Programma',
-    cluster: 'Cluster',
-    draw: 'Trekking',
     dialCaption:
       'Elke stip is een van de loten van vandaag: rond de wijzerplaat volgens het moment van aankoop, naar buiten volgens het getal.',
 
@@ -169,6 +174,14 @@ const nl: Dict = {
       description: 'Nog twijfels? Het programma, de app en de beheerscripts zijn open source.',
       readCode: 'Lees de code',
       items: {
+        what: {
+          q: 'Wat is S☉Lucky?',
+          a: 'S☉Lucky is een set van drie loterijspellen op Solana, gemaakt door Nexow, Inc.: een dagelijkse loterij, een uurloterij en Raad het getal. Elk lot, elke pot en elke trekking is een account van een opensource Solana-programma, dus iedereen kan het controleren. De winnaar krijgt 80% van de pot; de huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende ronde van het spel.',
+        },
+        guess: {
+          q: 'Hoe werkt Raad het getal?',
+          a: 'Het speelt alsof elke ronde een getal van 0 tot {max} verstopt dat niemand kent, ook de beheerder niet. Elke poging is een lot op een getal dat in de ronde nog niet is geprobeerd. Om de paar seconden worden de nieuwe pogingen verzegeld en gecontroleerd met de hash van een slot dat niemand vooraf kon kennen. Raakt er een, dan wint de eigenaar 80% van de pot en begint er meteen een nieuwe ronde; zo niet, dan vallen die getallen af en gaat de ronde verder, zonder deadline.',
+        },
         real: {
           q: 'Is dit echt geld?',
           a: 'De openbare app draait op Solana devnet, waar SOL gratis testgeld is van faucet.solana.com. Het programma werkt hetzelfde op mainnet, maar voor een loterij met echt geld heb je de juiste vergunningen nodig waar je actief bent.',
@@ -196,6 +209,50 @@ const nl: Dict = {
       },
     },
 
+    live: {
+      title: 'Potten op dit moment',
+      drawIn: 'Trekking over',
+      noDeadline: 'Geen deadline',
+    },
+
+    practice: {
+      notice: 'Oefenen: draait in je browser, er wordt niets naar Solana gestuurd',
+      title: 'Probeer het: het dichtstbijzijnde getal wint',
+      lead: 'De markeringen zijn de echte loten van vandaag. Zet het jouwe: elk getal dat dichter bij het jouwe ligt dan bij een ander lot is van jou, en de trekking kiest één getal van 0 tot {max}.',
+      drawn: 'Getrokken getal',
+      yourNumber: 'Jouw getal',
+      best: 'Beste vrije plek',
+      draw: 'Oefentrekking',
+      share: 'Jouw deel van de trekking',
+      today: 'Loten vandaag',
+      record: 'Oefenwinsten',
+      won: '{drawn} is getrokken: jouw getal ligt het dichtstbij. Je wint!',
+      lost: '{drawn} is getrokken: {number} ligt dichterbij, dus dat lot wint.',
+      taken: 'Iemand heeft dit getal vandaag al. Kies in het echte spel een ander.',
+      alone: 'Vandaag nog geen loten: in je eentje zou je getal elke trekking winnen.',
+    },
+
+    split: {
+      title: 'van elke pot gaat naar de winnaar',
+      lead: 'Het programma betaalt het uit aan de eigenaar van het winnende lot zodra de ronde is afgewikkeld. De huiscommissie gaat van de overige {rest} af, en wat overblijft schuift door naar de volgende ronde van het spel.',
+      winner: 'Winnaar',
+      fee: 'Huiscommissie',
+      carry: 'Volgende ronde',
+      feeNote: 'Commissie van de dagloterij, on-chain vastgelegd: {fee}. Het programma begrenst die op {cap}.',
+      example: 'Bedragen voor de pot van vandaag van {pot}.',
+    },
+
+    winners: {
+      tag: 'Winnaars',
+      title: 'Elke winnaar, on-chain',
+      description:
+        'De laatst afgewikkelde rondes van de drie spellen, gelezen uit de accounts van het programma. Elke ronde linkt naar haar pagina, waar de trekking opnieuw te berekenen is.',
+      paid: 'Uitbetaald aan winnaars',
+      rounds: 'Afgewikkelde rondes',
+      empty: 'Er is nog geen ronde afgewikkeld.',
+      drawn: 'Getrokken: {number}',
+      found: 'Getal gevonden',
+    },
     cta: {
       title: 'De pot van vandaag wacht',
       description: 'Kies een getal dat nog niemand heeft genomen. Veel geluk!',
@@ -233,6 +290,7 @@ const nl: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Gecontroleerd',
     title: 'Trekkingsbewijs',
     round: 'Ronde',
     noneYet: 'nog geen afgewikkeld',
@@ -290,6 +348,7 @@ const nl: Dict = {
     openFaucet: 'Faucet openen',
     retry: 'Opnieuw proberen',
     rpcError: 'Kan het Solana-RPC-endpoint niet bereiken ({reason})',
+    fundHow: 'Test-SOL halen',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -312,8 +371,19 @@ const nl: Dict = {
     takenToday: '{number} is bezet',
     outOfRange: 'Getal buiten bereik',
     notEnough: 'Niet genoeg SOL',
+    loading: 'Ronde laden…',
+    unavailable: 'Ronde niet beschikbaar',
+    closing: 'Deze ronde sluit zo',
+    over: 'Deze ronde is voorbij',
+    full: 'Deze ronde is vol',
     keys: 'Typ met 0–9, ⌫ wist, Enter koopt.',
     rent: 'Een lot houdt ook ◎{rent} aan rent voor zijn account vast, die je na de trekking terugkrijgt.',
+    best: 'Beste plek',
+    bestHint: 'Kiest het vrije getal met het grootste deel van de trekking op dit moment',
+    share: 'Winkans met {number}',
+    wins: 'Wint als de trekking tussen {lo} en {hi} valt. Loten die later dichtbij worden gekocht, verkleinen dat.',
+    yourPick: 'Jouw getal',
+    line: 'Tik of sleep langs de lijn om een getal te kiezen',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -368,6 +438,33 @@ const nl: Dict = {
     foundByYou: 'Je hebt het gevonden! {number} was het getal',
     foundByOther: 'Een andere speler heeft het getal gevonden',
     nextRound: 'Er is een nieuwe ronde met een nieuw getal te koop.',
+    perGuess: 'Elke gok: 1 op {n} bij de volgende controle',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Ronde {round}',
+    winnerTakes: 'De winnaar krijgt ◎{prize}',
+    lastDraw: 'Laatste trekking',
+    closesIn: 'Sluit over',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Nog geen loten in deze ronde. Kies een getal om er een te krijgen.',
+    connect: 'Koppel een wallet om te spelen. Je loten verschijnen hier.',
+    missed: 'Mis',
+    won: 'Gewonnen',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'Ronde {round} is getrokken',
+    number: 'Winnend getal',
+    youWon: 'Je hebt ◎{amount} gewonnen!',
+    winner: 'De winnaar krijgt ◎{amount}',
+    see: 'Bekijk de trekking',
+    close: 'Sluiten',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -422,6 +519,9 @@ const nl: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Bevestig in je wallet…',
+    cancel: 'Annuleren',
+    otherWay: 'Op een andere manier proberen',
+    abandoned: 'De pagina wacht niet meer op je wallet. Toont de wallet het verzoek nog, wijs het daar dan af.',
     done: '{label}: klaar',
     cancelled: '{label}: geannuleerd',
     failed: '{label} mislukt',
@@ -445,6 +545,8 @@ const nl: Dict = {
     description: 'Elke Solana-wallet die de Wallet Standard ondersteunt, werkt.',
     none: 'In deze browser is geen Solana-wallet gevonden. Installeer er een en laad de pagina daarna opnieuw:',
     failed: 'Kon {wallet} niet koppelen',
+    noAccount:
+      '{wallet} heeft geen Solana-account gedeeld. Voeg in {wallet} een Solana-account toe of kies er een, en koppel dan opnieuw.',
     copied: 'Adres gekopieerd',
     balance: 'Saldo',
     ticketsLeft: 'nog {n} lot | nog {n} loten',
@@ -504,8 +606,19 @@ const nl: Dict = {
     rejected: 'Je hebt het verzoek in je wallet geannuleerd.',
     taken: 'Iemand heeft dit getal in deze ronde al. Kies een ander.',
     funds: 'Niet genoeg SOL in de wallet.',
-    walletCluster:
-      'Je wallet kon niet ondertekenen. In Phantom: Settings → Developer Settings → Testnet Mode inschakelen → Devnet kiezen, koppel daarna opnieuw en probeer het nog eens.',
+    noSol: 'Deze wallet heeft nog geen SOL op dit netwerk. Zet er wat op en probeer het dan opnieuw.',
+    wrongCluster:
+      'Je wallet heeft de transactie naar een ander netwerk gestuurd. Zet hem op {network} en probeer het dan opnieuw.',
+    notSetUp: 'Dit spel is op dit netwerk nog niet ingesteld.',
+    outdated: 'De app is verouderd. Herlaad de pagina en probeer het dan opnieuw.',
+    expired:
+      'De transactie is verlopen voordat ze werd bevestigd. Bekijk de activiteit van je wallet voordat je het opnieuw probeert.',
+    walletFailed:
+      'Je wallet meldde „Unexpected error” en heeft niet ondertekend. Sluit het venster, vergrendel en ontgrendel de wallet of herstart de extensie, en probeer het dan opnieuw.',
+    walletNetwork:
+      'Zorg dat je wallet op {network} staat (in Phantom: Settings → Developer Settings → Testnet Mode), of probeer een andere wallet.',
+    rateLimited: 'Het RPC-endpoint beperkt het aantal verzoeken (HTTP 429). Wacht een minuut en probeer het opnieuw.',
+    rpcHttp: 'Het RPC-endpoint antwoordde met HTTP-fout {status}.',
     unknown: 'Er is iets misgegaan.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

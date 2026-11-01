@@ -1,8 +1,9 @@
 import { type Address, address, createClient } from '@solana/kit';
 import { solanaRpc } from '@solana/kit-plugin-rpc';
 import { walletSigner } from '@solana/kit-plugin-wallet';
-import { SOLUCKY_PROGRAM_ADDRESS, soluckyProgram } from '@solucky/client';
+import { rpcEndpoint, SOLUCKY_PROGRAM_ADDRESS, soluckyProgram } from '@solucky/client';
 
+import { WALLET_STORAGE_KEY } from '../utils/walletRestore';
 import { walletAwareSend } from '../utils/walletSend';
 
 export type Cluster = 'mainnet' | 'devnet' | 'testnet' | 'localnet';
@@ -26,7 +27,7 @@ function createSoluckyClient(options: {
 }) {
   return (
     createClient()
-      .use(walletSigner({ chain: `solana:${options.cluster}`, storageKey: 'solucky:wallet' }))
+      .use(walletSigner({ chain: `solana:${options.cluster}`, storageKey: WALLET_STORAGE_KEY }))
       .use(
         solanaRpc({
           rpcUrl: options.rpcUrl,
@@ -61,10 +62,15 @@ export function useSolana() {
   const settings = CLUSTERS[cluster];
   const programAddress = config.programId ? address(config.programId) : SOLUCKY_PROGRAM_ADDRESS;
 
+  // A token only belongs to a configured provider, never to the public endpoint.
+  const endpoint = config.rpcUrl
+    ? rpcEndpoint({ url: config.rpcUrl, wsUrl: config.rpcWsUrl, token: config.rpcToken, tokenIn: 'path' })
+    : { rpcUrl: settings.rpcUrl, rpcSubscriptionsUrl: undefined };
+
   client ??= createSoluckyClient({
     cluster,
-    rpcUrl: config.rpcUrl || settings.rpcUrl,
-    rpcWsUrl: config.rpcWsUrl,
+    rpcUrl: endpoint.rpcUrl,
+    rpcWsUrl: endpoint.rpcSubscriptionsUrl,
     programAddress,
   });
 

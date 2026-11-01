@@ -59,7 +59,7 @@ const PROGRAM_ERRORS: Record<number, string> = {
 };
 
 /** vue-i18n's `t`, or anything that turns a dictionary key into text. */
-export type Translate = (key: string) => string;
+export type Translate = (key: string, named?: Record<string, unknown>) => string;
 
 /** True when the wallet reported that the user closed or declined the prompt. */
 export function isUserRejection(error: unknown): boolean {
@@ -72,9 +72,10 @@ export function isUserRejection(error: unknown): boolean {
 
 /**
  * Turns a wallet, RPC or program error into one sentence for a toast, in the
- * page's language when given its `t`, in English otherwise.
+ * page's language when given its `t`, in English otherwise. `cluster` names
+ * the app's network (Devnet…) for advice about the wallet's own network.
  */
-export function friendlyError(error: unknown, t?: Translate): string {
+export function friendlyError(error: unknown, t?: Translate, cluster?: { label: string; mainnet: boolean }): string {
   if (!t) return isUserRejection(error) ? 'You cancelled the request in your wallet.' : describeError(error);
   if (isUserRejection(error)) return t('errors.rejected');
   const reason = errorReason(error);
@@ -87,8 +88,25 @@ export function friendlyError(error: unknown, t?: Translate): string {
       return t('errors.taken');
     case 'insufficient-funds':
       return t('errors.funds');
-    case 'wallet-cluster':
-      return t('errors.walletCluster');
+    case 'no-sol':
+      return t('errors.noSol');
+    case 'wrong-cluster':
+      return t('errors.wrongCluster', { network: cluster?.label ?? 'Mainnet' });
+    case 'not-set-up':
+      return t('errors.notSetUp');
+    case 'outdated':
+      return t('errors.outdated');
+    case 'expired':
+      return t('errors.expired');
+    case 'wallet-failed':
+      // Off mainnet, wallets fail most often because their own network setting differs.
+      return cluster && !cluster.mainnet
+        ? `${t('errors.walletFailed')} ${t('errors.walletNetwork', { network: cluster.label })}`
+        : t('errors.walletFailed');
+    case 'rate-limited':
+      return t('errors.rateLimited');
+    case 'rpc-http':
+      return t('errors.rpcHttp', { status: reason.status });
     case 'other':
       // Wallet and RPC messages come as they are, in their own words.
       return reason.message || t('errors.unknown');

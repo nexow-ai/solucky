@@ -24,6 +24,11 @@
   // Public settings read by the app at runtime (see app/.env.example).
   "vars": {
     "NUXT_PUBLIC_CLUSTER": "devnet",
+    // The header's Testnet | Mainnet selector links to the other deployment.
+    // S☉Lucky is not on Mainnet yet, so that side stays disabled; set the
+    // Mainnet site's URL here once it exists. This site is the test one.
+    "NUXT_PUBLIC_MAINNET_URL": "",
+    "NUXT_PUBLIC_TESTNET_URL": "",
     "NUXT_PUBLIC_SITE_URL": "https://solucky.me",
     // The same URL, so every language's hreflang and canonical links are absolute.
     "NUXT_PUBLIC_I18N_BASE_URL": "https://solucky.me",

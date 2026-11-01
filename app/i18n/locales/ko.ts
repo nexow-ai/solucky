@@ -47,17 +47,23 @@ const ko: Dict = {
   header: {
     beta: '베타',
     getSol: 'SOL 받기',
-    faucetTip: '임시 베타 포셋: 플레이용 무료 테스트 SOL 받기',
-    mute: '소리 끄기',
-    unmute: '소리 켜기',
+    faucetTip: '주소와 ◎{amount}이 입력된 상태로 Solana 포셋을 열어요',
+  },
+
+  network: {
+    label: '네트워크',
+    test: '테스트넷',
+    main: '메인넷',
+    testHere: 'Solana {cluster}: 티켓은 실제 가치가 없는 테스트 SOL로 사요',
+    mainHere: 'Solana Mainnet: 티켓은 실제 SOL로 사요',
+    goTest: '무료 테스트 SOL로 플레이하기',
+    goMain: 'Solana Mainnet에서 실제 SOL로 플레이하기',
+    notYet: 'S☉Lucky는 아직 {network}에 없어요',
   },
 
   faucet: {
-    connectFirst: '먼저 지갑을 연결하세요',
-    connectFirstHint: '그다음 SOL 받기를 탭해서 테스트 SOL을 충전하세요.',
     request: '포셋에서 테스트 SOL 요청하기',
-    requestHint: '지갑 주소가 복사됐어요. 입력란이 비어 있으면 붙여 넣은 다음 확인하세요.',
-    openAgain: '다시 열기',
+    requestHint: '주소와 ◎{amount}이 이미 입력돼 있어요. 확인 절차를 마친 다음 Confirm Airdrop을 누르세요.',
     airdropped: '◎1 에어드롭 완료',
     airdroppedHint: '테스트 SOL이 {cluster}에 도착했어요. 이제 티켓을 살 수 있어요.',
     failed: '에어드롭 실패',
@@ -73,6 +79,8 @@ const ko: Dict = {
     source: '소스 코드',
     builtOn: '{solana} 기반',
     madeBy: '{nexow} 제작',
+    mute: '소리 끄기',
+    unmute: '소리 켜기',
   },
 
   home: {
@@ -82,9 +90,6 @@ const ko: Dict = {
     lead: '매일 추첨, 매시간 추첨, 그리고 찾아내야 할 숨겨진 번호. 당첨자는 상금의 80%를 가져가고, 나머지는 다음 라운드로 이월돼요. 모든 티켓, 모든 lamport, 모든 추첨이 Solana에 기록되어 누구나 확인할 수 있어요.',
     playNow: '지금 플레이',
     howItWorks: '작동 방식',
-    program: '프로그램',
-    cluster: '클러스터',
-    draw: '추첨',
     dialCaption:
       '점 하나하나가 오늘의 티켓이에요. 다이얼을 따라 도는 위치는 구매 시각을, 바깥쪽으로 떨어진 거리는 번호를 나타내요.',
 
@@ -167,6 +172,14 @@ const ko: Dict = {
       description: '아직 확신이 서지 않나요? 프로그램, 앱, 운영 스크립트는 오픈 소스예요.',
       readCode: '코드 읽기',
       items: {
+        what: {
+          q: 'S☉Lucky는 무엇인가요?',
+          a: 'S☉Lucky는 Nexow, Inc.가 만든 Solana 복권 게임 세 가지예요. 매일 복권, 매시간 복권, 그리고 숫자 맞히기. 모든 티켓, 모든 상금, 모든 추첨은 오픈소스 Solana 프로그램의 계정이라 누구나 확인할 수 있어요. 당첨자는 상금의 80%를 가져가고, 운영 수수료는 나머지에서 빠지며, 남은 금액은 그 게임의 다음 라운드로 이월돼요.',
+        },
+        guess: {
+          q: '숫자 맞히기는 어떻게 진행되나요?',
+          a: '각 라운드가 운영자를 포함해 아무도 모르는 0부터 {max}까지의 번호 하나를 숨기고 있는 것처럼 진행돼요. 추측 하나하나는 그 라운드에서 아직 아무도 시도하지 않은 번호에 건 티켓이에요. 몇 초마다 새 추측들이 봉인되고, 아무도 미리 알 수 없었던 슬롯의 해시로 확인돼요. 그중 하나가 맞으면 주인이 상금의 80%를 받고 곧바로 새 라운드가 시작돼요. 아니면 그 번호들은 탈락하고, 라운드는 마감 없이 계속돼요.',
+        },
         real: {
           q: '진짜 돈인가요?',
           a: '공개된 앱은 Solana devnet에서 돌아가고, 여기서 SOL은 faucet.solana.com에서 무료로 받는 테스트용 돈이에요. 프로그램은 mainnet에서도 똑같이 작동하지만, 실제 돈으로 복권을 운영하려면 운영하는 곳에서 필요한 인허가를 받아야 해요.',
@@ -194,6 +207,50 @@ const ko: Dict = {
       },
     },
 
+    live: {
+      title: '지금 상금',
+      drawIn: '추첨까지',
+      noDeadline: '마감 없음',
+    },
+
+    practice: {
+      notice: '연습: 브라우저에서 실행되며 Solana로 아무것도 전송되지 않아요',
+      title: '해 보세요: 가장 가까운 번호가 이겨요',
+      lead: '이 표시들은 오늘의 실제 티켓이에요. 내 번호를 놓아 보세요: 다른 어떤 티켓보다 내 번호에 더 가까운 번호는 모두 내 것이고, 추첨은 0부터 {max}까지 중 번호 하나를 골라요.',
+      drawn: '추첨된 번호',
+      yourNumber: '내 번호',
+      best: '가장 좋은 빈자리',
+      draw: '연습 추첨',
+      share: '추첨에서 내 몫',
+      today: '오늘의 티켓',
+      record: '연습 당첨',
+      won: '{drawn}이(가) 나왔어요: 내 번호가 가장 가까워요. 당첨이에요!',
+      lost: '{drawn}이(가) 나왔어요: {number}이(가) 더 가까워서 그 티켓이 이겨요.',
+      taken: '오늘 이미 다른 사람이 가진 번호예요. 실제 게임에서는 다른 번호를 고르세요.',
+      alone: '오늘은 아직 티켓이 없어요: 혼자라면 내 번호가 어떤 추첨이든 이겨요.',
+    },
+
+    split: {
+      title: '모든 상금에서 당첨자 몫',
+      lead: '라운드가 정산되면 프로그램이 당첨 티켓 주인에게 이 금액을 지급해요. 운영 수수료는 나머지 {rest}에서 빠지고, 남은 금액은 그 게임의 다음 라운드로 이월돼요.',
+      winner: '당첨자',
+      fee: '운영 수수료',
+      carry: '다음 라운드',
+      feeNote: '일일 복권의 수수료, 온체인에 설정됨: {fee}. 프로그램이 최대 {cap}로 제한해요.',
+      example: '오늘 상금 {pot} 기준 금액이에요.',
+    },
+
+    winners: {
+      tag: '당첨자',
+      title: '모든 당첨자는 온체인에',
+      description:
+        '세 게임에서 가장 최근에 정산된 라운드를 프로그램 계정에서 바로 읽어 와요. 각 라운드 페이지에서 추첨을 다시 계산할 수 있어요.',
+      paid: '당첨자에게 지급',
+      rounds: '정산된 라운드',
+      empty: '아직 정산된 라운드가 없어요.',
+      drawn: '추첨: {number}',
+      found: '번호를 찾았어요',
+    },
     cta: {
       title: '오늘의 상금이 기다리고 있어요',
       description: '아직 아무도 고르지 않은 번호를 고르세요. 행운을 빌어요!',
@@ -231,6 +288,7 @@ const ko: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: '검증됨',
     title: '추첨 영수증',
     round: '라운드',
     noneYet: '아직 정산된 라운드 없음',
@@ -288,6 +346,7 @@ const ko: Dict = {
     openFaucet: '포셋 열기',
     retry: '다시 시도',
     rpcError: 'Solana RPC 엔드포인트에 연결할 수 없어요({reason})',
+    fundHow: '테스트 SOL 받기',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -310,8 +369,19 @@ const ko: Dict = {
     takenToday: '{number}번은 이미 선택됐어요',
     outOfRange: '범위를 벗어난 번호',
     notEnough: 'SOL 부족',
+    loading: '라운드 불러오는 중…',
+    unavailable: '라운드를 불러올 수 없어요',
+    closing: '이번 라운드가 곧 마감돼요',
+    over: '이번 라운드가 끝났어요',
+    full: '이번 라운드가 가득 찼어요',
     keys: '0–9 키로 입력, ⌫로 삭제, Enter로 구매.',
     rent: '티켓에는 계정 렌트 ◎{rent}도 들어가며, 추첨 후 돌려받을 수 있어요.',
+    best: '최적 위치',
+    bestHint: '지금 추첨에서 가장 큰 몫을 차지하는 빈 번호를 골라요',
+    share: '{number}번의 당첨 확률',
+    wins: '추첨 결과가 {lo}~{hi} 사이면 당첨이에요. 나중에 근처 번호가 팔리면 범위가 줄어요.',
+    yourPick: '내 번호',
+    line: '선을 탭하거나 드래그해서 번호를 고르세요',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -363,6 +433,33 @@ const ko: Dict = {
     foundByYou: '찾았어요! 정답은 {number}번이었어요',
     foundByOther: '다른 플레이어가 번호를 찾았어요',
     nextRound: '새 번호로 새 라운드를 판매 중이에요.',
+    perGuess: '추측마다: 다음 확인에서 {n}분의 1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: '{round} 라운드',
+    winnerTakes: '당첨자 상금 ◎{prize}',
+    lastDraw: '지난 추첨',
+    closesIn: '마감까지',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: '이번 라운드에 아직 티켓이 없어요. 번호를 골라 티켓을 받으세요.',
+    connect: '지갑을 연결하면 플레이할 수 있어요. 내 티켓은 여기에 표시돼요.',
+    missed: '꽝',
+    won: '당첨',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: '{round} 라운드 추첨 완료',
+    number: '당첨 번호',
+    youWon: '◎{amount}에 당첨됐어요!',
+    winner: '당첨자 상금 ◎{amount}',
+    see: '추첨 보기',
+    close: '닫기',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -416,6 +513,9 @@ const ko: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: '지갑에서 승인하세요…',
+    cancel: '취소',
+    otherWay: '다른 방법으로 시도',
+    abandoned: '페이지가 더 이상 지갑의 응답을 기다리지 않아요. 지갑에 요청이 아직 보이면 지갑에서 거절하세요.',
     done: '{label}: 완료',
     cancelled: '{label}: 취소됨',
     failed: '{label} 실패',
@@ -439,6 +539,8 @@ const ko: Dict = {
     description: 'Wallet Standard를 지원하는 Solana 지갑이면 무엇이든 쓸 수 있어요.',
     none: '이 브라우저에서 Solana 지갑을 찾지 못했어요. 지갑을 설치한 뒤 페이지를 새로고침하세요:',
     failed: '{wallet}에 연결하지 못했어요',
+    noAccount:
+      '{wallet}에서 공유된 Solana 계정이 없어요. {wallet}에서 Solana 계정을 추가하거나 선택한 뒤 다시 연결하세요.',
     copied: '주소 복사됨',
     balance: '잔액',
     ticketsLeft: '티켓 {n}장 분량 남음',
@@ -497,8 +599,17 @@ const ko: Dict = {
     rejected: '지갑에서 요청을 취소했어요.',
     taken: '이번 라운드에서 이미 누군가 이 번호를 가지고 있어요. 다른 번호를 고르세요.',
     funds: '지갑에 SOL이 부족해요.',
-    walletCluster:
-      '지갑이 서명하지 못했어요. Phantom에서 Settings → Developer Settings → Testnet Mode 켜기 → Devnet 선택 후, 다시 연결하고 다시 시도하세요.',
+    noSol: '이 지갑에는 아직 이 네트워크의 SOL이 없어요. SOL을 넣은 뒤 다시 시도하세요.',
+    wrongCluster: '지갑이 다른 네트워크로 트랜잭션을 보냈어요. {network}(으)로 바꾼 뒤 다시 시도하세요.',
+    notSetUp: '이 게임은 아직 이 네트워크에 설정되지 않았어요.',
+    outdated: '앱이 오래된 버전이에요. 페이지를 새로고침한 뒤 다시 시도하세요.',
+    expired: '트랜잭션이 확인되기 전에 만료됐어요. 다시 시도하기 전에 지갑 활동을 확인하세요.',
+    walletFailed:
+      '지갑이 “Unexpected error”를 보고하고 서명하지 않았어요. 지갑 창을 닫고, 지갑을 잠갔다가 다시 열거나 확장 프로그램을 다시 시작한 뒤 다시 시도하세요.',
+    walletNetwork:
+      '지갑이 {network}에 있는지 확인하세요(Phantom: Settings → Developer Settings → Testnet Mode). 아니면 다른 지갑을 사용해 보세요.',
+    rateLimited: 'RPC 엔드포인트가 요청을 제한하고 있어요(HTTP 429). 1분 정도 기다린 뒤 다시 시도하세요.',
+    rpcHttp: 'RPC 엔드포인트가 HTTP 오류 {status}로 응답했어요.',
     unknown: '문제가 발생했어요.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

@@ -13,6 +13,10 @@
   --animate-twinkle: twinkle 4s ease-in-out infinite;
   --animate-ping-once: ping-out 1.4s cubic-bezier(0, 0, 0.2, 1) forwards;
 
+  /* Motion: a long, soft landing for things arriving; a little overshoot for things that snap into place. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
   @keyframes blink {
     50% {
       opacity: 0;
@@ -136,11 +140,64 @@ html {
     0 0 80px -20px color-mix(in oklab, var(--ui-primary) 50%, transparent);
 }
 
+/* Frosted glass for small controls: the header's network selector, the footer's switches. */
+@utility glass-pill {
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in oklab, white 14%, transparent),
+      color-mix(in oklab, white 3%, transparent) 55%
+    ),
+    color-mix(in oklab, var(--ui-bg-elevated) 45%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 22%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--ui-border-accented) 70%, transparent),
+    0 8px 24px -14px color-mix(in oklab, black 60%, transparent);
+}
+
 /* Text seen through a grid of round dots, like a lottery board's LEDs. The pitch follows the font size. */
 @utility led {
   --led-pitch: 0.09em;
   mask-image: radial-gradient(circle at center, #000 60%, transparent 66%);
   mask-size: var(--led-pitch) var(--led-pitch);
+}
+
+/*
+ * Surfaces sunk into the play table's glass: a shallow tray for readouts, and
+ * a deeper well for lists and the number window. Smoked by night, frosted by
+ * day (black mixed into a light page only turns it grey).
+ */
+@utility table-tray {
+  border-radius: 1rem;
+  background: color-mix(in oklab, black 20%, transparent);
+  box-shadow:
+    inset 0 1px 4px color-mix(in oklab, black 50%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 5%, transparent);
+
+  :root:not(.dark) & {
+    background: color-mix(in oklab, white 55%, transparent);
+    box-shadow:
+      inset 0 1px 3px color-mix(in oklab, var(--ui-primary) 10%, transparent),
+      inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 12%, transparent);
+  }
+}
+
+@utility table-well {
+  border-radius: 1.1rem;
+  background: color-mix(in oklab, black 32%, transparent);
+  box-shadow:
+    inset 0 2px 12px color-mix(in oklab, black 65%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 5%, transparent);
+  scrollbar-width: thin;
+
+  :root:not(.dark) & {
+    background: color-mix(in oklab, white 50%, transparent);
+    box-shadow:
+      inset 0 2px 8px color-mix(in oklab, var(--ui-primary) 10%, transparent),
+      inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 14%, transparent);
+  }
 }
 
 /* Long-form text on the legal pages. */
@@ -274,13 +331,87 @@ html {
   }
 }
 
-/* Sections slide in as they scroll into view, where the browser supports scroll-driven animations. */
+/* The brand gradient, flowing slowly through its colors: for the one headline that should feel alive. */
+@utility lucky-flow {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-purple-400),
+    var(--color-pink-600) 35%,
+    var(--ui-color-primary-300) 62%,
+    var(--color-purple-400)
+  );
+  background-size: 220% 100%;
+  background-clip: text;
+  color: transparent;
+  animation: lucky-flow 7s ease-in-out infinite alternate;
+}
+
+@keyframes lucky-flow {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+/*
+ * Scroll-driven entrances, where the browser supports them (elsewhere the
+ * content simply stands still). Each runs on its own element's way into view:
+ * - reveal: rises into place;
+ * - reveal-stagger: the same for each child, offset by its `--i`, so a row of
+ *   cards that enters together still arrives one after the other;
+ * - reveal-side: slides in from the start of the line (the right in RTL);
+ * - reveal-draw: a line drawing itself from the start of the line;
+ * - reveal-print: unrolls from the top, like paper out of a printer;
+ * - reveal-blur: comes into focus.
+ */
 @media screen and (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .reveal {
+    .reveal,
+    .reveal-stagger > *,
+    .reveal-side,
+    .reveal-draw,
+    .reveal-print,
+    .reveal-blur {
       animation: reveal linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 60%;
+    }
+    .reveal-stagger > * {
+      animation-range: entry calc(var(--i, 0) * 7%) entry calc(55% + var(--i, 0) * 7%);
+    }
+    .reveal-side {
+      --from: -2.5rem;
+      animation-name: reveal-side;
+      animation-range: entry 5% entry 75%;
+    }
+    .reveal-side:dir(rtl) {
+      --from: 2.5rem;
+    }
+    .reveal-draw {
+      animation-name: reveal-draw;
+      animation-range: entry 20% cover 45%;
+      transform-origin: left center;
+    }
+    .reveal-draw:dir(rtl) {
+      transform-origin: right center;
+    }
+    .reveal-print {
+      animation-name: reveal-print;
+      animation-range: entry 10% cover 45%;
+    }
+    /* Sharp by the time the heading is fully in view, so it is never read blurred. */
+    .reveal-blur {
+      animation-name: reveal-blur;
+      animation-range: entry 0% entry 80%;
+    }
+
+    /* How far down the page you are, as a neon thread under the header. */
+    .scroll-meter {
+      display: block;
+      animation: meter linear both;
+      animation-timeline: scroll(root block);
     }
   }
 }
@@ -289,6 +420,141 @@ html {
   from {
     opacity: 0;
     transform: translateY(2.5rem);
+  }
+}
+
+@keyframes reveal-side {
+  from {
+    opacity: 0;
+    translate: var(--from) 0;
+  }
+}
+
+@keyframes reveal-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes reveal-print {
+  from {
+    clip-path: inset(0 0 100% 0);
+    translate: 0 -3rem;
+  }
+}
+
+@keyframes reveal-blur {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    letter-spacing: 0.08em;
+  }
+}
+
+@keyframes meter {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.scroll-meter {
+  display: none;
+  position: fixed;
+  z-index: 60;
+  inset-inline: 0;
+  top: var(--ui-header-height);
+  height: 2px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--ui-color-primary-500), var(--color-pink-600), var(--ui-secondary));
+  box-shadow: 0 0 12px color-mix(in oklab, var(--ui-primary) 70%, transparent);
+  pointer-events: none;
+}
+
+.scroll-meter:dir(rtl) {
+  transform-origin: right center;
+}
+
+/*
+ * Arrivals on page load, in the order of `--rise` (0, 1, 2…): what the page
+ * says first lands first. Only with motion allowed, so nothing waits on a
+ * delay when animations are cut short.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 0.9s var(--ease-out-expo) both;
+    animation-delay: calc(var(--rise, 0) * 90ms);
+  }
+
+  /* A neon sign switching on: a few stutters, then steady. */
+  .ignite {
+    animation: ignite 1.4s linear both;
+    animation-delay: calc(var(--rise, 0) * 90ms + 150ms);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    filter: blur(8px);
+  }
+}
+
+@keyframes ignite {
+  0% {
+    opacity: 0.08;
+  }
+  6% {
+    opacity: 0.9;
+  }
+  9% {
+    opacity: 0.15;
+  }
+  14% {
+    opacity: 1;
+  }
+  19% {
+    opacity: 0.35;
+  }
+  26%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Anchored sections stop below the sticky header (the router reads this too). */
+html {
+  scroll-padding-top: calc(var(--ui-header-height) + 0.5rem);
+}
+
+/*
+ * Page changes cross-fade (Nuxt's view transitions): the old page dims away
+ * quickly, the new one settles in. The header and the background are the same
+ * on both sides, so only the content seems to move. The play page's game pill
+ * glides from one game to the next.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: vt-out 0.18s ease-in both;
+  }
+  ::view-transition-new(root) {
+    animation: vt-in 0.36s var(--ease-out-expo) both;
+  }
+  ::view-transition-group(game-pill) {
+    animation-duration: 0.5s;
+    animation-timing-function: var(--ease-spring);
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
   }
 }
 

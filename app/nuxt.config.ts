@@ -97,10 +97,22 @@ export default defineNuxtConfig({
       vapidKey: '',
       /** devnet, testnet, mainnet or localnet. */
       cluster: 'devnet',
-      /** RPC endpoint. Defaults to the public endpoint of the cluster. */
+      /**
+       * The app's deployments on the other side of the header's network
+       * selector (each cluster is its own site). Empty disables that side.
+       */
+      mainnetUrl: '',
+      testnetUrl: '',
+      /** RPC endpoint, without its auth token. Defaults to the public endpoint of the cluster. */
       rpcUrl: '',
-      /** RPC websocket endpoint. Defaults to `rpcUrl` with ws(s)://. */
+      /** RPC websocket endpoint, without its auth token. Defaults to `rpcUrl` with ws(s)://. */
       rpcWsUrl: '',
+      /**
+       * The RPC provider's auth token (QuickNode), added as the last path segment
+       * of both URLs: browsers cannot send it as a header. It reaches every
+       * visitor, so restrict the endpoint to the site's domains at the provider.
+       */
+      rpcToken: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
       /** Highest ticket number, shown until the on-chain config loads. */
@@ -173,9 +185,12 @@ export default defineNuxtConfig({
     ],
   },
 
-  // How often an open page asks for the latest build (app/plugins/pwa.client.ts).
   experimental: {
+    // How often an open page asks for the latest build (app/plugins/pwa.client.ts).
     checkOutdatedBuildInterval: 10 * 60_000,
+    // Page changes cross-fade with the View Transitions API (styles in main.css);
+    // skipped where the browser lacks it or the visitor asks for less motion.
+    viewTransition: true,
   },
 
   hooks: {

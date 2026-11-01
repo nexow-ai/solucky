@@ -47,17 +47,23 @@ const zhtw: Dict = {
   header: {
     beta: '測試版',
     getSol: '取得 SOL',
-    faucetTip: '測試版臨時水龍頭：免費取得測試 SOL 來玩',
-    mute: '關閉音效',
-    unmute: '開啟音效',
+    faucetTip: '開啟 Solana 水龍頭，已填好你的地址和 ◎{amount}',
+  },
+
+  network: {
+    label: '網路',
+    test: '測試網',
+    main: '主網',
+    testHere: 'Solana {cluster}：彩券以測試 SOL 支付，沒有實際價值',
+    mainHere: 'Solana Mainnet：彩券以真實 SOL 支付',
+    goTest: '用免費的測試 SOL 來玩',
+    goMain: '在 Solana Mainnet 上用真實 SOL 來玩',
+    notYet: 'S☉Lucky 尚未上線{network}',
   },
 
   faucet: {
-    connectFirst: '請先連接錢包',
-    connectFirstHint: '然後輕觸「取得 SOL」，為錢包儲值測試 SOL。',
     request: '在水龍頭申請測試 SOL',
-    requestHint: '你的錢包地址已複製。如果欄位是空的，請貼上，然後確認。',
-    openAgain: '再次開啟',
+    requestHint: '你的地址和 ◎{amount} 已填好：完成驗證，然後按下 Confirm Airdrop。',
     airdropped: '已空投 ◎1',
     airdroppedHint: '測試 SOL 已在 {cluster} 上入帳。現在可以買彩券了。',
     failed: '空投失敗',
@@ -73,6 +79,8 @@ const zhtw: Dict = {
     source: '原始碼',
     builtOn: '基於 {solana} 打造',
     madeBy: '由 {nexow} 打造',
+    mute: '關閉音效',
+    unmute: '開啟音效',
   },
 
   home: {
@@ -82,9 +90,6 @@ const zhtw: Dict = {
     lead: '每天開獎一次，每小時開獎一次，還有一個等你找出的隱藏號碼。贏家拿走獎池的 80%，其餘累積到下一期。每一張彩券、每一個 lamport、每一次開獎都在 Solana 上，任何人都能查證。',
     playNow: '立即開玩',
     howItWorks: '運作方式',
-    program: '程式',
-    cluster: '叢集',
-    draw: '開獎',
     dialCaption: '每個點代表今天的一張彩券：繞錶盤一圈的位置代表購買時間，往外的距離代表它的號碼。',
 
     how: {
@@ -161,6 +166,14 @@ const zhtw: Dict = {
       description: '還有疑問嗎？程式、應用程式和營運腳本都是開源的。',
       readCode: '閱讀程式碼',
       items: {
+        what: {
+          q: 'S☉Lucky 是什麼？',
+          a: 'S☉Lucky 是 Nexow, Inc. 打造的三款 Solana 彩券遊戲：每日彩券、每小時彩券和猜數字。每一張彩券、每一個獎池、每一次開獎都是一個開源 Solana 程式的帳戶，任何人都能查證。贏家拿走獎池的 80%；平台手續費從剩下的部分扣除，其餘累積到該遊戲的下一期。',
+        },
+        guess: {
+          q: '猜數字怎麼玩？',
+          a: '玩法就像每一期都藏著一個從 0 到 {max} 的號碼，沒有人知道，營運方也一樣。每次猜測都是一張押在該期還沒有人試過的號碼上的彩券。每隔幾秒，新的猜測會被封存，並用一個事先無人能知的插槽雜湊值來檢查。如果其中一個猜中，持有人贏得獎池的 80%，新的一期隨即開始；否則這些號碼出局，該期繼續進行，沒有截止時間。',
+        },
         real: {
           q: '這是真錢嗎？',
           a: '公開的應用程式在 Solana devnet 上運作，那裡的 SOL 是來自 faucet.solana.com 的免費測試幣。程式在 mainnet 上的運作方式相同，但經營真錢彩券需要在營運所在地取得相應的執照。',
@@ -188,6 +201,49 @@ const zhtw: Dict = {
       },
     },
 
+    live: {
+      title: '目前獎池',
+      drawIn: '距開獎',
+      noDeadline: '沒有截止時間',
+    },
+
+    practice: {
+      notice: '練習：在你的瀏覽器中執行，不會向 Solana 傳送任何內容',
+      title: '試試看：最接近的號碼獲勝',
+      lead: '這些標記是今天真實的彩券。放上你的號碼：離它比離其他任何彩券都近的號碼都歸你，開獎會從 0 到 {max} 中選出一個號碼。',
+      drawn: '開出的號碼',
+      yourNumber: '你的號碼',
+      best: '最佳空位',
+      draw: '練習開獎',
+      share: '你在開獎中的份額',
+      today: '今日彩券數',
+      record: '練習獲勝',
+      won: '開出 {drawn}：你的號碼最接近。你贏了！',
+      lost: '開出 {drawn}：{number} 更接近，所以那張彩券獲勝。',
+      taken: '今天已有人持有這個號碼。在真實遊戲中，請換一個。',
+      alone: '今天還沒有彩券：只有你一張時，你的號碼會贏下任何一次開獎。',
+    },
+
+    split: {
+      title: '的獎池歸贏家',
+      lead: '一期結算時，程式會把這部分支付給中獎彩券的持有者。平台手續費從剩下的 {rest} 中扣除，其餘累積到該遊戲的下一期。',
+      winner: '贏家',
+      fee: '平台手續費',
+      carry: '下一期',
+      feeNote: '每日彩券的手續費，設定在鏈上：{fee}。程式將其上限設為 {cap}。',
+      example: '以下金額依今日獎池 {pot} 計算。',
+    },
+
+    winners: {
+      tag: '中獎者',
+      title: '每位中獎者，都在鏈上',
+      description: '三個遊戲最近結算的各期，直接讀取自程式的帳戶。每一期都連結到它的頁面，可在那裡重新計算開獎。',
+      paid: '已支付給中獎者',
+      rounds: '已結算期數',
+      empty: '尚無已結算的一期。',
+      drawn: '開出：{number}',
+      found: '號碼已找到',
+    },
     cta: {
       title: '今天的獎池在等你',
       description: '選一個還沒有人選的號碼。祝你好運！',
@@ -225,6 +281,7 @@ const zhtw: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: '已驗證',
     title: '開獎收據',
     round: '期別',
     noneYet: '尚無已結算的一期',
@@ -281,6 +338,7 @@ const zhtw: Dict = {
     openFaucet: '開啟水龍頭',
     retry: '重試',
     rpcError: '無法連上 Solana RPC 節點（{reason}）',
+    fundHow: '領取測試 SOL',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -303,8 +361,19 @@ const zhtw: Dict = {
     takenToday: '{number} 已被選走',
     outOfRange: '號碼超出範圍',
     notEnough: 'SOL 不足',
+    loading: '正在載入本期…',
+    unavailable: '本期暫不可用',
+    closing: '本期即將截止',
+    over: '本期已結束',
+    full: '本期已滿',
     keys: '按 0–9 輸入，⌫ 刪除，Enter 購買。',
     rent: '每張彩券還會占用 ◎{rent} 的帳戶租金，開獎後可以取回。',
+    best: '最佳位置',
+    bestHint: '選出目前佔開獎份額最大的空閒號碼',
+    share: '選 {number} 的中獎機率',
+    wins: '開獎號碼落在 {lo} 到 {hi} 之間即中獎。之後有人在附近買號會縮小這個範圍。',
+    yourPick: '你選的號碼',
+    line: '點按或沿著數線拖曳來選號',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -354,6 +423,33 @@ const zhtw: Dict = {
     foundByYou: '你猜中了！號碼就是 {number}',
     foundByOther: '另一位玩家找到了號碼',
     nextRound: '新的一期已開賣，號碼也是新的。',
+    perGuess: '每次猜測：下次檢查時的機率為 {n} 分之 1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: '第 {round} 期',
+    winnerTakes: '中獎者得 ◎{prize}',
+    lastDraw: '上期開獎',
+    closesIn: '距截止',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: '本期你還沒有彩券。選一個號碼就能買一張。',
+    connect: '連接錢包即可遊戲。你的彩券會顯示在這裡。',
+    missed: '未中',
+    won: '中獎',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: '第 {round} 期已開獎',
+    number: '中獎號碼',
+    youWon: '你贏得了 ◎{amount}！',
+    winner: '中獎者獲得 ◎{amount}',
+    see: '查看開獎',
+    close: '關閉',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -406,6 +502,9 @@ const zhtw: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: '請在錢包中確認…',
+    cancel: '取消',
+    otherWay: '換一種方式試試',
+    abandoned: '頁面已停止等待你的錢包。如果錢包仍顯示該請求，請在錢包中拒絕。',
     done: '{label}：完成',
     cancelled: '{label}：已取消',
     failed: '{label}：失敗',
@@ -429,6 +528,7 @@ const zhtw: Dict = {
     description: '任何支援 Wallet Standard 的 Solana 錢包都能使用。',
     none: '在這個瀏覽器中找不到 Solana 錢包。請安裝一個，然後重新載入頁面：',
     failed: '無法連接 {wallet}',
+    noAccount: '{wallet} 沒有分享任何 Solana 帳戶。請在 {wallet} 中新增或選擇一個 Solana 帳戶，然後重新連接。',
     copied: '已複製地址',
     balance: '餘額',
     ticketsLeft: '還夠買 {n} 張彩券',
@@ -487,8 +587,17 @@ const zhtw: Dict = {
     rejected: '你在錢包中取消了請求。',
     taken: '本期已有人持有這個號碼。請另選一個。',
     funds: '錢包中的 SOL 不足。',
-    walletCluster:
-      '你的錢包無法簽署。在 Phantom 中：Settings → Developer Settings → 開啟 Testnet Mode → 選擇 Devnet，然後重新連接並再試一次。',
+    noSol: '此錢包在這個網路上還沒有 SOL。請儲值一些後再試一次。',
+    wrongCluster: '你的錢包把交易送到了另一個網路。請切換到 {network}，然後再試一次。',
+    notSetUp: '這個遊戲在此網路上尚未設定。',
+    outdated: '應用程式已過期。請重新整理頁面，然後再試一次。',
+    expired: '交易在確認前已過期。再試之前，請先查看錢包的活動紀錄。',
+    walletFailed:
+      '你的錢包回報了「Unexpected error」，沒有簽署。請關閉錢包視窗，鎖定後再解鎖，或重新啟動擴充功能，然後再試一次。',
+    walletNetwork:
+      '請確認你的錢包在 {network} 上（Phantom 中：Settings → Developer Settings → Testnet Mode），或換一個錢包試試。',
+    rateLimited: 'RPC 節點正在限制請求（HTTP 429）。請等一分鐘後再試。',
+    rpcHttp: 'RPC 節點回傳了 HTTP 錯誤 {status}。',
     unknown: '發生錯誤。',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

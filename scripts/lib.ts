@@ -3,7 +3,10 @@
  * keypair, with the S☉Lucky program plugin installed.
  *
  * Environment:
- *   SOLANA_RPC_URL       RPC endpoint (default: devnet)
+ *   SOLANA_RPC_URL       RPC endpoint, without any auth token (default: devnet); safe to log
+ *   SOLANA_WS_URL        its WebSocket endpoint (default: SOLANA_RPC_URL with ws(s)://)
+ *   SOLANA_AUTH_TOKEN    the provider's auth token (QuickNode): sent as an `x-token` header,
+ *                        and as the last path segment of the WebSocket URL
  *   SOLANA_KEYPAIR       path to a keypair JSON file (default: ~/.config/solana/id.json)
  *   SOLANA_KEYPAIR_JSON  the keypair's byte array itself, for CI secrets; wins over the file
  *   SOLUCKY_PROGRAM_ID   program address (default: the address in the IDL)
@@ -35,11 +38,22 @@ import {
   GAME_SLUGS,
   GameKind,
   type Round,
+  rpcEndpoint,
   SOLUCKY_PROGRAM_ADDRESS,
   soluckyProgram,
 } from '@solucky/client';
 
+/** The RPC endpoint, without the auth token: the scripts print it, and the monitor posts it to alerts. */
 export const RPC_URL = process.env.SOLANA_RPC_URL || 'https://api.devnet.solana.com';
+/** How to reach the endpoint: the token travels in a header, never in `RPC_URL`. */
+export const RPC_ENDPOINT = rpcEndpoint({
+  url: RPC_URL,
+  wsUrl: process.env.SOLANA_WS_URL,
+  token: process.env.SOLANA_AUTH_TOKEN,
+  tokenIn: 'header',
+});
+/** `createSolanaRpc` settings for `RPC_URL`. */
+export const RPC_CONFIG = RPC_ENDPOINT.headers ? { headers: RPC_ENDPOINT.headers } : undefined;
 export const PROGRAM_ADDRESS = process.env.SOLUCKY_PROGRAM_ID
   ? address(process.env.SOLUCKY_PROGRAM_ID)
   : SOLUCKY_PROGRAM_ADDRESS;
@@ -80,7 +94,14 @@ export function clientFor(signer: TransactionSigner) {
     createClient()
       .use(payer(signer))
       // Version 0 transactions work on every cluster and RPC provider.
-      .use(solanaRpc({ rpcUrl: RPC_URL, transactionConfig: { version: 0 } }))
+      .use(
+        solanaRpc({
+          rpcUrl: RPC_URL,
+          rpcConfig: RPC_CONFIG,
+          rpcSubscriptionsUrl: RPC_ENDPOINT.rpcSubscriptionsUrl,
+          transactionConfig: { version: 0 },
+        }),
+      )
       .use(soluckyProgram({ programAddress: PROGRAM_ADDRESS }))
   );
 }

@@ -4,6 +4,7 @@ import {
   countryFromBytes,
   countryToBytes,
   fetchOwnerTickets,
+  fetchRoundHeader,
   fetchRounds,
   fetchRoundTickets,
   fetchTicketByIndex,
@@ -96,7 +97,9 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     state.gameMissing.value = !account.exists;
     // A Guess round ends when a guess finds the number; the next one is on sale at once.
     if (!isLottery(k) && account.exists && state.period.value !== account.data.currentRound) {
-      const moved = state.period.value !== null;
+      // The first load reads the round itself; after it (even a failed one),
+      // a new round number means loading and watching that round.
+      const moved = state.period.value !== null || !state.loading.value;
       state.period.value = account.data.currentRound;
       if (moved) {
         await loadRound(k);
@@ -110,7 +113,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     const period = state.period.value;
     if (period === null) return;
     const [address] = await findRoundPda({ kind: k, period }, { programAddress });
-    const account = await client.solucky.accounts.round.fetchMaybe(address, { commitment: 'confirmed' });
+    // Only the round's fields: its sorted numbers can weigh megabytes, and the tickets carry them.
+    const account = await fetchRoundHeader(client.rpc, address);
     const list = account.exists ? await fetchRoundTickets(client.rpc, address, programAddress) : [];
     // A slower load for a round that already ended must not overwrite the new one.
     if (period !== state.period.value) return;
@@ -194,8 +198,22 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     state.started = true;
     if (isLottery(k)) state.period.value = periodOf(k, now.value);
     void refreshGame(k).then(() => watchRound(k));
-    setInterval(() => void loadRound(k).catch(() => {}), 15_000);
-    setInterval(() => void Promise.all([loadConfig(), loadGame(k), loadHistory(k)]).catch(() => {}), 30_000);
+    // Polling backs up the round's websocket. A hidden tab skips it (the
+    // next poll after it shows again catches up), and the history, a scan of
+    // every round of the game, refreshes less often than the rest.
+    let polls = 0;
+    setInterval(() => {
+      if (document.visibilityState === 'hidden') return;
+      polls++;
+      void loadRound(k).catch(() => {});
+      if (polls % 2 === 0) {
+        // A poll that gets through clears the error a failed load left on the page.
+        void Promise.all([loadConfig(), loadGame(k), polls % 4 === 0 ? loadHistory(k) : null]).then(
+          () => (state.error.value = null),
+          () => {},
+        );
+      }
+    }, 15_000);
     // The watchers live in their own scope so they outlive the component that
     // first showed the game.
     effectScope(true).run(() => {
@@ -278,12 +296,13 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     const k = kind.value;
     const period = s.value.period.value;
     const price = ticketPrice.value;
-    if (!wallet.value || price === null || period === null) return null;
+    // One transaction at a time: a second click or Enter must not start another.
+    if (busy.value || !wallet.value || price === null || period === null) return null;
     busy.value = true;
     try {
       const signature = await run(
         t('tx.buying', { number: formatNumber(number) }),
-        () =>
+        (config) =>
           client.solucky.instructions
             .buyTicket({
               buyer: client.payer,
@@ -293,7 +312,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
               country: countryToBytes(country),
               maxPrice: price,
             })
-            .sendTransaction(),
+            .sendTransaction(config),
         t(isLottery(k) ? 'tx.bought' : 'guess.bought', { number: formatNumber(number) }),
       );
       await after(k);
@@ -340,8 +359,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
       if (current.data.status === RoundStatus.Closed) {
         if (await isPinnedSlotExpired(client.rpc, current.data.targetSlot)) {
           if (
-            !(await run(t('tx.repin', { day: label }), () =>
-              ix.closeRound({ round: current.address }).sendTransaction(),
+            !(await run(t('tx.repin', { day: label }), (config) =>
+              ix.closeRound({ round: current.address }).sendTransaction(config),
             ))
           )
             return;
@@ -350,8 +369,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
       }
       if (current.data.status === RoundStatus.Open) {
         if (
-          !(await run(t(isLottery(k) ? 'tx.closing' : 'guess.sealing', { day: label }), () =>
-            ix.closeRound({ round: current.address }).sendTransaction(),
+          !(await run(t(isLottery(k) ? 'tx.closing' : 'guess.sealing', { day: label }), (config) =>
+            ix.closeRound({ round: current.address }).sendTransaction(config),
           ))
         )
           return;
@@ -361,8 +380,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
         await waitForSlot(current.data.targetSlot);
         const [game] = await findGamePda({ kind: k }, { programAddress });
         if (
-          !(await run(t('tx.drawing', { day: label }), () =>
-            ix.drawRound({ round: current.address, game }).sendTransaction(),
+          !(await run(t('tx.drawing', { day: label }), (config) =>
+            ix.drawRound({ round: current.address, game }).sendTransaction(config),
           ))
         )
           return;
@@ -373,10 +392,10 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
         if (!winner) throw new Error(t('tx.noWinner'));
         await run(
           t('tx.paying', { day: label }),
-          () =>
+          (config) =>
             ix
               .claimPrize({ round: current.address, ticket: winner.address, owner: winner.data.owner })
-              .sendTransaction(),
+              .sendTransaction(config),
           t('tx.paid', { amount: formatSol(current.data.payout), day: label }),
         );
       }
@@ -410,7 +429,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
               { programAddress },
             ),
           );
-        if (!(await run(t('tx.reclaiming'), () => client.sendTransaction(batch)))) break;
+        if (!(await run(t('tx.reclaiming'), (config) => client.sendTransaction(batch, config)))) break;
       }
     } finally {
       busy.value = false;

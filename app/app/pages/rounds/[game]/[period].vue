@@ -46,6 +46,8 @@ const round = shallowRef<Account<Round> | null>(null);
 const numbers = shallowRef<number[]>([]);
 const tickets = shallowRef<Account<Ticket>[]>([]);
 const loading = ref(true);
+/** Why the round could not be read: shown instead of "nobody bought", which would not be true. */
+const loadError = ref<string | null>(null);
 
 async function load() {
   if (period.value === null) {
@@ -53,12 +55,15 @@ async function load() {
     return;
   }
   loading.value = true;
+  loadError.value = null;
   try {
     const [address] = await findRoundPda({ kind: kind.value, period: period.value }, { programAddress });
     const account = await fetchEncodedAccount(client.rpc, address, { commitment: 'confirmed' });
     round.value = account.exists ? decodeRound(account) : null;
     numbers.value = account.exists ? roundNumbers(account.data) : [];
     tickets.value = account.exists ? await fetchRoundTickets(client.rpc, address, programAddress) : [];
+  } catch (cause) {
+    loadError.value = t('play.rpcError', { reason: friendlyError(cause, t) });
   } finally {
     loading.value = false;
   }
@@ -155,6 +160,15 @@ const facts = computed(() => {
       </div>
 
       <USkeleton v-if="loading" class="h-64 w-full" />
+
+      <UAlert
+        v-else-if="loadError"
+        color="error"
+        variant="subtle"
+        icon="i-lucide-wifi-off"
+        :title="loadError"
+        :actions="[{ label: t('play.retry'), color: 'neutral', variant: 'outline', onClick: load }]"
+      />
 
       <UEmpty
         v-else-if="!round"

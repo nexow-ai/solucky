@@ -21,6 +21,7 @@ useSeoMeta({
   title: () => `${title.value} · S☉Lucky`,
   ogTitle: () => `${title.value} · S☉Lucky`,
   description: () => description.value,
+  ogDescription: () => description.value,
 });
 
 const documents = computed<NavigationMenuItem[]>(() =>

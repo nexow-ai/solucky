@@ -1,20 +1,14 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
-import { lamports } from '@solana/kit';
-
-/** Provisional beta faucet: enough for a handful of ◎0.1 tickets on non-mainnet. */
-const AIRDROP_LAMPORTS = 1_000_000_000n;
 
 const route = useRoute();
 const { t } = useI18n();
 const localePath = useLocalePath();
-const { client, cluster, clusterLabel, isMainnet } = useSolana();
-const { address, balance, refreshBalance } = useWallet();
-const sound = useSound();
-const toast = useToast();
-const airdropping = ref(false);
+const faucet = useFaucet();
 
-const items = computed<NavigationMenuItem[]>(() => [
+const isHome = computed(() => route.path === localePath('/'));
+
+const drawerItems = computed<NavigationMenuItem[]>(() => [
   {
     label: t('nav.play'),
     to: localePath('/play'),
@@ -26,78 +20,8 @@ const items = computed<NavigationMenuItem[]>(() => [
   { label: t('nav.faq'), to: localePath({ path: '/', hash: '#faq' }), exactHash: true },
 ]);
 
-function faucetUrl(owner: string) {
-  return `https://faucet.solana.com/?address=${encodeURIComponent(owner)}`;
-}
-
-async function openWebFaucet(owner: string) {
-  try {
-    await navigator.clipboard.writeText(owner);
-  } catch {
-    // Clipboard may be blocked; the URL still carries the address.
-  }
-  window.open(faucetUrl(owner), '_blank', 'noopener,noreferrer');
-}
-
-/** Wait until the wallet balance rises after a local requestAirdrop. */
-async function waitForAirdrop(before: bigint | null) {
-  for (let i = 0; i < 20; i++) {
-    await refreshBalance();
-    const next = balance.value === null ? null : BigInt(balance.value);
-    if (next !== null && (before === null || next > before)) return;
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-  throw new Error(t('faucet.slow'));
-}
-
-async function airdropSol() {
-  const owner = address.value;
-  if (!owner) {
-    toast.add({
-      title: t('faucet.connectFirst'),
-      description: t('faucet.connectFirstHint'),
-      color: 'warning',
-      icon: 'i-lucide-wallet',
-    });
-    return;
-  }
-  if (airdropping.value) return;
-  airdropping.value = true;
-  try {
-    // Public RPCs rate-limit requestAirdrop (often 429). Use the web faucet on
-    // shared clusters; only the local validator can airdrop reliably.
-    if (cluster !== 'localnet') {
-      await openWebFaucet(owner);
-      toast.add({
-        title: t('faucet.request'),
-        description: t('faucet.requestHint'),
-        color: 'success',
-        icon: 'i-lucide-external-link',
-        actions: [{ label: t('faucet.openAgain'), onClick: () => void openWebFaucet(owner) }],
-      });
-      return;
-    }
-
-    const before = balance.value === null ? null : BigInt(balance.value);
-    await client.rpc.requestAirdrop(owner, lamports(AIRDROP_LAMPORTS), { commitment: 'confirmed' }).send();
-    await waitForAirdrop(before);
-    toast.add({
-      title: t('faucet.airdropped'),
-      description: t('faucet.airdroppedHint', { cluster: clusterLabel }),
-      color: 'success',
-      icon: 'i-lucide-sparkles',
-    });
-  } catch (error) {
-    toast.add({
-      title: t('faucet.failed'),
-      description: friendlyError(error, t),
-      color: 'error',
-      icon: 'i-lucide-cloud-off',
-    });
-  } finally {
-    airdropping.value = false;
-  }
-}
+/** On the landing page, section links live in LandingSectionIndex (lg+); keep them in the mobile drawer. */
+const items = computed(() => (isHome.value ? [] : drawerItems.value));
 </script>
 
 <template>
@@ -106,6 +30,15 @@ async function airdropSol() {
     title="S☉Lucky"
     :ui="{
       root: 'border-b-0 bg-default/60 backdrop-blur-md after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-linear-to-r after:from-transparent after:via-primary/70 after:to-transparent',
+      // The links, the network selector and the wallet only fit side by side
+      // from xl on; below that the links stay in the menu.
+      center: 'lg:max-xl:hidden',
+      // The sides split the bar evenly to center the links; when the buttons
+      // need more than half, the links move over instead of the labels wrapping.
+      right: 'whitespace-nowrap',
+      toggle: 'lg:max-xl:inline-flex',
+      overlay: 'lg:max-xl:block',
+      content: 'lg:max-xl:flex',
     }"
   >
     <template #title>
@@ -116,47 +49,50 @@ async function airdropSol() {
           color="primary"
           variant="subtle"
           size="sm"
-          class="hidden font-mono tracking-wider uppercase sm:inline-flex"
+          class="hidden font-mono tracking-wider uppercase sm:max-xl:inline-flex"
         />
       </span>
     </template>
 
     <UNavigationMenu
+      v-if="items.length"
       :items="items"
       variant="link"
-      :ui="{ link: 'font-mono text-xs tracking-[0.16em] uppercase', linkLeadingIcon: 'size-4' }"
+      :ui="{
+        link: 'font-mono text-xs tracking-[0.16em] uppercase',
+        linkLeadingIcon: 'size-4',
+      }"
     />
 
     <template #right>
-      <UBadge v-if="!isMainnet" :label="clusterLabel" color="warning" variant="subtle" class="hidden sm:inline-flex" />
-      <UTooltip v-if="!isMainnet" :text="t('header.faucetTip')">
-        <UButton
-          :label="t('header.getSol')"
-          :aria-label="t('header.getSol')"
-          icon="i-lucide-droplets"
-          :ui="{ label: 'hidden sm:inline' }"
-          size="xs"
-          color="success"
-          variant="soft"
-          :loading="airdropping"
-          class="font-mono uppercase tracking-wider"
-          @click="airdropSol()"
-        />
-      </UTooltip>
+      <AppNetwork class="max-lg:hidden" />
+      <!-- The wallet's address lives in the browser, so the faucet button does too. -->
+      <ClientOnly>
+        <UTooltip
+          v-if="faucet.available.value"
+          :text="t('header.faucetTip', { amount: FAUCET_SOL })"
+          :disabled="!faucet.url.value"
+        >
+          <UButton
+            :label="t('header.getSol')"
+            :aria-label="t('header.getSol')"
+            icon="i-lucide-droplets"
+            :ui="{ label: 'hidden md:max-xl:inline' }"
+            size="xs"
+            color="success"
+            variant="soft"
+            :to="faucet.url.value ?? undefined"
+            :target="faucet.url.value ? '_blank' : undefined"
+            :loading="faucet.busy.value"
+            class="font-mono tracking-wider uppercase"
+            @click="faucet.request()"
+          />
+        </UTooltip>
+      </ClientOnly>
       <ClientOnly>
         <AppInstall />
       </ClientOnly>
-      <UTooltip :text="sound.enabled.value ? t('header.mute') : t('header.unmute')">
-        <UButton
-          :icon="sound.enabled.value ? 'i-lucide-volume-2' : 'i-lucide-volume-x'"
-          color="neutral"
-          variant="ghost"
-          :aria-label="sound.enabled.value ? t('header.mute') : t('header.unmute')"
-          @click="sound.toggle()"
-        />
-      </UTooltip>
       <AppLangMenu />
-      <UColorModeButton />
       <ClientOnly>
         <LazyWalletButton class="hidden sm:inline-flex" />
         <template #fallback>
@@ -166,19 +102,22 @@ async function airdropSol() {
     </template>
 
     <template #body>
-      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
-      <UButton
-        v-if="!isMainnet"
-        :label="t('header.getSol')"
-        icon="i-lucide-droplets"
-        color="success"
-        variant="soft"
-        block
-        class="mt-4 font-mono uppercase tracking-wider"
-        :loading="airdropping"
-        @click="airdropSol()"
-      />
+      <AppNetwork block class="mb-4 lg:hidden" />
+      <UNavigationMenu :items="drawerItems" orientation="vertical" class="-mx-2.5" />
       <ClientOnly>
+        <UButton
+          v-if="faucet.available.value"
+          :label="t('header.getSol')"
+          icon="i-lucide-droplets"
+          color="success"
+          variant="soft"
+          block
+          :to="faucet.url.value ?? undefined"
+          :target="faucet.url.value ? '_blank' : undefined"
+          :loading="faucet.busy.value"
+          class="mt-4 font-mono tracking-wider uppercase"
+          @click="faucet.request()"
+        />
         <LazyWalletButton block class="mt-4" />
       </ClientOnly>
     </template>

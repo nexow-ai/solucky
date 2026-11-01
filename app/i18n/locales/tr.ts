@@ -47,17 +47,23 @@ const tr: Dict = {
   header: {
     beta: 'Beta',
     getSol: 'SOL alın',
-    faucetTip: 'Geçici beta faucet’i: oynamak için ücretsiz test SOL alın',
-    mute: 'Sesleri kapatın',
-    unmute: 'Sesleri açın',
+    faucetTip: 'Solana faucet’ini adresiniz ve ◎{amount} doldurulmuş olarak açar',
+  },
+
+  network: {
+    label: 'Ağ',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: biletler gerçek değeri olmayan test SOL ile alınır',
+    mainHere: 'Solana Mainnet: biletler gerçek SOL ile alınır',
+    goTest: 'Ücretsiz test SOL ile oynayın',
+    goMain: 'Solana Mainnet’te gerçek SOL ile oynayın',
+    notYet: 'S☉Lucky henüz {network} üzerinde değil',
   },
 
   faucet: {
-    connectFirst: 'Önce bir cüzdan bağlayın',
-    connectFirstHint: 'Ardından cüzdanınıza test SOL yüklemek için “SOL alın” düğmesine dokunun.',
     request: 'Faucet üzerinden test SOL isteyin',
-    requestHint: 'Cüzdan adresiniz kopyalandı. Alan boşsa yapıştırın, ardından onaylayın.',
-    openAgain: 'Yeniden açın',
+    requestHint: 'Adresiniz ve ◎{amount} zaten dolduruldu: doğrulamayı tamamlayın, ardından Confirm Airdrop’a basın.',
     airdropped: '◎1 airdrop edildi',
     airdroppedHint: 'Test SOL {cluster} ağına ulaştı. Artık bilet alabilirsiniz.',
     failed: 'Airdrop başarısız oldu',
@@ -73,6 +79,8 @@ const tr: Dict = {
     source: 'Kaynak kod',
     builtOn: '{solana} üzerinde geliştirildi',
     madeBy: '{nexow} tarafından yapıldı',
+    mute: 'Sesleri kapatın',
+    unmute: 'Sesleri açın',
   },
 
   home: {
@@ -82,9 +90,6 @@ const tr: Dict = {
     lead: 'Her gün bir çekiliş, her saat bir çekiliş ve bulunmayı bekleyen gizli bir sayı. Kazanan, havuzun %80’ini alır; kalanı bir sonraki tura aktarılır. Her bilet, her lamport ve her çekiliş Solana’da yer alır; orada herkes kontrol edebilir.',
     playNow: 'Hemen oynayın',
     howItWorks: 'Nasıl çalışır',
-    program: 'Program',
-    cluster: 'Ağ',
-    draw: 'Çekiliş',
     dialCaption:
       'Her nokta bugünkü biletlerden biridir: kadranın çevresindeki yeri satın alındığı saati, merkezden uzaklığı numarasını gösterir.',
 
@@ -167,6 +172,14 @@ const tr: Dict = {
       description: 'Hâlâ emin değil misiniz? Program, uygulama ve operatör betikleri açık kaynaktır.',
       readCode: 'Kodu okuyun',
       items: {
+        what: {
+          q: 'S☉Lucky nedir?',
+          a: 'S☉Lucky, Nexow, Inc. tarafından geliştirilen ve Solana üzerinde çalışan üç piyango oyunudur: günlük piyango, saatlik piyango ve Sayıyı Tahmin Et. Her bilet, her havuz ve her çekiliş açık kaynaklı bir Solana programının hesabıdır; bu yüzden herkes kontrol edebilir. Kazanan, havuzun %80’ini alır; kasa payı kalandan düşülür, geriye kalan da oyunun bir sonraki turuna aktarılır.',
+        },
+        guess: {
+          q: 'Sayıyı Tahmin Et nasıl işler?',
+          a: 'Her tur, operatör dahil kimsenin bilmediği 0 ile {max} arasında bir sayı saklıyormuş gibi oynanır. Her tahmin, o turda henüz denenmemiş bir sayıya alınmış bir bilettir. Birkaç saniyede bir yeni tahminler mühürlenir ve kimsenin önceden bilemeyeceği bir slotun hash’iyle kontrol edilir. Biri tutarsa sahibi havuzun %80’ini kazanır ve hemen yeni bir tur başlar; tutmazsa bu sayılar elenir ve tur, süre sınırı olmadan devam eder.',
+        },
         real: {
           q: 'Bu gerçek para mı?',
           a: 'Herkese açık uygulama, SOL’un faucet.solana.com’dan alınan ücretsiz test parası olduğu Solana devnet üzerinde çalışır. Program mainnet’te de aynı şekilde çalışır, ancak gerçek parayla piyango işletmek, faaliyet gösterdiğiniz yerde gerekli lisanslara sahip olmayı gerektirir.',
@@ -194,6 +207,51 @@ const tr: Dict = {
       },
     },
 
+    live: {
+      title: 'Şu anki havuzlar',
+      drawIn: 'Çekilişe kalan',
+      noDeadline: 'Süre sınırı yok',
+    },
+
+    practice: {
+      notice: 'Deneme: tarayıcınızda çalışır, Solana’ya hiçbir şey gönderilmez',
+      title: 'Deneyin: en yakın sayı kazanır',
+      lead: 'İşaretler bugünün gerçek biletleri. Sizinkini yerleştirin: ona diğer biletlerden daha yakın olan her sayı sizindir ve çekiliş 0 ile {max} arasında bir sayı seçer.',
+      drawn: 'Çekilen sayı',
+      yourNumber: 'Sayınız',
+      best: 'En iyi boş yer',
+      draw: 'Deneme çekilişi',
+      share: 'Çekilişteki payınız',
+      today: 'Bugünkü biletler',
+      record: 'Deneme kazançları',
+      won: '{drawn} çekildi: en yakın sayı sizinki. Kazandınız!',
+      lost: '{drawn} çekildi: {number} daha yakın, yani o bilet kazanır.',
+      taken: 'Bu sayı bugün zaten başkasında. Gerçek oyunda başka bir sayı seçin.',
+      alone: 'Bugün henüz bilet yok: tek başına sayınız her çekilişi kazanırdı.',
+    },
+
+    split: {
+      title: 'her havuzdan kazanana gider',
+      lead: 'Program bunu, tur sonuçlandığında kazanan biletin sahibine öder. Kasa payı kalan {rest} içinden düşülür, geriye kalan da oyunun bir sonraki turuna aktarılır.',
+      winner: 'Kazanan',
+      fee: 'Kasa payı',
+      carry: 'Sonraki tur',
+      feeNote:
+        'Günlük piyangonun zincir üstünde belirlenen kasa payı: {fee}. Program bunu en fazla {cap} ile sınırlar.',
+      example: 'Bugünkü {pot} havuz için tutarlar.',
+    },
+
+    winners: {
+      tag: 'Kazananlar',
+      title: 'Her kazanan zincir üstünde',
+      description:
+        'Üç oyunun en son sonuçlanan turları, doğrudan programın hesaplarından okunur. Her biri kendi turuna bağlanır; çekiliş orada yeniden hesaplanabilir.',
+      paid: 'Kazananlara ödenen',
+      rounds: 'Sonuçlanan turlar',
+      empty: 'Henüz sonuçlanan tur yok.',
+      drawn: 'Çekilen: {number}',
+      found: 'Sayı bulundu',
+    },
     cta: {
       title: 'Bugünkü havuz sizi bekliyor',
       description: 'Henüz kimsenin almadığı bir sayı seçin. Bol şans!',
@@ -231,6 +289,7 @@ const tr: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Doğrulandı',
     title: 'Çekiliş makbuzu',
     round: 'Tur',
     noneYet: 'henüz sonuçlanan tur yok',
@@ -288,6 +347,7 @@ const tr: Dict = {
     openFaucet: 'Faucet’i açın',
     retry: 'Tekrar deneyin',
     rpcError: 'Solana RPC uç noktasına ulaşılamadı ({reason})',
+    fundHow: 'Test SOL’ü alın',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -310,8 +370,19 @@ const tr: Dict = {
     takenToday: '{number} sayısı alınmış',
     outOfRange: 'Sayı aralık dışında',
     notEnough: 'Yeterli SOL yok',
+    loading: 'Tur yükleniyor…',
+    unavailable: 'Tur kullanılamıyor',
+    closing: 'Bu tur kapanıyor',
+    over: 'Bu tur bitti',
+    full: 'Bu tur doldu',
     keys: '0–9 tuşları yazar, ⌫ siler, Enter satın alır.',
     rent: 'Bir bilet ayrıca ◎{rent} hesap kirası tutar; bunu çekilişten sonra geri alırsınız.',
+    best: 'En iyi yer',
+    bestHint: 'Şu anda çekilişin en büyük payına sahip boş sayıyı seçer',
+    share: '{number} ile kazanma şansı',
+    wins: 'Çekiliş {lo} ile {hi} arasına düşerse kazanır. Yakına sonradan alınan biletler bunu küçültür.',
+    yourPick: 'Seçtiğiniz sayı',
+    line: 'Sayı seçmek için çizgiye dokunun veya üzerinde sürükleyin',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -364,6 +435,33 @@ const tr: Dict = {
     foundByYou: 'Buldunuz! Sayı {number} idi',
     foundByOther: 'Başka bir oyuncu sayıyı buldu',
     nextRound: 'Yeni bir sayıyla yeni bir tur satışta.',
+    perGuess: 'Her tahmin: sonraki kontrolde {n} ihtimalde 1',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: '{round} turu',
+    winnerTakes: 'Kazanan ◎{prize} alır',
+    lastDraw: 'Son çekiliş',
+    closesIn: 'Kapanışa kalan',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Bu turda henüz biletiniz yok. Bir bilet için sayı seçin.',
+    connect: 'Oynamak için bir cüzdan bağlayın. Biletleriniz burada görünür.',
+    missed: 'Tutmadı',
+    won: 'Kazandı',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: '{round} turunun çekilişi yapıldı',
+    number: 'Kazanan sayı',
+    youWon: '◎{amount} kazandınız!',
+    winner: 'Kazanan ◎{amount} alır',
+    see: 'Çekilişi görün',
+    close: 'Kapat',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -418,6 +516,9 @@ const tr: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Cüzdanınızda onaylayın…',
+    cancel: 'İptal',
+    otherWay: 'Başka bir yolla dene',
+    abandoned: 'Sayfa artık cüzdanınızı beklemiyor. Cüzdan isteği hâlâ gösteriyorsa orada reddedin.',
     done: '{label}: tamamlandı',
     cancelled: '{label}: iptal edildi',
     failed: '{label}: başarısız oldu',
@@ -441,6 +542,8 @@ const tr: Dict = {
     description: 'Wallet Standard destekli her Solana cüzdanı çalışır.',
     none: 'Bu tarayıcıda Solana cüzdanı bulunamadı. Bir tane kurun, ardından sayfayı yenileyin:',
     failed: '{wallet} bağlanamadı',
+    noAccount:
+      '{wallet} hiçbir Solana hesabı paylaşmadı. {wallet} içinde bir Solana hesabı ekleyin veya seçin, sonra yeniden bağlanın.',
     copied: 'Adres kopyalandı',
     balance: 'Bakiye',
     ticketsLeft: '{n} bilete yeter | {n} bilete yeter',
@@ -499,8 +602,17 @@ const tr: Dict = {
     rejected: 'İsteği cüzdanınızda iptal ettiniz.',
     taken: 'Bu sayı bu turda başka birine ait. Başka bir sayı seçin.',
     funds: 'Cüzdanda yeterli SOL yok.',
-    walletCluster:
-      'Cüzdanınız imzalayamadı. Phantom’da: Settings → Developer Settings → Testnet Mode seçeneğini etkinleştirin → Devnet’i seçin; ardından yeniden bağlanıp tekrar deneyin.',
+    noSol: 'Bu cüzdanda bu ağda henüz SOL yok. Biraz ekleyin, sonra tekrar deneyin.',
+    wrongCluster: 'Cüzdanınız işlemi başka bir ağa gönderdi. {network} ağına geçin, sonra tekrar deneyin.',
+    notSetUp: 'Bu oyun bu ağda henüz kurulmadı.',
+    outdated: 'Uygulama güncel değil. Sayfayı yenileyin, sonra tekrar deneyin.',
+    expired: 'İşlem onaylanmadan önce süresi doldu. Tekrar denemeden önce cüzdan etkinliğinizi kontrol edin.',
+    walletFailed:
+      'Cüzdanınız “Unexpected error” bildirdi ve imzalamadı. Penceresini kapatın, cüzdanı kilitleyip kilidini açın ya da eklentiyi yeniden başlatın, sonra tekrar deneyin.',
+    walletNetwork:
+      'Cüzdanınızın {network} ağında olduğundan emin olun (Phantom’da: Settings → Developer Settings → Testnet Mode) ya da başka bir cüzdan deneyin.',
+    rateLimited: 'RPC uç noktası istekleri sınırlıyor (HTTP 429). Bir dakika bekleyip tekrar deneyin.',
+    rpcHttp: 'RPC uç noktası HTTP {status} hatasıyla yanıt verdi.',
     unknown: 'Bir şeyler ters gitti.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

@@ -127,6 +127,11 @@ The program address in the code, `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` 
    bun run program:build:verifiable
    solana program deploy -u devnet --program-id target/deploy/solucky-keypair.json target/verifiable/solucky.so
    ```
+   To **upgrade** a program that is already deployed, name it by address and sign with its upgrade authority; the program keypair is not needed. Check first that `solana-keygen pubkey target/deploy/solucky-keypair.json` prints the address in `declare_id!`: if it does not (a checkout that once built 1.0 still holds the `8uiVK…` key), do not run `anchor keys sync`, which would switch the code to that address.
+   ```bash
+   solana program deploy -u devnet --program-id GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux \
+     --upgrade-authority <AUTHORITY KEYPAIR> target/verifiable/solucky.so
+   ```
 2. **Config and games.** Copy [`.env.example`](.env.example) to `.env` and set `SOLUCKY_MAX_NUMBER` (21 000 000 by default). As the upgrade authority, create the config and open the three games at one price and fee (tickets cost at least ◎0.002, the fee is at most 2000 bps). Fund the treasury with at least ◎0.001 first, so it can receive small fees:
    ```bash
    SOLANA_RPC_URL=https://api.devnet.solana.com bun run admin init --treasury <ADDRESS> --price 0.1 --fee-bps 500
@@ -134,10 +139,22 @@ The program address in the code, `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` 
    bun run admin status
    ```
    Later changes: `bun run admin game <daily|hourly|guess> --price <SOL> --fee-bps <n>`, and `bun run admin set --max-number <n>`, `--treasury <ADDRESS>`, `--authority <ADDRESS>`, `--pause`, `--resume`.
-3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc). Set the cluster, and preferably a dedicated RPC endpoint, as `NUXT_PUBLIC_*` variables there. `bun run build` produces a Node server in `app/.output` instead. The app installs as a PWA and updates itself: a page left open offers each deploy within ten minutes and loads it on its next page change, and an installed app gets it on its next launch. Its install screenshots come from the play page: retake them with `bun run screenshots <site URL>` when the page changes.
+3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc); the manual [Deploy workflow](.github/workflows/deploy.yml) does the same from a commit on GitHub (secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). The cluster, the site URL and the other network's site (`NUXT_PUBLIC_MAINNET_URL` or `NUXT_PUBLIC_TESTNET_URL`, for the header's network selector) are `vars` in `wrangler.jsonc`, and each deploy replaces the variables set in the dashboard with them. Use a dedicated RPC endpoint in production (the public ones answer HTTP 429 under load) and keep it out of the repository: `wrangler secret put NUXT_PUBLIC_RPC_URL` and, for QuickNode, `wrangler secret put NUXT_PUBLIC_RPC_TOKEN` (secrets survive deploys; the app still sends both to every browser, so restrict the endpoint to the site's domains at the provider). `bun run build` produces a Node server in `app/.output` instead. The app installs as a PWA and updates itself: a page left open offers each deploy within ten minutes and loads it on its next page change, and an installed app gets it on its next launch. Its install screenshots come from the play page: retake them with `bun run screenshots <site URL>` when the page changes.
    **Draw notifications** are optional. `bun run vapid` prints new keys: set `NUXT_PUBLIC_VAPID_KEY` in `vars`, the private key and the push secret with `wrangler secret put NUXT_VAPID_PRIVATE_KEY` and `wrangler secret put NUXT_PUSH_SECRET`, and give the crank the site's URL and the same secret (below). The first deploy creates the `PUSH` KV namespace for the subscriptions and writes its id into `app/wrangler.jsonc`: commit it. On Node, subscriptions are files in `.data/push` under the working directory. Without a VAPID key, the bell on the play page stays hidden.
 4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so lottery rounds are drawn within seconds of their end and Guess players get their check within seconds; it polls every 3 seconds while guesses wait. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON` (and, for notifications, the variable `SOLUCKY_APP_URL` and the secret `SOLUCKY_PUSH_SECRET`). Each crank reports the draws it makes to the app, which notifies the players who asked. Use a dedicated, lightly funded keypair: the crank never needs authority.
-5. **Monitoring.** `bun run monitor --crank <CRANK ADDRESS>` exits with an error when a finished lottery round is still unsettled 15 minutes after it ended, when a Guess winner is still unpaid, or when the crank holds less than ◎0.05; with `ALERT_WEBHOOK_URL` set it also posts to a Slack or Discord webhook. [`.github/workflows/monitor.yml`](.github/workflows/monitor.yml) runs it twice a day once the repository variable `SOLUCKY_MONITOR_ENABLED=true` is set (with the variables `SOLANA_RPC_URL` and `SOLUCKY_CRANK`, and the secret `ALERT_WEBHOOK_URL`); GitHub also emails you when a run fails.
+5. **Monitoring.** `bun run monitor --crank <CRANK ADDRESS>` exits with an error when buying a ticket in any game fails in simulation (it simulates one unsigned purchase per game, so a broken program, client or RPC shows up before players hit it), when a finished lottery round is still unsettled 15 minutes after it ended, when a Guess winner is still unpaid, or when the crank holds less than ◎0.05; with `ALERT_WEBHOOK_URL` set it also posts to a Slack or Discord webhook. [`.github/workflows/monitor.yml`](.github/workflows/monitor.yml) runs it twice a day once the repository variable `SOLUCKY_MONITOR_ENABLED=true` is set (with the variables `SOLANA_RPC_URL` and `SOLUCKY_CRANK`, and the secret `ALERT_WEBHOOK_URL`); GitHub also emails you when a run fails.
+
+### Before a mainnet launch
+
+S☉Lucky runs on devnet. None of these is done yet; each one closes a gap listed under [Fairness and trust](#fairness-and-trust):
+
+- [ ] Draw with a verifiable randomness oracle (Switchboard On-Demand or ORAO VRF) instead of a slot hash, which the slot's leader can bias and which a player can re-roll by withholding the draw.
+- [ ] Put the upgrade authority and the config authority behind a multisig (for example Squads) with a time lock, or make the program immutable. Today the authority can change the highest number for rounds that have not opened yet, and a range of one or two numbers would hand it the next pot and the carry.
+- [ ] Have the program audited, then deploy a [verifiable build](#verifiable-builds) and publish its verification.
+- [ ] Run `crank --watch` as an always-on service with alerting, and enable the monitor workflow; scheduled GitHub Actions start minutes to hours late.
+- [ ] Use a dedicated mainnet RPC endpoint restricted to the site's domains, or proxy it through the Worker.
+- [ ] Get legal advice for each market: a real-money lottery is regulated or banned in many countries, and the copy must state only what the program enforces.
+- [ ] Rotate the keys and passwords that the 2022 prototype committed to this public repository's history (see [SECURITY.md](SECURITY.md)).
 
 ## Verifiable builds
 
@@ -162,8 +179,10 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `NUXT_PUBLIC_CLUSTER` | `devnet` | `mainnet`, `devnet`, `testnet` or `localnet`; also picks the wallet chain |
-| `NUXT_PUBLIC_RPC_URL` | public endpoint | RPC endpoint. Use a provider in production: public endpoints are rate-limited |
-| `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different |
+| `NUXT_PUBLIC_MAINNET_URL`, `NUXT_PUBLIC_TESTNET_URL` | empty | The app on the other cluster, for the header's Testnet / Mainnet selector, which opens the same page there (each cluster is its own deployment). Empty disables that side |
+| `NUXT_PUBLIC_RPC_URL` | public endpoint | RPC endpoint, without its auth token. Use a provider in production: public endpoints are rate-limited (HTTP 429) |
+| `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different; without the token |
+| `NUXT_PUBLIC_RPC_TOKEN` | empty | The provider's auth token (QuickNode), added as the last path segment of both URLs, since browsers cannot send QuickNode's `x-token` header. Every visitor sees it: restrict the endpoint to your domains at the provider |
 | `NUXT_PUBLIC_PROGRAM_ID` | from the IDL | Program address |
 | `NUXT_PUBLIC_MAX_NUMBER` | `21000000` | Highest ticket number, shown until the on-chain config loads; keep it equal to `SOLUCKY_MAX_NUMBER` |
 | `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
@@ -182,7 +201,9 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `SOLANA_RPC_URL` | devnet | RPC endpoint |
+| `SOLANA_RPC_URL` | devnet | RPC endpoint, without any auth token; the scripts print it |
+| `SOLANA_WS_URL` | from the RPC URL | Its WebSocket endpoint, if different |
+| `SOLANA_AUTH_TOKEN` | — | The provider's auth token (QuickNode): an `x-token` header on HTTP, the last path segment of the WebSocket URL |
 | `SOLANA_KEYPAIR` | `~/.config/solana/id.json` | Signer keypair file |
 | `SOLANA_KEYPAIR_JSON` | — | The keypair's byte array, for CI secrets |
 | `SOLUCKY_PROGRAM_ID` | from the IDL | Program address |
@@ -197,7 +218,7 @@ English, Español, Français, Deutsch, Italiano, Português (Brasil), Nederlands
 - **The list** is [`app/i18n/languages.ts`](app/i18n/languages.ts): each language's path code, its `lang` tag, its name in itself, its direction, and the plural forms its messages give. `nuxt.config.ts` reads it for [@nuxtjs/i18n](https://i18n.nuxtjs.org).
 - **The words** are in `app/i18n/locales/`, one file per language. `en.ts` is the source and defines the type every other file must match. `bun run test:js` checks that every dictionary has the same keys and the same `{placeholders}` as English, the right number of plural forms, and valid message syntax, and that it is really translated. Messages follow vue-i18n: `{name}` is a value the page fills in (sometimes a link or bold text, rendered with `<i18n-t>`), and ` | ` separates plural forms. The legal pages are translated too, and each translation says the English version applies.
 - **Pages** exist in every language: English at the root (`/play`), the others under their code (`/fr/play`, `/ar/play`, `/zh-cn/play`). Each page has `hreflang` alternates and its own `og:locale`; set `NUXT_PUBLIC_I18N_BASE_URL` so they are absolute.
-- **Right to left:** Arabic and Hebrew set `dir="rtl"`, and Nuxt UI's components follow. Layout uses logical properties (`ps-`, `ms-`, `text-end`), arrows along the line of reading flip, and the parts that are clocks or numbers stay left to right: the solar dial, the day bar, the countdown, the reels, the keypad, the pot chart, addresses.
+- **Right to left:** Arabic and Hebrew set `dir="rtl"`, and Nuxt UI's components follow. Layout uses logical properties (`ps-`, `ms-`, `text-end`), arrows along the line of reading flip, and the parts that are clocks or numbers stay left to right: the solar dial, the day bar, the countdown, the reels, the keypad, the number line, the pot chart, addresses.
 - **Type:** Space Grotesk and JetBrains Mono cover Latin and Vietnamese. Cyrillic, Arabic, Hebrew, Devanagari, Thai, Chinese, Japanese and Korean use the faces their systems ship, so nothing is downloaded from anyone else; those scripts drop the Latin letter-spacing (`main.css`).
 - **Numbers:** lottery numbers and SOL amounts look the same in every language (`21 000 000`, `◎0.1`). Dollars, percentages, durations, dates and country names follow the page's language through `Intl`, with Western digits in Arabic and the Gregorian calendar in Thai. Program errors are translated from their codes (`app/utils/errors.ts`).
 - **Choosing:** the globe in the header lists every language in its own name, and the footer links them all. Nothing redirects and no cookie is set: a visitor whose browser prefers another of the languages is offered it once, in that language (`AppLangSuggest.vue`), and the choice is kept in local storage (`solucky:lang`, listed on the Cookies & storage page).

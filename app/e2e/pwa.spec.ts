@@ -19,5 +19,5 @@ test('installs and opens offline', async ({ page, context }) => {
 
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole('banner').getByRole('link', { name: 'Play' })).toBeVisible();
+  await expect(page.getByRole('banner').getByRole('link', { name: 'S☉Lucky' })).toBeVisible();
 });

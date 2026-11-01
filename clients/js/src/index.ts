@@ -9,6 +9,7 @@
 export * from './generated';
 export * from './country';
 export * from './draw';
+export * from './endpoint';
 export * from './errors';
 export * from './queries';
 export * from './time';

@@ -182,6 +182,8 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
 .glass-body {
   position: relative;
   z-index: 2;
+  /* A pane stretched by its grid keeps its content full height. */
+  height: 100%;
 }
 
 /* Day mode: frosted white glass over the same table. */

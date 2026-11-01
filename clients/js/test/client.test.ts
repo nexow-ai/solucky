@@ -4,7 +4,11 @@ import {
   type Blockhash,
   getAddressEncoder,
   getBase64Decoder,
+  getSolanaErrorFromTransactionError,
+  SOLANA_ERROR__BLOCK_HEIGHT_EXCEEDED,
   SOLANA_ERROR__INSTRUCTION_ERROR__CUSTOM,
+  SOLANA_ERROR__RPC__TRANSPORT_HTTP_ERROR,
+  SOLANA_ERROR__TRANSACTION__FAILED_WHEN_SIMULATING_TO_ESTIMATE_COMPUTE_LIMIT,
   SolanaError,
 } from '@solana/kit';
 import { getSysvarSlotHashesEncoder } from '@solana/sysvars';
@@ -19,6 +23,7 @@ import {
   drawnNumber,
   errorReason,
   feeFor,
+  fetchRoundHeader,
   findGamePda,
   findRoundPda,
   findTicketPda,
@@ -43,6 +48,7 @@ import {
   roundNumbers,
   RoundStatus,
   SOLUCKY_ERROR__PAUSED,
+  SOLUCKY_PROGRAM_ADDRESS,
   TICKET_OFFSETS,
   winShare,
 } from '../src';
@@ -75,6 +81,8 @@ describe('time', () => {
     expect(formatPeriod(Guess, 12)).toBe('12');
     expect(parsePeriod(Guess, '12')).toBe(12);
     expect(parsePeriod(Guess, '2026-10-20')).toBeNull();
+    expect(parsePeriod(Guess, '4294967295')).toBe(4_294_967_295);
+    expect(parsePeriod(Guess, '4294967296')).toBeNull();
     expect(gameFromSlug('hourly')).toBe(Hourly);
     expect(gameFromSlug('weekly')).toBeNull();
   });
@@ -246,6 +254,67 @@ describe('accounts', () => {
     expect(roundNumbers(fields)).toEqual([]);
   });
 
+  test('a page reads only the round header, not the sorted numbers', async () => {
+    const header = getRoundEncoder().encode({
+      kind: Daily,
+      period: 20_758,
+      status: RoundStatus.Open,
+      ticketPrice: 100_000_000n,
+      feeBps: 500,
+      maxNumber: 21_000_000,
+      ticketCount: 2,
+      pot: 200_000_000n,
+      entropy: new Uint8Array(32),
+      targetSlot: 0n,
+      checked: 0,
+      sealedCount: 0,
+      drawSlot: 0n,
+      slotHash: new Uint8Array(32),
+      randomness: new Uint8Array(32),
+      drawnNumber: 0,
+      winningIndex: 0,
+      winningNumber: 0,
+      winner: address('11111111111111111111111111111111'),
+      winnerCountry: new Uint8Array(2),
+      payout: 0n,
+      fee: 0n,
+      feeCollected: false,
+      bump: 254,
+    });
+    const asked: unknown[] = [];
+    const rpc = {
+      getAccountInfo: (_address: string, config: unknown) => {
+        asked.push(config);
+        return {
+          send: async () => ({
+            value: {
+              data: [getBase64Decoder().decode(header), 'base64'],
+              executable: false,
+              lamports: 1n,
+              owner: SOLUCKY_PROGRAM_ADDRESS,
+              space: BigInt(header.length + 8),
+            },
+          }),
+        };
+      },
+    };
+    const [roundAddress] = await findRoundPda({ kind: Daily, period: 20_758 });
+    const round = await fetchRoundHeader(rpc as never, roundAddress);
+    expect(round.exists && round.data.pot).toBe(200_000_000n);
+    expect(asked[0]).toMatchObject({ dataSlice: { offset: 0, length: getRoundSize() } });
+
+    const missing = { getAccountInfo: () => ({ send: async () => ({ value: null }) }) };
+    expect((await fetchRoundHeader(missing as never, roundAddress)).exists).toBe(false);
+  });
+
+  test('PDA seeds match the program: fixed addresses on the deployed program', async () => {
+    // Seeds: "round", kind as one byte, period as u32 LE (programs/solucky/src/instructions/buy_ticket.rs).
+    const [round] = await findRoundPda({ kind: Daily, period: 20_758 });
+    expect(round).toBe(address('H9ukcLBatBGuWiBhrc6mTCehbLBEEjdAoyPXLhgD34s3'));
+    const [game] = await findGamePda({ kind: Guess });
+    expect(game).toBe(address('51qixxK5d8myuYRki4254Bzf47Pd1AydHh79mNGBBBqv'));
+  });
+
   test('PDAs are derived from the game, the period and the number', async () => {
     const [roundA] = await findRoundPda({ kind: Daily, period: 20_000 });
     const [roundB] = await findRoundPda({ kind: Daily, period: 20_001 });
@@ -280,8 +349,38 @@ describe('errors', () => {
     expect(errorReason(failed(6004))).toEqual({ kind: 'program', code: SOLUCKY_ERROR__PAUSED });
     expect(errorReason(failed(0))).toEqual({ kind: 'number-taken' });
     expect(errorReason(failed(1))).toEqual({ kind: 'insufficient-funds' });
-    expect(errorReason(new Error('Unexpected error'))).toEqual({ kind: 'wallet-cluster' });
+    expect(errorReason(new Error('Unexpected error'))).toEqual({ kind: 'wallet-failed' });
+    const http = (statusCode: number) =>
+      new SolanaError(SOLANA_ERROR__RPC__TRANSPORT_HTTP_ERROR, { headers: new Headers(), message: '', statusCode });
+    expect(errorReason(new Error('load failed', { cause: http(429) }))).toEqual({ kind: 'rate-limited' });
+    expect(errorReason(http(403))).toEqual({ kind: 'rpc-http', status: 403 });
+    expect(describeError(http(429))).toMatch(/rate-limiting requests \(HTTP 429\)/);
     expect(errorReason(new Error('boom'))).toEqual({ kind: 'other', message: 'boom' });
+  });
+
+  test('explain a wallet without SOL, on another cluster, or an app out of date', () => {
+    // A 0-SOL fee payer fails the compute-unit estimate with AccountNotFound.
+    const unfunded = new SolanaError(SOLANA_ERROR__TRANSACTION__FAILED_WHEN_SIMULATING_TO_ESTIMATE_COMPUTE_LIMIT, {
+      cause: getSolanaErrorFromTransactionError('AccountNotFound'),
+      unitsConsumed: 0,
+    } as never);
+    expect(errorReason(unfunded)).toEqual({ kind: 'no-sol' });
+    expect(errorReason(getSolanaErrorFromTransactionError('BlockhashNotFound'))).toEqual({ kind: 'wrong-cluster' });
+    expect(errorReason(getSolanaErrorFromTransactionError('ProgramAccountNotFound'))).toEqual({
+      kind: 'wrong-cluster',
+    });
+    expect(errorReason(new Error('Transaction simulation failed: Blockhash not found'))).toEqual({
+      kind: 'wrong-cluster',
+    });
+    expect(errorReason(failed(3012))).toEqual({ kind: 'not-set-up' });
+    expect(errorReason(failed(4100))).toEqual({ kind: 'outdated' });
+    expect(errorReason(failed(2006))).toEqual({ kind: 'outdated' });
+    const expired = new SolanaError(SOLANA_ERROR__BLOCK_HEIGHT_EXCEEDED, {
+      currentBlockHeight: 10n,
+      lastValidBlockHeight: 9n,
+    });
+    expect(errorReason(new Error('send failed', { cause: expired }))).toEqual({ kind: 'expired' });
+    expect(describeError(unfunded)).toMatch(/no SOL on this network/);
   });
 
   test('describe them in English', () => {

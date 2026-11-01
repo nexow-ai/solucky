@@ -10,6 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  NODE_VERSION: 22
   BUN_VERSION: 1.2.21
   ANCHOR_VERSION: 1.2.1
   SOLANA_VERSION: 4.3.2
@@ -76,6 +77,11 @@ jobs:
           name: program
           path: target/deploy
 
+      # The browser tests serve the build with Node (package.json engines).
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: ${{ env.BUN_VERSION }}
@@ -128,6 +134,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - uses: oven-sh/setup-bun@v2
         with:

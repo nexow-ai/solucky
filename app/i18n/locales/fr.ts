@@ -48,17 +48,23 @@ const fr: Dict = {
   header: {
     beta: 'Bêta',
     getSol: 'Obtenir du SOL',
-    faucetTip: 'Faucet provisoire de la bêta : obtiens du SOL de test gratuit pour jouer',
-    mute: 'Couper le son',
-    unmute: 'Activer le son',
+    faucetTip: 'Ouvre le faucet Solana avec ton adresse et ◎{amount} déjà remplis',
+  },
+
+  network: {
+    label: 'Réseau',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster} : les tickets coûtent du SOL de test sans valeur réelle',
+    mainHere: 'Solana Mainnet : les tickets coûtent du vrai SOL',
+    goTest: 'Joue avec du SOL de test gratuit',
+    goMain: 'Joue avec du vrai SOL sur Solana Mainnet',
+    notYet: 'S☉Lucky n’est pas encore sur {network}',
   },
 
   faucet: {
-    connectFirst: 'Connecte d’abord un portefeuille',
-    connectFirstHint: 'Puis appuie sur Obtenir du SOL pour l’approvisionner en SOL de test.',
     request: 'Demande du SOL de test sur le faucet',
-    requestHint: 'L’adresse de ton portefeuille est copiée. Colle-la si le champ est vide, puis confirme.',
-    openAgain: 'Rouvrir',
+    requestHint: 'Ton adresse et ◎{amount} sont déjà remplis : passe la vérification, puis appuie sur Confirm Airdrop.',
     airdropped: 'Airdrop de ◎1 reçu',
     airdroppedHint: 'Le SOL de test est arrivé sur {cluster}. Tu peux maintenant acheter des tickets.',
     failed: 'Échec de l’airdrop',
@@ -74,6 +80,8 @@ const fr: Dict = {
     source: 'Code source',
     builtOn: 'Construit sur {solana}',
     madeBy: 'Conçu par {nexow}',
+    mute: 'Couper le son',
+    unmute: 'Activer le son',
   },
 
   home: {
@@ -83,9 +91,6 @@ const fr: Dict = {
     lead: 'Un tirage chaque jour, un tirage chaque heure, et un numéro caché à débusquer. Le gagnant remporte 80 % de la cagnotte, et le reste est reporté sur la manche suivante. Chaque ticket, chaque lamport et chaque tirage vivent sur Solana, où n’importe qui peut les vérifier.',
     playNow: 'Jouer maintenant',
     howItWorks: 'Comment ça marche',
-    program: 'Programme',
-    cluster: 'Cluster',
-    draw: 'Tirage',
     dialCaption:
       'Chaque point est l’un des tickets du jour : autour du cadran selon l’heure de son achat, vers l’extérieur selon son numéro.',
 
@@ -170,6 +175,14 @@ const fr: Dict = {
       description: 'Encore un doute ? Le programme, l’appli et les scripts de l’opérateur sont open source.',
       readCode: 'Lire le code',
       items: {
+        what: {
+          q: 'Qu’est-ce que S☉Lucky ?',
+          a: 'S☉Lucky, ce sont trois jeux de loterie sur Solana, créés par Nexow, Inc. : une loterie quotidienne, une loterie horaire et Devine le numéro. Chaque ticket, chaque cagnotte et chaque tirage est un compte d’un programme Solana open source, que n’importe qui peut vérifier. Le gagnant remporte 80 % de la cagnotte ; la commission de la maison est prélevée sur le reste, et le solde est reporté sur la manche suivante du jeu.',
+        },
+        guess: {
+          q: 'Comment fonctionne Devine le numéro ?',
+          a: 'Tout se passe comme si chaque manche cachait un numéro de 0 à {max} que personne ne connaît, pas même l’opérateur. Chaque proposition est un ticket sur un numéro pas encore essayé dans la manche. Toutes les quelques secondes, les nouvelles propositions sont scellées puis vérifiées avec le hash d’un slot que personne ne pouvait connaître à l’avance. Si l’une d’elles tombe juste, son propriétaire remporte 80 % de la cagnotte et une nouvelle manche commence aussitôt ; sinon, ces numéros sont écartés et la manche continue, sans échéance.',
+        },
         real: {
           q: 'Est-ce de l’argent réel ?',
           a: 'L’appli publique tourne sur le devnet de Solana, où le SOL est de l’argent de test gratuit, obtenu sur faucet.solana.com. Le programme fonctionne de la même façon sur le mainnet, mais exploiter une loterie en argent réel exige les licences adéquates là où tu opères.',
@@ -197,6 +210,50 @@ const fr: Dict = {
       },
     },
 
+    live: {
+      title: 'Cagnottes en ce moment',
+      drawIn: 'Tirage dans',
+      noDeadline: 'Sans échéance',
+    },
+
+    practice: {
+      notice: 'Entraînement : tout se passe dans ton navigateur, rien n’est envoyé à Solana',
+      title: 'Essaie : le numéro le plus proche gagne',
+      lead: 'Les repères sont les vrais tickets du jour. Place le tien : chaque numéro plus proche de lui que de tout autre ticket est à toi, et le tirage choisit un numéro de 0 à {max}.',
+      drawn: 'Numéro tiré',
+      yourNumber: 'Ton numéro',
+      best: 'Meilleure place libre',
+      draw: 'Tirage d’essai',
+      share: 'Ta part du tirage',
+      today: 'Tickets du jour',
+      record: 'Victoires d’essai',
+      won: '{drawn} est sorti : ton numéro est le plus proche. Tu gagnes !',
+      lost: '{drawn} est sorti : {number} est plus proche, ce ticket gagne.',
+      taken: 'Quelqu’un détient déjà ce numéro aujourd’hui. Dans le vrai jeu, choisis-en un autre.',
+      alone: 'Aucun ticket aujourd’hui pour l’instant : seul, ton numéro gagnerait n’importe quel tirage.',
+    },
+
+    split: {
+      title: 'de chaque cagnotte va au gagnant',
+      lead: 'Le programme les verse au propriétaire du ticket gagnant quand la manche est réglée. La commission de la maison est prélevée sur les {rest} restants, et le solde est reporté sur la manche suivante du jeu.',
+      winner: 'Gagnant',
+      fee: 'Commission',
+      carry: 'Manche suivante',
+      feeNote: 'Commission de la loterie quotidienne, fixée on-chain : {fee}. Le programme la plafonne à {cap}.',
+      example: 'Montants pour la cagnotte du jour de {pot}.',
+    },
+
+    winners: {
+      tag: 'Gagnants',
+      title: 'Chaque gagnant, on-chain',
+      description:
+        'Les dernières manches réglées des trois jeux, lues dans les comptes du programme. Chacune renvoie à sa manche, où le tirage peut être recalculé.',
+      paid: 'Versé aux gagnants',
+      rounds: 'Manches réglées',
+      empty: 'Aucune manche n’a encore été réglée.',
+      drawn: 'Tiré : {number}',
+      found: 'Numéro trouvé',
+    },
     cta: {
       title: 'La cagnotte du jour t’attend',
       description: 'Choisis un numéro que personne n’a encore pris. Bonne chance !',
@@ -234,6 +291,7 @@ const fr: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Vérifié',
     title: 'Reçu du tirage',
     round: 'Manche',
     noneYet: 'aucune réglée pour l’instant',
@@ -291,6 +349,7 @@ const fr: Dict = {
     openFaucet: 'Ouvrir le faucet',
     retry: 'Réessayer',
     rpcError: 'Impossible de joindre l’endpoint RPC de Solana ({reason})',
+    fundHow: 'Obtenir des SOL de test',
   },
 
   /** The middle panel of the play page, where a number is picked and bought. */
@@ -313,8 +372,19 @@ const fr: Dict = {
     takenToday: 'Le {number} est pris',
     outOfRange: 'Numéro hors limites',
     notEnough: 'Pas assez de SOL',
+    loading: 'Chargement de la manche…',
+    unavailable: 'Manche indisponible',
+    closing: 'Cette manche se termine',
+    over: 'Cette manche est finie',
+    full: 'Cette manche est complète',
     keys: 'Touches 0–9 pour saisir, ⌫ pour effacer, Entrée pour acheter.',
     rent: 'Un ticket immobilise aussi ◎{rent} de loyer de compte, que tu récupères après le tirage.',
+    best: 'Meilleure place',
+    bestHint: 'Choisit le numéro libre qui couvre la plus grande part du tirage en ce moment',
+    share: 'Chance de gain avec le {number}',
+    wins: 'Gagne si le tirage tombe entre {lo} et {hi}. Les tickets achetés plus tard tout près la réduisent.',
+    yourPick: 'Votre numéro',
+    line: 'Touchez ou glissez le long de la ligne pour choisir un numéro',
   },
 
   /** The left panel of the play page: today's pot and tickets. */
@@ -367,6 +437,33 @@ const fr: Dict = {
     foundByYou: 'Tu l’as trouvé ! Le numéro était le {number}',
     foundByOther: 'Un autre joueur a trouvé le numéro',
     nextRound: 'Une nouvelle manche avec un nouveau numéro est en vente.',
+    perGuess: 'Chaque essai : 1 sur {n} à la prochaine vérification',
+  },
+
+  /** The top of the play page: the round, its pot and its clock. */
+  stage: {
+    round: 'Manche {round}',
+    winnerTakes: 'Le gagnant remporte ◎{prize}',
+    lastDraw: 'Dernier tirage',
+    closesIn: 'Fermeture dans',
+  },
+
+  /** The play page's list of the connected wallet's tickets. */
+  tickets: {
+    none: 'Aucun ticket dans cette manche pour l’instant. Choisissez un numéro pour en avoir un.',
+    connect: 'Connectez un wallet pour jouer. Vos tickets s’affichent ici.',
+    missed: 'Raté',
+    won: 'Gagnant',
+  },
+
+  /** The moment a round is drawn while the play page is open. */
+  reveal: {
+    title: 'La manche {round} est tirée',
+    number: 'Numéro gagnant',
+    youWon: 'Vous avez gagné ◎{amount} !',
+    winner: 'Le gagnant remporte ◎{amount}',
+    see: 'Voir le tirage',
+    close: 'Fermer',
   },
 
   /** The right panel of the play page: past rounds. */
@@ -422,6 +519,10 @@ const fr: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Confirme dans ton portefeuille…',
+    cancel: 'Annuler',
+    otherWay: 'Essayer autrement',
+    abandoned:
+      'La page n’attend plus ton portefeuille. S’il affiche encore la demande, refuse-la dans le portefeuille.',
     done: '{label} : terminé',
     cancelled: '{label} : annulé',
     failed: '{label} : échec',
@@ -445,6 +546,8 @@ const fr: Dict = {
     description: 'N’importe quel portefeuille Solana compatible avec le Wallet Standard fonctionne.',
     none: 'Aucun portefeuille Solana n’a été trouvé dans ce navigateur. Installes-en un, puis recharge la page :',
     failed: 'Impossible de connecter {wallet}',
+    noAccount:
+      '{wallet} n’a partagé aucun compte Solana. Ajoute ou sélectionne un compte Solana dans {wallet}, puis reconnecte-toi.',
     copied: 'Adresse copiée',
     balance: 'Solde',
     ticketsLeft: '{n} ticket restant | {n} tickets restants',
@@ -504,8 +607,19 @@ const fr: Dict = {
     rejected: 'Tu as annulé la demande dans ton portefeuille.',
     taken: 'Quelqu’un détient déjà ce numéro dans cette manche. Choisis-en un autre.',
     funds: 'Pas assez de SOL dans le portefeuille.',
-    walletCluster:
-      'Ton portefeuille n’a pas pu signer. Dans Phantom : Settings → Developer Settings → active Testnet Mode → sélectionne Devnet, puis reconnecte-toi et réessaie.',
+    noSol: 'Ce portefeuille n’a pas encore de SOL sur ce réseau. Ajoutes-en, puis réessaie.',
+    wrongCluster:
+      'Ton portefeuille a envoyé la transaction sur un autre réseau. Passe-le sur {network}, puis réessaie.',
+    notSetUp: 'Ce jeu n’est pas encore configuré sur ce réseau.',
+    outdated: 'L’app n’est plus à jour. Recharge la page, puis réessaie.',
+    expired:
+      'La transaction a expiré avant d’être confirmée. Vérifie l’activité de ton portefeuille avant de réessayer.',
+    walletFailed:
+      'Ton portefeuille a signalé « Unexpected error » et n’a pas signé. Ferme sa fenêtre, verrouille-le puis déverrouille-le ou redémarre l’extension, puis réessaie.',
+    walletNetwork:
+      'Vérifie que ton portefeuille est sur {network} (dans Phantom : Settings → Developer Settings → Testnet Mode), ou essaie un autre portefeuille.',
+    rateLimited: 'L’endpoint RPC limite les requêtes (HTTP 429). Attends une minute et réessaie.',
+    rpcHttp: 'L’endpoint RPC a répondu avec l’erreur HTTP {status}.',
     unknown: 'Une erreur s’est produite.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
