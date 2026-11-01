@@ -1,7 +1,7 @@
 import { closestNumber, winShare } from '@solucky/client';
 import { describe, expect, it } from 'vitest';
 
-import { bestSpot, density, shareOf, sortNumbers, territory } from '../app/utils/line';
+import { bestSpot, between, density, lensWindow, neighbors, shareOf, sortNumbers, territory } from '../app/utils/line';
 
 /** Every number `n` would win on, found by brute force with the program's rule. */
 function bruteTerritory(numbers: number[], n: number, max: number) {
@@ -68,6 +68,41 @@ describe('number line', () => {
 
   it('has no free spot when every number is taken', () => {
     expect(bestSpot([0, 1, 2], 2)).toBeNull();
+  });
+
+  it('finds the tickets either side of a number, skipping its own', () => {
+    expect(neighbors([3, 10, 20], 12)).toEqual({ prev: 10, next: 20 });
+    expect(neighbors([3, 10, 20], 10)).toEqual({ prev: 3, next: 20 });
+    expect(neighbors([3, 10, 20], 1)).toEqual({ prev: null, next: 3 });
+    expect(neighbors([3, 10, 20], 25)).toEqual({ prev: 20, next: null });
+    expect(neighbors([], 5)).toEqual({ prev: null, next: null });
+  });
+
+  it('lists the numbers in a stretch, up to a limit', () => {
+    expect(between([1, 4, 9, 16, 25], 4, 16)).toEqual([4, 9, 16]);
+    expect(between([1, 4, 9, 16, 25], 5, 8)).toEqual([]);
+    expect(between([1, 4, 9, 16, 25], 0, 100, 2)).toEqual([1, 4]);
+  });
+
+  it('frames a lens around the whole stretch and both neighbors', () => {
+    const max = 1_000_000;
+    const sorted = sortNumbers([10, 400_000, 400_100, 400_160, 999_990]);
+    for (const n of [5, 11, 400_050, 400_130, 400_159, 700_000, 999_995, 0, 1_000_000]) {
+      const { from, to } = lensWindow(sorted, n, max);
+      const { lo, hi } = territory(sorted, n, max);
+      const { prev, next } = neighbors(sorted, n);
+      expect(from, `n = ${n}`).toBeGreaterThanOrEqual(0);
+      expect(to, `n = ${n}`).toBeLessThanOrEqual(max);
+      expect(from <= lo && hi <= to, `n = ${n}`).toBe(true);
+      if (prev !== null) expect(from).toBeLessThanOrEqual(prev);
+      if (next !== null) expect(to).toBeGreaterThanOrEqual(next);
+      expect(to - from + 1).toBeGreaterThanOrEqual(24);
+    }
+    // Squeezed between two close tickets: it stays small, so it magnifies.
+    const tight = lensWindow([100, 104], 102, max);
+    expect(tight.to - tight.from + 1).toBe(24);
+    // A short line is never wider than itself.
+    expect(lensWindow([2, 5], 3, 9)).toEqual({ from: 0, to: 9 });
   });
 
   it('counts numbers per slice', () => {

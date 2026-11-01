@@ -37,6 +37,57 @@ export function territory(sorted: readonly number[], n: number, max: number): { 
   };
 }
 
+/** The tickets either side of `n` (its own entry skipped): the two its stretch is cut between. */
+export function neighbors(sorted: readonly number[], n: number): { prev: number | null; next: number | null } {
+  const at = lowerBound(sorted, n);
+  const nextAt = sorted[at] === n ? at + 1 : at;
+  return { prev: at > 0 ? sorted[at - 1]! : null, next: sorted[nextAt] ?? null };
+}
+
+/** The entries of `sorted` from `from` to `to`, inclusive: at most `limit` of them, from the lowest. */
+export function between(sorted: readonly number[], from: number, to: number, limit = Infinity): number[] {
+  const found: number[] = [];
+  for (let i = lowerBound(sorted, from); i < sorted.length && sorted[i]! <= to && found.length < limit; i++) {
+    found.push(sorted[i]!);
+  }
+  return found;
+}
+
+/**
+ * The stretch of the line a lens shows around `n`: from a little before the
+ * ticket below it to a little after the ticket above (or the ends of its own
+ * stretch where there is none), at least `minSpan` numbers, within 0 to `max`.
+ * It always holds `n`'s whole stretch and both of its neighbors.
+ */
+export function lensWindow(
+  sorted: readonly number[],
+  n: number,
+  max: number,
+  minSpan = 24,
+): { from: number; to: number } {
+  const { lo, hi } = territory(sorted, n, max);
+  const { prev, next } = neighbors(sorted, n);
+  const left = prev ?? lo;
+  const right = next ?? hi;
+  const pad = Math.ceil((right - left + 1) / 4);
+  let from = left - pad;
+  let to = right + pad;
+  const short = minSpan - (to - from + 1);
+  if (short > 0) {
+    from -= Math.ceil(short / 2);
+    to += Math.floor(short / 2);
+  }
+  if (from < 0) {
+    to = Math.min(max, to - from);
+    from = 0;
+  }
+  if (to > max) {
+    from = Math.max(0, from - (to - max));
+    to = max;
+  }
+  return { from, to };
+}
+
 /** The share of the draw `n` would win if it joined the round now: 0 to 1. */
 export function shareOf(sorted: readonly number[], n: number, max: number): number {
   const { lo, hi } = territory(sorted, n, max);
