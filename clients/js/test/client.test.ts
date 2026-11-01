@@ -79,6 +79,8 @@ describe('time', () => {
     expect(formatPeriod(Guess, 12)).toBe('12');
     expect(parsePeriod(Guess, '12')).toBe(12);
     expect(parsePeriod(Guess, '2026-10-20')).toBeNull();
+    expect(parsePeriod(Guess, '4294967295')).toBe(4_294_967_295);
+    expect(parsePeriod(Guess, '4294967296')).toBeNull();
     expect(gameFromSlug('hourly')).toBe(Hourly);
     expect(gameFromSlug('weekly')).toBeNull();
   });
