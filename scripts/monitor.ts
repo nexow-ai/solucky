@@ -24,7 +24,7 @@ import {
   RoundStatus,
 } from '@solucky/client';
 
-import { log, PROGRAM_ADDRESS, roundLabel, RPC_URL } from './lib';
+import { log, PROGRAM_ADDRESS, roundLabel, RPC_CONFIG, RPC_URL } from './lib';
 import { isDue } from './settle';
 
 const { values: args } = parseArgs({
@@ -42,7 +42,7 @@ const WAITING_FOR: Record<RoundStatus, string> = {
   [RoundStatus.Settled]: 'fee not collected',
 };
 
-const rpc = createSolanaRpc(RPC_URL);
+const rpc = createSolanaRpc(RPC_URL, RPC_CONFIG);
 const graceMs = Number(args.grace) * 60_000;
 const problems: string[] = [];
 

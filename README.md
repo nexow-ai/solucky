@@ -162,8 +162,9 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `NUXT_PUBLIC_CLUSTER` | `devnet` | `mainnet`, `devnet`, `testnet` or `localnet`; also picks the wallet chain |
-| `NUXT_PUBLIC_RPC_URL` | public endpoint | RPC endpoint. Use a provider in production: public endpoints are rate-limited |
-| `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different |
+| `NUXT_PUBLIC_RPC_URL` | public endpoint | RPC endpoint, without its auth token. Use a provider in production: public endpoints are rate-limited (HTTP 429) |
+| `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different; without the token |
+| `NUXT_PUBLIC_RPC_TOKEN` | empty | The provider's auth token (QuickNode), added as the last path segment of both URLs, since browsers cannot send QuickNode's `x-token` header. Every visitor sees it: restrict the endpoint to your domains at the provider |
 | `NUXT_PUBLIC_PROGRAM_ID` | from the IDL | Program address |
 | `NUXT_PUBLIC_MAX_NUMBER` | `21000000` | Highest ticket number, shown until the on-chain config loads; keep it equal to `SOLUCKY_MAX_NUMBER` |
 | `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
@@ -182,7 +183,9 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `SOLANA_RPC_URL` | devnet | RPC endpoint |
+| `SOLANA_RPC_URL` | devnet | RPC endpoint, without any auth token; the scripts print it |
+| `SOLANA_WS_URL` | from the RPC URL | Its WebSocket endpoint, if different |
+| `SOLANA_AUTH_TOKEN` | — | The provider's auth token (QuickNode): an `x-token` header on HTTP, the last path segment of the WebSocket URL |
 | `SOLANA_KEYPAIR` | `~/.config/solana/id.json` | Signer keypair file |
 | `SOLANA_KEYPAIR_JSON` | — | The keypair's byte array, for CI secrets |
 | `SOLUCKY_PROGRAM_ID` | from the IDL | Program address |
