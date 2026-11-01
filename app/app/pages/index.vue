@@ -96,6 +96,9 @@ useHead(() => ({
   <div class="landing" :data-orrery="orrery ? '' : undefined">
     <div class="scroll-meter" aria-hidden="true" />
     <ClientOnly>
+      <LazyLandingSectionIndex />
+    </ClientOnly>
+    <ClientOnly>
       <LazyLandingOrrery @active="orrery = $event" />
     </ClientOnly>
 

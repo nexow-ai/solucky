@@ -26,22 +26,19 @@ const activeIndex = computed(() => {
 });
 
 const nav = useTemplateRef<HTMLElement>('nav');
-const itemEls = useTemplateRef<HTMLElement[]>('item');
 const markerY = ref(0);
-const visible = ref(false);
 
 function syncMarker() {
   const root = nav.value;
-  const el = itemEls.value?.[activeIndex.value];
-  if (!root || !el) return;
+  if (!root) return;
+  const el = root.querySelectorAll<HTMLElement>('.item')[activeIndex.value];
+  if (!el) return;
   const rootBox = root.getBoundingClientRect();
   const itemBox = el.getBoundingClientRect();
   markerY.value = itemBox.top + itemBox.height / 2 - rootBox.top;
 }
 
 onMounted(() => {
-  if (route.path !== localePath('/')) return;
-  visible.value = true;
   nextTick(syncMarker);
   window.addEventListener('resize', syncMarker, { passive: true });
 });
@@ -53,7 +50,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', syncMarker));
 
 <template>
   <nav
-    v-show="visible"
     ref="nav"
     :aria-label="t('legal.onThisPage')"
     class="section-index pointer-events-none fixed z-40 hidden lg:block"
@@ -66,7 +62,6 @@ onBeforeUnmount(() => window.removeEventListener('resize', syncMarker));
       <li
         v-for="(item, index) in items"
         :key="item.key"
-        ref="item"
         class="item"
         :style="{ '--i': index }"
       >

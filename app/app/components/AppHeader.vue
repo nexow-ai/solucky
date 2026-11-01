@@ -6,7 +6,9 @@ const { t } = useI18n();
 const localePath = useLocalePath();
 const faucet = useFaucet();
 
-const items = computed<NavigationMenuItem[]>(() => [
+const isHome = computed(() => route.path === localePath('/'));
+
+const drawerItems = computed<NavigationMenuItem[]>(() => [
   {
     label: t('nav.play'),
     to: localePath('/play'),
@@ -17,6 +19,9 @@ const items = computed<NavigationMenuItem[]>(() => [
   { label: t('nav.fairness'), to: localePath({ path: '/', hash: '#fairness' }), exactHash: true },
   { label: t('nav.faq'), to: localePath({ path: '/', hash: '#faq' }), exactHash: true },
 ]);
+
+/** On the landing page, section links live in LandingSectionIndex (lg+); keep them in the mobile drawer. */
+const items = computed(() => (isHome.value ? [] : drawerItems.value));
 </script>
 
 <template>
@@ -41,6 +46,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     </template>
 
     <UNavigationMenu
+      v-if="items.length"
       :items="items"
       variant="link"
       :ui="{
@@ -88,7 +94,7 @@ const items = computed<NavigationMenuItem[]>(() => [
 
     <template #body>
       <AppNetwork block class="mb-4" />
-      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
+      <UNavigationMenu :items="drawerItems" orientation="vertical" class="-mx-2.5" />
       <ClientOnly>
         <UButton
           v-if="faucet.available.value"

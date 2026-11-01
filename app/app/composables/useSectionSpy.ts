@@ -39,5 +39,5 @@ export function useSectionSpy(ids: readonly string[]) {
     onBeforeUnmount(() => observer.disconnect());
   });
 
-  return readonly(active);
+  return active;
 }
