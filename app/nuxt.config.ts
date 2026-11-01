@@ -97,6 +97,12 @@ export default defineNuxtConfig({
       vapidKey: '',
       /** devnet, testnet, mainnet or localnet. */
       cluster: 'devnet',
+      /**
+       * The app's deployments on the other side of the header's network
+       * selector (each cluster is its own site). Empty disables that side.
+       */
+      mainnetUrl: '',
+      testnetUrl: '',
       /** RPC endpoint, without its auth token. Defaults to the public endpoint of the cluster. */
       rpcUrl: '',
       /** RPC websocket endpoint, without its auth token. Defaults to `rpcUrl` with ws(s)://. */

@@ -48,17 +48,23 @@ const fr: Dict = {
   header: {
     beta: 'Bêta',
     getSol: 'Obtenir du SOL',
-    faucetTip: 'Faucet provisoire de la bêta : obtiens du SOL de test gratuit pour jouer',
-    mute: 'Couper le son',
-    unmute: 'Activer le son',
+    faucetTip: 'Ouvre le faucet Solana avec ton adresse et ◎{amount} déjà remplis',
+  },
+
+  network: {
+    label: 'Réseau',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster} : les tickets coûtent du SOL de test sans valeur réelle',
+    mainHere: 'Solana Mainnet : les tickets coûtent du vrai SOL',
+    goTest: 'Joue avec du SOL de test gratuit',
+    goMain: 'Joue avec du vrai SOL sur Solana Mainnet',
+    notYet: 'S☉Lucky n’est pas encore sur {network}',
   },
 
   faucet: {
-    connectFirst: 'Connecte d’abord un portefeuille',
-    connectFirstHint: 'Puis appuie sur Obtenir du SOL pour l’approvisionner en SOL de test.',
     request: 'Demande du SOL de test sur le faucet',
-    requestHint: 'L’adresse de ton portefeuille est copiée. Colle-la si le champ est vide, puis confirme.',
-    openAgain: 'Rouvrir',
+    requestHint: 'Ton adresse et ◎{amount} sont déjà remplis : passe la vérification, puis appuie sur Confirm Airdrop.',
     airdropped: 'Airdrop de ◎1 reçu',
     airdroppedHint: 'Le SOL de test est arrivé sur {cluster}. Tu peux maintenant acheter des tickets.',
     failed: 'Échec de l’airdrop',
@@ -74,6 +80,8 @@ const fr: Dict = {
     source: 'Code source',
     builtOn: 'Construit sur {solana}',
     madeBy: 'Conçu par {nexow}',
+    mute: 'Couper le son',
+    unmute: 'Activer le son',
   },
 
   home: {

@@ -48,17 +48,23 @@ const es: Dict = {
   header: {
     beta: 'Beta',
     getSol: 'Obtener SOL',
-    faucetTip: 'Faucet provisional de la beta: consigue SOL de prueba gratis para jugar',
-    mute: 'Silenciar sonidos',
-    unmute: 'Activar sonidos',
+    faucetTip: 'Abre el faucet de Solana con tu dirección y ◎{amount} ya puestos',
+  },
+
+  network: {
+    label: 'Red',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: los boletos cuestan SOL de prueba sin valor real',
+    mainHere: 'Solana Mainnet: los boletos cuestan SOL real',
+    goTest: 'Juega con SOL de prueba gratis',
+    goMain: 'Juega con SOL real en Solana Mainnet',
+    notYet: 'S☉Lucky aún no está en {network}',
   },
 
   faucet: {
-    connectFirst: 'Primero conecta una billetera',
-    connectFirstHint: 'Luego toca Obtener SOL para cargarla con SOL de prueba.',
     request: 'Pide SOL de prueba en el faucet',
-    requestHint: 'Se copió la dirección de tu billetera. Pégala si el campo está vacío y luego confirma.',
-    openAgain: 'Abrir de nuevo',
+    requestHint: 'Tu dirección y ◎{amount} ya están puestos: completa la verificación y pulsa Confirm Airdrop.',
     airdropped: 'Airdrop de ◎1 recibido',
     airdroppedHint: 'El SOL de prueba llegó a {cluster}. Ya puedes comprar boletos.',
     failed: 'Falló el airdrop',
@@ -74,6 +80,8 @@ const es: Dict = {
     source: 'Código fuente',
     builtOn: 'Construido en {solana}',
     madeBy: 'Hecho por {nexow}',
+    mute: 'Silenciar sonidos',
+    unmute: 'Activar sonidos',
   },
 
   home: {

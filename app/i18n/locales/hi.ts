@@ -47,17 +47,23 @@ const hi: Dict = {
   header: {
     beta: 'बीटा',
     getSol: 'SOL पाएँ',
-    faucetTip: 'अस्थायी बीटा फ़ॉसेट: खेलने के लिए मुफ़्त टेस्ट SOL पाएँ',
-    mute: 'आवाज़ बंद करें',
-    unmute: 'आवाज़ चालू करें',
+    faucetTip: 'Solana फ़ॉसेट खोलता है, जिसमें आपका एड्रेस और ◎{amount} पहले से भरे होते हैं',
+  },
+
+  network: {
+    label: 'नेटवर्क',
+    test: 'टेस्टनेट',
+    main: 'मेननेट',
+    testHere: 'Solana {cluster}: टिकट टेस्ट SOL से ख़रीदे जाते हैं, जिसकी कोई असली कीमत नहीं है',
+    mainHere: 'Solana Mainnet: टिकट असली SOL से ख़रीदे जाते हैं',
+    goTest: 'मुफ़्त टेस्ट SOL से खेलें',
+    goMain: 'Solana Mainnet पर असली SOL से खेलें',
+    notYet: 'S☉Lucky अभी {network} पर नहीं है',
   },
 
   faucet: {
-    connectFirst: 'पहले वॉलेट कनेक्ट करें',
-    connectFirstHint: 'फिर उसमें टेस्ट SOL डालने के लिए “SOL पाएँ” पर टैप करें।',
     request: 'फ़ॉसेट में टेस्ट SOL का अनुरोध करें',
-    requestHint: 'आपके वॉलेट का एड्रेस कॉपी हो गया है। अगर फ़ील्ड ख़ाली है तो उसे पेस्ट करें, फिर कन्फ़र्म करें।',
-    openAgain: 'फिर से खोलें',
+    requestHint: 'आपका एड्रेस और ◎{amount} पहले से भरे हैं: जाँच पूरी करें, फिर Confirm Airdrop दबाएँ।',
     airdropped: '◎1 एयरड्रॉप हुआ',
     airdroppedHint: 'टेस्ट SOL {cluster} पर आ गया। अब आप टिकट ख़रीद सकते हैं।',
     failed: 'एयरड्रॉप नहीं हो सका',
@@ -73,6 +79,8 @@ const hi: Dict = {
     source: 'सोर्स कोड',
     builtOn: '{solana} पर बना',
     madeBy: '{nexow} ने बनाया',
+    mute: 'आवाज़ बंद करें',
+    unmute: 'आवाज़ चालू करें',
   },
 
   home: {

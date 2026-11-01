@@ -179,6 +179,7 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `NUXT_PUBLIC_CLUSTER` | `devnet` | `mainnet`, `devnet`, `testnet` or `localnet`; also picks the wallet chain |
+| `NUXT_PUBLIC_MAINNET_URL`, `NUXT_PUBLIC_TESTNET_URL` | empty | The app on the other cluster, for the header's Testnet / Mainnet selector, which opens the same page there (each cluster is its own deployment). Empty disables that side |
 | `NUXT_PUBLIC_RPC_URL` | public endpoint | RPC endpoint, without its auth token. Use a provider in production: public endpoints are rate-limited (HTTP 429) |
 | `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different; without the token |
 | `NUXT_PUBLIC_RPC_TOKEN` | empty | The provider's auth token (QuickNode), added as the last path segment of both URLs, since browsers cannot send QuickNode's `x-token` header. Every visitor sees it: restrict the endpoint to your domains at the provider |

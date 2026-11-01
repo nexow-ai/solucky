@@ -58,17 +58,23 @@ const en = {
   header: {
     beta: 'Beta',
     getSol: 'Get SOL',
-    faucetTip: 'Provisional beta faucet: get free test SOL to play',
-    mute: 'Mute sounds',
-    unmute: 'Play sounds',
+    faucetTip: 'Opens the Solana faucet with your address and ◎{amount} filled in',
+  },
+
+  network: {
+    label: 'Network',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: tickets cost test SOL with no real value',
+    mainHere: 'Solana Mainnet: tickets cost real SOL',
+    goTest: 'Play with free test SOL',
+    goMain: 'Play with real SOL on Solana Mainnet',
+    notYet: 'S☉Lucky is not on {network} yet',
   },
 
   faucet: {
-    connectFirst: 'Connect a wallet first',
-    connectFirstHint: 'Then tap Get SOL to fund it with test SOL.',
     request: 'Request test SOL in the faucet',
-    requestHint: 'Your wallet address is copied. Paste it if the field is empty, then confirm.',
-    openAgain: 'Open again',
+    requestHint: 'Your address and ◎{amount} are filled in: complete the check, then press Confirm Airdrop.',
     airdropped: 'Airdropped ◎1',
     airdroppedHint: 'Test SOL landed on {cluster}. You can buy tickets now.',
     failed: 'Airdrop failed',
@@ -84,6 +90,8 @@ const en = {
     source: 'Source code',
     builtOn: 'Built on {solana}',
     madeBy: 'Made by {nexow}',
+    mute: 'Mute sounds',
+    unmute: 'Play sounds',
   },
 
   home: {

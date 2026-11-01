@@ -10,6 +10,7 @@ const { wallets, connected, address, ready, status, balance, connect, disconnect
 const { explorer, clusterLabel, isMainnet } = useSolana();
 const { myTickets, myChance: chance, ticketPrice, pot, prize } = useLottery();
 const solUsd = useSolPrice();
+const faucet = useFaucet();
 const toast = useToast();
 const open = ref(false);
 const dashOpen = ref(false);
@@ -164,15 +165,17 @@ async function signOut() {
             target="_blank"
           />
           <UButton
-            v-if="!isMainnet"
+            v-if="faucet.available.value"
             :label="t('header.getSol')"
             icon="i-lucide-droplets"
             color="success"
             variant="soft"
             size="sm"
             block
-            :to="`https://faucet.solana.com/?address=${encodeURIComponent(address)}`"
-            target="_blank"
+            :to="faucet.url.value ?? undefined"
+            :target="faucet.url.value ? '_blank' : undefined"
+            :loading="faucet.busy.value"
+            @click="faucet.request()"
           />
           <UButton
             :label="t('wallet.play')"

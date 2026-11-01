@@ -48,17 +48,23 @@ const nl: Dict = {
   header: {
     beta: 'Bèta',
     getSol: 'SOL halen',
-    faucetTip: 'Voorlopige bèta-faucet: haal gratis test-SOL om te spelen',
-    mute: 'Geluid uit',
-    unmute: 'Geluid aan',
+    faucetTip: 'Opent de Solana-faucet met je adres en ◎{amount} al ingevuld',
+  },
+
+  network: {
+    label: 'Netwerk',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: loten kosten test-SOL zonder echte waarde',
+    mainHere: 'Solana Mainnet: loten kosten echte SOL',
+    goTest: 'Speel met gratis test-SOL',
+    goMain: 'Speel met echte SOL op Solana Mainnet',
+    notYet: 'S☉Lucky staat nog niet op {network}',
   },
 
   faucet: {
-    connectFirst: 'Koppel eerst een wallet',
-    connectFirstHint: 'Tik daarna op “SOL halen” om hem met test-SOL te vullen.',
     request: 'Vraag test-SOL aan in de faucet',
-    requestHint: 'Je walletadres is gekopieerd. Plak het als het veld leeg is en bevestig dan.',
-    openAgain: 'Opnieuw openen',
+    requestHint: 'Je adres en ◎{amount} zijn al ingevuld: doorloop de controle en druk dan op Confirm Airdrop.',
     airdropped: '◎1 ontvangen via airdrop',
     airdroppedHint: 'Test-SOL is aangekomen op {cluster}. Je kunt nu loten kopen.',
     failed: 'Airdrop mislukt',
@@ -74,6 +80,8 @@ const nl: Dict = {
     source: 'Broncode',
     builtOn: 'Gebouwd op {solana}',
     madeBy: 'Gemaakt door {nexow}',
+    mute: 'Geluid uit',
+    unmute: 'Geluid aan',
   },
 
   home: {

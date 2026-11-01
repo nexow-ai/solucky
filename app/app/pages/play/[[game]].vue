@@ -18,6 +18,7 @@ useSeoMeta({
 
 const { error, refresh } = useLottery();
 const { cluster, clusterLabel, isMainnet } = useSolana();
+const { address } = useWallet();
 const { feed } = useTableFeed();
 
 // The retry button spins until the reload answers, whatever the game's own loading state says.
@@ -52,7 +53,7 @@ const testFunds = computed(() =>
         action: [
           {
             label: t('play.openFaucet'),
-            to: 'https://faucet.solana.com',
+            to: faucetUrl(cluster, address.value) ?? 'https://faucet.solana.com',
             target: '_blank',
             color: 'warning' as const,
             variant: 'outline' as const,

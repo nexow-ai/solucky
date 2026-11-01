@@ -47,17 +47,23 @@ const th: Dict = {
   header: {
     beta: 'เบต้า',
     getSol: 'รับ SOL',
-    faucetTip: 'ฟอเซ็ตชั่วคราวช่วงเบต้า: รับ SOL ทดสอบฟรีไว้เล่น',
-    mute: 'ปิดเสียง',
-    unmute: 'เปิดเสียง',
+    faucetTip: 'เปิดฟอเซ็ตของ Solana โดยกรอกที่อยู่ของคุณและ ◎{amount} ไว้ให้แล้ว',
+  },
+
+  network: {
+    label: 'เครือข่าย',
+    test: 'เทสต์เน็ต',
+    main: 'เมนเน็ต',
+    testHere: 'Solana {cluster}: ตั๋วใช้ SOL ทดสอบที่ไม่มีมูลค่าจริง',
+    mainHere: 'Solana Mainnet: ตั๋วใช้ SOL จริง',
+    goTest: 'เล่นด้วย SOL ทดสอบฟรี',
+    goMain: 'เล่นด้วย SOL จริงบน Solana Mainnet',
+    notYet: 'S☉Lucky ยังไม่เปิดบน{network}',
   },
 
   faucet: {
-    connectFirst: 'เชื่อมต่อวอลเล็ตก่อน',
-    connectFirstHint: 'จากนั้นแตะ “รับ SOL” เพื่อเติม SOL ทดสอบเข้าวอลเล็ต',
     request: 'ขอ SOL ทดสอบจากฟอเซ็ต',
-    requestHint: 'คัดลอกที่อยู่วอลเล็ตของคุณแล้ว ถ้าช่องว่างอยู่ให้วางลงไป แล้วกดยืนยัน',
-    openAgain: 'เปิดอีกครั้ง',
+    requestHint: 'กรอกที่อยู่ของคุณและ ◎{amount} ไว้ให้แล้ว ผ่านการตรวจสอบให้เรียบร้อย แล้วกด Confirm Airdrop',
     airdropped: 'แอร์ดรอป ◎1 แล้ว',
     airdroppedHint: 'SOL ทดสอบเข้าบน {cluster} แล้ว ตอนนี้คุณซื้อตั๋วได้แล้ว',
     failed: 'แอร์ดรอปไม่สำเร็จ',
@@ -73,6 +79,8 @@ const th: Dict = {
     source: 'ซอร์สโค้ด',
     builtOn: 'สร้างบน {solana}',
     madeBy: 'สร้างโดย {nexow}',
+    mute: 'ปิดเสียง',
+    unmute: 'เปิดเสียง',
   },
 
   home: {

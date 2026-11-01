@@ -47,17 +47,23 @@ const tr: Dict = {
   header: {
     beta: 'Beta',
     getSol: 'SOL alın',
-    faucetTip: 'Geçici beta faucet’i: oynamak için ücretsiz test SOL alın',
-    mute: 'Sesleri kapatın',
-    unmute: 'Sesleri açın',
+    faucetTip: 'Solana faucet’ini adresiniz ve ◎{amount} doldurulmuş olarak açar',
+  },
+
+  network: {
+    label: 'Ağ',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: biletler gerçek değeri olmayan test SOL ile alınır',
+    mainHere: 'Solana Mainnet: biletler gerçek SOL ile alınır',
+    goTest: 'Ücretsiz test SOL ile oynayın',
+    goMain: 'Solana Mainnet’te gerçek SOL ile oynayın',
+    notYet: 'S☉Lucky henüz {network} üzerinde değil',
   },
 
   faucet: {
-    connectFirst: 'Önce bir cüzdan bağlayın',
-    connectFirstHint: 'Ardından cüzdanınıza test SOL yüklemek için “SOL alın” düğmesine dokunun.',
     request: 'Faucet üzerinden test SOL isteyin',
-    requestHint: 'Cüzdan adresiniz kopyalandı. Alan boşsa yapıştırın, ardından onaylayın.',
-    openAgain: 'Yeniden açın',
+    requestHint: 'Adresiniz ve ◎{amount} zaten dolduruldu: doğrulamayı tamamlayın, ardından Confirm Airdrop’a basın.',
     airdropped: '◎1 airdrop edildi',
     airdroppedHint: 'Test SOL {cluster} ağına ulaştı. Artık bilet alabilirsiniz.',
     failed: 'Airdrop başarısız oldu',
@@ -73,6 +79,8 @@ const tr: Dict = {
     source: 'Kaynak kod',
     builtOn: '{solana} üzerinde geliştirildi',
     madeBy: '{nexow} tarafından yapıldı',
+    mute: 'Sesleri kapatın',
+    unmute: 'Sesleri açın',
   },
 
   home: {

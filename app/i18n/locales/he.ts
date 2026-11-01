@@ -47,17 +47,23 @@ const he: Dict = {
   header: {
     beta: 'בטא',
     getSol: 'לקבל SOL',
-    faucetTip: 'ברז זמני לגרסת הבטא: קבלו SOL לבדיקה בחינם כדי לשחק',
-    mute: 'השתקת צלילים',
-    unmute: 'הפעלת צלילים',
+    faucetTip: 'פותח את הברז של Solana עם הכתובת שלכם ו־◎{amount} כבר ממולאים',
+  },
+
+  network: {
+    label: 'רשת',
+    test: 'רשת בדיקה',
+    main: 'רשת ראשית',
+    testHere: 'Solana {cluster}: הכרטיסים עולים SOL לבדיקה, בלי ערך אמיתי',
+    mainHere: 'Solana Mainnet: הכרטיסים עולים SOL אמיתי',
+    goTest: 'שחקו עם SOL לבדיקה בחינם',
+    goMain: 'שחקו עם SOL אמיתי ב־Solana Mainnet',
+    notYet: 'S☉Lucky עדיין לא זמין ב{network}',
   },
 
   faucet: {
-    connectFirst: 'קודם חברו ארנק',
-    connectFirstHint: 'אחר כך הקישו על "לקבל SOL" כדי להטעין אותו ב־SOL לבדיקה.',
     request: 'בקשו SOL לבדיקה בברז',
-    requestHint: 'כתובת הארנק שלכם הועתקה. הדביקו אותה אם השדה ריק, ואז אשרו.',
-    openAgain: 'לפתוח שוב',
+    requestHint: 'הכתובת שלכם ו־◎{amount} כבר ממולאים: השלימו את הבדיקה ואז לחצו על Confirm Airdrop.',
     airdropped: 'התקבל איירדרופ של ◎1',
     airdroppedHint: 'SOL לבדיקה הגיע לרשת {cluster}. אפשר לקנות כרטיסים עכשיו.',
     failed: 'האיירדרופ נכשל',
@@ -73,6 +79,8 @@ const he: Dict = {
     source: 'קוד מקור',
     builtOn: 'בנוי על {solana}',
     madeBy: 'מבית {nexow}',
+    mute: 'השתקת צלילים',
+    unmute: 'הפעלת צלילים',
   },
 
   home: {

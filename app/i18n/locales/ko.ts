@@ -47,17 +47,23 @@ const ko: Dict = {
   header: {
     beta: '베타',
     getSol: 'SOL 받기',
-    faucetTip: '임시 베타 포셋: 플레이용 무료 테스트 SOL 받기',
-    mute: '소리 끄기',
-    unmute: '소리 켜기',
+    faucetTip: '주소와 ◎{amount}이 입력된 상태로 Solana 포셋을 열어요',
+  },
+
+  network: {
+    label: '네트워크',
+    test: '테스트넷',
+    main: '메인넷',
+    testHere: 'Solana {cluster}: 티켓은 실제 가치가 없는 테스트 SOL로 사요',
+    mainHere: 'Solana Mainnet: 티켓은 실제 SOL로 사요',
+    goTest: '무료 테스트 SOL로 플레이하기',
+    goMain: 'Solana Mainnet에서 실제 SOL로 플레이하기',
+    notYet: 'S☉Lucky는 아직 {network}에 없어요',
   },
 
   faucet: {
-    connectFirst: '먼저 지갑을 연결하세요',
-    connectFirstHint: '그다음 SOL 받기를 탭해서 테스트 SOL을 충전하세요.',
     request: '포셋에서 테스트 SOL 요청하기',
-    requestHint: '지갑 주소가 복사됐어요. 입력란이 비어 있으면 붙여 넣은 다음 확인하세요.',
-    openAgain: '다시 열기',
+    requestHint: '주소와 ◎{amount}이 이미 입력돼 있어요. 확인 절차를 마친 다음 Confirm Airdrop을 누르세요.',
     airdropped: '◎1 에어드롭 완료',
     airdroppedHint: '테스트 SOL이 {cluster}에 도착했어요. 이제 티켓을 살 수 있어요.',
     failed: '에어드롭 실패',
@@ -73,6 +79,8 @@ const ko: Dict = {
     source: '소스 코드',
     builtOn: '{solana} 기반',
     madeBy: '{nexow} 제작',
+    mute: '소리 끄기',
+    unmute: '소리 켜기',
   },
 
   home: {

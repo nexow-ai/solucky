@@ -47,17 +47,23 @@ const vi: Dict = {
   header: {
     beta: 'Beta',
     getSol: 'Nhận SOL',
-    faucetTip: 'Faucet tạm thời cho bản beta: nhận SOL thử nghiệm miễn phí để chơi',
-    mute: 'Tắt âm thanh',
-    unmute: 'Bật âm thanh',
+    faucetTip: 'Mở faucet của Solana với địa chỉ của bạn và ◎{amount} đã điền sẵn',
+  },
+
+  network: {
+    label: 'Mạng',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: vé được trả bằng SOL thử nghiệm, không có giá trị thật',
+    mainHere: 'Solana Mainnet: vé được trả bằng SOL thật',
+    goTest: 'Chơi bằng SOL thử nghiệm miễn phí',
+    goMain: 'Chơi bằng SOL thật trên Solana Mainnet',
+    notYet: 'S☉Lucky chưa có trên {network}',
   },
 
   faucet: {
-    connectFirst: 'Hãy kết nối ví trước',
-    connectFirstHint: 'Sau đó chạm vào Nhận SOL để nạp SOL thử nghiệm vào ví.',
     request: 'Yêu cầu SOL thử nghiệm trên faucet',
-    requestHint: 'Địa chỉ ví của bạn đã được sao chép. Hãy dán vào nếu ô còn trống, rồi xác nhận.',
-    openAgain: 'Mở lại',
+    requestHint: 'Địa chỉ của bạn và ◎{amount} đã được điền sẵn: hoàn tất bước xác minh, rồi bấm Confirm Airdrop.',
     airdropped: 'Đã airdrop ◎1',
     airdroppedHint: 'SOL thử nghiệm đã về ví trên {cluster}. Giờ bạn có thể mua vé.',
     failed: 'Airdrop thất bại',
@@ -73,6 +79,8 @@ const vi: Dict = {
     source: 'Mã nguồn',
     builtOn: 'Xây dựng trên {solana}',
     madeBy: 'Được tạo bởi {nexow}',
+    mute: 'Tắt âm thanh',
+    unmute: 'Bật âm thanh',
   },
 
   home: {

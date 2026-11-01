@@ -47,17 +47,23 @@ const ar: Dict = {
   header: {
     beta: 'تجريبي',
     getSol: 'احصل على SOL',
-    faucetTip: 'صنبور مؤقت للنسخة التجريبية: احصل على SOL تجريبية مجانًا للعب',
-    mute: 'كتم الأصوات',
-    unmute: 'تشغيل الأصوات',
+    faucetTip: 'يفتح صنبور Solana وقد مُلئ فيه عنوانك و◎{amount} مسبقًا',
+  },
+
+  network: {
+    label: 'الشبكة',
+    test: 'شبكة الاختبار',
+    main: 'الشبكة الرئيسية',
+    testHere: 'Solana {cluster}: ثمن التذاكر SOL تجريبية لا قيمة حقيقية لها',
+    mainHere: 'Solana Mainnet: ثمن التذاكر SOL حقيقية',
+    goTest: 'العب بعملة SOL تجريبية مجانية',
+    goMain: 'العب بعملة SOL حقيقية على Solana Mainnet',
+    notYet: 'S☉Lucky ليس على {network} بعد',
   },
 
   faucet: {
-    connectFirst: 'اربط محفظة أولًا',
-    connectFirstHint: 'ثم اضغط على «احصل على SOL» لتمويلها بعملة SOL تجريبية.',
     request: 'اطلب SOL تجريبية من الصنبور',
-    requestHint: 'نُسخ عنوان محفظتك. الصقه إذا كان الحقل فارغًا، ثم أكّد.',
-    openAgain: 'افتح مجددًا',
+    requestHint: 'عنوانك و◎{amount} مملوءان مسبقًا: أكمل التحقق، ثم اضغط Confirm Airdrop.',
     airdropped: 'وصل الإيردروب: ◎1',
     airdroppedHint: 'وصلت SOL التجريبية إلى شبكة {cluster}. يمكنك شراء التذاكر الآن.',
     failed: 'فشل الإيردروب',
@@ -73,6 +79,8 @@ const ar: Dict = {
     source: 'الشيفرة المصدرية',
     builtOn: 'مبني على {solana}',
     madeBy: 'من صنع {nexow}',
+    mute: 'كتم الأصوات',
+    unmute: 'تشغيل الأصوات',
   },
 
   home: {

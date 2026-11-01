@@ -47,17 +47,23 @@ const zhtw: Dict = {
   header: {
     beta: '測試版',
     getSol: '取得 SOL',
-    faucetTip: '測試版臨時水龍頭：免費取得測試 SOL 來玩',
-    mute: '關閉音效',
-    unmute: '開啟音效',
+    faucetTip: '開啟 Solana 水龍頭，已填好你的地址和 ◎{amount}',
+  },
+
+  network: {
+    label: '網路',
+    test: '測試網',
+    main: '主網',
+    testHere: 'Solana {cluster}：彩券以測試 SOL 支付，沒有實際價值',
+    mainHere: 'Solana Mainnet：彩券以真實 SOL 支付',
+    goTest: '用免費的測試 SOL 來玩',
+    goMain: '在 Solana Mainnet 上用真實 SOL 來玩',
+    notYet: 'S☉Lucky 尚未上線{network}',
   },
 
   faucet: {
-    connectFirst: '請先連接錢包',
-    connectFirstHint: '然後輕觸「取得 SOL」，為錢包儲值測試 SOL。',
     request: '在水龍頭申請測試 SOL',
-    requestHint: '你的錢包地址已複製。如果欄位是空的，請貼上，然後確認。',
-    openAgain: '再次開啟',
+    requestHint: '你的地址和 ◎{amount} 已填好：完成驗證，然後按下 Confirm Airdrop。',
     airdropped: '已空投 ◎1',
     airdroppedHint: '測試 SOL 已在 {cluster} 上入帳。現在可以買彩券了。',
     failed: '空投失敗',
@@ -73,6 +79,8 @@ const zhtw: Dict = {
     source: '原始碼',
     builtOn: '基於 {solana} 打造',
     madeBy: '由 {nexow} 打造',
+    mute: '關閉音效',
+    unmute: '開啟音效',
   },
 
   home: {

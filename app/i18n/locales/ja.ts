@@ -47,17 +47,23 @@ const ja: Dict = {
   header: {
     beta: 'ベータ',
     getSol: 'SOLを入手',
-    faucetTip: 'ベータ版の暫定フォーセット：プレイ用の無料テストSOLを入手',
-    mute: 'サウンドをオフ',
-    unmute: 'サウンドをオン',
+    faucetTip: 'アドレスと◎{amount}を入力済みの状態でSolanaのフォーセットを開きます',
+  },
+
+  network: {
+    label: 'ネットワーク',
+    test: 'テストネット',
+    main: 'メインネット',
+    testHere: 'Solana {cluster}：チケットの代金は、実際の価値がないテストSOLです',
+    mainHere: 'Solana Mainnet：チケットの代金は本物のSOLです',
+    goTest: '無料のテストSOLでプレイ',
+    goMain: 'Solana Mainnetで本物のSOLを使ってプレイ',
+    notYet: 'S☉Luckyはまだ{network}にありません',
   },
 
   faucet: {
-    connectFirst: 'まずウォレットを接続してください',
-    connectFirstHint: 'それから「SOLを入手」をタップして、テストSOLを入金してください。',
     request: 'フォーセットでテストSOLをリクエスト',
-    requestHint: 'ウォレットアドレスはコピー済みです。入力欄が空なら貼り付けてから、確定してください。',
-    openAgain: 'もう一度開く',
+    requestHint: 'アドレスと◎{amount}は入力済みです。認証を済ませてから「Confirm Airdrop」を押してください。',
     airdropped: '◎1をエアドロップしました',
     airdroppedHint: 'テストSOLが{cluster}に届きました。これでチケットを購入できます。',
     failed: 'エアドロップに失敗しました',
@@ -73,6 +79,8 @@ const ja: Dict = {
     source: 'ソースコード',
     builtOn: '{solana}で構築',
     madeBy: '制作：{nexow}',
+    mute: 'サウンドをオフ',
+    unmute: 'サウンドをオン',
   },
 
   home: {

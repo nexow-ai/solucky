@@ -47,17 +47,23 @@ const ru: Dict = {
   header: {
     beta: 'Бета',
     getSol: 'Получить SOL',
-    faucetTip: 'Временный кран для беты: получите бесплатные тестовые SOL для игры',
-    mute: 'Выключить звук',
-    unmute: 'Включить звук',
+    faucetTip: 'Открывает кран Solana, где уже указаны ваш адрес и ◎{amount}',
+  },
+
+  network: {
+    label: 'Сеть',
+    test: 'Тестнет',
+    main: 'Мейннет',
+    testHere: 'Solana {cluster}: билеты стоят тестовых SOL без реальной ценности',
+    mainHere: 'Solana Mainnet: билеты стоят настоящих SOL',
+    goTest: 'Играть на бесплатные тестовые SOL',
+    goMain: 'Играть на настоящие SOL в Solana Mainnet',
+    notYet: 'S☉Lucky пока нет в сети {network}',
   },
 
   faucet: {
-    connectFirst: 'Сначала подключите кошелёк',
-    connectFirstHint: 'Затем нажмите «Получить SOL», чтобы пополнить его тестовыми SOL.',
     request: 'Запросите тестовые SOL в кране',
-    requestHint: 'Адрес вашего кошелька скопирован. Если поле пустое, вставьте его, затем подтвердите.',
-    openAgain: 'Открыть снова',
+    requestHint: 'Ваш адрес и ◎{amount} уже указаны: пройдите проверку и нажмите Confirm Airdrop.',
     airdropped: 'Зачислено ◎1',
     airdroppedHint: 'Тестовые SOL зачислены в сети {cluster}. Теперь вы можете покупать билеты.',
     failed: 'Эйрдроп не удался',
@@ -73,6 +79,8 @@ const ru: Dict = {
     source: 'Исходный код',
     builtOn: 'Построено на {solana}',
     madeBy: 'Разработано в {nexow}',
+    mute: 'Выключить звук',
+    unmute: 'Включить звук',
   },
 
   home: {

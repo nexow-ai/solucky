@@ -47,17 +47,23 @@ const id: Dict = {
   header: {
     beta: 'Beta',
     getSol: 'Dapatkan SOL',
-    faucetTip: 'Faucet beta sementara: dapatkan SOL uji coba gratis untuk bermain',
-    mute: 'Matikan suara',
-    unmute: 'Nyalakan suara',
+    faucetTip: 'Membuka faucet Solana dengan alamatmu dan ◎{amount} sudah terisi',
+  },
+
+  network: {
+    label: 'Jaringan',
+    test: 'Testnet',
+    main: 'Mainnet',
+    testHere: 'Solana {cluster}: tiket dibayar dengan SOL uji coba yang tidak punya nilai sungguhan',
+    mainHere: 'Solana Mainnet: tiket dibayar dengan SOL sungguhan',
+    goTest: 'Main dengan SOL uji coba gratis',
+    goMain: 'Main dengan SOL sungguhan di Solana Mainnet',
+    notYet: 'S☉Lucky belum ada di {network}',
   },
 
   faucet: {
-    connectFirst: 'Hubungkan dompet dulu',
-    connectFirstHint: 'Lalu ketuk Dapatkan SOL untuk mengisinya dengan SOL uji coba.',
     request: 'Minta SOL uji coba di faucet',
-    requestHint: 'Alamat dompetmu sudah disalin. Tempel jika kolomnya kosong, lalu konfirmasi.',
-    openAgain: 'Buka lagi',
+    requestHint: 'Alamatmu dan ◎{amount} sudah terisi: selesaikan verifikasinya, lalu tekan Confirm Airdrop.',
     airdropped: '◎1 berhasil di-airdrop',
     airdroppedHint: 'SOL uji coba sudah masuk di {cluster}. Kamu bisa membeli tiket sekarang.',
     failed: 'Airdrop gagal',
@@ -73,6 +79,8 @@ const id: Dict = {
     source: 'Kode sumber',
     builtOn: 'Dibangun di atas {solana}',
     madeBy: 'Dibuat oleh {nexow}',
+    mute: 'Matikan suara',
+    unmute: 'Nyalakan suara',
   },
 
   home: {
