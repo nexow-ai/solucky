@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Account } from '@solana/kit';
-import { countryFromBytes, flagEmoji, GAME_SLUGS, type Round } from '@solucky/client';
+import { countryFromBytes, flagEmoji, GAME_SLUGS, type GameKind, type Round } from '@solucky/client';
 
 /**
  * The draw, as it happens: when the round just before the one on sale is
@@ -34,7 +34,7 @@ const seen = new Set<string>();
 let armed = false;
 let timers: ReturnType<typeof setTimeout>[] = [];
 
-async function reveal(round: Account<Round>) {
+function reveal(round: Account<Round>) {
   timers.forEach(clearTimeout);
   shown.value = round;
   rolling.value = true;
@@ -64,7 +64,7 @@ watch(
       return;
     }
     const latest = fresh.find((r) => period.value !== null && r.data.period === period.value - 1);
-    if (latest) void reveal(latest);
+    if (latest) reveal(latest);
   },
   { immediate: true },
 );
@@ -83,7 +83,7 @@ onBeforeUnmount(() => timers.forEach(clearTimeout));
       <LotteryGlass v-if="data" hero class="reveal">
         <div class="relative space-y-5 p-6 text-center sm:p-7">
           <div>
-            <p class="kicker">{{ t(`games.${GAME_SLUGS[data.kind as 0 | 1 | 2]}.name`) }}</p>
+            <p class="kicker">{{ t(`games.${GAME_SLUGS[data.kind as GameKind]}.name`) }}</p>
             <h2 class="mt-1 text-2xl font-semibold text-highlighted" dir="auto">{{ title }}</h2>
           </div>
 
