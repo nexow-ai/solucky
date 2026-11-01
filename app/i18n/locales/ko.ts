@@ -400,6 +400,7 @@ const ko: Dict = {
     round: '{round} 라운드',
     winnerTakes: '당첨자 상금 ◎{prize}',
     lastDraw: '지난 추첨',
+    closesIn: '마감까지',
   },
 
   /** The play page's list of the connected wallet's tickets. */

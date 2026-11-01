@@ -6,15 +6,15 @@ import { GameKind } from '@solucky/client';
  * hourly lottery's clock sweeping round, Guess the number's radar hunting for
  * the hidden number. They glow brighter while their card is hovered. Decorative.
  */
-// The kind as a number (0 daily, 1 hourly, 2 guess), as `GAME_SLUGS` indexes it.
-const props = defineProps<{ kind: number }>();
+// The kind as a number (0 daily, 1 hourly, 2 guess), as `GAME_SLUGS` indexes it; `size` is a sizing class.
+const props = withDefaults(defineProps<{ kind: number; size?: string }>(), { size: 'size-14' });
 
 const rays = Array.from({ length: 12 }, (_, i) => i * 30);
 const ticks = Array.from({ length: 12 }, (_, i) => i * 30);
 </script>
 
 <template>
-  <svg viewBox="-32 -32 64 64" class="emblem size-14" aria-hidden="true" :data-kind="props.kind">
+  <svg viewBox="-32 -32 64 64" class="emblem" :class="props.size" aria-hidden="true" :data-kind="props.kind">
     <defs>
       <radialGradient :id="`emblem-glow-${props.kind}`">
         <stop offset="0" style="stop-color: var(--ui-primary); stop-opacity: 0.55" />

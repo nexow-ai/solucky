@@ -399,6 +399,7 @@ const th: Dict = {
     round: 'รอบ {round}',
     winnerTakes: 'ผู้ชนะได้ ◎{prize}',
     lastDraw: 'ผลรอบล่าสุด',
+    closesIn: 'ปิดในอีก',
   },
 
   /** The play page's list of the connected wallet's tickets. */

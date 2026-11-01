@@ -401,6 +401,7 @@ const uk: Dict = {
     round: 'Раунд {round}',
     winnerTakes: 'Переможець отримає ◎{prize}',
     lastDraw: 'Останній розіграш',
+    closesIn: 'Закриється через',
   },
 
   /** The play page's list of the connected wallet's tickets. */

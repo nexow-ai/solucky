@@ -52,13 +52,13 @@ const ar: Dict = {
 
   network: {
     label: 'الشبكة',
-    test: 'شبكة الاختبار',
-    main: 'الشبكة الرئيسية',
+    test: 'تجريبية',
+    main: 'رئيسية',
     testHere: 'Solana {cluster}: ثمن التذاكر SOL تجريبية لا قيمة حقيقية لها',
     mainHere: 'Solana Mainnet: ثمن التذاكر SOL حقيقية',
     goTest: 'العب بعملة SOL تجريبية مجانية',
     goMain: 'العب بعملة SOL حقيقية على Solana Mainnet',
-    notYet: 'S☉Lucky ليس على {network} بعد',
+    notYet: 'S☉Lucky غير متاح بعد على «{network}»',
   },
 
   faucet: {
@@ -396,6 +396,7 @@ const ar: Dict = {
     round: 'جولة {round}',
     winnerTakes: 'الفائز يأخذ ◎{prize}',
     lastDraw: 'آخر سحب',
+    closesIn: 'يُغلق بعد',
   },
 
   /** The play page's list of the connected wallet's tickets. */

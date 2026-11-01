@@ -21,7 +21,8 @@ const stubs = computed(() => {
   return [...myTickets.value].reverse().map((ticket) => {
     const { number, index } = ticket.data;
     const cc = countryFromBytes(ticket.data.country);
-    if (lottery.value) return { key: ticket.address, number, cc, share: shareOf(sorted.value, number, maxNumber.value) };
+    if (lottery.value)
+      return { key: ticket.address, number, cc, share: shareOf(sorted.value, number, maxNumber.value) };
     const won = !!r && r.status >= RoundStatus.Drawn && index === r.winningIndex;
     const state = won ? ('won' as const) : index < checked.value ? ('missed' as const) : ('waiting' as const);
     return { key: ticket.address, number, cc, state };
@@ -31,7 +32,7 @@ const stubs = computed(() => {
 
 <template>
   <LotteryGlass tint="secondary">
-    <div class="space-y-6 p-5 sm:p-6">
+    <div class="flex h-full flex-col gap-6 p-5 sm:p-6">
       <section>
         <header class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
           <h2 class="kicker flex items-center gap-2">
@@ -81,13 +82,13 @@ const stubs = computed(() => {
         </div>
       </section>
 
-      <section>
+      <section class="flex min-h-0 flex-1 flex-col">
         <h2 class="kicker mb-3 flex items-center gap-2">
           <span class="live-dot" aria-hidden="true" />
           {{ t('pot.inPlay') }}
           <span class="ms-auto font-mono tabular-nums">{{ formatNumber(tickets.length) }}</span>
         </h2>
-        <div class="table-well h-80 overflow-y-auto p-2" data-ticket-well>
+        <div class="table-well h-80 flex-1 overflow-y-auto p-2 lg:h-0 lg:min-h-72" data-ticket-well>
           <div v-if="loading" class="space-y-2 p-1">
             <USkeleton v-for="i in 6" :key="i" class="h-5 w-full" />
           </div>

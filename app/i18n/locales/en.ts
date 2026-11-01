@@ -411,6 +411,7 @@ const en = {
     round: 'Round {round}',
     winnerTakes: 'Winner takes ◎{prize}',
     lastDraw: 'Last draw',
+    closesIn: 'Closes in',
   },
 
   /** The play page's list of the connected wallet's tickets. */

@@ -308,7 +308,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
               <template v-if="period !== null"> · {{ roundTitle(kind, period) }}</template>
             </span>
           </div>
-          <div class="ticket-window">
+          <div class="ticket-window" :style="{ '--n': formatNumber(number).length }">
             <span class="sr-only" aria-live="polite">{{ formatNumber(number) }}</span>
             <LotteryReels :value="number" :spinning="spinning" :invalid="taken || tooBig" />
           </div>
@@ -377,7 +377,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
       <div class="flex min-w-0 flex-col gap-3">
         <!-- A keypad: 1 2 3 on top, read left to right, in every language. -->
-        <div class="grid grid-cols-3 gap-2" dir="ltr" role="group" :aria-label="t('pick.pad')">
+        <div class="keypad grid flex-1 grid-cols-3 gap-2" dir="ltr" role="group" :aria-label="t('pick.pad')">
           <UButton
             v-for="key in KEYS"
             :key="key"
@@ -495,7 +495,10 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
             <Transition name="bar">
               <div v-if="buyBelow" class="buy-bar lg:hidden">
                 <div class="flex items-center gap-3">
-                  <span class="min-w-0 shrink-0 font-mono text-lg font-semibold text-highlighted tabular-nums" dir="ltr">
+                  <span
+                    class="min-w-0 shrink-0 font-mono text-lg font-semibold text-highlighted tabular-nums"
+                    dir="ltr"
+                  >
                     {{ formatNumber(number) }}
                   </span>
                   <div class="relative min-w-0 flex-1">
@@ -649,6 +652,11 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
   background: color-mix(in oklab, var(--ui-color-neutral-950) 88%, transparent);
 }
 
+/* The reels fill the window: as large as the number's width allows. */
+.ticket-window :deep(.reels) {
+  font-size: min(4.25rem, calc(100cqw / (var(--n) * 1.02 + 0.6)));
+}
+
 .rolling .ticket-window {
   box-shadow:
     inset 0 2px 10px color-mix(in oklab, black 70%, transparent),
@@ -759,6 +767,10 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
 :root:not(.dark) .keycap:hover {
   background: linear-gradient(180deg, white, color-mix(in oklab, var(--ui-primary) 14%, white));
+}
+
+.keypad {
+  grid-auto-rows: minmax(3.25rem, 1fr);
 }
 
 .keycap-quiet {

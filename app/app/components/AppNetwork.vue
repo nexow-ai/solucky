@@ -83,6 +83,12 @@ const options = computed(() => {
   --tint: var(--ui-success);
 }
 
+/* The mono face has no Arabic, Hebrew, Devanagari or Thai: its fallback draws them unjoined. */
+.segment:is(:lang(ar), :lang(he), :lang(hi), :lang(th)) {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+}
+
 .segment:focus-visible {
   box-shadow: 0 0 0 2px var(--ui-primary);
 }

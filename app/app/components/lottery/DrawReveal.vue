@@ -27,7 +27,11 @@ const title = computed(() =>
 const amount = computed(() => (data.value ? formatSol(data.value.payout, 3) : ''));
 /** While rolling, the reels spin at the winning number's width so they stop in place. */
 const reelValue = computed(() =>
-  !data.value ? 0 : rolling.value ? Number('1'.repeat(String(data.value.winningNumber).length)) : data.value.winningNumber,
+  !data.value
+    ? 0
+    : rolling.value
+      ? Number('1'.repeat(String(data.value.winningNumber).length))
+      : data.value.winningNumber,
 );
 
 const seen = new Set<string>();

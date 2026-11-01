@@ -403,6 +403,7 @@ const ru: Dict = {
     round: 'Раунд {round}',
     winnerTakes: 'Победитель получит ◎{prize}',
     lastDraw: 'Последний розыгрыш',
+    closesIn: 'Закроется через',
   },
 
   /** The play page's list of the connected wallet's tickets. */

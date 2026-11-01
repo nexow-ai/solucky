@@ -398,6 +398,7 @@ const ja: Dict = {
     round: 'ラウンド {round}',
     winnerTakes: '当選者の賞金 ◎{prize}',
     lastDraw: '前回の抽選',
+    closesIn: '締め切りまで',
   },
 
   /** The play page's list of the connected wallet's tickets. */

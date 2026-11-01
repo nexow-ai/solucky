@@ -400,6 +400,7 @@ const vi: Dict = {
     round: 'Vòng {round}',
     winnerTakes: 'Người thắng nhận ◎{prize}',
     lastDraw: 'Lần quay gần nhất',
+    closesIn: 'Đóng sau',
   },
 
   /** The play page's list of the connected wallet's tickets. */

@@ -393,6 +393,7 @@ const he: Dict = {
     round: 'סבב {round}',
     winnerTakes: 'הזוכה מקבל ◎{prize}',
     lastDraw: 'ההגרלה האחרונה',
+    closesIn: 'נסגר בעוד',
   },
 
   /** The play page's list of the connected wallet's tickets. */

@@ -51,7 +51,9 @@ const games = computed(() =>
         <span class="relative min-w-0 text-center sm:text-start">
           <span class="block truncate text-sm font-semibold">{{ t(`games.${g.slug}.short`) }}</span>
           <span class="block truncate font-mono text-[0.7rem] text-muted tabular-nums" aria-hidden="true" dir="ltr">
-            <span :class="{ 'text-lucky font-semibold': g.current }">◎{{ g.pot === null ? '…' : formatSol(g.pot, 2) }}</span>
+            <span :class="{ 'text-lucky font-semibold': g.current }"
+              >◎{{ g.pot === null ? '…' : formatSol(g.pot, 2) }}</span
+            >
             <template v-if="g.clock"> · {{ g.clock }}</template>
           </span>
         </span>

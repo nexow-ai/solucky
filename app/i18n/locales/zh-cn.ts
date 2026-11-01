@@ -391,6 +391,7 @@ const zhcn: Dict = {
     round: '第 {round} 期',
     winnerTakes: '中奖者得 ◎{prize}',
     lastDraw: '上期开奖',
+    closesIn: '距截止',
   },
 
   /** The play page's list of the connected wallet's tickets. */

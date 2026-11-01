@@ -404,6 +404,7 @@ const it: Dict = {
     round: 'Round {round}',
     winnerTakes: 'Il vincitore prende ◎{prize}',
     lastDraw: 'Ultima estrazione',
+    closesIn: 'Chiude tra',
   },
 
   /** The play page's list of the connected wallet's tickets. */

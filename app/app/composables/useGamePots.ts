@@ -26,7 +26,9 @@ export function useGamePots() {
       if (document.visibilityState === 'hidden') return;
       try {
         const kinds = GAME_SLUGS.map((_, kind) => kind as GameKind);
-        const addresses = await Promise.all(kinds.map(async (kind) => (await findGamePda({ kind }, { programAddress }))[0]));
+        const addresses = await Promise.all(
+          kinds.map(async (kind) => (await findGamePda({ kind }, { programAddress }))[0]),
+        );
         const games = await fetchAllMaybeGame(client.rpc, addresses, { commitment: 'confirmed' });
         pots.value = await Promise.all(
           kinds.map(async (kind, i) => {

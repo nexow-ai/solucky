@@ -139,12 +139,12 @@ onBeforeUnmount(() => cancelAnimationFrame(frame));
   min-width: 3px;
   background: linear-gradient(
     to bottom,
-    color-mix(in oklab, var(--ui-secondary) 34%, transparent),
-    color-mix(in oklab, var(--ui-secondary) 12%, transparent)
+    color-mix(in oklab, var(--ui-secondary) 22%, transparent),
+    color-mix(in oklab, var(--ui-secondary) 5%, transparent)
   );
   box-shadow:
-    inset 1px 0 0 color-mix(in oklab, var(--ui-secondary) 80%, transparent),
-    inset -1px 0 0 color-mix(in oklab, var(--ui-secondary) 80%, transparent);
+    inset 1px 0 0 color-mix(in oklab, var(--ui-secondary) 70%, transparent),
+    inset -1px 0 0 color-mix(in oklab, var(--ui-secondary) 70%, transparent);
   transition:
     left 0.45s var(--ease-out-expo),
     width 0.45s var(--ease-out-expo);

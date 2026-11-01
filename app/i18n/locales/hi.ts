@@ -401,6 +401,7 @@ const hi: Dict = {
     round: 'राउंड {round}',
     winnerTakes: 'विजेता को ◎{prize} मिलेंगे',
     lastDraw: 'पिछला ड्रॉ',
+    closesIn: 'बंद होने में',
   },
 
   /** The play page's list of the connected wallet's tickets. */

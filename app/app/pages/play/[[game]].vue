@@ -5,7 +5,6 @@ import { GAME_SLUGS, gameFromSlug } from '@solucky/client';
 definePageMeta({ validate: (route) => !route.params.game || gameFromSlug(String(route.params.game)) !== null });
 
 const { t } = useI18n();
-const localePath = useLocalePath();
 const game = useGame();
 
 const title = computed(() => `${t(`games.${GAME_SLUGS[game.value]}.name`)} · S☉Lucky`);
@@ -77,57 +76,51 @@ let leftAt = 0;
 <template>
   <div class="relative" :class="{ arriving }">
     <LotteryFloor />
-    <UContainer class="space-y-5 py-6 sm:py-8">
-      <UAlert
+    <UContainer class="space-y-5 py-5 sm:py-7">
+      <!-- Test money: one line, with the way to get some a tap away. -->
+      <div
         v-if="!isMainnet"
-        color="warning"
-        variant="subtle"
-        icon="i-lucide-flask-conical"
-        class="glass-alert enter"
+        class="glass-alert enter flex items-center gap-3 px-4 py-2.5 text-sm text-warning"
         style="--i: 0"
-        :title="t('play.testMoney', { cluster: clusterLabel })"
-        :description="testFunds.text"
-        :actions="testFunds.action"
-      />
+        role="note"
+      >
+        <UIcon name="i-lucide-flask-conical" class="size-4 shrink-0" />
+        <p class="min-w-0 flex-1 font-medium text-pretty">{{ t('play.testMoney', { cluster: clusterLabel }) }}</p>
+        <UPopover :content="{ align: 'end', sideOffset: 10 }">
+          <UButton :label="t('play.fundHow')" icon="i-lucide-droplets" color="warning" variant="outline" size="xs" />
+          <template #content>
+            <div class="max-w-xs space-y-3 p-4 text-sm text-toned">
+              <p class="text-pretty">{{ testFunds.text }}</p>
+              <UButton v-for="action in testFunds.action" :key="action.label" v-bind="action" size="sm" />
+            </div>
+          </template>
+        </UPopover>
+      </div>
       <UAlert
         v-if="error"
         color="error"
         variant="subtle"
         icon="i-lucide-cloud-off"
-        class="glass-alert"
+        class="glass-alert glass-alert-error"
         :title="error"
         :actions="[{ label: t('play.retry'), color: 'error', variant: 'outline', loading: retrying, onClick: retry }]"
       />
 
       <div class="enter flex items-center justify-center gap-2" style="--i: 1">
-        <LotteryGlass as="nav" rounded="rounded-full" :aria-label="t('games.tag')">
-          <div class="flex gap-1 p-1">
-            <span v-for="(slug, kind) in GAME_SLUGS" :key="slug" class="relative">
-              <span v-if="kind === game" class="game-pill" aria-hidden="true" />
-              <UButton
-                :to="localePath(playPath(slug))"
-                :label="t(`games.${slug}.short`)"
-                :aria-current="kind === game ? 'page' : undefined"
-                :color="kind === game ? 'primary' : 'neutral'"
-                variant="ghost"
-                size="lg"
-                class="relative rounded-full px-4 font-semibold hover:bg-transparent"
-                :class="kind === game ? 'text-highlighted' : 'text-muted hover:text-highlighted'"
-              />
-            </span>
-          </div>
-        </LotteryGlass>
+        <LotteryGameTabs />
         <LotteryNotifyButton />
       </div>
 
-      <LotteryLiveBar class="enter" style="--i: 2" :feed="feed" />
+      <LotteryStage class="enter" style="--i: 2" />
+      <LotteryLiveBar class="enter" style="--i: 3" :feed="feed" />
 
-      <div class="panels grid items-start gap-5 lg:grid-cols-[1fr_1.12fr_1fr]">
-        <LotteryPotPanel class="enter order-2 lg:order-none" style="--i: 4" />
-        <LotteryPlayPanel class="enter order-1 lg:order-none" style="--i: 3" />
-        <LotteryHistoryPanel class="enter order-3 lg:order-none" style="--i: 5" />
+      <div class="grid items-start gap-5 lg:grid-cols-12 lg:items-stretch">
+        <LotteryPlayPanel class="enter lg:col-span-7" style="--i: 4" />
+        <LotteryTicketsPanel class="enter lg:col-span-5" style="--i: 5" />
       </div>
+      <LotteryHistoryPanel class="enter" style="--i: 6" />
     </UContainer>
+    <LotteryDrawReveal />
   </div>
 </template>
 
@@ -149,25 +142,6 @@ let leftAt = 0;
     opacity: 0;
     transform: translateY(2rem) scale(0.97);
   }
-}
-
-/* The current game's pill. It carries a view-transition name, so it glides to the next game on a switch. */
-.game-pill {
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  view-transition-name: game-pill;
-  background:
-    linear-gradient(180deg, color-mix(in oklab, white 16%, transparent), transparent 60%),
-    linear-gradient(
-      120deg,
-      color-mix(in oklab, var(--ui-primary) 40%, transparent),
-      color-mix(in oklab, var(--color-pink-600) 30%, transparent)
-    );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 35%, transparent),
-    inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 55%, transparent),
-    0 0 24px -6px var(--ui-primary);
 }
 </style>
 
@@ -205,5 +179,9 @@ let leftAt = 0;
 
 .glass-alert {
   --tint: var(--ui-warning);
+}
+
+.glass-alert-error {
+  --tint: var(--ui-error);
 }
 </style>

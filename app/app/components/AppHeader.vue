@@ -59,7 +59,7 @@ const items = computed<NavigationMenuItem[]>(() => [
             :label="t('header.getSol')"
             :aria-label="t('header.getSol')"
             icon="i-lucide-droplets"
-            :ui="{ label: 'hidden sm:inline' }"
+            :ui="{ label: 'hidden sm:max-lg:inline xl:inline' }"
             size="xs"
             color="success"
             variant="soft"

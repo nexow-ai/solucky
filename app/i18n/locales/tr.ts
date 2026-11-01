@@ -401,6 +401,7 @@ const tr: Dict = {
     round: '{round} turu',
     winnerTakes: 'Kazanan ◎{prize} alır',
     lastDraw: 'Son çekiliş',
+    closesIn: 'Kapanışa kalan',
   },
 
   /** The play page's list of the connected wallet's tickets. */

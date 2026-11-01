@@ -405,6 +405,7 @@ const nl: Dict = {
     round: 'Ronde {round}',
     winnerTakes: 'De winnaar krijgt ◎{prize}',
     lastDraw: 'Laatste trekking',
+    closesIn: 'Sluit over',
   },
 
   /** The play page's list of the connected wallet's tickets. */
