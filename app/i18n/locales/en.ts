@@ -101,9 +101,6 @@ const en = {
     lead: 'A draw every day, a draw every hour, and a hidden number to hunt down. The winner takes 80% of the pot, and the rest carries over to the next round. Every ticket, every lamport and every draw lives on Solana, where anyone can check it.',
     playNow: 'Play now',
     howItWorks: 'How it works',
-    program: 'Program',
-    cluster: 'Cluster',
-    draw: 'Draw',
     dialCaption:
       'Each dot is one of today’s tickets: around the dial by the time it was bought, outwards by its number.',
 
@@ -221,6 +218,50 @@ const en = {
       },
     },
 
+    live: {
+      title: 'Pots right now',
+      drawIn: 'Draw in',
+      noDeadline: 'No deadline',
+    },
+
+    practice: {
+      notice: 'Practice: it runs in your browser and nothing is sent to Solana',
+      title: 'Try it: the closest number wins',
+      lead: 'The marks are today’s real tickets. Place yours: every number closer to it than to any other ticket is yours, and the draw picks one number from 0 to {max}.',
+      drawn: 'Drawn number',
+      yourNumber: 'Your number',
+      best: 'Best free spot',
+      draw: 'Practice draw',
+      share: 'Your share of the draw',
+      today: 'Tickets today',
+      record: 'Practice wins',
+      won: '{drawn} was drawn: your number is the closest. You win!',
+      lost: '{drawn} was drawn: {number} is closer, so that ticket wins.',
+      taken: 'Someone already holds this number today. In the real game, pick another one.',
+      alone: 'No tickets yet today: on its own, your number would win any draw.',
+    },
+
+    split: {
+      title: 'of every pot goes to the winner',
+      lead: 'The program pays it to the winning ticket’s owner when the round is settled. The house fee comes out of the other {rest}, and what is left carries over to the game’s next round.',
+      winner: 'Winner',
+      fee: 'House fee',
+      carry: 'Next round',
+      feeNote: 'The daily lottery’s fee, set on-chain: {fee}. The program caps it at {cap}.',
+      example: 'Amounts for today’s pot of {pot}.',
+    },
+
+    winners: {
+      tag: 'Winners',
+      title: 'Every winner, on-chain',
+      description:
+        'The latest settled rounds of the three games, read from the program’s accounts. Each one links to its round, where the draw can be recomputed.',
+      paid: 'Paid to winners',
+      rounds: 'Rounds settled',
+      empty: 'No round has been settled yet.',
+      drawn: 'Drawn: {number}',
+      found: 'Number found',
+    },
     cta: {
       title: 'Today’s pot is waiting',
       description: 'Pick a number nobody has taken yet. Good luck!',

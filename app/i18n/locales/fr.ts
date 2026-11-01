@@ -91,9 +91,6 @@ const fr: Dict = {
     lead: 'Un tirage chaque jour, un tirage chaque heure, et un numéro caché à débusquer. Le gagnant remporte 80 % de la cagnotte, et le reste est reporté sur la manche suivante. Chaque ticket, chaque lamport et chaque tirage vivent sur Solana, où n’importe qui peut les vérifier.',
     playNow: 'Jouer maintenant',
     howItWorks: 'Comment ça marche',
-    program: 'Programme',
-    cluster: 'Cluster',
-    draw: 'Tirage',
     dialCaption:
       'Chaque point est l’un des tickets du jour : autour du cadran selon l’heure de son achat, vers l’extérieur selon son numéro.',
 
@@ -213,6 +210,50 @@ const fr: Dict = {
       },
     },
 
+    live: {
+      title: 'Cagnottes en ce moment',
+      drawIn: 'Tirage dans',
+      noDeadline: 'Sans échéance',
+    },
+
+    practice: {
+      notice: 'Entraînement : tout se passe dans ton navigateur, rien n’est envoyé à Solana',
+      title: 'Essaie : le numéro le plus proche gagne',
+      lead: 'Les repères sont les vrais tickets du jour. Place le tien : chaque numéro plus proche de lui que de tout autre ticket est à toi, et le tirage choisit un numéro de 0 à {max}.',
+      drawn: 'Numéro tiré',
+      yourNumber: 'Ton numéro',
+      best: 'Meilleure place libre',
+      draw: 'Tirage d’essai',
+      share: 'Ta part du tirage',
+      today: 'Tickets du jour',
+      record: 'Victoires d’essai',
+      won: '{drawn} est sorti : ton numéro est le plus proche. Tu gagnes !',
+      lost: '{drawn} est sorti : {number} est plus proche, ce ticket gagne.',
+      taken: 'Quelqu’un détient déjà ce numéro aujourd’hui. Dans le vrai jeu, choisis-en un autre.',
+      alone: 'Aucun ticket aujourd’hui pour l’instant : seul, ton numéro gagnerait n’importe quel tirage.',
+    },
+
+    split: {
+      title: 'de chaque cagnotte va au gagnant',
+      lead: 'Le programme les verse au propriétaire du ticket gagnant quand la manche est réglée. La commission de la maison est prélevée sur les {rest} restants, et le solde est reporté sur la manche suivante du jeu.',
+      winner: 'Gagnant',
+      fee: 'Commission',
+      carry: 'Manche suivante',
+      feeNote: 'Commission de la loterie quotidienne, fixée on-chain : {fee}. Le programme la plafonne à {cap}.',
+      example: 'Montants pour la cagnotte du jour de {pot}.',
+    },
+
+    winners: {
+      tag: 'Gagnants',
+      title: 'Chaque gagnant, on-chain',
+      description:
+        'Les dernières manches réglées des trois jeux, lues dans les comptes du programme. Chacune renvoie à sa manche, où le tirage peut être recalculé.',
+      paid: 'Versé aux gagnants',
+      rounds: 'Manches réglées',
+      empty: 'Aucune manche n’a encore été réglée.',
+      drawn: 'Tiré : {number}',
+      found: 'Numéro trouvé',
+    },
     cta: {
       title: 'La cagnotte du jour t’attend',
       description: 'Choisis un numéro que personne n’a encore pris. Bonne chance !',

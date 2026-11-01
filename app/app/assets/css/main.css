@@ -401,9 +401,10 @@ html {
       animation-name: reveal-print;
       animation-range: entry 10% cover 45%;
     }
+    /* Sharp by the time the heading is fully in view, so it is never read blurred. */
     .reveal-blur {
       animation-name: reveal-blur;
-      animation-range: entry 0% cover 35%;
+      animation-range: entry 0% entry 80%;
     }
 
     /* How far down the page you are, as a neon thread under the header. */

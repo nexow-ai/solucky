@@ -90,9 +90,6 @@ const tr: Dict = {
     lead: 'Her gün bir çekiliş, her saat bir çekiliş ve bulunmayı bekleyen gizli bir sayı. Kazanan, havuzun %80’ini alır; kalanı bir sonraki tura aktarılır. Her bilet, her lamport ve her çekiliş Solana’da yer alır; orada herkes kontrol edebilir.',
     playNow: 'Hemen oynayın',
     howItWorks: 'Nasıl çalışır',
-    program: 'Program',
-    cluster: 'Ağ',
-    draw: 'Çekiliş',
     dialCaption:
       'Her nokta bugünkü biletlerden biridir: kadranın çevresindeki yeri satın alındığı saati, merkezden uzaklığı numarasını gösterir.',
 
@@ -210,6 +207,51 @@ const tr: Dict = {
       },
     },
 
+    live: {
+      title: 'Şu anki havuzlar',
+      drawIn: 'Çekilişe kalan',
+      noDeadline: 'Süre sınırı yok',
+    },
+
+    practice: {
+      notice: 'Deneme: tarayıcınızda çalışır, Solana’ya hiçbir şey gönderilmez',
+      title: 'Deneyin: en yakın sayı kazanır',
+      lead: 'İşaretler bugünün gerçek biletleri. Sizinkini yerleştirin: ona diğer biletlerden daha yakın olan her sayı sizindir ve çekiliş 0 ile {max} arasında bir sayı seçer.',
+      drawn: 'Çekilen sayı',
+      yourNumber: 'Sayınız',
+      best: 'En iyi boş yer',
+      draw: 'Deneme çekilişi',
+      share: 'Çekilişteki payınız',
+      today: 'Bugünkü biletler',
+      record: 'Deneme kazançları',
+      won: '{drawn} çekildi: en yakın sayı sizinki. Kazandınız!',
+      lost: '{drawn} çekildi: {number} daha yakın, yani o bilet kazanır.',
+      taken: 'Bu sayı bugün zaten başkasında. Gerçek oyunda başka bir sayı seçin.',
+      alone: 'Bugün henüz bilet yok: tek başına sayınız her çekilişi kazanırdı.',
+    },
+
+    split: {
+      title: 'her havuzdan kazanana gider',
+      lead: 'Program bunu, tur sonuçlandığında kazanan biletin sahibine öder. Kasa payı kalan {rest} içinden düşülür, geriye kalan da oyunun bir sonraki turuna aktarılır.',
+      winner: 'Kazanan',
+      fee: 'Kasa payı',
+      carry: 'Sonraki tur',
+      feeNote:
+        'Günlük piyangonun zincir üstünde belirlenen kasa payı: {fee}. Program bunu en fazla {cap} ile sınırlar.',
+      example: 'Bugünkü {pot} havuz için tutarlar.',
+    },
+
+    winners: {
+      tag: 'Kazananlar',
+      title: 'Her kazanan zincir üstünde',
+      description:
+        'Üç oyunun en son sonuçlanan turları, doğrudan programın hesaplarından okunur. Her biri kendi turuna bağlanır; çekiliş orada yeniden hesaplanabilir.',
+      paid: 'Kazananlara ödenen',
+      rounds: 'Sonuçlanan turlar',
+      empty: 'Henüz sonuçlanan tur yok.',
+      drawn: 'Çekilen: {number}',
+      found: 'Sayı bulundu',
+    },
     cta: {
       title: 'Bugünkü havuz sizi bekliyor',
       description: 'Henüz kimsenin almadığı bir sayı seçin. Bol şans!',

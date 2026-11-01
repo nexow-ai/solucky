@@ -15,17 +15,25 @@ const { explorer } = useSolana();
 const sorted = computed(() => sortNumbers(takenNumbers.value));
 const newestFirst = computed(() => [...tickets.value].reverse());
 
-/** Your tickets, newest first. Lotteries: the share of the draw each one wins on now. Guess: how its check went. */
+interface Stub {
+  key: string;
+  number: number;
+  cc: string | null;
+  /** Lotteries: the share of the draw the ticket wins on now. */
+  share: number | null;
+  /** Guess: how its check went. */
+  state: 'won' | 'missed' | 'waiting' | null;
+}
+
+/** Your tickets, newest first. */
 const stubs = computed(() => {
   const r = round.value?.data;
-  return [...myTickets.value].reverse().map((ticket) => {
+  return [...myTickets.value].reverse().map((ticket): Stub => {
     const { number, index } = ticket.data;
-    const cc = countryFromBytes(ticket.data.country);
-    if (lottery.value)
-      return { key: ticket.address, number, cc, share: shareOf(sorted.value, number, maxNumber.value) };
+    const base = { key: ticket.address, number, cc: countryFromBytes(ticket.data.country) };
+    if (lottery.value) return { ...base, share: shareOf(sorted.value, number, maxNumber.value), state: null };
     const won = !!r && r.status >= RoundStatus.Drawn && index === r.winningIndex;
-    const state = won ? ('won' as const) : index < checked.value ? ('missed' as const) : ('waiting' as const);
-    return { key: ticket.address, number, cc, state };
+    return { ...base, share: null, state: won ? 'won' : index < checked.value ? 'missed' : 'waiting' };
   });
 });
 </script>
@@ -52,14 +60,14 @@ const stubs = computed(() => {
               v-for="(stub, i) in stubs"
               :key="stub.key"
               class="stub"
-              :data-state="'state' in stub ? stub.state : undefined"
+              :data-state="stub.state ?? undefined"
               :style="{ '--i': Math.min(i, 8) }"
             >
               <span class="stub-flag" aria-hidden="true">{{ flagEmoji(stub.cc) }}</span>
               <span class="stub-number font-mono font-semibold tabular-nums" dir="ltr">{{
                 formatNumber(stub.number)
               }}</span>
-              <span v-if="'share' in stub" class="stub-meta font-mono tabular-nums">
+              <span v-if="stub.share !== null" class="stub-meta font-mono tabular-nums">
                 {{ formatPercent(stub.share, intl) }}
               </span>
               <span v-else class="stub-meta">

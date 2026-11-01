@@ -91,9 +91,6 @@ const nl: Dict = {
     lead: 'Elke dag een trekking, elk uur een trekking, en een verborgen getal om op te sporen. De winnaar krijgt 80% van de pot, en de rest schuift door naar de volgende ronde. Elk lot, elke lamport en elke trekking staat op Solana, waar iedereen het kan controleren.',
     playNow: 'Nu spelen',
     howItWorks: 'Zo werkt het',
-    program: 'Programma',
-    cluster: 'Cluster',
-    draw: 'Trekking',
     dialCaption:
       'Elke stip is een van de loten van vandaag: rond de wijzerplaat volgens het moment van aankoop, naar buiten volgens het getal.',
 
@@ -212,6 +209,50 @@ const nl: Dict = {
       },
     },
 
+    live: {
+      title: 'Potten op dit moment',
+      drawIn: 'Trekking over',
+      noDeadline: 'Geen deadline',
+    },
+
+    practice: {
+      notice: 'Oefenen: draait in je browser, er wordt niets naar Solana gestuurd',
+      title: 'Probeer het: het dichtstbijzijnde getal wint',
+      lead: 'De markeringen zijn de echte loten van vandaag. Zet het jouwe: elk getal dat dichter bij het jouwe ligt dan bij een ander lot is van jou, en de trekking kiest één getal van 0 tot {max}.',
+      drawn: 'Getrokken getal',
+      yourNumber: 'Jouw getal',
+      best: 'Beste vrije plek',
+      draw: 'Oefentrekking',
+      share: 'Jouw deel van de trekking',
+      today: 'Loten vandaag',
+      record: 'Oefenwinsten',
+      won: '{drawn} is getrokken: jouw getal ligt het dichtstbij. Je wint!',
+      lost: '{drawn} is getrokken: {number} ligt dichterbij, dus dat lot wint.',
+      taken: 'Iemand heeft dit getal vandaag al. Kies in het echte spel een ander.',
+      alone: 'Vandaag nog geen loten: in je eentje zou je getal elke trekking winnen.',
+    },
+
+    split: {
+      title: 'van elke pot gaat naar de winnaar',
+      lead: 'Het programma betaalt het uit aan de eigenaar van het winnende lot zodra de ronde is afgewikkeld. De huiscommissie gaat van de overige {rest} af, en wat overblijft schuift door naar de volgende ronde van het spel.',
+      winner: 'Winnaar',
+      fee: 'Huiscommissie',
+      carry: 'Volgende ronde',
+      feeNote: 'Commissie van de dagloterij, on-chain vastgelegd: {fee}. Het programma begrenst die op {cap}.',
+      example: 'Bedragen voor de pot van vandaag van {pot}.',
+    },
+
+    winners: {
+      tag: 'Winnaars',
+      title: 'Elke winnaar, on-chain',
+      description:
+        'De laatst afgewikkelde rondes van de drie spellen, gelezen uit de accounts van het programma. Elke ronde linkt naar haar pagina, waar de trekking opnieuw te berekenen is.',
+      paid: 'Uitbetaald aan winnaars',
+      rounds: 'Afgewikkelde rondes',
+      empty: 'Er is nog geen ronde afgewikkeld.',
+      drawn: 'Getrokken: {number}',
+      found: 'Getal gevonden',
+    },
     cta: {
       title: 'De pot van vandaag wacht',
       description: 'Kies een getal dat nog niemand heeft genomen. Veel geluk!',

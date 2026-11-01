@@ -81,16 +81,31 @@ const field = computed(() =>
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col gap-5">
+  <div
+    class="flex-1"
+    :class="props.big ? 'grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]' : 'flex flex-col gap-5'"
+  >
     <!-- The round so far: decorative, the numbers below say it in words. -->
-    <div aria-hidden="true" dir="ltr" class="art">
-      <svg v-if="props.kind === GameKind.Daily" viewBox="0 0 400 160" class="w-full" :class="props.big ? 'max-h-60' : 'max-h-32'">
+    <div aria-hidden="true" dir="ltr" class="art" :class="props.big ? 'lg:order-last' : ''">
+      <svg
+        v-if="props.kind === GameKind.Daily"
+        viewBox="0 0 400 160"
+        class="w-full"
+        :class="props.big ? 'max-h-60' : 'max-h-32'"
+      >
         <line x1="40" y1="150" x2="360" y2="150" class="stroke-(--ui-border-accented)" />
         <path d="M 64 150 A 136 136 0 0 1 336 150" class="fill-none stroke-(--ui-border)" stroke-dasharray="2 5" />
         <path d="M 144 150 A 56 56 0 0 1 256 150" class="fill-none stroke-(--ui-border)" />
         <path d="M 82 150 A 118 118 0 0 1 318 150" class="fill-none stroke-(--ui-border)" stroke-dasharray="1 6" />
         <path :d="day.arc" class="fill-none stroke-(--ui-primary)" stroke-width="2.5" stroke-linecap="round" />
-        <circle v-for="dot in day.dots" :key="dot.key" :cx="dot.x" :cy="dot.y" r="2.6" class="dot fill-(--ui-primary)" />
+        <circle
+          v-for="dot in day.dots"
+          :key="dot.key"
+          :cx="dot.x"
+          :cy="dot.y"
+          r="2.6"
+          class="dot fill-(--ui-primary)"
+        />
         <g :transform="`translate(${day.sun.x} ${day.sun.y})`">
           <circle r="13" class="fill-(--ui-primary)/25 sun-halo" />
           <circle r="7" class="fill-(--ui-color-primary-300)" />
@@ -113,8 +128,23 @@ const field = computed(() =>
         />
         <circle cx="80" cy="80" r="24" class="fill-none stroke-(--ui-border)" stroke-dasharray="1 4" />
         <path :d="hour.sweep" class="fill-(--ui-primary)/15" />
-        <line x1="80" y1="80" :x2="hour.hand.x" :y2="hour.hand.y" class="stroke-(--ui-secondary)" stroke-width="2" stroke-linecap="round" />
-        <circle v-for="dot in hour.dots" :key="dot.key" :cx="dot.x" :cy="dot.y" r="2.6" class="dot fill-(--ui-primary)" />
+        <line
+          x1="80"
+          y1="80"
+          :x2="hour.hand.x"
+          :y2="hour.hand.y"
+          class="stroke-(--ui-secondary)"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <circle
+          v-for="dot in hour.dots"
+          :key="dot.key"
+          :cx="dot.x"
+          :cy="dot.y"
+          r="2.6"
+          class="dot fill-(--ui-primary)"
+        />
         <circle cx="80" cy="80" r="3.5" class="fill-(--ui-secondary)" />
       </svg>
 
@@ -135,36 +165,38 @@ const field = computed(() =>
       </svg>
     </div>
 
-    <dl class="grid grid-cols-2 gap-x-4 gap-y-3" :class="props.big ? 'sm:grid-cols-4' : ''">
-      <div class="col-span-2" :class="props.big ? 'sm:col-span-2' : ''">
-        <dt class="kicker text-[0.6rem]">{{ t('stat.todaysPot') }}</dt>
-        <dd v-if="loading"><USkeleton class="mt-1 h-8 w-32" /></dd>
-        <dd v-else class="flex flex-wrap items-baseline gap-x-2">
-          <span
-            class="led font-mono leading-tight font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em]"
-            :class="props.big ? 'text-5xl' : 'text-3xl'"
-            dir="ltr"
-            >◎{{ formatSol(pot, 3) }}</span
-          >
-          <span class="font-mono text-xs text-muted">{{ formatUsd(pot, price, intl) }}</span>
-        </dd>
-      </div>
-      <div>
-        <dt class="kicker text-[0.6rem]">{{ lottery ? t('home.live.drawIn') : t('stat.numbersLeft') }}</dt>
-        <dd class="mt-0.5 font-mono text-sm font-semibold text-primary tabular-nums" dir="ltr">
-          {{ lottery ? (clock ?? '—') : formatNumber(numbersLeft) }}
-        </dd>
-      </div>
-      <div>
-        <dt class="kicker text-[0.6rem]">{{ t('stat.tickets') }} · {{ t('stat.ticket') }}</dt>
-        <dd class="mt-0.5 font-mono text-sm text-toned tabular-nums" dir="ltr">
-          {{ formatNumber(count) }} · {{ ticketPrice === null ? '—' : `◎${formatSol(ticketPrice)}` }}
-        </dd>
-      </div>
-    </dl>
-    <p class="kicker -mt-2 text-[0.6rem] text-dimmed">
-      {{ t('receipt.round') }} <span dir="ltr">{{ period === null ? '…' : roundTitle(props.kind, period) }}</span>
-    </p>
+    <div class="space-y-3">
+      <dl class="grid grid-cols-2 gap-x-4 gap-y-3">
+        <div class="col-span-2">
+          <dt class="kicker text-[0.6rem]">{{ t('stat.todaysPot') }}</dt>
+          <dd v-if="loading"><USkeleton class="mt-1 h-8 w-32" /></dd>
+          <dd v-else class="flex flex-wrap items-baseline gap-x-2">
+            <span
+              class="led font-mono leading-tight font-extrabold text-highlighted tabular-nums [--led-pitch:0.1em]"
+              :class="props.big ? 'text-6xl' : 'text-3xl'"
+              dir="ltr"
+              >◎{{ formatSol(pot, 3) }}</span
+            >
+            <span class="font-mono text-xs text-muted">{{ formatUsd(pot, price, intl) }}</span>
+          </dd>
+        </div>
+        <div>
+          <dt class="kicker text-[0.6rem]">{{ lottery ? t('home.live.drawIn') : t('stat.numbersLeft') }}</dt>
+          <dd class="mt-0.5 font-mono text-sm font-semibold text-primary tabular-nums" dir="ltr">
+            {{ lottery ? (clock ?? '—') : formatNumber(numbersLeft) }}
+          </dd>
+        </div>
+        <div>
+          <dt class="kicker text-[0.6rem]">{{ t('stat.tickets') }} · {{ t('stat.ticket') }}</dt>
+          <dd class="mt-0.5 font-mono text-sm text-toned tabular-nums" dir="ltr">
+            {{ formatNumber(count) }} · {{ ticketPrice === null ? '—' : `◎${formatSol(ticketPrice)}` }}
+          </dd>
+        </div>
+      </dl>
+      <p class="kicker text-[0.6rem] text-dimmed">
+        {{ t('receipt.round') }} <span dir="ltr">{{ period === null ? '…' : roundTitle(props.kind, period) }}</span>
+      </p>
+    </div>
   </div>
 </template>
 

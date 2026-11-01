@@ -34,6 +34,7 @@ const {
   numbersLeft,
   maxNumber,
   settled,
+  pending,
   loading,
 } = useLottery();
 const price = useSolPrice();
@@ -57,6 +58,10 @@ const fee = computed(() =>
 );
 const potShown = useTween(() => Number(pot.value), 1_600);
 const last = computed(() => settled.value[0] ?? null);
+/** The round that just ended, while it waits to be closed, drawn and paid: the reveal follows. */
+const drawing = computed(() =>
+  period.value === null ? null : (pending.value.find((r) => r.data.period === period.value! - 1) ?? null),
+);
 
 // When the pot grows, a chip with the difference floats off the counter.
 const gains = ref<{ id: number; amount: bigint }[]>([]);
@@ -71,7 +76,7 @@ watch(pot, (to, from) => {
 
 <template>
   <LotteryGlass hero class="stage">
-    <div class="grid items-center gap-6 p-5 sm:p-7 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
+    <div class="grid items-center gap-5 p-5 sm:gap-6 sm:p-7 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
       <!-- The game and its round. -->
       <div class="flex items-center justify-center gap-4 lg:justify-start">
         <span class="stage-emblem size-16 shrink-0 sm:size-20">
@@ -99,7 +104,8 @@ watch(pot, (to, from) => {
             <rect class="bulbs-lit" x="3" y="3" rx="18" pathLength="300" />
           </svg>
           <p
-            class="text-lucky glow-primary led font-mono text-5xl font-semibold tabular-nums [--led-pitch:0.065em] sm:text-6xl"
+            class="text-lucky glow-primary led font-mono text-4xl font-semibold tabular-nums [--led-pitch:0.065em] sm:text-6xl"
+            dir="ltr"
           >
             ◎{{ formatSol(Math.round(potShown), 3) }}
           </p>
@@ -126,7 +132,7 @@ watch(pot, (to, from) => {
       <div class="flex flex-col items-center lg:items-end">
         <template v-if="lottery && period !== null">
           <p class="kicker">{{ t('stage.closesIn') }}</p>
-          <div class="mt-3"><LotteryCountdown :ms="left" size="lg" /></div>
+          <div class="stage-clock mt-3"><LotteryCountdown :ms="left" size="lg" /></div>
           <div class="meter mt-4 w-full max-w-64" :style="{ '--p': elapsed }" aria-hidden="true"><i /></div>
         </template>
         <template v-else-if="!lottery">
@@ -154,7 +160,21 @@ watch(pot, (to, from) => {
       </div>
       <p class="hidden text-center text-xs text-muted xl:block">{{ t('pot.split', { fee }) }}</p>
       <NuxtLink
-        v-if="last"
+        v-if="drawing"
+        :to="localePath(roundPath(drawing.data.kind, drawing.data.period))"
+        class="drawing flex items-center gap-2.5 rounded-full py-1.5 ps-3 pe-2 text-sm"
+      >
+        <span class="pulse" aria-hidden="true" />
+        <span class="font-mono text-xs text-toned" dir="ltr">{{
+          roundTitle(drawing.data.kind, drawing.data.period)
+        }}</span>
+        <span class="font-mono font-semibold text-warning tabular-nums" dir="ltr"
+          >◎{{ formatSol(drawing.data.pot, 3) }}</span
+        >
+        <LotteryStatusBadge :status="drawing.data.status" :lottery="lottery" />
+      </NuxtLink>
+      <NuxtLink
+        v-else-if="last"
         :to="localePath(roundPath(last.data.kind, last.data.period))"
         class="last-draw group flex items-center gap-2.5 rounded-full py-1.5 ps-3.5 pe-2.5 text-sm"
       >
@@ -162,7 +182,9 @@ watch(pot, (to, from) => {
         <span class="ball font-mono text-xs font-semibold tabular-nums" dir="ltr">{{
           formatNumber(last.data.winningNumber)
         }}</span>
-        <span class="font-mono font-semibold text-secondary tabular-nums">◎{{ formatSol(last.data.payout, 3) }}</span>
+        <span class="font-mono font-semibold text-secondary tabular-nums" dir="ltr"
+          >◎{{ formatSol(last.data.payout, 3) }}</span
+        >
         <span aria-hidden="true">{{ flagEmoji(countryFromBytes(last.data.winnerCountry)) }}</span>
         <UIcon
           name="i-lucide-arrow-right"
@@ -177,6 +199,17 @@ watch(pot, (to, from) => {
 .stage-emblem :deep(svg) {
   width: 100%;
   height: 100%;
+}
+
+/* Phones get a smaller clock, so the pot and the buy button come up sooner. */
+.stage-clock :deep(.countdown) {
+  font-size: 1.75rem;
+}
+
+@media (min-width: 40rem) {
+  .stage-clock :deep(.countdown) {
+    font-size: 2.25rem;
+  }
 }
 
 .stage-foot {
@@ -295,6 +328,37 @@ watch(pot, (to, from) => {
   box-shadow:
     inset 0 0 0 1px color-mix(in oklab, var(--ui-secondary) 45%, transparent),
     0 0 24px -8px var(--ui-secondary);
+}
+
+/* The round that just ended, waiting for its draw: a warm pill with a pulse. */
+.drawing {
+  background: color-mix(in oklab, var(--ui-warning) 8%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-warning) 30%, transparent);
+}
+
+.pulse {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--ui-warning);
+  box-shadow: 0 0 10px var(--ui-warning);
+}
+
+.pulse::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 1px solid var(--ui-warning);
+  animation: pulse 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulse {
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 
 /* The winning number on a lottery ball. */

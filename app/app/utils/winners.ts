@@ -15,7 +15,9 @@ export interface Win {
 export function latestWins(games: readonly { kind: number; rounds: readonly Account<Round>[] }[], limit = 12): Win[] {
   return games
     .flatMap(({ kind, rounds }) => rounds.map((round) => ({ kind, round })))
-    .sort((a, b) => (a.round.data.drawSlot === b.round.data.drawSlot ? 0 : a.round.data.drawSlot > b.round.data.drawSlot ? -1 : 1))
+    .sort((a, b) =>
+      a.round.data.drawSlot === b.round.data.drawSlot ? 0 : a.round.data.drawSlot > b.round.data.drawSlot ? -1 : 1,
+    )
     .slice(0, limit);
 }
 

@@ -28,7 +28,10 @@ const seen = useSeen(card);
       <div class="stub flex items-center gap-4 rounded-t-[1.25rem] px-5 pt-5 pb-4 sm:px-6">
         <LandingGameEmblem :kind="props.kind" :size="props.big ? 'size-14' : 'size-11'" />
         <div class="min-w-0 flex-1">
-          <h3 class="font-semibold text-balance text-highlighted" :class="props.big ? 'text-2xl tracking-tight' : 'text-lg'">
+          <h3
+            class="font-semibold text-balance text-highlighted"
+            :class="props.big ? 'text-2xl tracking-tight' : 'text-lg'"
+          >
             {{ t(`games.${slug}.name`) }}
           </h3>
           <p class="mt-0.5 text-sm text-pretty text-muted">{{ t(`games.${slug}.description`) }}</p>
@@ -38,9 +41,9 @@ const seen = useSeen(card);
         <span aria-hidden="true" class="absolute inset-x-5 top-0 border-t-2 border-dashed border-accented" />
         <ClientOnly>
           <LandingMachineLive v-if="seen" :kind="props.kind" :big="props.big" />
-          <div v-else class="flex-1" :class="props.big ? 'min-h-72' : 'min-h-40'" />
+          <div v-else class="flex-1" :class="props.big ? 'min-h-56' : 'min-h-40'" />
           <template #fallback>
-            <div class="flex-1" :class="props.big ? 'min-h-72' : 'min-h-40'" />
+            <div class="flex-1" :class="props.big ? 'min-h-56' : 'min-h-40'" />
           </template>
         </ClientOnly>
         <span

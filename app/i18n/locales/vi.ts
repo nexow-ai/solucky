@@ -90,9 +90,6 @@ const vi: Dict = {
     lead: 'Mỗi ngày một lượt quay số, mỗi giờ một lượt quay số, và một con số ẩn để truy tìm. Người thắng nhận 80% quỹ thưởng, phần còn lại được chuyển sang vòng tiếp theo. Mọi vé, mọi lamport và mọi lượt quay số đều nằm trên Solana, nơi ai cũng có thể kiểm tra.',
     playNow: 'Chơi ngay',
     howItWorks: 'Cách hoạt động',
-    program: 'Chương trình',
-    cluster: 'Cụm',
-    draw: 'Quay số',
     dialCaption:
       'Mỗi chấm là một vé của hôm nay: vị trí quanh mặt đồng hồ theo thời điểm mua, khoảng cách ra phía ngoài theo con số của vé.',
 
@@ -209,6 +206,50 @@ const vi: Dict = {
       },
     },
 
+    live: {
+      title: 'Quỹ thưởng lúc này',
+      drawIn: 'Quay số sau',
+      noDeadline: 'Không có hạn chót',
+    },
+
+    practice: {
+      notice: 'Luyện tập: chạy trong trình duyệt của bạn, không có gì được gửi lên Solana',
+      title: 'Thử xem: số gần nhất sẽ thắng',
+      lead: 'Các vạch là vé thật của hôm nay. Đặt vé của bạn: mọi số gần vé của bạn hơn bất kỳ vé nào khác đều thuộc về bạn, và lần quay chọn một số từ 0 đến {max}.',
+      drawn: 'Số được quay',
+      yourNumber: 'Số của bạn',
+      best: 'Chỗ trống tốt nhất',
+      draw: 'Quay thử',
+      share: 'Phần của bạn trong lần quay',
+      today: 'Vé hôm nay',
+      record: 'Số lần thắng thử',
+      won: 'Quay ra {drawn}: số của bạn gần nhất. Bạn thắng!',
+      lost: 'Quay ra {drawn}: {number} gần hơn, nên vé đó thắng.',
+      taken: 'Hôm nay đã có người giữ số này. Trong trò chơi thật, hãy chọn số khác.',
+      alone: 'Hôm nay chưa có vé nào: một mình, số của bạn sẽ thắng mọi lần quay.',
+    },
+
+    split: {
+      title: 'của mỗi quỹ thưởng thuộc về người thắng',
+      lead: 'Chương trình trả phần này cho chủ vé thắng khi vòng được tất toán. Phí nhà cái được trừ từ {rest} còn lại, và phần dư được chuyển sang vòng tiếp theo của trò chơi.',
+      winner: 'Người thắng',
+      fee: 'Phí nhà cái',
+      carry: 'Vòng tiếp theo',
+      feeNote: 'Phí của xổ số hằng ngày, đặt trên chuỗi: {fee}. Chương trình giới hạn ở {cap}.',
+      example: 'Số tiền cho quỹ thưởng hôm nay là {pot}.',
+    },
+
+    winners: {
+      tag: 'Người thắng',
+      title: 'Mọi người thắng, trên chuỗi',
+      description:
+        'Các vòng đã tất toán gần nhất của ba trò chơi, đọc từ các tài khoản của chương trình. Mỗi vòng dẫn đến trang của nó, nơi có thể tính lại lần quay.',
+      paid: 'Đã trả cho người thắng',
+      rounds: 'Vòng đã tất toán',
+      empty: 'Chưa có vòng nào được tất toán.',
+      drawn: 'Quay ra: {number}',
+      found: 'Đã tìm thấy số',
+    },
     cta: {
       title: 'Quỹ thưởng hôm nay đang chờ',
       description: 'Chọn một con số chưa ai lấy. Chúc may mắn!',

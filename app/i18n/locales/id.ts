@@ -90,9 +90,6 @@ const id: Dict = {
     lead: 'Undian setiap hari, undian setiap jam, dan angka tersembunyi untuk diburu. Pemenang mendapat 80% pot, dan sisanya dibawa ke ronde berikutnya. Setiap tiket, setiap lamport, dan setiap undian ada di Solana, tempat siapa pun bisa memeriksanya.',
     playNow: 'Main sekarang',
     howItWorks: 'Cara kerja',
-    program: 'Program',
-    cluster: 'Jaringan',
-    draw: 'Undian',
     dialCaption:
       'Setiap titik adalah salah satu tiket hari ini: posisinya di sekeliling dial menunjukkan waktu pembeliannya, dan jaraknya ke luar menunjukkan angkanya.',
 
@@ -211,6 +208,50 @@ const id: Dict = {
       },
     },
 
+    live: {
+      title: 'Pot saat ini',
+      drawIn: 'Undian dalam',
+      noDeadline: 'Tanpa tenggat',
+    },
+
+    practice: {
+      notice: 'Latihan: berjalan di browser-mu, tidak ada yang dikirim ke Solana',
+      title: 'Coba: angka terdekat yang menang',
+      lead: 'Tanda-tanda ini adalah tiket asli hari ini. Taruh punyamu: setiap angka yang lebih dekat ke angkamu daripada ke tiket lain jadi milikmu, dan undian memilih satu angka dari 0 sampai {max}.',
+      drawn: 'Angka yang keluar',
+      yourNumber: 'Angkamu',
+      best: 'Tempat kosong terbaik',
+      draw: 'Undian latihan',
+      share: 'Bagianmu dari undian',
+      today: 'Tiket hari ini',
+      record: 'Menang latihan',
+      won: '{drawn} keluar: angkamu yang paling dekat. Kamu menang!',
+      lost: '{drawn} keluar: {number} lebih dekat, jadi tiket itu yang menang.',
+      taken: 'Angka ini sudah dipegang orang lain hari ini. Di permainan sungguhan, pilih angka lain.',
+      alone: 'Belum ada tiket hari ini: sendirian, angkamu akan memenangkan undian apa pun.',
+    },
+
+    split: {
+      title: 'dari setiap pot untuk pemenang',
+      lead: 'Program membayarnya ke pemilik tiket pemenang saat ronde diselesaikan. Biaya pengelola diambil dari {rest} sisanya, dan yang tersisa dibawa ke ronde berikutnya dari permainan itu.',
+      winner: 'Pemenang',
+      fee: 'Biaya pengelola',
+      carry: 'Ronde berikutnya',
+      feeNote: 'Biaya lotere harian, ditetapkan on-chain: {fee}. Program membatasinya maksimal {cap}.',
+      example: 'Jumlah untuk pot hari ini sebesar {pot}.',
+    },
+
+    winners: {
+      tag: 'Pemenang',
+      title: 'Setiap pemenang, on-chain',
+      description:
+        'Ronde terbaru yang sudah diselesaikan dari ketiga permainan, dibaca dari akun program. Masing-masing tertaut ke rondenya, tempat undian bisa dihitung ulang.',
+      paid: 'Dibayar ke pemenang',
+      rounds: 'Ronde diselesaikan',
+      empty: 'Belum ada ronde yang diselesaikan.',
+      drawn: 'Keluar: {number}',
+      found: 'Angka ditemukan',
+    },
     cta: {
       title: 'Pot hari ini sudah menunggu',
       description: 'Pilih angka yang belum diambil siapa pun. Semoga beruntung!',

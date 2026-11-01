@@ -5,13 +5,26 @@ import { carryFor, feeFor, GameKind, prizeFor } from '@solucky/client';
 const { t } = useI18n();
 const intl = useIntlLocale();
 const { pot, feeBps, loading } = useLottery(GameKind.Daily);
+const cap = computed(() => new Intl.NumberFormat(intl.value, { style: 'percent' }).format(0.2));
 
 const parts = computed(() => {
   const fee = feeBps.value / 10_000;
   return [
     { key: 'winner', share: 0.8, amount: prizeFor(pot.value), bar: 'bg-lucky', dot: 'bg-primary' },
-    { key: 'fee', share: fee, amount: feeFor(pot.value, feeBps.value), bar: 'bg-(--ui-text-dimmed)', dot: 'bg-(--ui-text-dimmed)' },
-    { key: 'carry', share: 0.2 - fee, amount: carryFor(pot.value, feeBps.value), bar: 'bg-secondary', dot: 'bg-secondary' },
+    {
+      key: 'fee',
+      share: fee,
+      amount: feeFor(pot.value, feeBps.value),
+      bar: 'bg-(--ui-text-dimmed)',
+      dot: 'bg-(--ui-text-dimmed)',
+    },
+    {
+      key: 'carry',
+      share: 0.2 - fee,
+      amount: carryFor(pot.value, feeBps.value),
+      bar: 'bg-secondary',
+      dot: 'bg-secondary',
+    },
   ];
 });
 </script>
@@ -42,7 +55,7 @@ const parts = computed(() => {
       </div>
     </dl>
     <p v-if="!loading" class="text-sm text-pretty text-muted">
-      {{ t('home.split.fee', { fee: formatPercent(feeBps / 10_000, intl) }) }}
+      {{ t('home.split.feeNote', { fee: formatPercent(feeBps / 10_000, intl), cap }) }}
       <template v-if="pot > 0n">{{ t('home.split.example', { pot: `◎${formatSol(pot, 4)}` }) }}</template>
     </p>
   </div>

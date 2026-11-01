@@ -53,7 +53,7 @@ const rolling = ref(false);
 const drawn = ref<number | null>(null);
 const winner = ref<number | null>(null);
 const record = reactive({ wins: 0, draws: 0 });
-const burst = useTemplateRef<{ fire: (count?: number) => void }>('burst');
+const burst = useTemplateRef<{ fire: (count?: number, fly?: boolean) => void }>('burst');
 
 function random(limit: number) {
   const [value] = crypto.getRandomValues(new Uint32Array(1));
@@ -72,7 +72,8 @@ async function draw() {
   record.draws++;
   if (winner.value === mine.value) {
     record.wins++;
-    burst.value?.fire();
+    // No ticket well on the landing: just the burst.
+    burst.value?.fire(26, false);
     flare(dialAngle(now.value));
   }
 }
@@ -86,20 +87,27 @@ const result = computed(() => {
   if (rolling.value || winner.value === null || drawn.value === null) return null;
   return winner.value === mine.value
     ? { won: true, text: t('home.practice.won', { drawn: formatNumber(drawn.value) }) }
-    : { won: false, text: t('home.practice.lost', { drawn: formatNumber(drawn.value), number: formatNumber(winner.value) }) };
+    : {
+        won: false,
+        text: t('home.practice.lost', { drawn: formatNumber(drawn.value), number: formatNumber(winner.value) }),
+      };
 });
 </script>
 
 <template>
-  <div class="practice relative overflow-hidden rounded-[1.5rem] bg-default/80 p-5 ring ring-default backdrop-blur-md sm:p-8">
+  <div
+    class="practice relative overflow-hidden rounded-[1.5rem] bg-default/80 p-5 ring ring-default backdrop-blur-md sm:p-8"
+  >
     <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center">
       <div>
         <p class="kicker flex items-center gap-2 text-[0.65rem] text-secondary">
           <UIcon name="i-lucide-flask-conical" class="size-3.5" />
           {{ t('home.practice.notice') }}
         </p>
-        <h3 class="mt-3 text-2xl font-bold tracking-tight text-highlighted sm:text-3xl">{{ t('home.practice.title') }}</h3>
-        <p class="mt-2 max-w-2xl text-pretty text-muted">{{ t('home.practice.lead') }}</p>
+        <h3 class="mt-3 text-2xl font-bold tracking-tight text-highlighted sm:text-3xl">
+          {{ t('home.practice.title') }}
+        </h3>
+        <p class="mt-2 max-w-2xl text-pretty text-muted">{{ t('home.practice.lead', { max: formatNumber(max) }) }}</p>
       </div>
       <!-- The drawn number, rolling in. -->
       <div class="@container text-center">
@@ -132,7 +140,10 @@ const result = computed(() => {
           :class="pin.tall ? 'h-9' : 'h-6'"
           :style="{ left: `${pin.x}%` }"
         >
-          <span class="dot absolute -top-1 left-1/2 size-2 -translate-x-1/2 rounded-full bg-primary text-primary" :class="winner === pin.n ? 'winner' : ''" />
+          <span
+            class="dot absolute -top-1 left-1/2 size-2 -translate-x-1/2 rounded-full bg-primary text-primary"
+            :class="winner === pin.n ? 'winner' : ''"
+          />
         </span>
         <!-- Yours. -->
         <span class="mine absolute bottom-6 h-16 w-0.5 -translate-x-1/2 bg-secondary" :style="{ left: `${x(mine)}%` }">
@@ -213,7 +224,9 @@ const result = computed(() => {
       </div>
       <div>
         <dt class="kicker text-[0.6rem]">{{ t('home.practice.today') }}</dt>
-        <dd class="mt-1 font-mono text-2xl font-bold text-highlighted tabular-nums">{{ formatNumber(sorted.length) }}</dd>
+        <dd class="mt-1 font-mono text-2xl font-bold text-highlighted tabular-nums">
+          {{ formatNumber(sorted.length) }}
+        </dd>
       </div>
       <div>
         <dt class="kicker text-[0.6rem]">{{ t('home.practice.record') }}</dt>
@@ -225,7 +238,9 @@ const result = computed(() => {
 
     <p class="mt-4 min-h-6 text-sm text-pretty" aria-live="polite">
       <span v-if="taken" class="text-error">{{ t('home.practice.taken') }}</span>
-      <span v-else-if="result" :class="result.won ? 'font-semibold text-secondary' : 'text-toned'">{{ result.text }}</span>
+      <span v-else-if="result" :class="result.won ? 'font-semibold text-secondary' : 'text-toned'">{{
+        result.text
+      }}</span>
       <span v-else-if="!loading && !sorted.length" class="text-muted">{{ t('home.practice.alone') }}</span>
     </p>
   </div>

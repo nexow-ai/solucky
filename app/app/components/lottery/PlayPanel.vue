@@ -291,7 +291,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
         </h2>
         <p class="text-end leading-none">
           <span class="kicker block">{{ t('pick.win') }}</span>
-          <span class="text-lucky glow-primary mt-1 block font-mono text-3xl font-semibold tabular-nums">
+          <span class="text-lucky glow-primary mt-1 block font-mono text-3xl font-semibold tabular-nums" dir="ltr">
             ◎{{ formatSol(Math.round(prizeShown), 3) }}
           </span>
         </p>

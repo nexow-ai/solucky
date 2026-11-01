@@ -92,9 +92,6 @@ const de: Dict = {
     lead: 'Eine Ziehung jeden Tag, eine Ziehung jede Stunde und eine versteckte Zahl zum Aufspüren. Der Gewinner erhält 80 % des Pots, und der Rest geht in die nächste Runde über. Jedes Ticket, jeder Lamport und jede Ziehung liegt auf Solana, wo alle es überprüfen können.',
     playNow: 'Jetzt spielen',
     howItWorks: 'So funktioniert’s',
-    program: 'Programm',
-    cluster: 'Cluster',
-    draw: 'Ziehung',
     dialCaption:
       'Jeder Punkt ist eines der heutigen Tickets: rund ums Zifferblatt nach seiner Kaufzeit, nach außen nach seiner Zahl.',
 
@@ -213,6 +210,50 @@ const de: Dict = {
       },
     },
 
+    live: {
+      title: 'Pots gerade jetzt',
+      drawIn: 'Ziehung in',
+      noDeadline: 'Ohne Frist',
+    },
+
+    practice: {
+      notice: 'Übung: läuft in deinem Browser, nichts wird an Solana gesendet',
+      title: 'Probier’s aus: Die nächste Zahl gewinnt',
+      lead: 'Die Markierungen sind die echten Tickets von heute. Setz deine: Jede Zahl, die näher an ihr liegt als an jedem anderen Ticket, gehört dir, und die Ziehung wählt eine Zahl von 0 bis {max}.',
+      drawn: 'Gezogene Zahl',
+      yourNumber: 'Deine Zahl',
+      best: 'Beste freie Stelle',
+      draw: 'Übungsziehung',
+      share: 'Dein Anteil an der Ziehung',
+      today: 'Tickets heute',
+      record: 'Übungsgewinne',
+      won: '{drawn} wurde gezogen: Deine Zahl liegt am nächsten. Du gewinnst!',
+      lost: '{drawn} wurde gezogen: {number} liegt näher, also gewinnt dieses Ticket.',
+      taken: 'Diese Zahl hat heute schon jemand. Wähl im echten Spiel eine andere.',
+      alone: 'Heute noch keine Tickets: Allein würde deine Zahl jede Ziehung gewinnen.',
+    },
+
+    split: {
+      title: 'jedes Pots gehen an den Gewinner',
+      lead: 'Das Programm zahlt sie dem Besitzer des Gewinnertickets aus, sobald die Runde abgewickelt ist. Die Hausgebühr geht von den übrigen {rest} ab, und was übrig bleibt, geht in die nächste Runde des Spiels über.',
+      winner: 'Gewinner',
+      fee: 'Hausgebühr',
+      carry: 'Nächste Runde',
+      feeNote: 'Gebühr der Tageslotterie, on-chain festgelegt: {fee}. Das Programm begrenzt sie auf {cap}.',
+      example: 'Beträge für den heutigen Pot von {pot}.',
+    },
+
+    winners: {
+      tag: 'Gewinner',
+      title: 'Jeder Gewinner, on-chain',
+      description:
+        'Die zuletzt abgewickelten Runden der drei Spiele, gelesen aus den Konten des Programms. Jede verlinkt auf ihre Runde, wo sich die Ziehung nachrechnen lässt.',
+      paid: 'An Gewinner ausgezahlt',
+      rounds: 'Abgewickelte Runden',
+      empty: 'Noch keine Runde wurde abgewickelt.',
+      drawn: 'Gezogen: {number}',
+      found: 'Zahl gefunden',
+    },
     cta: {
       title: 'Der heutige Pot wartet',
       description: 'Wähle eine Zahl, die noch niemand genommen hat. Viel Glück!',

@@ -80,12 +80,14 @@ let leftAt = 0;
       <!-- Test money: one line, with the way to get some a tap away. -->
       <div
         v-if="!isMainnet"
-        class="glass-alert enter flex items-center gap-3 px-4 py-2.5 text-sm text-warning"
+        class="glass-alert enter flex items-center gap-3 px-3.5 py-2 text-sm text-warning sm:px-4 sm:py-2.5"
         style="--i: 0"
         role="note"
       >
         <UIcon name="i-lucide-flask-conical" class="size-4 shrink-0" />
-        <p class="min-w-0 flex-1 font-medium text-pretty">{{ t('play.testMoney', { cluster: clusterLabel }) }}</p>
+        <p class="min-w-0 flex-1 text-xs font-medium text-pretty sm:text-sm">
+          {{ t('play.testMoney', { cluster: clusterLabel }) }}
+        </p>
         <UPopover :content="{ align: 'end', sideOffset: 10 }">
           <UButton :label="t('play.fundHow')" icon="i-lucide-droplets" color="warning" variant="outline" size="xs" />
           <template #content>

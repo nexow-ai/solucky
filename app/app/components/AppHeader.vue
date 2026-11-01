@@ -35,7 +35,7 @@ const items = computed<NavigationMenuItem[]>(() => [
           color="primary"
           variant="subtle"
           size="sm"
-          class="hidden font-mono tracking-wider uppercase sm:inline-flex"
+          class="hidden font-mono tracking-wider uppercase sm:max-lg:inline-flex xl:inline-flex"
         />
       </span>
     </template>
@@ -43,7 +43,10 @@ const items = computed<NavigationMenuItem[]>(() => [
     <UNavigationMenu
       :items="items"
       variant="link"
-      :ui="{ link: 'font-mono text-xs tracking-[0.16em] uppercase', linkLeadingIcon: 'size-4' }"
+      :ui="{
+        link: 'font-mono text-xs tracking-[0.16em] uppercase lg:max-xl:tracking-[0.06em]',
+        linkLeadingIcon: 'size-4',
+      }"
     />
 
     <template #right>

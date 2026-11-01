@@ -91,9 +91,6 @@ const es: Dict = {
     lead: 'Un sorteo cada día, un sorteo cada hora y un número oculto por descubrir. El ganador se lleva el 80 % del pozo, y el resto pasa a la siguiente ronda. Cada boleto, cada lamport y cada sorteo vive en Solana, donde cualquiera puede comprobarlo.',
     playNow: 'Jugar ahora',
     howItWorks: 'Cómo funciona',
-    program: 'Programa',
-    cluster: 'Clúster',
-    draw: 'Sorteo',
     dialCaption:
       'Cada punto es uno de los boletos de hoy: alrededor de la esfera según la hora en que se compró, hacia fuera según su número.',
 
@@ -212,6 +209,50 @@ const es: Dict = {
       },
     },
 
+    live: {
+      title: 'Pozos ahora mismo',
+      drawIn: 'Sorteo en',
+      noDeadline: 'Sin fecha límite',
+    },
+
+    practice: {
+      notice: 'Práctica: se ejecuta en tu navegador y no se envía nada a Solana',
+      title: 'Pruébalo: gana el número más cercano',
+      lead: 'Las marcas son los boletos reales de hoy. Coloca el tuyo: cada número más cerca de él que de cualquier otro boleto es tuyo, y el sorteo elige un número del 0 al {max}.',
+      drawn: 'Número sorteado',
+      yourNumber: 'Tu número',
+      best: 'Mejor hueco libre',
+      draw: 'Sorteo de práctica',
+      share: 'Tu parte del sorteo',
+      today: 'Boletos hoy',
+      record: 'Victorias de práctica',
+      won: 'Salió el {drawn}: tu número es el más cercano. ¡Ganas!',
+      lost: 'Salió el {drawn}: el {number} está más cerca, así que gana ese boleto.',
+      taken: 'Alguien ya tiene este número hoy. En el juego real, elige otro.',
+      alone: 'Aún no hay boletos hoy: solo, tu número ganaría cualquier sorteo.',
+    },
+
+    split: {
+      title: 'de cada pozo es para el ganador',
+      lead: 'El programa lo paga al dueño del boleto ganador cuando se liquida la ronda. La comisión de la casa sale del {rest} restante, y lo que queda pasa a la siguiente ronda del juego.',
+      winner: 'Ganador',
+      fee: 'Comisión de la casa',
+      carry: 'Siguiente ronda',
+      feeNote: 'Comisión de la lotería diaria, fijada on-chain: {fee}. El programa la limita a {cap}.',
+      example: 'Importes para el pozo de hoy de {pot}.',
+    },
+
+    winners: {
+      tag: 'Ganadores',
+      title: 'Cada ganador, on-chain',
+      description:
+        'Las últimas rondas liquidadas de los tres juegos, leídas de las cuentas del programa. Cada una enlaza a su ronda, donde se puede recalcular el sorteo.',
+      paid: 'Pagado a ganadores',
+      rounds: 'Rondas liquidadas',
+      empty: 'Todavía no se ha liquidado ninguna ronda.',
+      drawn: 'Sorteado: {number}',
+      found: 'Número encontrado',
+    },
     cta: {
       title: 'El pozo de hoy te espera',
       description: 'Elige un número que nadie haya elegido aún. ¡Buena suerte!',

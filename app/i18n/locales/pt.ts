@@ -91,9 +91,6 @@ const pt: Dict = {
     lead: 'Um sorteio todo dia, um sorteio toda hora e um número escondido para descobrir. O vencedor leva 80% do pote, e o resto passa para a próxima rodada. Cada bilhete, cada lamport e cada sorteio fica na Solana, onde qualquer pessoa pode conferir.',
     playNow: 'Jogar agora',
     howItWorks: 'Como funciona',
-    program: 'Programa',
-    cluster: 'Cluster',
-    draw: 'Sorteio',
     dialCaption:
       'Cada ponto é um dos bilhetes de hoje: em volta do mostrador pela hora em que foi comprado, para fora pelo seu número.',
 
@@ -212,6 +209,50 @@ const pt: Dict = {
       },
     },
 
+    live: {
+      title: 'Potes agora',
+      drawIn: 'Sorteio em',
+      noDeadline: 'Sem prazo',
+    },
+
+    practice: {
+      notice: 'Treino: roda no seu navegador e nada é enviado à Solana',
+      title: 'Experimente: o número mais próximo ganha',
+      lead: 'As marcas são os bilhetes reais de hoje. Coloque o seu: todo número mais perto dele do que de qualquer outro bilhete é seu, e o sorteio escolhe um número de 0 a {max}.',
+      drawn: 'Número sorteado',
+      yourNumber: 'Seu número',
+      best: 'Melhor lugar livre',
+      draw: 'Sorteio de treino',
+      share: 'Sua parte do sorteio',
+      today: 'Bilhetes hoje',
+      record: 'Vitórias no treino',
+      won: 'Saiu o {drawn}: seu número é o mais próximo. Você ganhou!',
+      lost: 'Saiu o {drawn}: o {number} está mais perto, então esse bilhete ganha.',
+      taken: 'Alguém já tem este número hoje. No jogo de verdade, escolha outro.',
+      alone: 'Ainda não há bilhetes hoje: sozinho, seu número ganharia qualquer sorteio.',
+    },
+
+    split: {
+      title: 'de cada pote vai para o vencedor',
+      lead: 'O programa paga ao dono do bilhete vencedor quando a rodada é liquidada. A taxa da casa sai dos outros {rest}, e o que sobra passa para a próxima rodada do jogo.',
+      winner: 'Vencedor',
+      fee: 'Taxa da casa',
+      carry: 'Próxima rodada',
+      feeNote: 'Taxa da loteria diária, definida on-chain: {fee}. O programa a limita a {cap}.',
+      example: 'Valores para o pote de hoje de {pot}.',
+    },
+
+    winners: {
+      tag: 'Vencedores',
+      title: 'Cada vencedor, on-chain',
+      description:
+        'As últimas rodadas liquidadas dos três jogos, lidas das contas do programa. Cada uma leva à sua rodada, onde o sorteio pode ser recalculado.',
+      paid: 'Pago aos vencedores',
+      rounds: 'Rodadas liquidadas',
+      empty: 'Nenhuma rodada foi liquidada ainda.',
+      drawn: 'Sorteado: {number}',
+      found: 'Número encontrado',
+    },
     cta: {
       title: 'O pote de hoje está esperando',
       description: 'Escolha um número que ninguém pegou ainda. Boa sorte!',

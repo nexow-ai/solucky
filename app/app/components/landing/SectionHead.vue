@@ -15,13 +15,15 @@ const props = defineProps<{ index: string; tag: string; title: string; descripti
   >
     <span
       aria-hidden="true"
-      class="led pointer-events-none absolute -top-14 -z-10 font-mono text-[9rem] leading-none font-extrabold text-primary/10 select-none -start-2 sm:-top-20 sm:text-[13rem]"
+      class="led pointer-events-none absolute -top-16 -end-2 -z-10 hidden font-mono text-[11rem] leading-none font-extrabold text-primary/[0.07] select-none lg:block"
       dir="ltr"
       >{{ props.index }}</span
     >
     <div>
       <LandingSectionTag :index="props.index" :label="props.tag" />
-      <h2 class="reveal-blur mt-4 text-4xl font-bold tracking-tighter text-balance text-highlighted sm:text-5xl lg:text-6xl">
+      <h2
+        class="reveal-blur mt-4 text-4xl font-bold tracking-tighter text-balance text-highlighted sm:text-5xl lg:text-6xl"
+      >
         {{ props.title }}
       </h2>
     </div>
