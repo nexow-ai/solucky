@@ -50,10 +50,10 @@
     "screenshots": "bun scripts/screenshots.ts"
   },
   "dependencies": {
-    "@solana/kit": "8.5.0",
+    "@solana/kit": "8.6.0",
     "@solana/kit-plugin-rpc": "0.22.0",
     "@solana/kit-plugin-signer": "0.19.0",
-    "@solana/sysvars": "8.5.0",
+    "@solana/sysvars": "8.6.0",
     "@solucky/client": "workspace:*"
   },
   "devDependencies": {
