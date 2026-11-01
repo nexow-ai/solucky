@@ -35,7 +35,12 @@ watch(pot, (to, from) => {
       <header class="text-center">
         <p class="kicker">{{ t(`games.${GAME_SLUGS[kind]}.name`) }}</p>
         <h2 class="text-3xl font-semibold tracking-[0.28em] text-muted">{{ t('pot.title') }}</h2>
-        <div class="jackpot relative mt-4">
+        <!-- The jackpot in a frame of marquee bulbs, chasing faster for a moment whenever the pot grows. -->
+        <div class="jackpot marquee relative mx-auto mt-4 w-fit px-5 py-3" :class="{ hot: gains.length }">
+          <svg class="bulbs" aria-hidden="true">
+            <rect class="bulbs-dim" x="3" y="3" rx="16" pathLength="300" />
+            <rect class="bulbs-lit" x="3" y="3" rx="16" pathLength="300" />
+          </svg>
           <p class="text-lucky glow-primary led font-mono text-5xl font-semibold tabular-nums [--led-pitch:0.07em]">
             ◎{{ formatSol(Math.round(potShown), 3) }}
           </p>
@@ -72,7 +77,7 @@ watch(pot, (to, from) => {
           <span class="live-dot" aria-hidden="true" />
           {{ t('pot.inPlay') }}
         </p>
-        <div class="well h-80 overflow-y-auto p-2">
+        <div class="well h-80 overflow-y-auto p-2" data-ticket-well>
           <div v-if="loading" class="space-y-2 p-1">
             <USkeleton v-for="i in 6" :key="i" class="h-5 w-full" />
           </div>
@@ -171,6 +176,49 @@ watch(pot, (to, from) => {
   40% {
     opacity: 1;
     background: color-mix(in oklab, var(--ui-secondary) 22%, transparent);
+  }
+}
+
+/* Marquee bulbs: a dim ring of thirty, and every third one lit, stepping round. */
+.bulbs {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.bulbs rect {
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
+  fill: none;
+  stroke-width: 4.5;
+  stroke-linecap: round;
+}
+
+.bulbs-dim {
+  stroke: color-mix(in oklab, var(--ui-warning) 22%, transparent);
+  stroke-dasharray: 0 10;
+}
+
+.bulbs-lit {
+  --bulb: var(--ui-warning);
+  stroke: var(--bulb);
+  stroke-dasharray: 0 30;
+  filter: drop-shadow(0 0 3px var(--bulb)) drop-shadow(0 0 8px color-mix(in oklab, var(--bulb) 60%, transparent));
+  animation: chase 1.2s steps(3) infinite;
+  transition: stroke 0.3s;
+}
+
+.hot .bulbs-lit {
+  --bulb: var(--ui-secondary);
+  animation-duration: 0.36s;
+}
+
+@keyframes chase {
+  to {
+    stroke-dashoffset: -30;
   }
 }
 

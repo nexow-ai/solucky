@@ -161,6 +161,14 @@ const zhtw: Dict = {
       description: '還有疑問嗎？程式、應用程式和營運腳本都是開源的。',
       readCode: '閱讀程式碼',
       items: {
+        what: {
+          q: 'S☉Lucky 是什麼？',
+          a: 'S☉Lucky 是 Nexow, Inc. 打造的三款 Solana 彩券遊戲：每日彩券、每小時彩券和猜數字。每一張彩券、每一個獎池、每一次開獎都是一個開源 Solana 程式的帳戶，任何人都能查證。贏家拿走獎池的 80%；平台手續費從剩下的部分扣除，其餘累積到該遊戲的下一期。',
+        },
+        guess: {
+          q: '猜數字怎麼玩？',
+          a: '玩法就像每一期都藏著一個從 0 到 {max} 的號碼，沒有人知道，營運方也一樣。每次猜測都是一張押在該期還沒有人試過的號碼上的彩券。每隔幾秒，新的猜測會被封存，並用一個事先無人能知的插槽雜湊值來檢查。如果其中一個猜中，持有人贏得獎池的 80%，新的一期隨即開始；否則這些號碼出局，該期繼續進行，沒有截止時間。',
+        },
         real: {
           q: '這是真錢嗎？',
           a: '公開的應用程式在 Solana devnet 上運作，那裡的 SOL 是來自 faucet.solana.com 的免費測試幣。程式在 mainnet 上的運作方式相同，但經營真錢彩券需要在營運所在地取得相應的執照。',
@@ -225,6 +233,7 @@ const zhtw: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: '已驗證',
     title: '開獎收據',
     round: '期別',
     noneYet: '尚無已結算的一期',

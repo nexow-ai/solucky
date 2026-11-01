@@ -169,6 +169,14 @@ const nl: Dict = {
       description: 'Nog twijfels? Het programma, de app en de beheerscripts zijn open source.',
       readCode: 'Lees de code',
       items: {
+        what: {
+          q: 'Wat is S☉Lucky?',
+          a: 'S☉Lucky is een set van drie loterijspellen op Solana, gemaakt door Nexow, Inc.: een dagelijkse loterij, een uurloterij en Raad het getal. Elk lot, elke pot en elke trekking is een account van een opensource Solana-programma, dus iedereen kan het controleren. De winnaar krijgt 80% van de pot; de huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende ronde van het spel.',
+        },
+        guess: {
+          q: 'Hoe werkt Raad het getal?',
+          a: 'Het speelt alsof elke ronde een getal van 0 tot {max} verstopt dat niemand kent, ook de beheerder niet. Elke poging is een lot op een getal dat in de ronde nog niet is geprobeerd. Om de paar seconden worden de nieuwe pogingen verzegeld en gecontroleerd met de hash van een slot dat niemand vooraf kon kennen. Raakt er een, dan wint de eigenaar 80% van de pot en begint er meteen een nieuwe ronde; zo niet, dan vallen die getallen af en gaat de ronde verder, zonder deadline.',
+        },
         real: {
           q: 'Is dit echt geld?',
           a: 'De openbare app draait op Solana devnet, waar SOL gratis testgeld is van faucet.solana.com. Het programma werkt hetzelfde op mainnet, maar voor een loterij met echt geld heb je de juiste vergunningen nodig waar je actief bent.',
@@ -233,6 +241,7 @@ const nl: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Gecontroleerd',
     title: 'Trekkingsbewijs',
     round: 'Ronde',
     noneYet: 'nog geen afgewikkeld',

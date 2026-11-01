@@ -8,14 +8,35 @@ const { t } = useI18n();
 const localePath = useLocalePath();
 const game = useGame();
 
+const title = computed(() => `${t(`games.${GAME_SLUGS[game.value]}.name`)} · S☉Lucky`);
 useSeoMeta({
-  title: () => `${t(`games.${GAME_SLUGS[game.value]}.name`)} · S☉Lucky`,
+  title,
+  ogTitle: title,
   description: () => t('play.description'),
+  ogDescription: () => t('play.description'),
 });
 
-const { error, refresh, loading } = useLottery();
+const { error, refresh } = useLottery();
 const { cluster, clusterLabel, isMainnet } = useSolana();
 const { feed } = useTableFeed();
+
+// The retry button spins until the reload answers, whatever the game's own loading state says.
+const retrying = ref(false);
+async function retry() {
+  retrying.value = true;
+  try {
+    await refresh();
+  } finally {
+    retrying.value = false;
+  }
+}
+
+const arriving = mounted === 0 && Date.now() - leftAt > 1_000;
+onMounted(() => mounted++);
+onBeforeUnmount(() => {
+  mounted--;
+  leftAt = Date.now();
+});
 
 const testFunds = computed(() =>
   cluster === 'localnet'
@@ -41,8 +62,19 @@ const testFunds = computed(() =>
 );
 </script>
 
+<script lang="ts">
+/**
+ * Switching games remounts this page. These tell an arrival (the panels rise
+ * in) from a switch (the view transition cross-fades and the game pill glides
+ * to the new game): a switch mounts the new page while the old one is still
+ * up, or right after it left.
+ */
+let mounted = 0;
+let leftAt = 0;
+</script>
+
 <template>
-  <div class="relative">
+  <div class="relative" :class="{ arriving }">
     <LotteryFloor />
     <UContainer class="space-y-5 py-6 sm:py-8">
       <UAlert
@@ -50,7 +82,8 @@ const testFunds = computed(() =>
         color="warning"
         variant="subtle"
         icon="i-lucide-flask-conical"
-        class="glass-alert"
+        class="glass-alert enter"
+        style="--i: 0"
         :title="t('play.testMoney', { cluster: clusterLabel })"
         :description="testFunds.text"
         :actions="testFunds.action"
@@ -62,33 +95,80 @@ const testFunds = computed(() =>
         icon="i-lucide-cloud-off"
         class="glass-alert"
         :title="error"
-        :actions="[{ label: t('play.retry'), color: 'error', variant: 'outline', loading, onClick: refresh }]"
+        :actions="[{ label: t('play.retry'), color: 'error', variant: 'outline', loading: retrying, onClick: retry }]"
       />
 
-      <nav class="flex justify-center gap-2" :aria-label="t('games.tag')">
-        <UButton
-          v-for="(slug, kind) in GAME_SLUGS"
-          :key="slug"
-          :to="localePath(`/play/${slug}`)"
-          :label="t(`games.${slug}.short`)"
-          :aria-current="kind === game ? 'page' : undefined"
-          :color="kind === game ? 'primary' : 'neutral'"
-          :variant="kind === game ? 'soft' : 'ghost'"
-          size="lg"
-        />
+      <div class="enter flex items-center justify-center gap-2" style="--i: 1">
+        <LotteryGlass as="nav" rounded="rounded-full" :aria-label="t('games.tag')">
+          <div class="flex gap-1 p-1">
+            <span v-for="(slug, kind) in GAME_SLUGS" :key="slug" class="relative">
+              <span v-if="kind === game" class="game-pill" aria-hidden="true" />
+              <UButton
+                :to="localePath(playPath(slug))"
+                :label="t(`games.${slug}.short`)"
+                :aria-current="kind === game ? 'page' : undefined"
+                :color="kind === game ? 'primary' : 'neutral'"
+                variant="ghost"
+                size="lg"
+                class="relative rounded-full px-4 font-semibold hover:bg-transparent"
+                :class="kind === game ? 'text-highlighted' : 'text-muted hover:text-highlighted'"
+              />
+            </span>
+          </div>
+        </LotteryGlass>
         <LotteryNotifyButton />
-      </nav>
+      </div>
 
-      <LotteryLiveBar :feed="feed" />
+      <LotteryLiveBar class="enter" style="--i: 2" :feed="feed" />
 
-      <div class="grid items-start gap-5 lg:grid-cols-[1fr_1.12fr_1fr]">
-        <LotteryPotPanel class="order-2 lg:order-none" />
-        <LotteryPlayPanel class="order-1 lg:order-none" />
-        <LotteryHistoryPanel class="order-3 lg:order-none" />
+      <div class="panels grid items-start gap-5 lg:grid-cols-[1fr_1.12fr_1fr]">
+        <LotteryPotPanel class="enter order-2 lg:order-none" style="--i: 4" />
+        <LotteryPlayPanel class="enter order-1 lg:order-none" style="--i: 3" />
+        <LotteryHistoryPanel class="enter order-3 lg:order-none" style="--i: 5" />
       </div>
     </UContainer>
   </div>
 </template>
+
+<style scoped>
+/*
+ * Arriving at the table: the bar, then the panels, rise into place one after
+ * the other. Opacity and movement only, on the glass itself, so the glass keeps
+ * refracting the floor while it fades in.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .arriving .enter {
+    animation: deal 0.95s var(--ease-out-expo) backwards;
+    animation-delay: calc(var(--i, 0) * 110ms + 60ms);
+  }
+}
+
+@keyframes deal {
+  from {
+    opacity: 0;
+    transform: translateY(2rem) scale(0.97);
+  }
+}
+
+/* The current game's pill. It carries a view-transition name, so it glides to the next game on a switch. */
+.game-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  view-transition-name: game-pill;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 16%, transparent), transparent 60%),
+    linear-gradient(
+      120deg,
+      color-mix(in oklab, var(--ui-primary) 40%, transparent),
+      color-mix(in oklab, var(--color-pink-600) 30%, transparent)
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 35%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--ui-primary) 55%, transparent),
+    0 0 24px -6px var(--ui-primary);
+}
+</style>
 
 <style>
 /*

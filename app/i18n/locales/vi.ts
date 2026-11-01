@@ -166,6 +166,14 @@ const vi: Dict = {
       description: 'Vẫn còn băn khoăn? Chương trình, ứng dụng và các script vận hành đều là mã nguồn mở.',
       readCode: 'Đọc mã nguồn',
       items: {
+        what: {
+          q: 'S☉Lucky là gì?',
+          a: 'S☉Lucky là bộ ba trò chơi xổ số trên Solana do Nexow, Inc. tạo ra: xổ số hằng ngày, xổ số hằng giờ và Đoán số. Mọi vé, mọi quỹ thưởng và mọi lượt quay số đều là một tài khoản của một chương trình Solana mã nguồn mở, nên ai cũng có thể kiểm tra. Người thắng nhận 80% quỹ thưởng; phí nhà cái được trừ từ phần còn lại, và phần dư được chuyển sang vòng tiếp theo của trò chơi.',
+        },
+        guess: {
+          q: 'Đoán số hoạt động thế nào?',
+          a: 'Trò chơi diễn ra như thể mỗi vòng giấu một con số từ 0 đến {max} mà không ai biết, kể cả nhà vận hành. Mỗi lượt đoán là một vé trên một con số chưa ai thử trong vòng. Cứ vài giây, các lượt đoán mới được niêm phong và kiểm tra với hash của một slot mà không ai có thể biết trước. Nếu một lượt trúng, chủ của nó nhận 80% quỹ thưởng và một vòng mới bắt đầu ngay; nếu không, những con số đó bị loại và vòng tiếp tục, không có hạn chót.',
+        },
         real: {
           q: 'Đây có phải tiền thật không?',
           a: 'Ứng dụng công khai chạy trên Solana devnet, nơi SOL là tiền thử nghiệm miễn phí từ faucet.solana.com. Chương trình hoạt động y hệt trên mainnet, nhưng vận hành một xổ số bằng tiền thật cần có giấy phép phù hợp ở nơi bạn hoạt động.',
@@ -230,6 +238,7 @@ const vi: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Đã xác minh',
     title: 'Biên nhận quay số',
     round: 'Vòng',
     noneYet: 'chưa có vòng nào được tất toán',

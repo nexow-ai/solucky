@@ -1,8 +1,9 @@
 <script setup lang="ts">
 /**
- * Time until today's round closes, as three LED segments. It warms up in the
- * last hour and pulses in the last ten minutes. Screen readers get the time
- * in words, once a minute, rather than every second.
+ * Time until today's round closes, as three LED segments whose digits roll
+ * like an odometer as they change. It warms up in the last hour and pulses in
+ * the last ten minutes. Screen readers get the time in words, once a minute,
+ * rather than every second.
  */
 const props = defineProps<{ ms: number; size?: 'md' | 'lg' }>();
 const { t } = useI18n();
@@ -33,7 +34,13 @@ const spoken = computed(() => {
     <template v-for="(part, i) in parts" :key="part.key">
       <span v-if="i" class="colon" aria-hidden="true">:</span>
       <span class="segment" aria-hidden="true">
-        <span class="led font-mono font-semibold tabular-nums [--led-pitch:0.085em]">{{ part.value }}</span>
+        <span class="led digits font-mono font-semibold tabular-nums [--led-pitch:0.085em]">
+          <span v-for="(digit, d) in part.value" :key="d" class="digit">
+            <Transition name="roll">
+              <span :key="digit">{{ digit }}</span>
+            </Transition>
+          </span>
+        </span>
         <span class="unit">{{ part.label }}</span>
       </span>
     </template>
@@ -72,6 +79,40 @@ const spoken = computed(() => {
     inset 0 0 0 1px color-mix(in oklab, var(--c) 25%, transparent),
     0 0 18px -6px color-mix(in oklab, var(--c) 70%, transparent);
   filter: drop-shadow(0 0 0.12em color-mix(in oklab, var(--c) 70%, transparent));
+}
+
+/* Each digit sits in its own window: the old one rolls up and out as the new one rolls in from below. */
+.digits {
+  display: inline-flex;
+}
+
+.digit {
+  position: relative;
+  display: inline-grid;
+  overflow: hidden;
+  height: 1.1em;
+  line-height: 1.1em;
+}
+
+.digit > * {
+  grid-area: 1 / 1;
+}
+
+.roll-enter-active,
+.roll-leave-active {
+  transition:
+    transform 0.45s var(--ease-out-expo),
+    opacity 0.45s ease;
+}
+
+.roll-enter-from {
+  transform: translateY(70%);
+  opacity: 0;
+}
+
+.roll-leave-to {
+  transform: translateY(-70%);
+  opacity: 0;
 }
 
 .unit {

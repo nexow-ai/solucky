@@ -15,7 +15,8 @@ import {
 /**
  * The last settled daily draw, printed like a receipt: the public inputs, the
  * hash they give, the drawn number and the closest ticket, and a button that
- * redoes the draw in the browser. Until a round is settled it prints blanks of the same length, so
+ * redoes the draw in the browser (a scanner runs down the paper meanwhile,
+ * and a stamp lands when the result matches). Until a round is settled it prints blanks of the same length, so
  * the receipt keeps one height whether it is loading, empty or filled.
  */
 const { t } = useI18n();
@@ -76,8 +77,13 @@ async function verify() {
 <template>
   <div class="drop-shadow-xl">
     <div
-      class="perforated mx-auto w-full max-w-sm rotate-1 bg-elevated px-6 py-9 font-mono text-xs text-toned transition-transform duration-500 hover:rotate-0"
+      class="perforated relative mx-auto w-full max-w-sm rotate-1 overflow-hidden bg-elevated px-6 py-9 font-mono text-xs text-toned transition-transform duration-500 hover:rotate-0"
     >
+      <!-- While the browser redoes the draw, a scanner reads the receipt; a stamp lands when it matches. -->
+      <span v-if="check === 'running'" class="scan" aria-hidden="true" />
+      <Transition name="stamp">
+        <span v-if="last && check === 'ok'" class="stamp" aria-hidden="true">{{ t('receipt.stamp') }}</span>
+      </Transition>
       <header class="text-center">
         <p class="text-sm font-semibold tracking-[0.35em] text-highlighted">S☉LUCKY</p>
         <p class="mt-1 tracking-[0.25em] text-muted uppercase">{{ t('receipt.title') }}</p>
@@ -201,3 +207,78 @@ async function verify() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.scan {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  top: 0;
+  height: 4rem;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in oklab, var(--ui-secondary) 22%, transparent) 80%,
+    color-mix(in oklab, var(--ui-secondary) 85%, transparent) 98%,
+    transparent
+  );
+  animation: scan 1.1s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  from {
+    translate: 0 -4rem;
+  }
+  to {
+    translate: 0 calc(41rem - 2rem);
+  }
+}
+
+.stamp {
+  position: absolute;
+  z-index: 2;
+  inset-inline-end: 1.25rem;
+  top: 58%;
+  padding: 0.35rem 0.8rem;
+  border: 3px double var(--ui-secondary);
+  border-radius: 0.4rem;
+  color: var(--ui-secondary);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  rotate: -14deg;
+  opacity: 0.85;
+  mix-blend-mode: screen;
+  text-shadow: 0 0 10px color-mix(in oklab, var(--ui-secondary) 60%, transparent);
+  pointer-events: none;
+}
+
+.stamp-enter-active {
+  animation: stamp 0.55s var(--ease-spring);
+}
+
+.stamp-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.stamp-leave-to {
+  opacity: 0;
+}
+
+@keyframes stamp {
+  0% {
+    opacity: 0;
+    scale: 2.6;
+    rotate: -4deg;
+  }
+  60% {
+    opacity: 0.95;
+    scale: 0.94;
+  }
+  100% {
+    scale: 1;
+  }
+}
+</style>

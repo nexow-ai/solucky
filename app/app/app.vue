@@ -48,7 +48,9 @@ const UI_LOCALES: Record<Locale, typeof en> = {
   ko,
 };
 
-const { siteUrl } = useRuntimeConfig().public;
+const config = useRuntimeConfig().public;
+// Social cards need absolute addresses: the site's URL, else the canonical links' base, else this request's origin.
+const origin = (config.siteUrl || config.i18n?.baseUrl || useRequestURL().origin).replace(/\/$/, '');
 const { t, locale } = useI18n();
 const ui = computed(() => UI_LOCALES[locale.value as Locale] ?? en);
 
@@ -60,10 +62,12 @@ useHead(() => ({
   meta: localeHead.value.meta,
 }));
 
+// Defaults; each page sets its own title and summary over them.
 useSeoMeta({
   title: () => t('meta.title'),
   description: () => t('meta.description'),
-  ogImage: `${siteUrl.replace(/\/$/, '')}/og.png`,
+  ogDescription: () => t('meta.description'),
+  ogImage: `${origin}/og.png`,
   ogImageWidth: 1200,
   ogImageHeight: 630,
   ogImageAlt: () => t('meta.ogImageAlt'),

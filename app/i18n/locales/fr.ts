@@ -170,6 +170,14 @@ const fr: Dict = {
       description: 'Encore un doute ? Le programme, l’appli et les scripts de l’opérateur sont open source.',
       readCode: 'Lire le code',
       items: {
+        what: {
+          q: 'Qu’est-ce que S☉Lucky ?',
+          a: 'S☉Lucky, ce sont trois jeux de loterie sur Solana, créés par Nexow, Inc. : une loterie quotidienne, une loterie horaire et Devine le numéro. Chaque ticket, chaque cagnotte et chaque tirage est un compte d’un programme Solana open source, que n’importe qui peut vérifier. Le gagnant remporte 80 % de la cagnotte ; la commission de la maison est prélevée sur le reste, et le solde est reporté sur la manche suivante du jeu.',
+        },
+        guess: {
+          q: 'Comment fonctionne Devine le numéro ?',
+          a: 'Tout se passe comme si chaque manche cachait un numéro de 0 à {max} que personne ne connaît, pas même l’opérateur. Chaque proposition est un ticket sur un numéro pas encore essayé dans la manche. Toutes les quelques secondes, les nouvelles propositions sont scellées puis vérifiées avec le hash d’un slot que personne ne pouvait connaître à l’avance. Si l’une d’elles tombe juste, son propriétaire remporte 80 % de la cagnotte et une nouvelle manche commence aussitôt ; sinon, ces numéros sont écartés et la manche continue, sans échéance.',
+        },
         real: {
           q: 'Est-ce de l’argent réel ?',
           a: 'L’appli publique tourne sur le devnet de Solana, où le SOL est de l’argent de test gratuit, obtenu sur faucet.solana.com. Le programme fonctionne de la même façon sur le mainnet, mais exploiter une loterie en argent réel exige les licences adéquates là où tu opères.',
@@ -234,6 +242,7 @@ const fr: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Vérifié',
     title: 'Reçu du tirage',
     round: 'Manche',
     noneYet: 'aucune réglée pour l’instant',

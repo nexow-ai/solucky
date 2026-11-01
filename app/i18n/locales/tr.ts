@@ -167,6 +167,14 @@ const tr: Dict = {
       description: 'Hâlâ emin değil misiniz? Program, uygulama ve operatör betikleri açık kaynaktır.',
       readCode: 'Kodu okuyun',
       items: {
+        what: {
+          q: 'S☉Lucky nedir?',
+          a: 'S☉Lucky, Nexow, Inc. tarafından geliştirilen ve Solana üzerinde çalışan üç piyango oyunudur: günlük piyango, saatlik piyango ve Sayıyı Tahmin Et. Her bilet, her havuz ve her çekiliş açık kaynaklı bir Solana programının hesabıdır; bu yüzden herkes kontrol edebilir. Kazanan, havuzun %80’ini alır; kasa payı kalandan düşülür, geriye kalan da oyunun bir sonraki turuna aktarılır.',
+        },
+        guess: {
+          q: 'Sayıyı Tahmin Et nasıl işler?',
+          a: 'Her tur, operatör dahil kimsenin bilmediği 0 ile {max} arasında bir sayı saklıyormuş gibi oynanır. Her tahmin, o turda henüz denenmemiş bir sayıya alınmış bir bilettir. Birkaç saniyede bir yeni tahminler mühürlenir ve kimsenin önceden bilemeyeceği bir slotun hash’iyle kontrol edilir. Biri tutarsa sahibi havuzun %80’ini kazanır ve hemen yeni bir tur başlar; tutmazsa bu sayılar elenir ve tur, süre sınırı olmadan devam eder.',
+        },
         real: {
           q: 'Bu gerçek para mı?',
           a: 'Herkese açık uygulama, SOL’un faucet.solana.com’dan alınan ücretsiz test parası olduğu Solana devnet üzerinde çalışır. Program mainnet’te de aynı şekilde çalışır, ancak gerçek parayla piyango işletmek, faaliyet gösterdiğiniz yerde gerekli lisanslara sahip olmayı gerektirir.',
@@ -231,6 +239,7 @@ const tr: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Doğrulandı',
     title: 'Çekiliş makbuzu',
     round: 'Tur',
     noneYet: 'henüz sonuçlanan tur yok',

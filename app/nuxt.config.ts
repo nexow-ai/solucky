@@ -179,9 +179,12 @@ export default defineNuxtConfig({
     ],
   },
 
-  // How often an open page asks for the latest build (app/plugins/pwa.client.ts).
   experimental: {
+    // How often an open page asks for the latest build (app/plugins/pwa.client.ts).
     checkOutdatedBuildInterval: 10 * 60_000,
+    // Page changes cross-fade with the View Transitions API (styles in main.css);
+    // skipped where the browser lacks it or the visitor asks for less motion.
+    viewTransition: true,
   },
 
   hooks: {

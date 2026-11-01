@@ -4,6 +4,7 @@ import {
   countryFromBytes,
   countryToBytes,
   fetchOwnerTickets,
+  fetchRoundHeader,
   fetchRounds,
   fetchRoundTickets,
   fetchTicketByIndex,
@@ -112,7 +113,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     const period = state.period.value;
     if (period === null) return;
     const [address] = await findRoundPda({ kind: k, period }, { programAddress });
-    const account = await client.solucky.accounts.round.fetchMaybe(address, { commitment: 'confirmed' });
+    // Only the round's fields: its sorted numbers can weigh megabytes, and the tickets carry them.
+    const account = await fetchRoundHeader(client.rpc, address);
     const list = account.exists ? await fetchRoundTickets(client.rpc, address, programAddress) : [];
     // A slower load for a round that already ended must not overwrite the new one.
     if (period !== state.period.value) return;
@@ -196,16 +198,22 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     state.started = true;
     if (isLottery(k)) state.period.value = periodOf(k, now.value);
     void refreshGame(k).then(() => watchRound(k));
-    setInterval(() => void loadRound(k).catch(() => {}), 15_000);
-    // A poll that gets through clears the error a failed load left on the page.
-    setInterval(
-      () =>
-        void Promise.all([loadConfig(), loadGame(k), loadHistory(k)]).then(
+    // Polling backs up the round's websocket. A hidden tab skips it (the
+    // next poll after it shows again catches up), and the history, a scan of
+    // every round of the game, refreshes less often than the rest.
+    let polls = 0;
+    setInterval(() => {
+      if (document.visibilityState === 'hidden') return;
+      polls++;
+      void loadRound(k).catch(() => {});
+      if (polls % 2 === 0) {
+        // A poll that gets through clears the error a failed load left on the page.
+        void Promise.all([loadConfig(), loadGame(k), polls % 4 === 0 ? loadHistory(k) : null]).then(
           () => (state.error.value = null),
           () => {},
-        ),
-      30_000,
-    );
+        );
+      }
+    }, 15_000);
     // The watchers live in their own scope so they outlive the component that
     // first showed the game.
     effectScope(true).run(() => {

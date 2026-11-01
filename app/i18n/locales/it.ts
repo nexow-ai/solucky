@@ -168,6 +168,14 @@ const it: Dict = {
       description: 'Ancora dubbi? Il programma, l’app e gli script dell’operatore sono open source.',
       readCode: 'Leggi il codice',
       items: {
+        what: {
+          q: 'Che cos’è S☉Lucky?',
+          a: 'S☉Lucky è un insieme di tre giochi di lotteria su Solana, creato da Nexow, Inc.: una lotteria quotidiana, una lotteria oraria e Indovina il numero. Ogni biglietto, ogni montepremi e ogni estrazione è un account di un programma Solana open source, quindi chiunque può verificarlo. Il vincitore si prende l’80% del montepremi; la commissione della casa esce dal resto, e ciò che avanza passa al round successivo del gioco.',
+        },
+        guess: {
+          q: 'Come funziona Indovina il numero?',
+          a: 'Si gioca come se ogni round nascondesse un numero da 0 a {max} che nessuno conosce, nemmeno l’operatore. Ogni tentativo è un biglietto su un numero non ancora provato nel round. Ogni pochi secondi, i nuovi tentativi vengono sigillati e verificati con l’hash di uno slot che nessuno poteva conoscere in anticipo. Se uno fa centro, il suo proprietario vince l’80% del montepremi e un nuovo round parte subito; altrimenti quei numeri vengono scartati e il round continua, senza scadenza.',
+        },
         real: {
           q: 'Sono soldi veri?',
           a: 'L’app pubblica gira sulla devnet di Solana, dove i SOL sono soldi di test gratuiti presi da faucet.solana.com. Il programma funziona allo stesso modo sulla mainnet, ma gestire una lotteria con soldi veri richiede le licenze adeguate nei luoghi in cui operi.',
@@ -232,6 +240,7 @@ const it: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Verificato',
     title: 'Ricevuta dell’estrazione',
     round: 'Round',
     noneYet: 'nessuno ancora liquidato',

@@ -20,6 +20,9 @@ function shortTitle(kind: number, period: number) {
   return kind === GameKind.Hourly ? title.slice(5, 16) : title;
 }
 
+// The rounds counter counts up to its value.
+const roundsShown = useTween(() => totals.value.rounds, 1_400);
+
 async function reclaimAll() {
   await reclaim(leftovers.value);
   await loadLeftovers();
@@ -37,7 +40,7 @@ async function reclaimAll() {
           <span
             class="glow-secondary led font-mono text-5xl font-semibold text-secondary tabular-nums [--led-pitch:0.07em]"
           >
-            {{ totals.rounds }}
+            {{ Math.round(roundsShown) }}
           </span>
           <span class="kicker text-sm">{{ t('history.games', totals.rounds) }}</span>
         </p>
@@ -126,7 +129,7 @@ async function reclaimAll() {
             class="h-full"
           />
           <ol v-else class="space-y-0.5 text-xs">
-            <li v-for="round in settled" :key="round.address">
+            <li v-for="(round, i) in settled" :key="round.address" class="appear" :style="{ '--i': Math.min(i, 14) }">
               <NuxtLink
                 :to="localePath(roundPath(round.data.kind, round.data.period))"
                 class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
@@ -174,6 +177,21 @@ async function reclaimAll() {
   border-radius: 1rem;
   background: color-mix(in oklab, var(--ui-warning) 8%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ui-warning) 30%, transparent);
+}
+
+/* The winners list cascades in when it first fills. */
+@media (prefers-reduced-motion: no-preference) {
+  .appear {
+    animation: appear 0.6s var(--ease-out-expo) backwards;
+    animation-delay: calc(var(--i) * 45ms + 150ms);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    translate: 0 0.6rem;
+  }
 }
 
 .row {

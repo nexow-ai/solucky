@@ -178,6 +178,14 @@ const en = {
       description: 'Still unsure? The program, the app and the operator scripts are open source.',
       readCode: 'Read the code',
       items: {
+        what: {
+          q: 'What is S☉Lucky?',
+          a: 'S☉Lucky is a set of three lottery games on Solana, made by Nexow, Inc.: a daily lottery, an hourly lottery and Guess the number. Every ticket, pot and draw is an account of an open-source Solana program, so anyone can check it. The winner takes 80% of the pot; the house fee comes out of the rest, and what is left carries over to the game’s next round.',
+        },
+        guess: {
+          q: 'How does Guess the number work?',
+          a: 'It plays as if each round hid a number from 0 to {max} that nobody knows, the operator included. Each guess is a ticket on a number not yet tried in the round. Every few seconds, the new guesses are sealed and checked against the hash of a slot nobody could know in advance. If one of them hits, its owner wins 80% of the pot and a new round starts at once; if not, those numbers are out and the round goes on, with no deadline.',
+        },
         real: {
           q: 'Is this real money?',
           a: 'The public app runs on Solana devnet, where SOL is free test money from faucet.solana.com. The program works the same on mainnet, but running a real-money lottery needs the right licences where you operate.',
@@ -242,6 +250,7 @@ const en = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Verified',
     title: 'Draw receipt',
     round: 'Round',
     noneYet: 'none settled yet',

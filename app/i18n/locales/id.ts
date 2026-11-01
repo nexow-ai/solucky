@@ -168,6 +168,14 @@ const id: Dict = {
       description: 'Masih ragu? Program, aplikasi, dan skrip operator bersifat sumber terbuka.',
       readCode: 'Baca kodenya',
       items: {
+        what: {
+          q: 'Apa itu S☉Lucky?',
+          a: 'S☉Lucky adalah tiga permainan lotre di Solana buatan Nexow, Inc.: lotre harian, lotre per jam, dan Tebak Angka. Setiap tiket, setiap pot, dan setiap undian adalah akun dari program Solana sumber terbuka, jadi siapa pun bisa memeriksanya. Pemenang mendapat 80% pot; biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke ronde berikutnya dari permainan itu.',
+        },
+        guess: {
+          q: 'Bagaimana cara kerja Tebak Angka?',
+          a: 'Permainannya berjalan seolah setiap ronde menyembunyikan satu angka dari 0 sampai {max} yang tidak diketahui siapa pun, termasuk operator. Setiap tebakan adalah tiket pada angka yang belum dicoba di ronde itu. Setiap beberapa detik, tebakan baru disegel dan diperiksa dengan hash sebuah slot yang tidak bisa diketahui siapa pun sebelumnya. Jika salah satunya tepat, pemiliknya memenangkan 80% pot dan ronde baru langsung dimulai; jika tidak, angka-angka itu gugur dan ronde berlanjut, tanpa batas waktu.',
+        },
         real: {
           q: 'Apakah ini uang sungguhan?',
           a: 'Aplikasi publik berjalan di Solana devnet, tempat SOL adalah uang uji coba gratis dari faucet.solana.com. Program bekerja dengan cara yang sama di mainnet, tetapi menjalankan lotre dengan uang sungguhan memerlukan lisensi yang sesuai di tempat kamu beroperasi.',
@@ -232,6 +240,7 @@ const id: Dict = {
 
   /** The last draw, printed like a receipt, in the Fairness section. */
   receipt: {
+    stamp: 'Terverifikasi',
     title: 'Struk undian',
     round: 'Ronde',
     noneYet: 'belum ada yang diselesaikan',
