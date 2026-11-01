@@ -14,6 +14,7 @@
 import { parseArgs } from 'node:util';
 
 import { address } from '@solana/kit';
+import { fetchSysvarClock } from '@solana/sysvars';
 import {
   describeError,
   findConfigPda,
@@ -90,6 +91,8 @@ async function status() {
   log(`numbers     0 – ${c.maxNumber.toLocaleString('en-US')}`);
   log(`sales       ${c.paused ? 'PAUSED' : 'open'}`);
 
+  // The round on sale by the cluster's clock, which can drift from this machine's.
+  const now = Number((await fetchSysvarClock(client.rpc, { commitment: 'confirmed' })).unixTimestamp) * 1000;
   for (const kind of GAMES) {
     const game = await client.solucky.accounts.game.fetchMaybe(await gamePda(kind));
     if (!game.exists) {
@@ -97,7 +100,7 @@ async function status() {
       continue;
     }
     const g = game.data;
-    const period = isLottery(kind) ? periodOf(kind) : g.currentRound;
+    const period = isLottery(kind) ? periodOf(kind, now) : g.currentRound;
     const [roundAddress] = await findRoundPda({ kind, period }, { programAddress: PROGRAM_ADDRESS });
     const round = await client.solucky.accounts.round.fetchMaybe(roundAddress);
     const label = roundLabel({ kind, period });
