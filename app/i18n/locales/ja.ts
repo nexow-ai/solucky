@@ -414,6 +414,9 @@ const ja: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'ウォレットで承認してください…',
+    cancel: 'キャンセル',
+    abandoned:
+      'ページはウォレットの応答を待つのをやめました。ウォレットにまだリクエストが表示されている場合は、そこで拒否してください。',
     done: '{label}：完了',
     cancelled: '{label}：キャンセルされました',
     failed: '{label}に失敗しました',
@@ -437,6 +440,8 @@ const ja: Dict = {
     description: 'Wallet Standardに対応したSolanaウォレットなら、どれでも使えます。',
     none: 'このブラウザにSolanaウォレットが見つかりません。ウォレットをインストールしてから、ページを再読み込みしてください：',
     failed: '{wallet}に接続できませんでした',
+    noAccount:
+      '{wallet}からSolanaアカウントが共有されませんでした。{wallet}でSolanaアカウントを追加または選択してから、もう一度接続してください。',
     copied: 'アドレスをコピーしました',
     balance: '残高',
     ticketsLeft: 'あとチケット{n}枚分',
@@ -495,8 +500,11 @@ const ja: Dict = {
     rejected: 'ウォレットでリクエストをキャンセルしました。',
     taken: 'この番号はこのラウンドですでに誰かが持っています。別の番号を選んでください。',
     funds: 'ウォレットのSOLが足りません。',
-    walletCluster:
-      'ウォレットで署名できませんでした。Phantomで：Settings → Developer Settings → Testnet Modeを有効化 → Devnetを選択し、再接続してからもう一度お試しください。',
+    walletFailed:
+      'ウォレットが「Unexpected error」を返し、署名しませんでした。ウォレットの画面を閉じ、ロックして再度ロック解除するか拡張機能を再起動してから、もう一度お試しください。',
+    rateLimited:
+      'RPCエンドポイントがリクエストを制限しています（HTTP 429）。1分ほど待ってから、もう一度お試しください。',
+    rpcHttp: 'RPCエンドポイントがHTTPエラー{status}を返しました。',
     unknown: '問題が発生しました。',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

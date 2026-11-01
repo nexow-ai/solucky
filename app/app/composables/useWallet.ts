@@ -1,14 +1,34 @@
 import { type Address, address as toAddress, lamports } from '@solana/kit';
 import { isWalletWarmingUp, type WalletState } from '@solana/kit-plugin-wallet';
 
+import { WALLET_STORAGE_KEY, walletToRestore } from '../utils/walletRestore';
+
 const state = shallowRef<WalletState | null>(null);
 const balance = ref<bigint | null>(null);
 let subscribed = false;
 let balanceTimer: ReturnType<typeof setInterval> | undefined;
+/** Set once the page restored a wallet itself, or the player picked or dropped one. */
+let restoreSettled = false;
+
+type Wallet = WalletState['wallets'][number];
 
 /** Reactive view of the browser wallet: discovery, connection and SOL balance. */
 export function useWallet() {
   const { client } = useSolana();
+
+  function restore() {
+    if (restoreSettled) return;
+    let saved: string | null;
+    try {
+      saved = localStorage.getItem(WALLET_STORAGE_KEY);
+    } catch {
+      return;
+    }
+    const wallet = walletToRestore(client.wallet.getState(), saved);
+    if (!wallet) return;
+    restoreSettled = true;
+    client.wallet.connect(wallet).catch(() => {});
+  }
 
   if (import.meta.client && !subscribed) {
     subscribed = true;
@@ -17,7 +37,9 @@ export function useWallet() {
       const previous = state.value?.connected?.account.address;
       state.value = client.wallet.getState();
       if (state.value.connected?.account.address !== previous) void refreshBalance();
+      restore();
     });
+    restore();
     balanceTimer ??= setInterval(() => void refreshBalance(), 20_000);
   }
 
@@ -49,7 +71,13 @@ export function useWallet() {
     ready: computed(() => !!state.value && !isWalletWarmingUp(state.value.status)),
     balance: computed(() => (balance.value === null ? null : lamports(balance.value))),
     refreshBalance,
-    connect: (wallet: WalletState['wallets'][number]) => client.wallet.connect(wallet),
-    disconnect: () => client.wallet.disconnect(),
+    connect: (wallet: Wallet) => {
+      restoreSettled = true;
+      return client.wallet.connect(wallet);
+    },
+    disconnect: () => {
+      restoreSettled = true;
+      return client.wallet.disconnect();
+    },
   };
 }

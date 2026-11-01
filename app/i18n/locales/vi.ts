@@ -416,6 +416,8 @@ const vi: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Xác nhận trong ví của bạn…',
+    cancel: 'Hủy',
+    abandoned: 'Trang đã ngừng chờ ví của bạn. Nếu ví vẫn hiển thị yêu cầu, hãy từ chối trong ví.',
     done: '{label}: xong',
     cancelled: '{label}: đã hủy',
     failed: '{label} thất bại',
@@ -439,6 +441,8 @@ const vi: Dict = {
     description: 'Mọi ví Solana hỗ trợ Wallet Standard đều dùng được.',
     none: 'Không tìm thấy ví Solana nào trong trình duyệt này. Hãy cài một ví, rồi tải lại trang:',
     failed: 'Không thể kết nối {wallet}',
+    noAccount:
+      '{wallet} không chia sẻ tài khoản Solana nào. Hãy thêm hoặc chọn một tài khoản Solana trong {wallet}, rồi kết nối lại.',
     copied: 'Đã sao chép địa chỉ',
     balance: 'Số dư',
     ticketsLeft: 'Còn đủ mua {n} vé',
@@ -497,8 +501,10 @@ const vi: Dict = {
     rejected: 'Bạn đã hủy yêu cầu trong ví.',
     taken: 'Đã có người giữ số này trong vòng này. Hãy chọn số khác.',
     funds: 'Ví không đủ SOL.',
-    walletCluster:
-      'Ví của bạn không thể ký. Trong Phantom: Settings → Developer Settings → bật Testnet Mode → chọn Devnet, rồi kết nối lại và thử lại.',
+    walletFailed:
+      'Ví của bạn báo “Unexpected error” và không ký. Hãy đóng cửa sổ ví, khóa rồi mở khóa ví hoặc khởi động lại tiện ích, rồi thử lại.',
+    rateLimited: 'Endpoint RPC đang giới hạn số yêu cầu (HTTP 429). Hãy đợi một phút rồi thử lại.',
+    rpcHttp: 'Endpoint RPC trả về lỗi HTTP {status}.',
     unknown: 'Đã xảy ra lỗi.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

@@ -428,6 +428,8 @@ const en = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Confirm in your wallet…',
+    cancel: 'Cancel',
+    abandoned: 'The page stopped waiting for your wallet. If the wallet still shows the request, reject it there.',
     done: '{label}: done',
     cancelled: '{label}: cancelled',
     failed: '{label} failed',
@@ -451,6 +453,8 @@ const en = {
     description: 'Any Solana wallet that supports the Wallet Standard works.',
     none: 'No Solana wallet was found in this browser. Install one, then reload the page:',
     failed: 'Could not connect {wallet}',
+    noAccount:
+      '{wallet} did not share a Solana account. Add or select a Solana account in {wallet}, then connect again.',
     copied: 'Address copied',
     balance: 'Balance',
     ticketsLeft: '{n} ticket left | {n} tickets left',
@@ -509,8 +513,10 @@ const en = {
     rejected: 'You cancelled the request in your wallet.',
     taken: 'Someone already holds this number in this round. Pick another one.',
     funds: 'Not enough SOL in the wallet.',
-    walletCluster:
-      'Your wallet could not sign. In Phantom: Settings → Developer Settings → enable Testnet Mode → select Devnet, then reconnect and try again.',
+    walletFailed:
+      'Your wallet reported “Unexpected error” and did not sign. Close its window, lock and unlock it or restart the extension, then try again.',
+    rateLimited: 'The RPC endpoint is rate-limiting requests (HTTP 429). Wait a minute and try again.',
+    rpcHttp: 'The RPC endpoint answered with HTTP error {status}.',
     unknown: 'Something went wrong.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

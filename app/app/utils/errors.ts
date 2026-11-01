@@ -59,7 +59,7 @@ const PROGRAM_ERRORS: Record<number, string> = {
 };
 
 /** vue-i18n's `t`, or anything that turns a dictionary key into text. */
-export type Translate = (key: string) => string;
+export type Translate = (key: string, named?: Record<string, unknown>) => string;
 
 /** True when the wallet reported that the user closed or declined the prompt. */
 export function isUserRejection(error: unknown): boolean {
@@ -87,8 +87,12 @@ export function friendlyError(error: unknown, t?: Translate): string {
       return t('errors.taken');
     case 'insufficient-funds':
       return t('errors.funds');
-    case 'wallet-cluster':
-      return t('errors.walletCluster');
+    case 'wallet-failed':
+      return t('errors.walletFailed');
+    case 'rate-limited':
+      return t('errors.rateLimited');
+    case 'rpc-http':
+      return t('errors.rpcHttp', { status: reason.status });
     case 'other':
       // Wallet and RPC messages come as they are, in their own words.
       return reason.message || t('errors.unknown');

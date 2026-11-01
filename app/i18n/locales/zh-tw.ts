@@ -406,6 +406,8 @@ const zhtw: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: '請在錢包中確認…',
+    cancel: '取消',
+    abandoned: '頁面已停止等待你的錢包。如果錢包仍顯示該請求，請在錢包中拒絕。',
     done: '{label}：完成',
     cancelled: '{label}：已取消',
     failed: '{label}：失敗',
@@ -429,6 +431,7 @@ const zhtw: Dict = {
     description: '任何支援 Wallet Standard 的 Solana 錢包都能使用。',
     none: '在這個瀏覽器中找不到 Solana 錢包。請安裝一個，然後重新載入頁面：',
     failed: '無法連接 {wallet}',
+    noAccount: '{wallet} 沒有分享任何 Solana 帳戶。請在 {wallet} 中新增或選擇一個 Solana 帳戶，然後重新連接。',
     copied: '已複製地址',
     balance: '餘額',
     ticketsLeft: '還夠買 {n} 張彩券',
@@ -487,8 +490,10 @@ const zhtw: Dict = {
     rejected: '你在錢包中取消了請求。',
     taken: '本期已有人持有這個號碼。請另選一個。',
     funds: '錢包中的 SOL 不足。',
-    walletCluster:
-      '你的錢包無法簽署。在 Phantom 中：Settings → Developer Settings → 開啟 Testnet Mode → 選擇 Devnet，然後重新連接並再試一次。',
+    walletFailed:
+      '你的錢包回報了「Unexpected error」，沒有簽署。請關閉錢包視窗，鎖定後再解鎖，或重新啟動擴充功能，然後再試一次。',
+    rateLimited: 'RPC 節點正在限制請求（HTTP 429）。請等一分鐘後再試。',
+    rpcHttp: 'RPC 節點回傳了 HTTP 錯誤 {status}。',
     unknown: '發生錯誤。',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

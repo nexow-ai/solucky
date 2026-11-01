@@ -420,6 +420,8 @@ const uk: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Підтвердьте в гаманці…',
+    cancel: 'Скасувати',
+    abandoned: 'Сторінка більше не чекає на гаманець. Якщо гаманець досі показує запит, відхиліть його там.',
     done: '{label}: готово',
     cancelled: '{label}: скасовано',
     failed: '{label}: помилка',
@@ -443,6 +445,8 @@ const uk: Dict = {
     description: 'Підійде будь-який гаманець Solana з підтримкою Wallet Standard.',
     none: 'У цьому браузері не знайдено гаманця Solana. Установіть його, потім перезавантажте сторінку:',
     failed: 'Не вдалося під’єднати {wallet}',
+    noAccount:
+      '{wallet} не надав жодного облікового запису Solana. Додайте або виберіть обліковий запис Solana у {wallet}, потім під’єднайтеся знову.',
     copied: 'Адресу скопійовано',
     balance: 'Баланс',
     ticketsLeft: 'вистачить на {n} квиток | вистачить на {n} квитки | вистачить на {n} квитків',
@@ -501,8 +505,10 @@ const uk: Dict = {
     rejected: 'Ви скасували запит у гаманці.',
     taken: 'У цьому раунді це число вже в когось є. Виберіть інше.',
     funds: 'У гаманці недостатньо SOL.',
-    walletCluster:
-      'Ваш гаманець не зміг підписати транзакцію. У Phantom: Settings → Developer Settings → увімкніть Testnet Mode → виберіть Devnet, потім під’єднайтеся знову й спробуйте ще раз.',
+    walletFailed:
+      'Гаманець повідомив «Unexpected error» і не підписав транзакцію. Закрийте його вікно, заблокуйте й розблокуйте гаманець або перезапустіть розширення, потім спробуйте ще раз.',
+    rateLimited: 'RPC-ендпоінт обмежує кількість запитів (HTTP 429). Зачекайте хвилину й спробуйте ще раз.',
+    rpcHttp: 'RPC-ендпоінт відповів помилкою HTTP {status}.',
     unknown: 'Щось пішло не так.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

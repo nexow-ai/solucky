@@ -422,6 +422,9 @@ const fr: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Confirme dans ton portefeuille…',
+    cancel: 'Annuler',
+    abandoned:
+      'La page n’attend plus ton portefeuille. S’il affiche encore la demande, refuse-la dans le portefeuille.',
     done: '{label} : terminé',
     cancelled: '{label} : annulé',
     failed: '{label} : échec',
@@ -445,6 +448,8 @@ const fr: Dict = {
     description: 'N’importe quel portefeuille Solana compatible avec le Wallet Standard fonctionne.',
     none: 'Aucun portefeuille Solana n’a été trouvé dans ce navigateur. Installes-en un, puis recharge la page :',
     failed: 'Impossible de connecter {wallet}',
+    noAccount:
+      '{wallet} n’a partagé aucun compte Solana. Ajoute ou sélectionne un compte Solana dans {wallet}, puis reconnecte-toi.',
     copied: 'Adresse copiée',
     balance: 'Solde',
     ticketsLeft: '{n} ticket restant | {n} tickets restants',
@@ -504,8 +509,10 @@ const fr: Dict = {
     rejected: 'Tu as annulé la demande dans ton portefeuille.',
     taken: 'Quelqu’un détient déjà ce numéro dans cette manche. Choisis-en un autre.',
     funds: 'Pas assez de SOL dans le portefeuille.',
-    walletCluster:
-      'Ton portefeuille n’a pas pu signer. Dans Phantom : Settings → Developer Settings → active Testnet Mode → sélectionne Devnet, puis reconnecte-toi et réessaie.',
+    walletFailed:
+      'Ton portefeuille a signalé « Unexpected error » et n’a pas signé. Ferme sa fenêtre, verrouille-le puis déverrouille-le ou redémarre l’extension, puis réessaie.',
+    rateLimited: 'L’endpoint RPC limite les requêtes (HTTP 429). Attends une minute et réessaie.',
+    rpcHttp: 'L’endpoint RPC a répondu avec l’erreur HTTP {status}.',
     unknown: 'Une erreur s’est produite.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

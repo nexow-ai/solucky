@@ -418,6 +418,8 @@ const tr: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Cüzdanınızda onaylayın…',
+    cancel: 'İptal',
+    abandoned: 'Sayfa artık cüzdanınızı beklemiyor. Cüzdan isteği hâlâ gösteriyorsa orada reddedin.',
     done: '{label}: tamamlandı',
     cancelled: '{label}: iptal edildi',
     failed: '{label}: başarısız oldu',
@@ -441,6 +443,8 @@ const tr: Dict = {
     description: 'Wallet Standard destekli her Solana cüzdanı çalışır.',
     none: 'Bu tarayıcıda Solana cüzdanı bulunamadı. Bir tane kurun, ardından sayfayı yenileyin:',
     failed: '{wallet} bağlanamadı',
+    noAccount:
+      '{wallet} hiçbir Solana hesabı paylaşmadı. {wallet} içinde bir Solana hesabı ekleyin veya seçin, sonra yeniden bağlanın.',
     copied: 'Adres kopyalandı',
     balance: 'Bakiye',
     ticketsLeft: '{n} bilete yeter | {n} bilete yeter',
@@ -499,8 +503,10 @@ const tr: Dict = {
     rejected: 'İsteği cüzdanınızda iptal ettiniz.',
     taken: 'Bu sayı bu turda başka birine ait. Başka bir sayı seçin.',
     funds: 'Cüzdanda yeterli SOL yok.',
-    walletCluster:
-      'Cüzdanınız imzalayamadı. Phantom’da: Settings → Developer Settings → Testnet Mode seçeneğini etkinleştirin → Devnet’i seçin; ardından yeniden bağlanıp tekrar deneyin.',
+    walletFailed:
+      'Cüzdanınız “Unexpected error” bildirdi ve imzalamadı. Penceresini kapatın, cüzdanı kilitleyip kilidini açın ya da eklentiyi yeniden başlatın, sonra tekrar deneyin.',
+    rateLimited: 'RPC uç noktası istekleri sınırlıyor (HTTP 429). Bir dakika bekleyip tekrar deneyin.',
+    rpcHttp: 'RPC uç noktası HTTP {status} hatasıyla yanıt verdi.',
     unknown: 'Bir şeyler ters gitti.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

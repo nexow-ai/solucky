@@ -416,6 +416,8 @@ const ko: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: '지갑에서 승인하세요…',
+    cancel: '취소',
+    abandoned: '페이지가 더 이상 지갑의 응답을 기다리지 않아요. 지갑에 요청이 아직 보이면 지갑에서 거절하세요.',
     done: '{label}: 완료',
     cancelled: '{label}: 취소됨',
     failed: '{label} 실패',
@@ -439,6 +441,8 @@ const ko: Dict = {
     description: 'Wallet Standard를 지원하는 Solana 지갑이면 무엇이든 쓸 수 있어요.',
     none: '이 브라우저에서 Solana 지갑을 찾지 못했어요. 지갑을 설치한 뒤 페이지를 새로고침하세요:',
     failed: '{wallet}에 연결하지 못했어요',
+    noAccount:
+      '{wallet}에서 공유된 Solana 계정이 없어요. {wallet}에서 Solana 계정을 추가하거나 선택한 뒤 다시 연결하세요.',
     copied: '주소 복사됨',
     balance: '잔액',
     ticketsLeft: '티켓 {n}장 분량 남음',
@@ -497,8 +501,10 @@ const ko: Dict = {
     rejected: '지갑에서 요청을 취소했어요.',
     taken: '이번 라운드에서 이미 누군가 이 번호를 가지고 있어요. 다른 번호를 고르세요.',
     funds: '지갑에 SOL이 부족해요.',
-    walletCluster:
-      '지갑이 서명하지 못했어요. Phantom에서 Settings → Developer Settings → Testnet Mode 켜기 → Devnet 선택 후, 다시 연결하고 다시 시도하세요.',
+    walletFailed:
+      '지갑이 “Unexpected error”를 보고하고 서명하지 않았어요. 지갑 창을 닫고, 지갑을 잠갔다가 다시 열거나 확장 프로그램을 다시 시작한 뒤 다시 시도하세요.',
+    rateLimited: 'RPC 엔드포인트가 요청을 제한하고 있어요(HTTP 429). 1분 정도 기다린 뒤 다시 시도하세요.',
+    rpcHttp: 'RPC 엔드포인트가 HTTP 오류 {status}로 응답했어요.',
     unknown: '문제가 발생했어요.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

@@ -422,6 +422,8 @@ const nl: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Bevestig in je wallet…',
+    cancel: 'Annuleren',
+    abandoned: 'De pagina wacht niet meer op je wallet. Toont de wallet het verzoek nog, wijs het daar dan af.',
     done: '{label}: klaar',
     cancelled: '{label}: geannuleerd',
     failed: '{label} mislukt',
@@ -445,6 +447,8 @@ const nl: Dict = {
     description: 'Elke Solana-wallet die de Wallet Standard ondersteunt, werkt.',
     none: 'In deze browser is geen Solana-wallet gevonden. Installeer er een en laad de pagina daarna opnieuw:',
     failed: 'Kon {wallet} niet koppelen',
+    noAccount:
+      '{wallet} heeft geen Solana-account gedeeld. Voeg in {wallet} een Solana-account toe of kies er een, en koppel dan opnieuw.',
     copied: 'Adres gekopieerd',
     balance: 'Saldo',
     ticketsLeft: 'nog {n} lot | nog {n} loten',
@@ -504,8 +508,10 @@ const nl: Dict = {
     rejected: 'Je hebt het verzoek in je wallet geannuleerd.',
     taken: 'Iemand heeft dit getal in deze ronde al. Kies een ander.',
     funds: 'Niet genoeg SOL in de wallet.',
-    walletCluster:
-      'Je wallet kon niet ondertekenen. In Phantom: Settings → Developer Settings → Testnet Mode inschakelen → Devnet kiezen, koppel daarna opnieuw en probeer het nog eens.',
+    walletFailed:
+      'Je wallet meldde „Unexpected error” en heeft niet ondertekend. Sluit het venster, vergrendel en ontgrendel de wallet of herstart de extensie, en probeer het dan opnieuw.',
+    rateLimited: 'Het RPC-endpoint beperkt het aantal verzoeken (HTTP 429). Wacht een minuut en probeer het opnieuw.',
+    rpcHttp: 'Het RPC-endpoint antwoordde met HTTP-fout {status}.',
     unknown: 'Er is iets misgegaan.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

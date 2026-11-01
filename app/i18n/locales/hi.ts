@@ -418,6 +418,9 @@ const hi: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'अपने वॉलेट में कन्फ़र्म करें…',
+    cancel: 'रद्द करें',
+    abandoned:
+      'पेज ने आपके वॉलेट का इंतज़ार बंद कर दिया है। अगर वॉलेट में अनुरोध अब भी दिख रहा है, तो उसे वहीं अस्वीकार करें।',
     done: '{label}: हो गया',
     cancelled: '{label}: रद्द',
     failed: '{label}: विफल',
@@ -441,6 +444,8 @@ const hi: Dict = {
     description: 'Wallet Standard सपोर्ट करने वाला कोई भी Solana वॉलेट काम करता है।',
     none: 'इस ब्राउज़र में कोई Solana वॉलेट नहीं मिला। एक इंस्टॉल करें, फिर पेज रीलोड करें:',
     failed: '{wallet} कनेक्ट नहीं हो सका',
+    noAccount:
+      '{wallet} ने कोई Solana खाता साझा नहीं किया। {wallet} में कोई Solana खाता जोड़ें या चुनें, फिर दोबारा कनेक्ट करें।',
     copied: 'एड्रेस कॉपी हो गया',
     balance: 'बैलेंस',
     ticketsLeft: '{n} टिकट बाक़ी | {n} टिकट बाक़ी',
@@ -500,8 +505,10 @@ const hi: Dict = {
     rejected: 'आपने अपने वॉलेट में अनुरोध रद्द कर दिया।',
     taken: 'इस राउंड में यह नंबर पहले से किसी के पास है। कोई दूसरा चुनें।',
     funds: 'वॉलेट में पर्याप्त SOL नहीं है।',
-    walletCluster:
-      'आपका वॉलेट साइन नहीं कर सका। Phantom में: Settings → Developer Settings → Testnet Mode चालू करें → Devnet चुनें, फिर दोबारा कनेक्ट करें और फिर से कोशिश करें।',
+    walletFailed:
+      'आपके वॉलेट ने “Unexpected error” बताया और साइन नहीं किया। उसकी विंडो बंद करें, वॉलेट को लॉक करके फिर अनलॉक करें या एक्सटेंशन को रीस्टार्ट करें, फिर दोबारा कोशिश करें।',
+    rateLimited: 'RPC एंडपॉइंट अनुरोधों को सीमित कर रहा है (HTTP 429)। एक मिनट रुकें और फिर से कोशिश करें।',
+    rpcHttp: 'RPC एंडपॉइंट ने HTTP त्रुटि {status} लौटाई।',
     unknown: 'कुछ गड़बड़ हो गई।',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

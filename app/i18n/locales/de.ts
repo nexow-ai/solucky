@@ -422,6 +422,9 @@ const de: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'In deiner Wallet bestätigen…',
+    cancel: 'Abbrechen',
+    abandoned:
+      'Die Seite wartet nicht mehr auf deine Wallet. Wenn die Wallet die Anfrage noch zeigt, lehne sie dort ab.',
     done: '{label}: erledigt',
     cancelled: '{label}: abgebrochen',
     failed: '{label} fehlgeschlagen',
@@ -445,6 +448,8 @@ const de: Dict = {
     description: 'Jede Solana-Wallet, die den Wallet Standard unterstützt, funktioniert.',
     none: 'In diesem Browser wurde keine Solana-Wallet gefunden. Installiere eine und lade die Seite dann neu:',
     failed: '{wallet} konnte nicht verbunden werden',
+    noAccount:
+      '{wallet} hat kein Solana-Konto freigegeben. Füge in {wallet} ein Solana-Konto hinzu oder wähle eines aus, dann verbinde dich erneut.',
     copied: 'Adresse kopiert',
     balance: 'Guthaben',
     ticketsLeft: 'noch {n} Ticket | noch {n} Tickets',
@@ -504,8 +509,10 @@ const de: Dict = {
     rejected: 'Du hast die Anfrage in deiner Wallet abgebrochen.',
     taken: 'Jemand hat diese Zahl in dieser Runde schon. Wähle eine andere.',
     funds: 'Nicht genug SOL in der Wallet.',
-    walletCluster:
-      'Deine Wallet konnte nicht signieren. In Phantom: Settings → Developer Settings → Testnet Mode aktivieren → Devnet auswählen, dann neu verbinden und es noch einmal versuchen.',
+    walletFailed:
+      'Deine Wallet meldete „Unexpected error“ und hat nicht signiert. Schließe ihr Fenster, sperre und entsperre sie oder starte die Erweiterung neu, dann versuche es noch einmal.',
+    rateLimited: 'Der RPC-Endpunkt begrenzt die Anfragen (HTTP 429). Warte eine Minute und versuche es noch einmal.',
+    rpcHttp: 'Der RPC-Endpunkt antwortete mit dem HTTP-Fehler {status}.',
     unknown: 'Etwas ist schiefgelaufen.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

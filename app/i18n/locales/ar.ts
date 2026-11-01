@@ -415,6 +415,8 @@ const ar: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'أكّد في محفظتك…',
+    cancel: 'إلغاء',
+    abandoned: 'توقفت الصفحة عن انتظار محفظتك. إذا كانت المحفظة لا تزال تعرض الطلب، فارفضه فيها.',
     done: '{label}: تم',
     cancelled: '{label}: أُلغي',
     failed: 'فشل {label}',
@@ -438,6 +440,7 @@ const ar: Dict = {
     description: 'تعمل أي محفظة Solana تدعم Wallet Standard.',
     none: 'لم يُعثر على أي محفظة Solana في هذا المتصفح. ثبّت واحدة، ثم أعد تحميل الصفحة:',
     failed: 'تعذّر ربط {wallet}',
+    noAccount: 'لم تشارك {wallet} أي حساب Solana. أضف حساب Solana أو اختره في {wallet}، ثم أعد الربط.',
     copied: 'نُسخ العنوان',
     balance: 'الرصيد',
     ticketsLeft:
@@ -497,8 +500,10 @@ const ar: Dict = {
     rejected: 'ألغيت الطلب في محفظتك.',
     taken: 'هناك من يحمل هذا الرقم في هذه الجولة بالفعل. اختر رقمًا آخر.',
     funds: 'رصيد SOL في المحفظة غير كافٍ.',
-    walletCluster:
-      'تعذّر على محفظتك التوقيع. في Phantom: Settings → Developer Settings → فعّل Testnet Mode → اختر Devnet، ثم أعد الربط وحاول مجددًا.',
+    walletFailed:
+      'أبلغت محفظتك عن «Unexpected error» ولم توقّع. أغلق نافذتها، ثم اقفلها وافتحها أو أعد تشغيل الإضافة، وحاول مجددًا.',
+    rateLimited: 'تحدّ نقطة نهاية RPC من عدد الطلبات (HTTP 429). انتظر دقيقة وحاول مجددًا.',
+    rpcHttp: 'ردّت نقطة نهاية RPC بخطأ HTTP {status}.',
     unknown: 'حدث خطأ ما.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

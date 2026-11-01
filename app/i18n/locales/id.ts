@@ -420,6 +420,8 @@ const id: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Konfirmasi di dompetmu…',
+    cancel: 'Batal',
+    abandoned: 'Halaman berhenti menunggu dompetmu. Jika dompet masih menampilkan permintaan, tolak di sana.',
     done: '{label}: selesai',
     cancelled: '{label}: dibatalkan',
     failed: '{label} gagal',
@@ -443,6 +445,8 @@ const id: Dict = {
     description: 'Dompet Solana apa pun yang mendukung Wallet Standard bisa dipakai.',
     none: 'Tidak ada dompet Solana di browser ini. Pasang salah satunya, lalu muat ulang halaman:',
     failed: 'Tidak dapat menghubungkan {wallet}',
+    noAccount:
+      '{wallet} tidak membagikan akun Solana. Tambahkan atau pilih akun Solana di {wallet}, lalu hubungkan ulang.',
     copied: 'Alamat disalin',
     balance: 'Saldo',
     ticketsLeft: 'cukup untuk {n} tiket',
@@ -502,8 +506,10 @@ const id: Dict = {
     rejected: 'Kamu membatalkan permintaan di dompetmu.',
     taken: 'Seseorang sudah memegang angka ini di ronde ini. Pilih angka lain.',
     funds: 'SOL di dompet tidak cukup.',
-    walletCluster:
-      'Dompetmu tidak dapat menandatangani. Di Phantom: Settings → Developer Settings → aktifkan Testnet Mode → pilih Devnet, lalu hubungkan ulang dan coba lagi.',
+    walletFailed:
+      'Dompetmu melaporkan “Unexpected error” dan tidak menandatangani. Tutup jendelanya, kunci lalu buka kunci dompet atau mulai ulang ekstensinya, lalu coba lagi.',
+    rateLimited: 'Endpoint RPC sedang membatasi permintaan (HTTP 429). Tunggu satu menit, lalu coba lagi.',
+    rpcHttp: 'Endpoint RPC menjawab dengan galat HTTP {status}.',
     unknown: 'Terjadi kesalahan.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

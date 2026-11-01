@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isSolanaError, SOLANA_ERROR__WALLET__NOT_CONNECTED } from '@solana/kit';
+
 defineProps<{ block?: boolean }>();
 
 const { t } = useI18n();
@@ -31,21 +33,30 @@ watch(dashOpen, (isOpen) => {
   if (isOpen) void refreshBalance();
 });
 
+// A wallet may never answer a connect request (its window fails to open, or
+// it is stuck). Every choice stays clickable: picking again, or picking another
+// wallet, supersedes the request that hangs, and only the latest one reports.
+let attempts = 0;
+
 async function choose(wallet: (typeof wallets.value)[number]) {
+  const attempt = ++attempts;
   connecting.value = wallet.name;
   try {
     await connect(wallet);
-    open.value = false;
+    if (attempt === attempts) open.value = false;
   } catch (error) {
-    if ((error as Error).name !== 'AbortError') {
+    if (attempt === attempts && (error as Error).name !== 'AbortError') {
       toast.add({
         title: t('wallet.failed', { wallet: wallet.name }),
-        description: friendlyError(error, t),
+        // The wallet answered without a Solana account (MetaMask without one does).
+        description: isSolanaError(error, SOLANA_ERROR__WALLET__NOT_CONNECTED)
+          ? t('wallet.noAccount', { wallet: wallet.name })
+          : friendlyError(error, t),
         color: 'error',
       });
     }
   } finally {
-    connecting.value = null;
+    if (attempt === attempts) connecting.value = null;
   }
 }
 
@@ -190,11 +201,12 @@ async function signOut() {
   </UPopover>
 
   <UModal v-else v-model:open="open" :title="t('wallet.title')" :description="t('wallet.description')">
+    <!-- Never disabled: a wallet that hangs while reconnecting or connecting must not lock the player out. -->
     <UButton
       :label="t('wallet.connect')"
-      icon="i-lucide-wallet"
+      :icon="!ready || status === 'connecting' ? 'i-lucide-loader-circle' : 'i-lucide-wallet'"
       :block="block"
-      :loading="!ready || status === 'connecting'"
+      :ui="{ leadingIcon: !ready || status === 'connecting' ? 'animate-spin' : '' }"
       class="bg-lucky text-white hover:opacity-90"
     />
 
@@ -207,8 +219,8 @@ async function signOut() {
           variant="outline"
           size="lg"
           block
-          :loading="connecting === wallet.name"
-          :disabled="!!connecting && connecting !== wallet.name"
+          :icon="connecting === wallet.name ? 'i-lucide-loader-circle' : undefined"
+          :ui="{ leadingIcon: 'animate-spin' }"
           class="justify-start"
           @click="choose(wallet)"
         >

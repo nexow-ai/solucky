@@ -283,7 +283,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     try {
       const signature = await run(
         t('tx.buying', { number: formatNumber(number) }),
-        () =>
+        (config) =>
           client.solucky.instructions
             .buyTicket({
               buyer: client.payer,
@@ -293,7 +293,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
               country: countryToBytes(country),
               maxPrice: price,
             })
-            .sendTransaction(),
+            .sendTransaction(config),
         t(isLottery(k) ? 'tx.bought' : 'guess.bought', { number: formatNumber(number) }),
       );
       await after(k);
@@ -340,8 +340,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
       if (current.data.status === RoundStatus.Closed) {
         if (await isPinnedSlotExpired(client.rpc, current.data.targetSlot)) {
           if (
-            !(await run(t('tx.repin', { day: label }), () =>
-              ix.closeRound({ round: current.address }).sendTransaction(),
+            !(await run(t('tx.repin', { day: label }), (config) =>
+              ix.closeRound({ round: current.address }).sendTransaction(config),
             ))
           )
             return;
@@ -350,8 +350,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
       }
       if (current.data.status === RoundStatus.Open) {
         if (
-          !(await run(t(isLottery(k) ? 'tx.closing' : 'guess.sealing', { day: label }), () =>
-            ix.closeRound({ round: current.address }).sendTransaction(),
+          !(await run(t(isLottery(k) ? 'tx.closing' : 'guess.sealing', { day: label }), (config) =>
+            ix.closeRound({ round: current.address }).sendTransaction(config),
           ))
         )
           return;
@@ -361,8 +361,8 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
         await waitForSlot(current.data.targetSlot);
         const [game] = await findGamePda({ kind: k }, { programAddress });
         if (
-          !(await run(t('tx.drawing', { day: label }), () =>
-            ix.drawRound({ round: current.address, game }).sendTransaction(),
+          !(await run(t('tx.drawing', { day: label }), (config) =>
+            ix.drawRound({ round: current.address, game }).sendTransaction(config),
           ))
         )
           return;
@@ -373,10 +373,10 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
         if (!winner) throw new Error(t('tx.noWinner'));
         await run(
           t('tx.paying', { day: label }),
-          () =>
+          (config) =>
             ix
               .claimPrize({ round: current.address, ticket: winner.address, owner: winner.data.owner })
-              .sendTransaction(),
+              .sendTransaction(config),
           t('tx.paid', { amount: formatSol(current.data.payout), day: label }),
         );
       }
@@ -410,7 +410,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
               { programAddress },
             ),
           );
-        if (!(await run(t('tx.reclaiming'), () => client.sendTransaction(batch)))) break;
+        if (!(await run(t('tx.reclaiming'), (config) => client.sendTransaction(batch, config)))) break;
       }
     } finally {
       busy.value = false;

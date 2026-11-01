@@ -420,6 +420,8 @@ const es: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Confirma en tu billetera…',
+    cancel: 'Cancelar',
+    abandoned: 'La página dejó de esperar a tu billetera. Si la billetera aún muestra la solicitud, recházala allí.',
     done: '{label}: hecho',
     cancelled: '{label}: cancelado',
     failed: '{label}: falló',
@@ -443,6 +445,8 @@ const es: Dict = {
     description: 'Funciona cualquier billetera de Solana compatible con el Wallet Standard.',
     none: 'No se encontró ninguna billetera de Solana en este navegador. Instala una y luego recarga la página:',
     failed: 'No se pudo conectar con {wallet}',
+    noAccount:
+      '{wallet} no compartió ninguna cuenta de Solana. Añade o selecciona una cuenta de Solana en {wallet} y vuelve a conectarte.',
     copied: 'Dirección copiada',
     balance: 'Saldo',
     ticketsLeft: '{n} boleto restante | {n} boletos restantes',
@@ -502,8 +506,10 @@ const es: Dict = {
     rejected: 'Cancelaste la solicitud en tu billetera.',
     taken: 'Alguien ya tiene este número en esta ronda. Elige otro.',
     funds: 'No hay suficiente SOL en la billetera.',
-    walletCluster:
-      'Tu billetera no pudo firmar. En Phantom: Settings → Developer Settings → activa Testnet Mode → selecciona Devnet, luego vuelve a conectarla e inténtalo de nuevo.',
+    walletFailed:
+      'Tu billetera informó «Unexpected error» y no firmó. Cierra su ventana, bloquéala y desbloquéala o reinicia la extensión, y vuelve a intentarlo.',
+    rateLimited: 'El endpoint RPC está limitando las solicitudes (HTTP 429). Espera un minuto y vuelve a intentarlo.',
+    rpcHttp: 'El endpoint RPC respondió con el error HTTP {status}.',
     unknown: 'Algo salió mal.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

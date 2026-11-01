@@ -410,6 +410,8 @@ const he: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'אשרו בארנק שלכם…',
+    cancel: 'ביטול',
+    abandoned: 'הדף הפסיק לחכות לארנק. אם הארנק עדיין מציג את הבקשה, דחו אותה שם.',
     done: '{label}: בוצע',
     cancelled: '{label}: בוטל',
     failed: '{label}: נכשל',
@@ -433,6 +435,7 @@ const he: Dict = {
     description: 'כל ארנק Solana שתומך ב־Wallet Standard עובד.',
     none: 'לא נמצא ארנק Solana בדפדפן הזה. התקינו אחד, ואז טענו מחדש את הדף:',
     failed: 'לא ניתן לחבר את {wallet}',
+    noAccount: '{wallet} לא שיתף אף חשבון Solana. הוסיפו או בחרו חשבון Solana ב־{wallet}, ואז התחברו מחדש.',
     copied: 'הכתובת הועתקה',
     balance: 'יתרה',
     ticketsLeft: 'נשאר כרטיס אחד | נשארו שני כרטיסים | נשארו {n} כרטיסים',
@@ -491,8 +494,10 @@ const he: Dict = {
     rejected: 'ביטלתם את הבקשה בארנק.',
     taken: 'מישהו כבר מחזיק במספר הזה בסבב הזה. בחרו מספר אחר.',
     funds: 'אין מספיק SOL בארנק.',
-    walletCluster:
-      'הארנק שלכם לא הצליח לחתום. ב־Phantom: Settings → Developer Settings → הפעילו את Testnet Mode → בחרו Devnet, ואז התחברו מחדש ונסו שוב.',
+    walletFailed:
+      'הארנק דיווח על „Unexpected error” ולא חתם. סגרו את החלון שלו, נעלו ופתחו אותו מחדש או הפעילו מחדש את התוסף, ונסו שוב.',
+    rateLimited: 'נקודת הקצה של ה־RPC מגבילה את הבקשות (HTTP 429). חכו דקה ונסו שוב.',
+    rpcHttp: 'נקודת הקצה של ה־RPC השיבה בשגיאת HTTP {status}.',
     unknown: 'משהו השתבש.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

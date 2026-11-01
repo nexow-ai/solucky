@@ -415,6 +415,8 @@ const th: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'ยืนยันในวอลเล็ตของคุณ…',
+    cancel: 'ยกเลิก',
+    abandoned: 'หน้านี้หยุดรอวอลเล็ตของคุณแล้ว หากวอลเล็ตยังแสดงคำขออยู่ ให้ปฏิเสธในวอลเล็ต',
     done: '{label}: เสร็จแล้ว',
     cancelled: '{label}: ยกเลิกแล้ว',
     failed: '{label} ไม่สำเร็จ',
@@ -438,6 +440,7 @@ const th: Dict = {
     description: 'ใช้วอลเล็ต Solana ใดก็ได้ที่รองรับ Wallet Standard',
     none: 'ไม่พบวอลเล็ต Solana ในเบราว์เซอร์นี้ ติดตั้งสักตัว แล้วโหลดหน้าใหม่:',
     failed: 'เชื่อมต่อ {wallet} ไม่ได้',
+    noAccount: '{wallet} ไม่ได้แชร์บัญชี Solana ใด ๆ เพิ่มหรือเลือกบัญชี Solana ใน {wallet} แล้วเชื่อมต่อใหม่',
     copied: 'คัดลอกที่อยู่แล้ว',
     balance: 'ยอดคงเหลือ',
     ticketsLeft: 'เหลือตั๋ว {n} ใบ',
@@ -496,8 +499,10 @@ const th: Dict = {
     rejected: 'คุณยกเลิกคำขอในวอลเล็ตของคุณ',
     taken: 'มีคนถือเลขนี้ในรอบนี้แล้ว เลือกเลขอื่น',
     funds: 'SOL ในวอลเล็ตไม่พอ',
-    walletCluster:
-      'วอลเล็ตของคุณเซ็นไม่ได้ ใน Phantom: Settings → Developer Settings → เปิด Testnet Mode → เลือก Devnet จากนั้นเชื่อมต่อใหม่แล้วลองอีกครั้ง',
+    walletFailed:
+      'วอลเล็ตของคุณแจ้ง “Unexpected error” และไม่ได้เซ็น ปิดหน้าต่างของวอลเล็ต ล็อกแล้วปลดล็อก หรือรีสตาร์ตส่วนขยาย แล้วลองอีกครั้ง',
+    rateLimited: 'เอนด์พอยต์ RPC กำลังจำกัดจำนวนคำขอ (HTTP 429) รอสักหนึ่งนาทีแล้วลองอีกครั้ง',
+    rpcHttp: 'เอนด์พอยต์ RPC ตอบกลับด้วยข้อผิดพลาด HTTP {status}',
     unknown: 'เกิดข้อผิดพลาดบางอย่าง',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

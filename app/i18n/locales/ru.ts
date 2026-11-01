@@ -422,6 +422,8 @@ const ru: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Подтвердите в кошельке…',
+    cancel: 'Отмена',
+    abandoned: 'Страница больше не ждёт ответа кошелька. Если кошелёк всё ещё показывает запрос, отклоните его там.',
     done: '{label}: готово',
     cancelled: '{label}: отменено',
     failed: '{label}: ошибка',
@@ -445,6 +447,8 @@ const ru: Dict = {
     description: 'Подойдёт любой кошелёк Solana с поддержкой Wallet Standard.',
     none: 'В этом браузере не найден кошелёк Solana. Установите его, затем перезагрузите страницу:',
     failed: 'Не удалось подключить {wallet}',
+    noAccount:
+      '{wallet} не передал ни одного аккаунта Solana. Добавьте или выберите аккаунт Solana в {wallet}, затем подключитесь снова.',
     copied: 'Адрес скопирован',
     balance: 'Баланс',
     ticketsLeft: 'хватит на {n} билет | хватит на {n} билета | хватит на {n} билетов',
@@ -504,8 +508,10 @@ const ru: Dict = {
     rejected: 'Вы отменили запрос в кошельке.',
     taken: 'В этом раунде это число уже у кого-то есть. Выберите другое.',
     funds: 'В кошельке недостаточно SOL.',
-    walletCluster:
-      'Ваш кошелёк не смог подписать транзакцию. В Phantom: Settings → Developer Settings → включите Testnet Mode → выберите Devnet, затем переподключитесь и попробуйте снова.',
+    walletFailed:
+      'Кошелёк сообщил «Unexpected error» и не подписал транзакцию. Закройте его окно, заблокируйте и разблокируйте кошелёк или перезапустите расширение, затем попробуйте снова.',
+    rateLimited: 'RPC-эндпоинт ограничивает число запросов (HTTP 429). Подождите минуту и попробуйте снова.',
+    rpcHttp: 'RPC-эндпоинт ответил ошибкой HTTP {status}.',
     unknown: 'Что-то пошло не так.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {

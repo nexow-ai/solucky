@@ -420,6 +420,8 @@ const pt: Dict = {
   /** Progress toasts for a transaction: {label} is one of the actions below. */
   tx: {
     confirm: 'Confirme na sua carteira…',
+    cancel: 'Cancelar',
+    abandoned: 'A página parou de esperar pela sua carteira. Se a carteira ainda mostrar o pedido, recuse-o nela.',
     done: '{label}: concluído',
     cancelled: '{label}: cancelado',
     failed: '{label}: falhou',
@@ -443,6 +445,8 @@ const pt: Dict = {
     description: 'Qualquer carteira da Solana compatível com o Wallet Standard funciona.',
     none: 'Nenhuma carteira da Solana foi encontrada neste navegador. Instale uma e depois recarregue a página:',
     failed: 'Falha ao conectar {wallet}',
+    noAccount:
+      '{wallet} não compartilhou nenhuma conta Solana. Adicione ou selecione uma conta Solana em {wallet} e conecte de novo.',
     copied: 'Endereço copiado',
     balance: 'Saldo',
     ticketsLeft: '{n} bilhete restante | {n} bilhetes restantes',
@@ -501,8 +505,10 @@ const pt: Dict = {
     rejected: 'Você cancelou a solicitação na sua carteira.',
     taken: 'Alguém já tem este número nesta rodada. Escolha outro.',
     funds: 'Não há SOL suficiente na carteira.',
-    walletCluster:
-      'Sua carteira não conseguiu assinar. No Phantom: Settings → Developer Settings → ative Testnet Mode → selecione Devnet, depois reconecte e tente de novo.',
+    walletFailed:
+      'Sua carteira informou “Unexpected error” e não assinou. Feche a janela dela, bloqueie e desbloqueie a carteira ou reinicie a extensão, depois tente de novo.',
+    rateLimited: 'O endpoint RPC está limitando as requisições (HTTP 429). Espere um minuto e tente de novo.',
+    rpcHttp: 'O endpoint RPC respondeu com o erro HTTP {status}.',
     unknown: 'Algo deu errado.',
     /** The program's own errors, in the order of programs/solucky/src/error.rs (codes 6000 and up). */
     program: {
