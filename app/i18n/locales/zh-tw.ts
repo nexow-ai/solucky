@@ -11,9 +11,6 @@ const zhtw: Dict = {
 
   nav: {
     play: '遊玩',
-    how: '運作方式',
-    fairness: '公平性',
-    faq: '常見問題',
     skip: '跳到主要內容',
   },
 
@@ -85,9 +82,6 @@ const zhtw: Dict = {
   },
 
   home: {
-    kicker: 'Solana 上的彩券遊戲',
-    title: '選一個號碼。',
-    titleEnd: '午夜贏得獎金。',
     lead: '每天開獎一次，每小時開獎一次，還有一個等你找出的隱藏號碼。贏家拿走獎池的 80%，其餘累積到下一期。每一張彩券、每一個 lamport、每一次開獎都在 Solana 上，任何人都能查證。',
     playNow: '立即開玩',
     howItWorks: '運作方式',
@@ -95,34 +89,8 @@ const zhtw: Dict = {
 
     how: {
       tag: '運作方式',
-      title: '四個步驟，每天開獎一次',
-      description: '每期依 UTC 日曆進行：新的一期在 UTC 00:00 開放，並在下一個午夜過後立即開獎。',
       opens: '本期開始',
-      draw: '開獎',
       now: '現在',
-      steps: {
-        wallet: {
-          title: '連接錢包',
-          description: 'Phantom、Solflare、Backpack，或任何支援 Wallet Standard 的錢包。不需要帳號，也不需要電子郵件。',
-          when: '隨時',
-        },
-        number: {
-          title: '選擇你的號碼',
-          description: '0 到 {max} 之間的任何號碼。每個號碼每天只能由一張彩券持有，所以動作要快。',
-          when: '直到 UTC 午夜',
-        },
-        pot: {
-          title: '看著獎池變大',
-          description: '每張彩券都會把票價加進獎池，獎池由該期在 Solana 上的專屬帳戶持有。其他任何人都動不了它。',
-          when: '全天',
-        },
-        win: {
-          title: '在 UTC 午夜贏得獎池',
-          description:
-            '開出一個隨機號碼，最接近它的彩券贏得獎池的 80%。平台手續費從剩下的部分扣除，其餘累積到隔天的那一期。',
-          when: 'UTC 午夜過後立即',
-        },
-      },
     },
 
     fairness: {
@@ -153,6 +121,16 @@ const zhtw: Dict = {
           title: '對平台的硬性限制',
           description:
             '程式一律把獎池的 80% 支付給贏家，並將手續費上限設為 20%。票價和手續費的變更只會套用到之後開放的各期，而且買家支付的金額絕不會超過畫面上顯示給他的價格。',
+        },
+        guessDraw: {
+          title: '沒有人能預測的檢查',
+          description:
+            '每一次猜測都會混入該期的熵。封存新的猜測時，會鎖定一個幾秒後才會出現的插槽；這個插槽的雜湊值在那之前沒有人知道，由它決定其中是否有猜測找到了號碼。',
+        },
+        guessBrowser: {
+          title: '在瀏覽器中就能查證',
+          description:
+            '每一期的頁面都會用公開資料重新計算結束該期的那次檢查：熵、插槽雜湊值和找到號碼的猜測。輸入相同，贏家就相同。',
         },
         open: {
           title: '開源',
@@ -238,26 +216,147 @@ const zhtw: Dict = {
     winners: {
       tag: '中獎者',
       title: '每位中獎者，都在鏈上',
-      description: '三個遊戲最近結算的各期，直接讀取自程式的帳戶。每一期都連結到它的頁面，可在那裡重新計算開獎。',
+      description: '這個遊戲最近結算的各期，直接讀取自程式的帳戶。每一期都連結到它的頁面，可在那裡重新計算結果。',
       paid: '已支付給中獎者',
       rounds: '已結算期數',
       empty: '尚無已結算的一期。',
       drawn: '開出：{number}',
       found: '號碼已找到',
     },
-    cta: {
-      title: '今天的獎池在等你',
-      description: '選一個還沒有人選的號碼。祝你好運！',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    title: 'Solana 上的{game}',
+    daily: {
+      kicker: '每日彩券 · 每天開獎一次',
+      title: '選一個號碼。',
+      titleEnd: '午夜贏得獎金。',
+      lead: '每天一期，從 UTC 00:00 到 24:00。從 0 到 {max} 中任選一個號碼：午夜一過就會隨機開出一個號碼，最接近它的彩券贏得獎池的 80%。平台手續費從剩下的部分扣除，其餘累積到隔天的那一期。',
+      how: {
+        title: '四個步驟，每天開獎一次',
+        description: '每期依 UTC 日曆進行：新的一期在 UTC 00:00 開放，並在下一個午夜過後立即開獎。',
+      },
+      steps: {
+        wallet: {
+          title: '連接錢包',
+          description: 'Phantom、Solflare、Backpack，或任何支援 Wallet Standard 的錢包。不需要帳號，也不需要電子郵件。',
+          when: '隨時',
+        },
+        number: {
+          title: '選擇你的號碼',
+          description: '0 到 {max} 之間的任何號碼。每個號碼每天只能由一張彩券持有，所以動作要快。',
+          when: '直到 UTC 午夜',
+        },
+        pot: {
+          title: '看著獎池變大',
+          description: '每張彩券都會把票價加進獎池，獎池由該期在 Solana 上的專屬帳戶持有。其他任何人都動不了它。',
+          when: '全天',
+        },
+        win: {
+          title: '在 UTC 午夜贏得獎池',
+          description:
+            '開出一個隨機號碼，最接近它的彩券贏得獎池的 80%。平台手續費從剩下的部分扣除，其餘累積到隔天的那一期。',
+          when: 'UTC 午夜過後立即',
+        },
+      },
+      cta: {
+        kicker: '每天 UTC 午夜後開獎',
+        title: '今天的獎池在等你',
+        description: '選一個還沒有人選的號碼。祝你好運！',
+      },
+    },
+    hourly: {
+      kicker: '每小時彩券 · 每天開獎 24 次',
+      title: '選一個號碼。',
+      titleEnd: '整點贏得獎金。',
+      lead: '每小時整點（UTC）開始新的一期。從 0 到 {max} 中任選一個號碼：這個小時一結束就會隨機開出一個號碼，最接近它的彩券贏得獎池的 80%。平台手續費從剩下的部分扣除，其餘累積到下一個小時的那一期。',
+      how: {
+        title: '四個步驟，每小時開獎一次',
+        description: '每期依 UTC 時鐘進行：新的一期在每個小時開始時開放，並在這個小時結束後立即開獎。',
+      },
+      steps: {
+        wallet: {
+          title: '連接錢包',
+          description: 'Phantom、Solflare、Backpack，或任何支援 Wallet Standard 的錢包。不需要帳號，也不需要電子郵件。',
+          when: '隨時',
+        },
+        number: {
+          title: '選擇你的號碼',
+          description: '0 到 {max} 之間的任何號碼。每個號碼每小時只能由一張彩券持有，所以動作要快。',
+          when: '直到這個小時結束',
+        },
+        pot: {
+          title: '看著獎池變大',
+          description: '每張彩券都會把票價加進獎池，獎池由該期在 Solana 上的專屬帳戶持有。其他任何人都動不了它。',
+          when: '整個小時',
+        },
+        win: {
+          title: '整點贏得獎池',
+          description:
+            '開出一個隨機號碼，最接近它的彩券贏得獎池的 80%。平台手續費從剩下的部分扣除，其餘累積到下一個小時的那一期。',
+          when: '整點過後立即',
+        },
+      },
+      cta: {
+        kicker: '每小時整點開獎',
+        title: '這個小時的獎池在等你',
+        description: '選一個這個小時還沒有人選的號碼。祝你好運！',
+      },
+    },
+    guess: {
+      kicker: '猜數字 · 沒有截止時間',
+      title: '找出那個號碼。',
+      titleEnd: '搶在所有人之前。',
+      lead: '玩法就像每一期都藏著一個從 0 到 {max} 的號碼，沒有人知道，營運方也一樣。每次猜測都是一張押在該期還沒有人試過的號碼上的彩券。每隔幾秒，新的猜測就會被檢查一次：找到號碼的那一個贏得獎池的 80%，新的一期隨即開始。',
+      how: {
+        title: '四個步驟，沒有截止時間',
+        description: '一期會一直持續，直到有猜測找到它的號碼。接著下一期開始，又有一個新的號碼等你找出。',
+      },
+      steps: {
+        wallet: {
+          title: '連接錢包',
+          description: 'Phantom、Solflare、Backpack，或任何支援 Wallet Standard 的錢包。不需要帳號，也不需要電子郵件。',
+          when: '隨時',
+        },
+        guess: {
+          title: '猜一個號碼',
+          description: '0 到 {max} 之間該期還沒有人試過的任何號碼。每次猜測就是一張彩券，票價會進入獎池。',
+          when: '隨時',
+        },
+        check: {
+          title: '幾秒內完成檢查',
+          description:
+            '每隔幾秒，新的猜測會被封存，並用一個事先無人能知的插槽雜湊值來檢查。沒猜中的猜測，它的號碼就會從該期出局。',
+          when: '每隔幾秒',
+        },
+        win: {
+          title: '搶先找到它',
+          description: '找到號碼的猜測贏得獎池的 80%。平台手續費從剩下的部分扣除，其餘累積到下一期，新的一期隨即開始。',
+          when: '找到的那一刻',
+        },
+      },
+      cta: {
+        kicker: '每隔幾秒檢查一次',
+        title: '那個號碼還沒被找到',
+        description: '試一個還沒有人試過的號碼。祝你好運！',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: '每天開獎一次 · UTC 午夜後開獎 · 每張彩券都在 Solana 上',
     draw: '開獎',
     pot: '今日獎池',
+    potHour: '這個小時的獎池',
     toDraw: '距離開獎 · {day}',
     tickets: '今天 {n} 張彩券',
+    ticketsHour: '這個小時 {n} 張彩券',
+    guesses: '本期 {n} 次猜測',
     entropy: '熵 · {cluster}',
     entropyTitle: '熵：{hex}',
     noTickets: '還沒有彩券',
@@ -461,6 +560,8 @@ const zhtw: Dict = {
     title: '三種玩法',
     description: '號碼範圍都一樣，從 0 到 {max}。贏家拿走獎池的 80%；平台手續費從剩下的部分扣除，其餘累積到下一期。',
     play: '開玩',
+    others: '另外兩種玩法',
+    discover: '了解更多',
     daily: {
       name: '每日彩券',
       short: '每日',

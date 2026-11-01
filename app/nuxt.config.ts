@@ -45,6 +45,14 @@ const browserOnly = Object.fromEntries(
   }),
 );
 
+/** The daily lottery's page is the home (pages/[[game]].vue), so `/daily` leads there, in every language. */
+const dailyHome = Object.fromEntries(
+  LOCALES.map(({ code }) => {
+    const prefix = code === DEFAULT_LOCALE ? '' : `/${code}`;
+    return [`${prefix}/daily`, { redirect: { to: prefix || '/', statusCode: 301 } }];
+  }),
+);
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
@@ -71,12 +79,13 @@ export default defineNuxtConfig({
     },
   },
 
-  // The landing and legal pages are rendered per request, so runtime settings
-  // such as the cluster always apply (a prerendered page would keep the
-  // build's values).
+  // The games' own pages and the legal pages are rendered per request, so
+  // runtime settings such as the cluster always apply (a prerendered page
+  // would keep the build's values).
   // English lives at the root: /en/… addresses go there.
   routeRules: {
     ...browserOnly,
+    ...dailyHome,
     '/en': { redirect: { to: '/', statusCode: 301 } },
     '/en/**': { redirect: { to: '/**', statusCode: 301 } },
   },

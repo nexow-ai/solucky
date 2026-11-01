@@ -11,9 +11,6 @@ const ko: Dict = {
 
   nav: {
     play: '플레이',
-    how: '작동 방식',
-    fairness: '공정성',
-    faq: 'FAQ',
     skip: '본문으로 건너뛰기',
   },
 
@@ -85,9 +82,6 @@ const ko: Dict = {
   },
 
   home: {
-    kicker: 'Solana의 복권 게임',
-    title: '번호를 고르세요.',
-    titleEnd: '자정에 당첨되세요.',
     lead: '매일 추첨, 매시간 추첨, 그리고 찾아내야 할 숨겨진 번호. 당첨자는 상금의 80%를 가져가고, 나머지는 다음 라운드로 이월돼요. 모든 티켓, 모든 lamport, 모든 추첨이 Solana에 기록되어 누구나 확인할 수 있어요.',
     playNow: '지금 플레이',
     howItWorks: '작동 방식',
@@ -96,37 +90,8 @@ const ko: Dict = {
 
     how: {
       tag: '작동 방식',
-      title: '네 단계, 하루 한 번 추첨',
-      description: '라운드는 UTC 달력을 따라요. 새 라운드는 UTC 00:00에 열리고, 다음 자정 직후에 추첨해요.',
       opens: '라운드 시작',
-      draw: '추첨',
       now: '지금',
-      steps: {
-        wallet: {
-          title: '지갑 연결하기',
-          description:
-            'Phantom, Solflare, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
-          when: '언제든',
-        },
-        number: {
-          title: '번호 고르기',
-          description:
-            '0부터 {max}까지 아무 번호나 고를 수 있어요. 번호 하나는 하루에 티켓 한 장만 가질 수 있으니 서두르세요.',
-          when: 'UTC 자정까지',
-        },
-        pot: {
-          title: '상금이 커지는 걸 지켜보기',
-          description:
-            '티켓이 팔릴 때마다 그 가격이 상금에 더해져요. 상금은 Solana에 있는 라운드 전용 계정이 보관하며, 다른 누구도 옮길 수 없어요.',
-          when: '하루 종일',
-        },
-        win: {
-          title: 'UTC 자정에 당첨',
-          description:
-            '무작위 번호를 추첨하고, 그 번호에 가장 가까운 티켓이 상금의 80%를 가져가요. 운영 수수료는 나머지에서 빠지고, 남은 금액은 다음 날로 이월돼요.',
-          when: 'UTC 자정 직후',
-        },
-      },
     },
 
     fairness: {
@@ -159,6 +124,16 @@ const ko: Dict = {
           title: '운영 측에 대한 엄격한 제한',
           description:
             '프로그램은 항상 상금의 80%를 당첨자에게 지급하고, 수수료 상한을 20%로 정해 둬요. 가격과 수수료 변경은 그 뒤에 열리는 라운드부터만 적용되고, 구매자는 안내받은 가격보다 더 내는 일이 없어요.',
+        },
+        guessDraw: {
+          title: '아무도 예측할 수 없는 확인',
+          description:
+            '모든 추측이 라운드의 엔트로피에 섞여요. 새 추측들을 봉인하면 몇 초 뒤의 슬롯이 고정되고, 그때까지 아무도 모르는 그 슬롯의 해시가 그중 하나가 번호를 찾았는지를 정해요.',
+        },
+        guessBrowser: {
+          title: '브라우저에서 확인 가능',
+          description:
+            '각 라운드 페이지는 엔트로피, 슬롯 해시, 번호를 찾은 추측 같은 공개 데이터로 그 라운드를 끝낸 확인을 다시 계산해요. 입력이 같으면 당첨자도 같아요.',
         },
         open: {
           title: '오픈 소스',
@@ -245,26 +220,158 @@ const ko: Dict = {
       tag: '당첨자',
       title: '모든 당첨자는 온체인에',
       description:
-        '세 게임에서 가장 최근에 정산된 라운드를 프로그램 계정에서 바로 읽어 와요. 각 라운드 페이지에서 추첨을 다시 계산할 수 있어요.',
+        '이 게임에서 가장 최근에 정산된 라운드를 프로그램 계정에서 바로 읽어 와요. 각 라운드 페이지에서 결과를 다시 계산할 수 있어요.',
       paid: '당첨자에게 지급',
       rounds: '정산된 라운드',
       empty: '아직 정산된 라운드가 없어요.',
       drawn: '추첨: {number}',
       found: '번호를 찾았어요',
     },
-    cta: {
-      title: '오늘의 상금이 기다리고 있어요',
-      description: '아직 아무도 고르지 않은 번호를 고르세요. 행운을 빌어요!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    title: 'Solana의 {game}',
+    daily: {
+      kicker: '매일 복권 · 하루 한 번 추첨',
+      title: '번호를 고르세요.',
+      titleEnd: '자정에 당첨되세요.',
+      lead: '라운드는 하루 한 번, UTC 00:00부터 24:00까지예요. 0부터 {max}까지 아무 번호나 고르세요. 자정 직후 무작위 번호를 추첨하고, 그 번호에 가장 가까운 티켓이 상금의 80%를 가져가요. 운영 수수료는 나머지에서 빠지고, 남은 금액은 다음 날로 이월돼요.',
+      how: {
+        title: '네 단계, 하루 한 번 추첨',
+        description: '라운드는 UTC 달력을 따라요. 새 라운드는 UTC 00:00에 열리고, 다음 자정 직후에 추첨해요.',
+      },
+      steps: {
+        wallet: {
+          title: '지갑 연결하기',
+          description:
+            'Phantom, Solflare, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
+          when: '언제든',
+        },
+        number: {
+          title: '번호 고르기',
+          description:
+            '0부터 {max}까지 아무 번호나 고를 수 있어요. 번호 하나는 하루에 티켓 한 장만 가질 수 있으니 서두르세요.',
+          when: 'UTC 자정까지',
+        },
+        pot: {
+          title: '상금이 커지는 걸 지켜보기',
+          description:
+            '티켓이 팔릴 때마다 그 가격이 상금에 더해져요. 상금은 Solana에 있는 라운드 전용 계정이 보관하며, 다른 누구도 옮길 수 없어요.',
+          when: '하루 종일',
+        },
+        win: {
+          title: 'UTC 자정에 당첨',
+          description:
+            '무작위 번호를 추첨하고, 그 번호에 가장 가까운 티켓이 상금의 80%를 가져가요. 운영 수수료는 나머지에서 빠지고, 남은 금액은 다음 날로 이월돼요.',
+          when: 'UTC 자정 직후',
+        },
+      },
+      cta: {
+        kicker: '매일 UTC 자정 이후 추첨',
+        title: '오늘의 상금이 기다리고 있어요',
+        description: '아직 아무도 고르지 않은 번호를 고르세요. 행운을 빌어요!',
+      },
+    },
+    hourly: {
+      kicker: '매시간 복권 · 하루 24번 추첨',
+      title: '번호를 고르세요.',
+      titleEnd: '정각에 당첨되세요.',
+      lead: '매시간 정각(UTC)에 새 라운드가 열려요. 0부터 {max}까지 아무 번호나 고르세요. 그 시간이 끝난 직후 무작위 번호를 추첨하고, 그 번호에 가장 가까운 티켓이 상금의 80%를 가져가요. 운영 수수료는 나머지에서 빠지고, 남은 금액은 다음 시간으로 이월돼요.',
+      how: {
+        title: '네 단계, 한 시간에 한 번 추첨',
+        description:
+          '라운드는 UTC 시계를 따라요. 새 라운드는 매시간이 시작될 때 열리고, 그 시간이 끝난 직후에 추첨해요.',
+      },
+      steps: {
+        wallet: {
+          title: '지갑 연결하기',
+          description:
+            'Phantom, Solflare, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
+          when: '언제든',
+        },
+        number: {
+          title: '번호 고르기',
+          description:
+            '0부터 {max}까지 아무 번호나 고를 수 있어요. 번호 하나는 한 시간에 티켓 한 장만 가질 수 있으니 서두르세요.',
+          when: '그 시간이 끝날 때까지',
+        },
+        pot: {
+          title: '상금이 커지는 걸 지켜보기',
+          description:
+            '티켓이 팔릴 때마다 그 가격이 상금에 더해져요. 상금은 Solana에 있는 라운드 전용 계정이 보관하며, 다른 누구도 옮길 수 없어요.',
+          when: '한 시간 내내',
+        },
+        win: {
+          title: '정각에 당첨',
+          description:
+            '무작위 번호를 추첨하고, 그 번호에 가장 가까운 티켓이 상금의 80%를 가져가요. 운영 수수료는 나머지에서 빠지고, 남은 금액은 다음 시간으로 이월돼요.',
+          when: '정각 직후',
+        },
+      },
+      cta: {
+        kicker: '매시간 정각에 추첨',
+        title: '이번 시간의 상금이 기다리고 있어요',
+        description: '이번 시간에 아직 아무도 고르지 않은 번호를 고르세요. 행운을 빌어요!',
+      },
+    },
+    guess: {
+      kicker: '숫자 맞히기 · 마감 없음',
+      title: '번호를 찾으세요.',
+      titleEnd: '누구보다 먼저.',
+      lead: '각 라운드는 운영자를 포함해 아무도 모르는 0부터 {max}까지의 번호 하나를 숨기고 있는 것처럼 진행돼요. 추측 하나하나는 그 라운드에서 아직 아무도 시도하지 않은 번호에 건 티켓이에요. 몇 초마다 새 추측을 확인하고, 번호를 찾은 추측이 상금의 80%를 가져가며, 곧바로 새 라운드가 시작돼요.',
+      how: {
+        title: '네 단계, 마감 없음',
+        description:
+          '라운드는 추측이 그 번호를 찾을 때까지 계속돼요. 그러면 찾아야 할 새 번호와 함께 다음 라운드가 열려요.',
+      },
+      steps: {
+        wallet: {
+          title: '지갑 연결하기',
+          description:
+            'Phantom, Solflare, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
+          when: '언제든',
+        },
+        guess: {
+          title: '추측하기',
+          description:
+            '0부터 {max}까지, 그 라운드에서 아직 아무도 시도하지 않은 번호라면 무엇이든 돼요. 추측 하나가 티켓 한 장이고, 그 가격은 상금에 더해져요.',
+          when: '언제든',
+        },
+        check: {
+          title: '몇 초 만에 확인',
+          description:
+            '몇 초마다 새 추측들이 봉인되고, 아무도 미리 알 수 없었던 슬롯의 해시로 확인돼요. 빗나간 추측의 번호는 그 라운드에서 탈락해요.',
+          when: '몇 초마다',
+        },
+        win: {
+          title: '먼저 찾기',
+          description:
+            '번호를 찾은 추측이 상금의 80%를 가져가요. 운영 수수료는 나머지에서 빠지고, 남은 금액은 이월되며, 곧바로 새 라운드가 시작돼요.',
+          when: '찾는 순간',
+        },
+      },
+      cta: {
+        kicker: '몇 초마다 확인',
+        title: '아직 아무도 번호를 찾지 못했어요',
+        description: '아직 아무도 시도하지 않은 번호를 시도해 보세요. 행운을 빌어요!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: '하루 한 번 추첨 · UTC 자정 이후 추첨 · 모든 티켓은 Solana에',
     draw: '추첨',
     pot: '오늘의 상금',
+    potHour: '이번 시간의 상금',
     toDraw: '추첨까지 · {day}',
     tickets: '오늘 티켓 {n}장',
+    ticketsHour: '이번 시간 티켓 {n}장',
+    guesses: '이번 라운드 추측 {n}개',
     entropy: '엔트로피 · {cluster}',
     entropyTitle: '엔트로피: {hex}',
     noTickets: '아직 티켓 없음',
@@ -472,6 +579,8 @@ const ko: Dict = {
     description:
       '번호는 모두 똑같이 0부터 {max}까지예요. 당첨자는 상금의 80%를 가져가고, 운영 수수료는 나머지에서 빠지며, 남은 금액은 다음 라운드로 이월돼요.',
     play: '플레이',
+    others: '다른 플레이 방법 두 가지',
+    discover: '자세히 보기',
     daily: {
       name: '매일 복권',
       short: '매일',

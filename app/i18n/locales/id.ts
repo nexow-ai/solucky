@@ -11,9 +11,6 @@ const id: Dict = {
 
   nav: {
     play: 'Main',
-    how: 'Cara kerja',
-    fairness: 'Keadilan',
-    faq: 'FAQ',
     skip: 'Langsung ke konten',
   },
 
@@ -85,9 +82,6 @@ const id: Dict = {
   },
 
   home: {
-    kicker: 'Permainan lotre di Solana',
-    title: 'Pilih angka.',
-    titleEnd: 'Menang saat tengah malam.',
     lead: 'Undian setiap hari, undian setiap jam, dan angka tersembunyi untuk diburu. Pemenang mendapat 80% pot, dan sisanya dibawa ke ronde berikutnya. Setiap tiket, setiap lamport, dan setiap undian ada di Solana, tempat siapa pun bisa memeriksanya.',
     playNow: 'Main sekarang',
     howItWorks: 'Cara kerja',
@@ -96,38 +90,8 @@ const id: Dict = {
 
     how: {
       tag: 'Cara kerja',
-      title: 'Empat langkah, satu undian sehari',
-      description:
-        'Ronde mengikuti kalender UTC: ronde baru dibuka pukul 00:00 UTC dan diundi tepat setelah tengah malam berikutnya.',
       opens: 'Ronde dibuka',
-      draw: 'Undian',
       now: 'Sekarang',
-      steps: {
-        wallet: {
-          title: 'Hubungkan dompet',
-          description:
-            'Phantom, Solflare, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
-          when: 'Kapan saja',
-        },
-        number: {
-          title: 'Pilih angkamu',
-          description:
-            'Angka berapa pun dari 0 sampai {max}. Setiap angka hanya bisa dipegang satu tiket per hari, jadi cepatlah.',
-          when: 'Hingga tengah malam UTC',
-        },
-        pot: {
-          title: 'Saksikan pot bertambah',
-          description:
-            'Setiap tiket menambahkan harganya ke pot, yang disimpan di akun milik ronde itu sendiri di Solana. Tidak ada orang lain yang bisa memindahkannya.',
-          when: 'Sepanjang hari',
-        },
-        win: {
-          title: 'Menang saat tengah malam UTC',
-          description:
-            'Sebuah angka acak diundi, dan tiket yang paling dekat dengannya memenangkan 80% pot. Biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke hari berikutnya.',
-          when: 'Tepat setelah tengah malam UTC',
-        },
-      },
     },
 
     fairness: {
@@ -160,6 +124,16 @@ const id: Dict = {
           title: 'Batas tegas bagi pengelola',
           description:
             'Program selalu membayar pemenang 80% pot dan membatasi biaya maksimal 20%. Perubahan harga dan biaya hanya berlaku untuk ronde yang dibuka sesudahnya, dan pembeli tidak pernah membayar lebih dari harga yang ditampilkan kepadanya.',
+        },
+        guessDraw: {
+          title: 'Pemeriksaan yang tak bisa diprediksi siapa pun',
+          description:
+            'Setiap tebakan dicampurkan ke dalam entropi ronde. Penyegelan tebakan baru menetapkan sebuah slot beberapa detik ke depan; hash slot itu, yang tidak diketahui siapa pun sampai saat itu, menentukan apakah salah satu tebakan itu menemukan angkanya.',
+        },
+        guessBrowser: {
+          title: 'Bisa diperiksa di browser-mu',
+          description:
+            'Setiap halaman ronde menghitung ulang pemeriksaan yang mengakhiri ronde itu dari data publik: entropi, hash slot, dan tebakan yang menemukan angkanya. Input sama, pemenang sama.',
         },
         open: {
           title: 'Sumber terbuka',
@@ -246,26 +220,159 @@ const id: Dict = {
       tag: 'Pemenang',
       title: 'Setiap pemenang, on-chain',
       description:
-        'Ronde terbaru yang sudah diselesaikan dari ketiga permainan, dibaca dari akun program. Masing-masing tertaut ke rondenya, tempat undian bisa dihitung ulang.',
+        'Ronde terbaru yang sudah diselesaikan dari permainan ini, dibaca dari akun program. Masing-masing tertaut ke halaman rondenya, tempat hasilnya bisa dihitung ulang.',
       paid: 'Dibayar ke pemenang',
       rounds: 'Ronde diselesaikan',
       empty: 'Belum ada ronde yang diselesaikan.',
       drawn: 'Keluar: {number}',
       found: 'Angka ditemukan',
     },
-    cta: {
-      title: 'Pot hari ini sudah menunggu',
-      description: 'Pilih angka yang belum diambil siapa pun. Semoga beruntung!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    title: '{game} di Solana',
+    daily: {
+      kicker: 'Lotre harian · satu undian sehari',
+      title: 'Pilih angka.',
+      titleEnd: 'Menang saat tengah malam.',
+      lead: 'Satu ronde sehari, dari pukul 00:00 sampai 24:00 UTC. Pilih angka berapa pun dari 0 sampai {max}: tepat setelah tengah malam, sebuah angka diundi secara acak, dan tiket yang paling dekat dengannya memenangkan 80% pot. Biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke hari berikutnya.',
+      how: {
+        title: 'Empat langkah, satu undian sehari',
+        description:
+          'Ronde mengikuti kalender UTC: ronde baru dibuka pukul 00:00 UTC dan diundi tepat setelah tengah malam berikutnya.',
+      },
+      steps: {
+        wallet: {
+          title: 'Hubungkan dompet',
+          description:
+            'Phantom, Solflare, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
+          when: 'Kapan saja',
+        },
+        number: {
+          title: 'Pilih angkamu',
+          description:
+            'Angka berapa pun dari 0 sampai {max}. Setiap angka hanya bisa dipegang satu tiket per hari, jadi cepatlah.',
+          when: 'Hingga tengah malam UTC',
+        },
+        pot: {
+          title: 'Saksikan pot bertambah',
+          description:
+            'Setiap tiket menambahkan harganya ke pot, yang disimpan di akun milik ronde itu sendiri di Solana. Tidak ada orang lain yang bisa memindahkannya.',
+          when: 'Sepanjang hari',
+        },
+        win: {
+          title: 'Menang saat tengah malam UTC',
+          description:
+            'Sebuah angka acak diundi, dan tiket yang paling dekat dengannya memenangkan 80% pot. Biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke hari berikutnya.',
+          when: 'Tepat setelah tengah malam UTC',
+        },
+      },
+      cta: {
+        kicker: 'Diundi setiap hari setelah tengah malam UTC',
+        title: 'Pot hari ini sudah menunggu',
+        description: 'Pilih angka yang belum diambil siapa pun. Semoga beruntung!',
+      },
+    },
+    hourly: {
+      kicker: 'Lotre per jam · 24 undian sehari',
+      title: 'Pilih angka.',
+      titleEnd: 'Menang tepat di awal jam.',
+      lead: 'Ronde baru setiap jam, tepat di awal jam (UTC). Pilih angka berapa pun dari 0 sampai {max}: tepat setelah jam itu berakhir, sebuah angka diundi secara acak, dan tiket yang paling dekat dengannya memenangkan 80% pot. Biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke jam berikutnya.',
+      how: {
+        title: 'Empat langkah, satu undian per jam',
+        description:
+          'Ronde mengikuti jam UTC: ronde baru dibuka di awal setiap jam dan diundi tepat setelah jam itu berakhir.',
+      },
+      steps: {
+        wallet: {
+          title: 'Hubungkan dompet',
+          description:
+            'Phantom, Solflare, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
+          when: 'Kapan saja',
+        },
+        number: {
+          title: 'Pilih angkamu',
+          description:
+            'Angka berapa pun dari 0 sampai {max}. Setiap angka hanya bisa dipegang satu tiket per jam, jadi cepatlah.',
+          when: 'Hingga akhir jam',
+        },
+        pot: {
+          title: 'Saksikan pot bertambah',
+          description:
+            'Setiap tiket menambahkan harganya ke pot, yang disimpan di akun milik ronde itu sendiri di Solana. Tidak ada orang lain yang bisa memindahkannya.',
+          when: 'Sepanjang jam',
+        },
+        win: {
+          title: 'Menang tepat di awal jam',
+          description:
+            'Sebuah angka acak diundi, dan tiket yang paling dekat dengannya memenangkan 80% pot. Biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke jam berikutnya.',
+          when: 'Tepat setelah jam berakhir',
+        },
+      },
+      cta: {
+        kicker: 'Diundi setiap jam, tepat di awal jam',
+        title: 'Pot jam ini sudah menunggu',
+        description: 'Pilih angka yang belum diambil siapa pun di jam ini. Semoga beruntung!',
+      },
+    },
+    guess: {
+      kicker: 'Tebak Angka · tanpa batas waktu',
+      title: 'Temukan angkanya.',
+      titleEnd: 'Sebelum orang lain.',
+      lead: 'Setiap ronde berjalan seolah menyembunyikan satu angka dari 0 sampai {max} yang tidak diketahui siapa pun, termasuk operator. Setiap tebakan adalah tiket pada angka yang belum dicoba siapa pun di ronde itu. Setiap beberapa detik, tebakan baru diperiksa: tebakan yang menemukan angkanya memenangkan 80% pot, dan ronde baru langsung dimulai.',
+      how: {
+        title: 'Empat langkah, tanpa batas waktu',
+        description:
+          'Sebuah ronde berlangsung sampai ada tebakan yang menemukan angkanya. Lalu ronde berikutnya dibuka, dengan angka baru untuk ditemukan.',
+      },
+      steps: {
+        wallet: {
+          title: 'Hubungkan dompet',
+          description:
+            'Phantom, Solflare, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
+          when: 'Kapan saja',
+        },
+        guess: {
+          title: 'Buat tebakan',
+          description:
+            'Angka berapa pun dari 0 sampai {max} yang belum dicoba siapa pun di ronde itu. Setiap tebakan adalah satu tiket, dan harganya masuk ke pot.',
+          when: 'Kapan saja',
+        },
+        check: {
+          title: 'Diperiksa dalam hitungan detik',
+          description:
+            'Setiap beberapa detik, tebakan baru disegel dan diperiksa dengan hash sebuah slot yang tidak bisa diketahui siapa pun sebelumnya. Tebakan yang meleset mengeluarkan angkanya dari ronde.',
+          when: 'Setiap beberapa detik',
+        },
+        win: {
+          title: 'Temukan lebih dulu',
+          description:
+            'Tebakan yang menemukan angkanya memenangkan 80% pot. Biaya pengelola diambil dari sisanya, yang tersisa dibawa ke ronde berikutnya, dan ronde baru langsung dimulai.',
+          when: 'Saat angkanya ditemukan',
+        },
+      },
+      cta: {
+        kicker: 'Diperiksa setiap beberapa detik',
+        title: 'Angkanya masih menunggu ditemukan',
+        description: 'Coba angka yang belum dicoba siapa pun. Semoga beruntung!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: 'Satu undian sehari · Diundi setelah tengah malam UTC · Setiap tiket di Solana',
     draw: 'Undian',
     pot: 'Pot hari ini',
+    potHour: 'Pot jam ini',
     toDraw: 'menuju undian · {day}',
     tickets: '{n} tiket hari ini',
+    ticketsHour: '{n} tiket jam ini',
+    guesses: '{n} tebakan di ronde ini',
     entropy: 'Entropi · {cluster}',
     entropyTitle: 'Entropi: {hex}',
     noTickets: 'belum ada tiket',
@@ -474,6 +581,9 @@ const id: Dict = {
     description:
       'Angka yang sama, dari 0 sampai {max}. Pemenang mendapat 80% pot; biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke ronde berikutnya.',
     play: 'Main',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Dua cara bermain lainnya',
+    discover: 'Jelajahi',
     daily: {
       name: 'Lotre harian',
       short: 'Harian',

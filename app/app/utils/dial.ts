@@ -1,14 +1,20 @@
-/** The landing's dial (`HeroDial`): where a moment of the UTC day sits on it. */
-const DAY_MS = 86_400_000;
+import { DAY_MS, GameKind, HOUR_MS } from '@solucky/client';
 
-/** Share of its UTC day a moment has reached, from 0 (00:00) to 1 (24:00). */
-export function dayProgress(ms: number): number {
-  return (((ms % DAY_MS) + DAY_MS) % DAY_MS) / DAY_MS;
+/**
+ * The dial on each game's page (`HeroDial`). A lottery's dial is its round:
+ * the UTC day for the daily lottery, the hour for the hourly one, starting at
+ * the top. Guess the number's dial is its range of numbers, 0 at the top.
+ */
+
+/** Share of its round a moment has reached in a lottery, from 0 (the round opens) to 1 (it closes). */
+export function roundShare(kind: number, ms: number): number {
+  const length = kind === GameKind.Hourly ? HOUR_MS : DAY_MS;
+  return (((ms % length) + length) % length) / length;
 }
 
-/** Angle of a moment on the dial, in radians clockwise from 3 o'clock, with 00:00 UTC at the top. */
-export function dialAngle(ms: number): number {
-  return -Math.PI / 2 + dayProgress(ms) * 2 * Math.PI;
+/** Angle of a share of the dial, in radians clockwise from 3 o'clock, with 0 at the top. */
+export function dialAngle(share: number): number {
+  return -Math.PI / 2 + share * 2 * Math.PI;
 }
 
 /**

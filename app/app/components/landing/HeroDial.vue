@@ -1,16 +1,35 @@
 <script setup lang="ts">
+import { GameKind } from '@solucky/client';
+
 /**
- * The landing's dial, in soft relief: a disc standing out of the page with
- * the 24 hours of the UTC day around its rim, a track pressed into it where
- * the day runs from 00:00 at the top, and a raised core in the middle that
- * holds the readout. The live layer (`HeroDialLive`) fills the track and the
- * core; on its own, the dial shows its empty face.
+ * The dial on each game's page, in soft relief: a disc standing out of the
+ * page, a track pressed into it, and a raised core in the middle that holds
+ * the readout. Its rim is the game's round: the 24 hours of the UTC day
+ * (daily), the 60 minutes of the hour (hourly), both from the top; or the
+ * range of numbers a guess can take, 0 at the top (Guess, read like a
+ * radar). The live layer (`HeroDialLive`) fills the track and the core; on
+ * its own, the dial shows its empty face.
  */
-const hours = Array.from({ length: 24 }, (_, i) => {
-  const angle = -Math.PI / 2 + (i / 24) * 2 * Math.PI;
-  const major = i % 6 === 0;
-  return { key: i, major, from: dialPoint(angle, 90), to: dialPoint(angle, major ? 95 : 93) };
+// The kind as a number (0 daily, 1 hourly, 2 guess), as `GAME_SLUGS` indexes it.
+const props = defineProps<{ kind: number }>();
+
+// How many marks go around the rim, and every how many of them a long one stands.
+const FACES: Record<number, { marks: number; every: number }> = {
+  [GameKind.Daily]: { marks: 24, every: 6 },
+  [GameKind.Hourly]: { marks: 60, every: 5 },
+  [GameKind.Guess]: { marks: 40, every: 10 },
+};
+
+const marks = computed(() => {
+  const face = FACES[props.kind] ?? FACES[GameKind.Daily]!;
+  return Array.from({ length: face.marks }, (_, i) => {
+    const angle = dialAngle(i / face.marks);
+    const major = i % face.every === 0;
+    return { key: i, major, from: dialPoint(angle, 90), to: dialPoint(angle, major ? 95 : 93) };
+  });
 });
+// Hourly's sixty marks stand closer together, so they are finer.
+const fine = computed(() => props.kind === GameKind.Hourly);
 </script>
 
 <template>
@@ -20,19 +39,27 @@ const hours = Array.from({ length: 24 }, (_, i) => {
     <div class="absolute inset-[9%] rounded-full shadow-(--neu-in)" aria-hidden="true" />
     <svg viewBox="-100 -100 200 200" class="pointer-events-none absolute inset-0 size-full" aria-hidden="true">
       <line
-        v-for="h in hours"
-        :key="h.key"
-        :x1="h.from.x"
-        :y1="h.from.y"
-        :x2="h.to.x"
-        :y2="h.to.y"
+        v-for="m in marks"
+        :key="m.key"
+        :x1="m.from.x"
+        :y1="m.from.y"
+        :x2="m.to.x"
+        :y2="m.to.y"
         :class="
-          h.key === 0 ? 'stroke-(--ui-primary)' : h.major ? 'stroke-(--ui-text-muted)' : 'stroke-(--ui-text-dimmed)/60'
+          m.key === 0 ? 'stroke-(--ui-primary)' : m.major ? 'stroke-(--ui-text-muted)' : 'stroke-(--ui-text-dimmed)/60'
         "
-        :stroke-width="h.major ? 1.2 : 0.8"
+        :stroke-width="m.major ? 1.2 : fine ? 0.5 : 0.8"
         stroke-linecap="round"
       />
       <circle r="74" class="fill-none stroke-(--ui-text-dimmed)/20" stroke-width="2.5" />
+      <!-- Guess: the radar's inner ring. -->
+      <circle
+        v-if="props.kind === GameKind.Guess"
+        r="62"
+        class="fill-none stroke-(--ui-text-dimmed)/30"
+        stroke-width="0.6"
+        stroke-dasharray="1.5 2.5"
+      />
     </svg>
     <div class="absolute inset-[25%] rounded-full bg-default shadow-(--neu)" aria-hidden="true" />
     <slot />

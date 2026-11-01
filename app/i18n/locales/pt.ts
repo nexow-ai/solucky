@@ -11,9 +11,6 @@ const pt: Dict = {
 
   nav: {
     play: 'Jogar',
-    how: 'Como funciona',
-    fairness: 'Jogo limpo',
-    faq: 'Dúvidas',
     skip: 'Pular para o conteúdo',
   },
 
@@ -86,9 +83,6 @@ const pt: Dict = {
   },
 
   home: {
-    kicker: 'Jogos de loteria na Solana',
-    title: 'Escolha um número.',
-    titleEnd: 'Ganhe à meia-noite.',
     lead: 'Um sorteio todo dia, um sorteio toda hora e um número escondido para descobrir. O vencedor leva 80% do pote, e o resto passa para a próxima rodada. Cada bilhete, cada lamport e cada sorteio fica na Solana, onde qualquer pessoa pode conferir.',
     playNow: 'Jogar agora',
     howItWorks: 'Como funciona',
@@ -97,38 +91,8 @@ const pt: Dict = {
 
     how: {
       tag: 'Como funciona',
-      title: 'Quatro passos, um sorteio por dia',
-      description:
-        'As rodadas seguem o calendário UTC: uma nova abre às 00:00 UTC e é sorteada logo depois da meia-noite seguinte.',
       opens: 'Abre a rodada',
-      draw: 'Sorteio',
       now: 'Agora',
-      steps: {
-        wallet: {
-          title: 'Conecte uma carteira',
-          description:
-            'Phantom, Solflare, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
-          when: 'A qualquer hora',
-        },
-        number: {
-          title: 'Escolha seu número',
-          description:
-            'Qualquer número de 0 a {max}. Cada número só pode estar em um bilhete por dia, então não demore.',
-          when: 'Até a meia-noite UTC',
-        },
-        pot: {
-          title: 'Veja o pote crescer',
-          description:
-            'Cada bilhete soma seu preço ao pote, guardado pela própria conta da rodada na Solana. Ninguém mais pode movimentá-lo.',
-          when: 'O dia todo',
-        },
-        win: {
-          title: 'Ganhe à meia-noite UTC',
-          description:
-            'Um número aleatório é sorteado, e o bilhete mais próximo dele leva 80% do pote. A taxa da casa sai do restante, e o que sobra passa para o dia seguinte.',
-          when: 'Logo após a meia-noite UTC',
-        },
-      },
     },
 
     fairness: {
@@ -161,6 +125,16 @@ const pt: Dict = {
           title: 'Limites rígidos para a casa',
           description:
             'O programa sempre paga 80% do pote ao vencedor e limita a taxa a 20%. Mudanças de preço e de taxa só valem para as rodadas abertas depois, e um comprador nunca paga mais do que o preço que lhe foi mostrado.',
+        },
+        guessDraw: {
+          title: 'Uma verificação que ninguém pode prever',
+          description:
+            'Cada palpite é misturado à entropia da rodada. Selar os novos palpites fixa um slot alguns segundos no futuro; o hash desse slot, desconhecido por todos até então, decide se um deles acertou o número.',
+        },
+        guessBrowser: {
+          title: 'Conferível no seu navegador',
+          description:
+            'A página de cada rodada recalcula, a partir de dados públicos, a verificação que a encerrou: a entropia, o hash do slot e o palpite que acertou o número. Mesmas entradas, mesmo vencedor.',
         },
         open: {
           title: 'Código aberto',
@@ -247,26 +221,160 @@ const pt: Dict = {
       tag: 'Vencedores',
       title: 'Cada vencedor, on-chain',
       description:
-        'As últimas rodadas liquidadas dos três jogos, lidas das contas do programa. Cada uma leva à sua rodada, onde o sorteio pode ser recalculado.',
+        'As últimas rodadas liquidadas deste jogo, lidas das contas do programa. Cada uma leva à página da sua rodada, onde o resultado pode ser recalculado.',
       paid: 'Pago aos vencedores',
       rounds: 'Rodadas liquidadas',
       empty: 'Nenhuma rodada foi liquidada ainda.',
       drawn: 'Sorteado: {number}',
       found: 'Número encontrado',
     },
-    cta: {
-      title: 'O pote de hoje está esperando',
-      description: 'Escolha um número que ninguém pegou ainda. Boa sorte!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    /** The hourly and Guess pages' title; the daily lottery's page is the site's home and keeps meta.title. */
+    title: '{game} na Solana',
+    daily: {
+      kicker: 'Loteria diária · um sorteio por dia',
+      title: 'Escolha um número.',
+      titleEnd: 'Ganhe à meia-noite.',
+      lead: 'Uma rodada por dia, das 00:00 às 24:00 UTC. Escolha qualquer número de 0 a {max}: logo depois da meia-noite, um número aleatório é sorteado, e o bilhete mais próximo dele leva 80% do pote. A taxa da casa sai do restante, e o que sobra passa para o dia seguinte.',
+      how: {
+        title: 'Quatro passos, um sorteio por dia',
+        description:
+          'As rodadas seguem o calendário UTC: uma nova abre às 00:00 UTC e é sorteada logo depois da meia-noite seguinte.',
+      },
+      steps: {
+        wallet: {
+          title: 'Conecte uma carteira',
+          description:
+            'Phantom, Solflare, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
+          when: 'A qualquer hora',
+        },
+        number: {
+          title: 'Escolha seu número',
+          description:
+            'Qualquer número de 0 a {max}. Cada número só pode estar em um bilhete por dia, então não demore.',
+          when: 'Até a meia-noite UTC',
+        },
+        pot: {
+          title: 'Veja o pote crescer',
+          description:
+            'Cada bilhete soma seu preço ao pote, guardado pela própria conta da rodada na Solana. Ninguém mais pode movimentá-lo.',
+          when: 'O dia todo',
+        },
+        win: {
+          title: 'Ganhe à meia-noite UTC',
+          description:
+            'Um número aleatório é sorteado, e o bilhete mais próximo dele leva 80% do pote. A taxa da casa sai do restante, e o que sobra passa para o dia seguinte.',
+          when: 'Logo após a meia-noite UTC',
+        },
+      },
+      cta: {
+        kicker: 'Sorteado todo dia após a meia-noite UTC',
+        title: 'O pote de hoje está esperando',
+        description: 'Escolha um número que ninguém pegou ainda. Boa sorte!',
+      },
+    },
+    hourly: {
+      kicker: 'Loteria horária · 24 sorteios por dia',
+      title: 'Escolha um número.',
+      titleEnd: 'Ganhe na hora cheia.',
+      lead: 'Uma nova rodada a cada hora, na hora cheia (UTC). Escolha qualquer número de 0 a {max}: logo depois que a hora termina, um número aleatório é sorteado, e o bilhete mais próximo dele leva 80% do pote. A taxa da casa sai do restante, e o que sobra passa para a hora seguinte.',
+      how: {
+        title: 'Quatro passos, um sorteio por hora',
+        description:
+          'As rodadas seguem o relógio UTC: uma nova abre no início de cada hora e é sorteada logo depois que ela termina.',
+      },
+      steps: {
+        wallet: {
+          title: 'Conecte uma carteira',
+          description:
+            'Phantom, Solflare, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
+          when: 'A qualquer hora',
+        },
+        number: {
+          title: 'Escolha seu número',
+          description:
+            'Qualquer número de 0 a {max}. Cada número só pode estar em um bilhete por hora, então não demore.',
+          when: 'Até o fim da hora',
+        },
+        pot: {
+          title: 'Veja o pote crescer',
+          description:
+            'Cada bilhete soma seu preço ao pote, guardado pela própria conta da rodada na Solana. Ninguém mais pode movimentá-lo.',
+          when: 'A hora toda',
+        },
+        win: {
+          title: 'Ganhe na hora cheia',
+          description:
+            'Um número aleatório é sorteado, e o bilhete mais próximo dele leva 80% do pote. A taxa da casa sai do restante, e o que sobra passa para a hora seguinte.',
+          when: 'Logo após o fim da hora',
+        },
+      },
+      cta: {
+        kicker: 'Sorteado a cada hora, na hora cheia',
+        title: 'O pote desta hora está esperando',
+        description: 'Escolha um número que ninguém pegou nesta hora. Boa sorte!',
+      },
+    },
+    guess: {
+      kicker: 'Adivinhe o número · sem prazo',
+      title: 'Encontre o número.',
+      titleEnd: 'Antes de todo mundo.',
+      lead: 'Cada rodada funciona como se escondesse um número de 0 a {max}, desconhecido por todos, inclusive o operador. Cada palpite é um bilhete em um número que ninguém tentou ainda na rodada. A cada poucos segundos, os novos palpites são verificados: o que acertar o número leva 80% do pote, e uma nova rodada começa na hora.',
+      how: {
+        title: 'Quatro passos, sem prazo',
+        description:
+          'Uma rodada dura até que um palpite acerte o seu número. Aí abre a próxima rodada, com um novo número para encontrar.',
+      },
+      steps: {
+        wallet: {
+          title: 'Conecte uma carteira',
+          description:
+            'Phantom, Solflare, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
+          when: 'A qualquer hora',
+        },
+        guess: {
+          title: 'Dê um palpite',
+          description:
+            'Qualquer número de 0 a {max} que ninguém tentou ainda na rodada. Cada palpite é um bilhete, e o preço dele vai para o pote.',
+          when: 'A qualquer hora',
+        },
+        check: {
+          title: 'Verificado em segundos',
+          description:
+            'A cada poucos segundos, os novos palpites são selados e verificados com o hash de um slot que ninguém podia conhecer de antemão. Um palpite que erra tira o seu número da rodada.',
+          when: 'A cada poucos segundos',
+        },
+        win: {
+          title: 'Acerte primeiro',
+          description:
+            'O palpite que acertar o número leva 80% do pote. A taxa da casa sai do restante, o que sobra passa adiante, e uma nova rodada começa na hora.',
+          when: 'No momento em que é encontrado',
+        },
+      },
+      cta: {
+        kicker: 'Verificado a cada poucos segundos',
+        title: 'O número ainda está por aí',
+        description: 'Tente um número que ninguém tentou ainda. Boa sorte!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: 'Um sorteio por dia · Sorteado após a meia-noite UTC · Todo bilhete na Solana',
     draw: 'Sorteio',
     pot: 'Pote de hoje',
+    potHour: 'Pote desta hora',
     toDraw: 'até o sorteio · {day}',
     tickets: '{n} bilhete hoje | {n} bilhetes hoje',
+    ticketsHour: '{n} bilhete nesta hora | {n} bilhetes nesta hora',
+    guesses: '{n} palpite nesta rodada | {n} palpites nesta rodada',
     entropy: 'Entropia · {cluster}',
     entropyTitle: 'Entropia: {hex}',
     noTickets: 'nenhum bilhete ainda',
@@ -477,6 +585,9 @@ const pt: Dict = {
     description:
       'Os mesmos números, de 0 a {max}. O vencedor leva 80% do pote; a taxa da casa sai do restante, e o que sobra passa para a próxima rodada.',
     play: 'Jogar',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Mais dois jeitos de jogar',
+    discover: 'Descobrir',
     daily: {
       name: 'Loteria diária',
       short: 'Diária',

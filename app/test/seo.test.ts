@@ -59,6 +59,7 @@ describe('sitemapXml', () => {
   it('lists every indexed page in every language', () => {
     expect(sitemap.match(/<url>/g)).toHaveLength(INDEXED_PATHS.length * LOCALES.length);
     expect(sitemap).toContain(`<loc>${ORIGIN}/ja/play/guess</loc>`);
+    expect(sitemap).toContain(`<loc>${ORIGIN}/ja/guess</loc>`);
     expect(sitemap).toContain(`<loc>${ORIGIN}/legal/terms</loc>`);
   });
 
@@ -91,7 +92,11 @@ describe('llmsTxt', () => {
 
   it('summarises the games, the rules and every question', () => {
     expect(text.startsWith('# S☉Lucky\n\n> ')).toBe(true);
-    expect(text).toContain(`[${en.games.hourly.name}](${ORIGIN}/play/hourly)`);
+    expect(text).toContain(`[${en.games.hourly.name}](${ORIGIN}/hourly)`);
+    expect(text).toContain(`[${en.nav.play}](${ORIGIN}/play/hourly)`);
+    for (const slug of ['daily', 'hourly', 'guess'] as const) {
+      for (const step of Object.values(en.landing[slug].steps)) expect(text).toContain(`**${step.title}**`);
+    }
     for (const item of Object.values(en.home.faq.items)) expect(text).toContain(`### ${item.q}`);
     expect(text).toContain('test money');
   });
@@ -115,8 +120,10 @@ describe('shellHead', () => {
   });
 
   it('escapes the words it writes into attributes', () => {
-    const { head } = shellHead(browserOnlyPage('/fr/play/guess')!, '/fr/play/guess', ORIGIN);
+    const { head, noscript } = shellHead(browserOnlyPage('/fr/play/guess')!, '/fr/play/guess', ORIGIN);
     expect(head).not.toMatch(/content="[^"]*[<>][^"]*"/);
+    // Without scripts, the shell leads to the game's own page, which renders on the server.
+    expect(noscript).toContain(`href="${ORIGIN}/fr/guess"`);
   });
 });
 
@@ -134,8 +141,8 @@ describe('homeGraph', () => {
     repository: 'https://github.com/nexow-ai/solucky',
     games: [{ name: 'Daily lottery', description: 'Daily', url: `${ORIGIN}/play/daily` }],
     gamesTitle: en.games.title,
-    howTitle: en.home.how.title,
-    howDescription: en.home.how.description,
+    howTitle: en.landing.daily.how.title,
+    howDescription: en.landing.daily.how.description,
     steps: [{ name: 'Connect', text: 'A wallet' }],
     faq: [{ question: 'Q?', answer: 'A </script><script>alert(1)</script>' }],
     playUrl: `${ORIGIN}/play`,

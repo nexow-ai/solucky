@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { GameKind } from '@solucky/client';
+import type { GameKind } from '@solucky/client';
 
-/** The counters under the landing's dial: today's tickets, players and the ticket price. Browser only. */
+/** The counters under a game's dial: its round's tickets, players and the ticket price. Browser only. */
+// The kind as a number (0 daily, 1 hourly, 2 guess), as `GAME_SLUGS` indexes it.
+const props = defineProps<{ kind: number }>();
+
 const { t } = useI18n();
-const { tickets, players, ticketPrice } = useLottery(GameKind.Daily);
+const { tickets, players, ticketPrice } = useLottery(() => props.kind as GameKind);
 </script>
 
 <template>

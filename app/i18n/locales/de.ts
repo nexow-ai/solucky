@@ -11,9 +11,6 @@ const de: Dict = {
 
   nav: {
     play: 'Spielen',
-    how: 'So funktioniert’s',
-    fairness: 'Fairness',
-    faq: 'FAQ',
     skip: 'Zum Inhalt springen',
   },
 
@@ -87,9 +84,6 @@ const de: Dict = {
   },
 
   home: {
-    kicker: 'Lotteriespiele auf Solana',
-    title: 'Wähle eine Zahl.',
-    titleEnd: 'Gewinne um Mitternacht.',
     lead: 'Eine Ziehung jeden Tag, eine Ziehung jede Stunde und eine versteckte Zahl zum Aufspüren. Der Gewinner erhält 80 % des Pots, und der Rest geht in die nächste Runde über. Jedes Ticket, jeder Lamport und jede Ziehung liegt auf Solana, wo alle es überprüfen können.',
     playNow: 'Jetzt spielen',
     howItWorks: 'So funktioniert’s',
@@ -98,38 +92,8 @@ const de: Dict = {
 
     how: {
       tag: 'So funktioniert’s',
-      title: 'Vier Schritte, eine Ziehung am Tag',
-      description:
-        'Die Runden folgen dem UTC-Kalender: Eine neue öffnet um 00:00 UTC und wird direkt nach der nächsten Mitternacht gezogen.',
       opens: 'Runde öffnet',
-      draw: 'Ziehung',
       now: 'Jetzt',
-      steps: {
-        wallet: {
-          title: 'Verbinde eine Wallet',
-          description:
-            'Phantom, Solflare, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
-          when: 'Jederzeit',
-        },
-        number: {
-          title: 'Wähle deine Zahl',
-          description:
-            'Eine beliebige Zahl von 0 bis {max}. Jede Zahl kann pro Tag nur von einem Ticket belegt werden, also sei schnell.',
-          when: 'Bis Mitternacht UTC',
-        },
-        pot: {
-          title: 'Sieh dem Pot beim Wachsen zu',
-          description:
-            'Jedes Ticket legt seinen Preis in den Pot, den das eigene Konto der Runde auf Solana verwahrt. Niemand sonst kann ihn bewegen.',
-          when: 'Den ganzen Tag',
-        },
-        win: {
-          title: 'Gewinne um Mitternacht UTC',
-          description:
-            'Eine Zufallszahl wird gezogen, und das Ticket, das ihr am nächsten liegt, gewinnt 80 % des Pots. Die Hausgebühr geht vom Rest ab, und was übrig bleibt, wird auf den nächsten Tag übertragen.',
-          when: 'Direkt nach Mitternacht UTC',
-        },
-      },
     },
 
     fairness: {
@@ -162,6 +126,16 @@ const de: Dict = {
           title: 'Harte Grenzen für das Haus',
           description:
             'Das Programm zahlt dem Gewinner immer 80 % des Pots und begrenzt die Gebühr auf 20 %. Preis- und Gebührenänderungen gelten erst für danach geöffnete Runden, und wer kauft, zahlt nie mehr als den angezeigten Preis.',
+        },
+        guessDraw: {
+          title: 'Eine Prüfung, die niemand vorhersagen kann',
+          description:
+            'Jeder Tipp fließt in die Entropie der Runde ein. Das Versiegeln der neuen Tipps legt einen Slot einige Sekunden in der Zukunft fest; der Hash dieses Slots, bis dahin allen unbekannt, entscheidet, ob einer von ihnen die Zahl gefunden hat.',
+        },
+        guessBrowser: {
+          title: 'Prüfbar in deinem Browser',
+          description:
+            'Jede Rundenseite berechnet die Prüfung, die sie beendet hat, aus öffentlichen Daten neu: der Entropie, dem Slot-Hash und dem Tipp, der die Zahl gefunden hat. Gleiche Eingaben, gleicher Gewinner.',
         },
         open: {
           title: 'Open Source',
@@ -248,26 +222,160 @@ const de: Dict = {
       tag: 'Gewinner',
       title: 'Jeder Gewinner, on-chain',
       description:
-        'Die zuletzt abgewickelten Runden der drei Spiele, gelesen aus den Konten des Programms. Jede verlinkt auf ihre Runde, wo sich die Ziehung nachrechnen lässt.',
+        'Die zuletzt abgewickelten Runden dieses Spiels, gelesen aus den Konten des Programms. Jede verlinkt auf ihre Rundenseite, wo sich das Ergebnis nachrechnen lässt.',
       paid: 'An Gewinner ausgezahlt',
       rounds: 'Abgewickelte Runden',
       empty: 'Noch keine Runde wurde abgewickelt.',
       drawn: 'Gezogen: {number}',
       found: 'Zahl gefunden',
     },
-    cta: {
-      title: 'Der heutige Pot wartet',
-      description: 'Wähle eine Zahl, die noch niemand genommen hat. Viel Glück!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    /** The hourly and Guess pages' title; the daily lottery's page is the site's home and keeps meta.title. */
+    title: '{game} auf Solana',
+    daily: {
+      kicker: 'Tägliche Lotterie · eine Ziehung am Tag',
+      title: 'Wähle eine Zahl.',
+      titleEnd: 'Gewinne um Mitternacht.',
+      lead: 'Eine Runde am Tag, von 00:00 bis 24:00 UTC. Wähle eine beliebige Zahl von 0 bis {max}: Direkt nach Mitternacht wird eine Zufallszahl gezogen, und das Ticket, das ihr am nächsten liegt, gewinnt 80 % des Pots. Die Hausgebühr geht vom Rest ab, und was übrig bleibt, wird auf den nächsten Tag übertragen.',
+      how: {
+        title: 'Vier Schritte, eine Ziehung am Tag',
+        description:
+          'Die Runden folgen dem UTC-Kalender: Eine neue öffnet um 00:00 UTC und wird direkt nach der nächsten Mitternacht gezogen.',
+      },
+      steps: {
+        wallet: {
+          title: 'Verbinde eine Wallet',
+          description:
+            'Phantom, Solflare, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
+          when: 'Jederzeit',
+        },
+        number: {
+          title: 'Wähle deine Zahl',
+          description:
+            'Eine beliebige Zahl von 0 bis {max}. Jede Zahl kann pro Tag nur von einem Ticket belegt werden, also sei schnell.',
+          when: 'Bis Mitternacht UTC',
+        },
+        pot: {
+          title: 'Sieh dem Pot beim Wachsen zu',
+          description:
+            'Jedes Ticket legt seinen Preis in den Pot, den das eigene Konto der Runde auf Solana verwahrt. Niemand sonst kann ihn bewegen.',
+          when: 'Den ganzen Tag',
+        },
+        win: {
+          title: 'Gewinne um Mitternacht UTC',
+          description:
+            'Eine Zufallszahl wird gezogen, und das Ticket, das ihr am nächsten liegt, gewinnt 80 % des Pots. Die Hausgebühr geht vom Rest ab, und was übrig bleibt, wird auf den nächsten Tag übertragen.',
+          when: 'Direkt nach Mitternacht UTC',
+        },
+      },
+      cta: {
+        kicker: 'Jeden Tag nach Mitternacht UTC gezogen',
+        title: 'Der heutige Pot wartet',
+        description: 'Wähle eine Zahl, die noch niemand genommen hat. Viel Glück!',
+      },
+    },
+    hourly: {
+      kicker: 'Stündliche Lotterie · 24 Ziehungen am Tag',
+      title: 'Wähle eine Zahl.',
+      titleEnd: 'Gewinne zur vollen Stunde.',
+      lead: 'Jede Stunde eine neue Runde, zur vollen Stunde (UTC). Wähle eine beliebige Zahl von 0 bis {max}: Direkt nach Ende der Stunde wird eine Zufallszahl gezogen, und das Ticket, das ihr am nächsten liegt, gewinnt 80 % des Pots. Die Hausgebühr geht vom Rest ab, und was übrig bleibt, wird auf die nächste Stunde übertragen.',
+      how: {
+        title: 'Vier Schritte, eine Ziehung pro Stunde',
+        description:
+          'Die Runden folgen der UTC-Uhr: Eine neue öffnet zu Beginn jeder Stunde und wird direkt nach deren Ende gezogen.',
+      },
+      steps: {
+        wallet: {
+          title: 'Verbinde eine Wallet',
+          description:
+            'Phantom, Solflare, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
+          when: 'Jederzeit',
+        },
+        number: {
+          title: 'Wähle deine Zahl',
+          description:
+            'Eine beliebige Zahl von 0 bis {max}. Jede Zahl kann pro Stunde nur von einem Ticket belegt werden, also sei schnell.',
+          when: 'Bis zum Ende der Stunde',
+        },
+        pot: {
+          title: 'Sieh dem Pot beim Wachsen zu',
+          description:
+            'Jedes Ticket legt seinen Preis in den Pot, den das eigene Konto der Runde auf Solana verwahrt. Niemand sonst kann ihn bewegen.',
+          when: 'Die ganze Stunde',
+        },
+        win: {
+          title: 'Gewinne zur vollen Stunde',
+          description:
+            'Eine Zufallszahl wird gezogen, und das Ticket, das ihr am nächsten liegt, gewinnt 80 % des Pots. Die Hausgebühr geht vom Rest ab, und was übrig bleibt, wird auf die nächste Stunde übertragen.',
+          when: 'Direkt nach Ende der Stunde',
+        },
+      },
+      cta: {
+        kicker: 'Jede Stunde gezogen, zur vollen Stunde',
+        title: 'Der Pot dieser Stunde wartet',
+        description: 'Wähle eine Zahl, die in dieser Stunde noch niemand genommen hat. Viel Glück!',
+      },
+    },
+    guess: {
+      kicker: 'Errate die Zahl · ohne Frist',
+      title: 'Finde die Zahl.',
+      titleEnd: 'Vor allen anderen.',
+      lead: 'Jede Runde spielt sich so, als würde sie eine Zahl von 0 bis {max} verstecken, die niemand kennt, auch der Betreiber nicht. Jeder Tipp ist ein Ticket auf eine Zahl, die in der Runde noch niemand versucht hat. Alle paar Sekunden werden die neuen Tipps geprüft: Der Tipp, der die Zahl findet, gewinnt 80 % des Pots, und sofort beginnt eine neue Runde.',
+      how: {
+        title: 'Vier Schritte, ohne Frist',
+        description:
+          'Eine Runde dauert, bis ein Tipp ihre Zahl findet. Dann öffnet die nächste Runde, mit einer neuen Zahl zum Finden.',
+      },
+      steps: {
+        wallet: {
+          title: 'Verbinde eine Wallet',
+          description:
+            'Phantom, Solflare, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
+          when: 'Jederzeit',
+        },
+        guess: {
+          title: 'Gib einen Tipp ab',
+          description:
+            'Eine beliebige Zahl von 0 bis {max}, die in der Runde noch niemand versucht hat. Jeder Tipp ist ein Ticket, und sein Preis fließt in den Pot.',
+          when: 'Jederzeit',
+        },
+        check: {
+          title: 'In Sekunden geprüft',
+          description:
+            'Alle paar Sekunden werden die neuen Tipps versiegelt und mit dem Hash eines Slots geprüft, den vorher niemand kennen konnte. Ein Tipp, der danebenliegt, nimmt seine Zahl aus der Runde.',
+          when: 'Alle paar Sekunden',
+        },
+        win: {
+          title: 'Finde sie zuerst',
+          description:
+            'Der Tipp, der die Zahl findet, gewinnt 80 % des Pots. Die Hausgebühr geht vom Rest ab, was übrig bleibt, wird übertragen, und sofort beginnt eine neue Runde.',
+          when: 'Sobald sie gefunden ist',
+        },
+      },
+      cta: {
+        kicker: 'Alle paar Sekunden geprüft',
+        title: 'Die Zahl ist noch da draußen',
+        description: 'Versuch eine Zahl, die noch niemand versucht hat. Viel Glück!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: 'Eine Ziehung am Tag · Gezogen nach Mitternacht UTC · Jedes Ticket auf Solana',
     draw: 'Ziehung',
     pot: 'Heutiger Pot',
+    potHour: 'Pot dieser Stunde',
     toDraw: 'bis zur Ziehung · {day}',
     tickets: 'heute {n} Ticket | heute {n} Tickets',
+    ticketsHour: '{n} Ticket in dieser Stunde | {n} Tickets in dieser Stunde',
+    guesses: '{n} Tipp in dieser Runde | {n} Tipps in dieser Runde',
     entropy: 'Entropie · {cluster}',
     entropyTitle: 'Entropie: {hex}',
     noTickets: 'noch keine Tickets',
@@ -478,6 +586,9 @@ const de: Dict = {
     description:
       'Dieselben Zahlen, von 0 bis {max}. Der Gewinner erhält 80 % des Pots; die Hausgebühr geht vom Rest ab, und was übrig bleibt, geht in die nächste Runde über.',
     play: 'Spielen',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Zwei weitere Arten zu spielen',
+    discover: 'Entdecken',
     daily: {
       name: 'Tägliche Lotterie',
       short: 'Täglich',

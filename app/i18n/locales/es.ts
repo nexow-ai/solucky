@@ -11,9 +11,6 @@ const es: Dict = {
 
   nav: {
     play: 'Jugar',
-    how: 'Cómo funciona',
-    fairness: 'Juego limpio',
-    faq: 'Preguntas',
     skip: 'Saltar al contenido',
   },
 
@@ -86,9 +83,6 @@ const es: Dict = {
   },
 
   home: {
-    kicker: 'Juegos de lotería en Solana',
-    title: 'Elige un número.',
-    titleEnd: 'Gana a medianoche.',
     lead: 'Un sorteo cada día, un sorteo cada hora y un número oculto por descubrir. El ganador se lleva el 80 % del pozo, y el resto pasa a la siguiente ronda. Cada boleto, cada lamport y cada sorteo vive en Solana, donde cualquiera puede comprobarlo.',
     playNow: 'Jugar ahora',
     howItWorks: 'Cómo funciona',
@@ -97,38 +91,8 @@ const es: Dict = {
 
     how: {
       tag: 'Cómo funciona',
-      title: 'Cuatro pasos, un sorteo al día',
-      description:
-        'Las rondas siguen el calendario UTC: una nueva abre a las 00:00 UTC y se sortea justo después de la medianoche siguiente.',
       opens: 'Abre la ronda',
-      draw: 'Sorteo',
       now: 'Ahora',
-      steps: {
-        wallet: {
-          title: 'Conecta una billetera',
-          description:
-            'Phantom, Solflare, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
-          when: 'En cualquier momento',
-        },
-        number: {
-          title: 'Elige tu número',
-          description:
-            'Cualquier número del 0 al {max}. Cada número solo puede tenerlo un boleto por día, así que no tardes.',
-          when: 'Hasta la medianoche UTC',
-        },
-        pot: {
-          title: 'Mira cómo crece el pozo',
-          description:
-            'Cada boleto suma su precio al pozo, que guarda la propia cuenta de la ronda en Solana. Nadie más puede moverlo.',
-          when: 'Todo el día',
-        },
-        win: {
-          title: 'Gana a medianoche UTC',
-          description:
-            'Se sortea un número al azar, y el boleto más cercano a él gana el 80 % del pozo. La comisión de la casa sale del resto, y lo que queda pasa al día siguiente.',
-          when: 'Justo después de la medianoche UTC',
-        },
-      },
     },
 
     fairness: {
@@ -161,6 +125,16 @@ const es: Dict = {
           title: 'Límites estrictos para la casa',
           description:
             'El programa siempre paga al ganador el 80 % del pozo y limita la comisión al 20 %. Los cambios de precio y de comisión solo se aplican a las rondas que se abran después, y un comprador nunca paga más que el precio que se le mostró.',
+        },
+        guessDraw: {
+          title: 'Una comprobación que nadie puede predecir',
+          description:
+            'Cada intento se mezcla en la entropía de la ronda. Al sellar los nuevos intentos se fija un slot unos segundos en el futuro; el hash de ese slot, que nadie conoce hasta entonces, decide si uno de ellos encontró el número.',
+        },
+        guessBrowser: {
+          title: 'Verificable en tu navegador',
+          description:
+            'La página de cada ronda recalcula la comprobación que la terminó a partir de datos públicos: la entropía, el hash del slot y el intento que encontró el número. Mismas entradas, mismo ganador.',
         },
         open: {
           title: 'Código abierto',
@@ -247,26 +221,160 @@ const es: Dict = {
       tag: 'Ganadores',
       title: 'Cada ganador, on-chain',
       description:
-        'Las últimas rondas liquidadas de los tres juegos, leídas de las cuentas del programa. Cada una enlaza a su ronda, donde se puede recalcular el sorteo.',
+        'Las últimas rondas liquidadas de este juego, leídas de las cuentas del programa. Cada una enlaza a la página de su ronda, donde se puede recalcular el resultado.',
       paid: 'Pagado a ganadores',
       rounds: 'Rondas liquidadas',
       empty: 'Todavía no se ha liquidado ninguna ronda.',
       drawn: 'Sorteado: {number}',
       found: 'Número encontrado',
     },
-    cta: {
-      title: 'El pozo de hoy te espera',
-      description: 'Elige un número que nadie haya elegido aún. ¡Buena suerte!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    /** The hourly and Guess pages' title; the daily lottery's page is the site's home and keeps meta.title. */
+    title: '{game} en Solana',
+    daily: {
+      kicker: 'Lotería diaria · un sorteo al día',
+      title: 'Elige un número.',
+      titleEnd: 'Gana a medianoche.',
+      lead: 'Una ronda al día, de 00:00 a 24:00 UTC. Elige cualquier número del 0 al {max}: justo después de la medianoche se sortea un número al azar, y el boleto más cercano a él gana el 80 % del pozo. La comisión de la casa sale del resto, y lo que queda pasa al día siguiente.',
+      how: {
+        title: 'Cuatro pasos, un sorteo al día',
+        description:
+          'Las rondas siguen el calendario UTC: una nueva abre a las 00:00 UTC y se sortea justo después de la medianoche siguiente.',
+      },
+      steps: {
+        wallet: {
+          title: 'Conecta una billetera',
+          description:
+            'Phantom, Solflare, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
+          when: 'En cualquier momento',
+        },
+        number: {
+          title: 'Elige tu número',
+          description:
+            'Cualquier número del 0 al {max}. Cada número solo puede tenerlo un boleto por día, así que no tardes.',
+          when: 'Hasta la medianoche UTC',
+        },
+        pot: {
+          title: 'Mira cómo crece el pozo',
+          description:
+            'Cada boleto suma su precio al pozo, que guarda la propia cuenta de la ronda en Solana. Nadie más puede moverlo.',
+          when: 'Todo el día',
+        },
+        win: {
+          title: 'Gana a medianoche UTC',
+          description:
+            'Se sortea un número al azar, y el boleto más cercano a él gana el 80 % del pozo. La comisión de la casa sale del resto, y lo que queda pasa al día siguiente.',
+          when: 'Justo después de la medianoche UTC',
+        },
+      },
+      cta: {
+        kicker: 'Se sortea cada día tras la medianoche UTC',
+        title: 'El pozo de hoy te espera',
+        description: 'Elige un número que nadie haya elegido aún. ¡Buena suerte!',
+      },
+    },
+    hourly: {
+      kicker: 'Lotería horaria · 24 sorteos al día',
+      title: 'Elige un número.',
+      titleEnd: 'Gana a la hora en punto.',
+      lead: 'Una nueva ronda cada hora, en punto (UTC). Elige cualquier número del 0 al {max}: justo al terminar la hora se sortea un número al azar, y el boleto más cercano a él gana el 80 % del pozo. La comisión de la casa sale del resto, y lo que queda pasa a la hora siguiente.',
+      how: {
+        title: 'Cuatro pasos, un sorteo por hora',
+        description:
+          'Las rondas siguen el reloj UTC: una nueva abre al empezar cada hora y se sortea justo después de que termine.',
+      },
+      steps: {
+        wallet: {
+          title: 'Conecta una billetera',
+          description:
+            'Phantom, Solflare, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
+          when: 'En cualquier momento',
+        },
+        number: {
+          title: 'Elige tu número',
+          description:
+            'Cualquier número del 0 al {max}. Cada número solo puede tenerlo un boleto por hora, así que no tardes.',
+          when: 'Hasta el final de la hora',
+        },
+        pot: {
+          title: 'Mira cómo crece el pozo',
+          description:
+            'Cada boleto suma su precio al pozo, que guarda la propia cuenta de la ronda en Solana. Nadie más puede moverlo.',
+          when: 'Toda la hora',
+        },
+        win: {
+          title: 'Gana a la hora en punto',
+          description:
+            'Se sortea un número al azar, y el boleto más cercano a él gana el 80 % del pozo. La comisión de la casa sale del resto, y lo que queda pasa a la hora siguiente.',
+          when: 'Justo al terminar la hora',
+        },
+      },
+      cta: {
+        kicker: 'Se sortea cada hora, en punto',
+        title: 'El pozo de esta hora te espera',
+        description: 'Elige un número que nadie haya elegido en esta hora. ¡Buena suerte!',
+      },
+    },
+    guess: {
+      kicker: 'Adivina el número · sin plazo',
+      title: 'Encuentra el número.',
+      titleEnd: 'Antes que nadie.',
+      lead: 'Cada ronda se juega como si escondiera un número del 0 al {max} que nadie conoce, ni siquiera el operador. Cada intento es un boleto sobre un número que aún nadie ha probado en la ronda. Cada pocos segundos se comprueban los nuevos intentos: el que encuentra el número gana el 80 % del pozo, y empieza una nueva ronda al instante.',
+      how: {
+        title: 'Cuatro pasos, sin plazo',
+        description:
+          'Una ronda dura hasta que un intento encuentra su número. Entonces abre la siguiente ronda, con un nuevo número por encontrar.',
+      },
+      steps: {
+        wallet: {
+          title: 'Conecta una billetera',
+          description:
+            'Phantom, Solflare, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
+          when: 'En cualquier momento',
+        },
+        guess: {
+          title: 'Haz un intento',
+          description:
+            'Cualquier número del 0 al {max} que nadie haya probado aún en la ronda. Cada intento es un boleto, y su precio va al pozo.',
+          when: 'En cualquier momento',
+        },
+        check: {
+          title: 'Comprobado en segundos',
+          description:
+            'Cada pocos segundos, los nuevos intentos se sellan y se comprueban con el hash de un slot que nadie podía conocer de antemano. Un intento fallido saca su número de la ronda.',
+          when: 'Cada pocos segundos',
+        },
+        win: {
+          title: 'Encuéntralo el primero',
+          description:
+            'El intento que encuentra el número gana el 80 % del pozo. La comisión de la casa sale del resto, lo que queda pasa a la siguiente ronda y empieza una nueva ronda al instante.',
+          when: 'En cuanto se encuentra',
+        },
+      },
+      cta: {
+        kicker: 'Se comprueba cada pocos segundos',
+        title: 'El número sigue ahí fuera',
+        description: 'Prueba un número que nadie haya probado aún. ¡Buena suerte!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: 'Un sorteo al día · Se sortea tras la medianoche UTC · Cada boleto en Solana',
     draw: 'Sorteo',
     pot: 'Pozo de hoy',
+    potHour: 'Pozo de esta hora',
     toDraw: 'para el sorteo · {day}',
     tickets: '{n} boleto hoy | {n} boletos hoy',
+    ticketsHour: '{n} boleto en esta hora | {n} boletos en esta hora',
+    guesses: '{n} intento en esta ronda | {n} intentos en esta ronda',
     entropy: 'Entropía · {cluster}',
     entropyTitle: 'Entropía: {hex}',
     noTickets: 'aún no hay boletos',
@@ -477,6 +585,9 @@ const es: Dict = {
     description:
       'Los mismos números, del 0 al {max}. El ganador se lleva el 80 % del pozo; la comisión de la casa sale del resto, y lo que queda pasa a la siguiente ronda.',
     play: 'Jugar',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Dos formas más de jugar',
+    discover: 'Descubrir',
     daily: {
       name: 'Lotería diaria',
       short: 'Diaria',

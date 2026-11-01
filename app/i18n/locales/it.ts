@@ -11,9 +11,6 @@ const it: Dict = {
 
   nav: {
     play: 'Gioca',
-    how: 'Come funziona',
-    fairness: 'Equità',
-    faq: 'FAQ',
     skip: 'Vai al contenuto',
   },
 
@@ -85,9 +82,6 @@ const it: Dict = {
   },
 
   home: {
-    kicker: 'Giochi di lotteria su Solana',
-    title: 'Scegli un numero.',
-    titleEnd: 'Vinci a mezzanotte.',
     lead: 'Un’estrazione al giorno, un’estrazione ogni ora e un numero nascosto da scovare. Il vincitore si prende l’80% del montepremi, e il resto passa al round successivo. Ogni biglietto, ogni lamport e ogni estrazione vivono su Solana, dove chiunque può verificarli.',
     playNow: 'Gioca ora',
     howItWorks: 'Come funziona',
@@ -96,38 +90,8 @@ const it: Dict = {
 
     how: {
       tag: 'Come funziona',
-      title: 'Quattro passi, un’estrazione al giorno',
-      description:
-        'I round seguono il calendario UTC: uno nuovo si apre alle 00:00 UTC e viene estratto subito dopo la mezzanotte successiva.',
       opens: 'Apertura del round',
-      draw: 'Estrazione',
       now: 'Ora',
-      steps: {
-        wallet: {
-          title: 'Collega un wallet',
-          description:
-            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
-          when: 'In qualsiasi momento',
-        },
-        number: {
-          title: 'Scegli il tuo numero',
-          description:
-            'Qualsiasi numero da 0 a {max}. Ogni numero può appartenere a un solo biglietto al giorno, quindi sii veloce.',
-          when: 'Fino a mezzanotte UTC',
-        },
-        pot: {
-          title: 'Guarda crescere il montepremi',
-          description:
-            'Ogni biglietto aggiunge il suo prezzo al montepremi, custodito dall’account del round su Solana. Nessun altro può spostarlo.',
-          when: 'Tutto il giorno',
-        },
-        win: {
-          title: 'Vinci a mezzanotte UTC',
-          description:
-            'Viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round del giorno dopo.',
-          when: 'Subito dopo la mezzanotte UTC',
-        },
-      },
     },
 
     fairness: {
@@ -160,6 +124,16 @@ const it: Dict = {
           title: 'Limiti rigidi per la casa',
           description:
             'Il programma paga sempre al vincitore l’80% del montepremi e limita la commissione al 20%. Le modifiche di prezzo e commissione valgono solo per i round aperti in seguito, e chi compra non paga mai più del prezzo che gli è stato mostrato.',
+        },
+        guessDraw: {
+          title: 'Una verifica che nessuno può prevedere',
+          description:
+            'Ogni tentativo viene mescolato nell’entropia del round. Sigillare i nuovi tentativi fissa uno slot qualche secondo nel futuro; l’hash di quello slot, sconosciuto a tutti fino ad allora, decide se uno di essi ha trovato il numero.',
+        },
+        guessBrowser: {
+          title: 'Verificabile nel tuo browser',
+          description:
+            'La pagina di ogni round ricalcola dai dati pubblici la verifica che lo ha concluso: l’entropia, l’hash dello slot e il tentativo che ha trovato il numero. Stessi input, stesso vincitore.',
         },
         open: {
           title: 'Open source',
@@ -246,26 +220,160 @@ const it: Dict = {
       tag: 'Vincitori',
       title: 'Ogni vincitore, on-chain',
       description:
-        'Gli ultimi round liquidati dei tre giochi, letti dagli account del programma. Ognuno porta al suo round, dove l’estrazione si può ricalcolare.',
+        'Gli ultimi round liquidati di questo gioco, letti dagli account del programma. Ognuno porta alla pagina del suo round, dove il risultato si può ricalcolare.',
       paid: 'Pagato ai vincitori',
       rounds: 'Round liquidati',
       empty: 'Nessun round è stato ancora liquidato.',
       drawn: 'Estratto: {number}',
       found: 'Numero trovato',
     },
-    cta: {
-      title: 'Il montepremi di oggi ti aspetta',
-      description: 'Scegli un numero che nessuno ha ancora preso. Buona fortuna!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    /** The hourly and Guess pages' title; the daily lottery's page is the site's home and keeps meta.title. */
+    title: '{game} su Solana',
+    daily: {
+      kicker: 'Lotteria quotidiana · un’estrazione al giorno',
+      title: 'Scegli un numero.',
+      titleEnd: 'Vinci a mezzanotte.',
+      lead: 'Un round al giorno, dalle 00:00 alle 24:00 UTC. Scegli un numero qualsiasi da 0 a {max}: subito dopo la mezzanotte viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round del giorno dopo.',
+      how: {
+        title: 'Quattro passi, un’estrazione al giorno',
+        description:
+          'I round seguono il calendario UTC: uno nuovo si apre alle 00:00 UTC e viene estratto subito dopo la mezzanotte successiva.',
+      },
+      steps: {
+        wallet: {
+          title: 'Collega un wallet',
+          description:
+            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+          when: 'In qualsiasi momento',
+        },
+        number: {
+          title: 'Scegli il tuo numero',
+          description:
+            'Qualsiasi numero da 0 a {max}. Ogni numero può appartenere a un solo biglietto al giorno, quindi sii veloce.',
+          when: 'Fino a mezzanotte UTC',
+        },
+        pot: {
+          title: 'Guarda crescere il montepremi',
+          description:
+            'Ogni biglietto aggiunge il suo prezzo al montepremi, custodito dall’account del round su Solana. Nessun altro può spostarlo.',
+          when: 'Tutto il giorno',
+        },
+        win: {
+          title: 'Vinci a mezzanotte UTC',
+          description:
+            'Viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round del giorno dopo.',
+          when: 'Subito dopo la mezzanotte UTC',
+        },
+      },
+      cta: {
+        kicker: 'Estrazione ogni giorno dopo la mezzanotte UTC',
+        title: 'Il montepremi di oggi ti aspetta',
+        description: 'Scegli un numero che nessuno ha ancora preso. Buona fortuna!',
+      },
+    },
+    hourly: {
+      kicker: 'Lotteria oraria · 24 estrazioni al giorno',
+      title: 'Scegli un numero.',
+      titleEnd: 'Vinci allo scoccare dell’ora.',
+      lead: 'Un nuovo round ogni ora, allo scoccare dell’ora (UTC). Scegli un numero qualsiasi da 0 a {max}: subito dopo la fine dell’ora viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round dell’ora successiva.',
+      how: {
+        title: 'Quattro passi, un’estrazione all’ora',
+        description:
+          'I round seguono l’orologio UTC: uno nuovo si apre all’inizio di ogni ora e viene estratto subito dopo la sua fine.',
+      },
+      steps: {
+        wallet: {
+          title: 'Collega un wallet',
+          description:
+            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+          when: 'In qualsiasi momento',
+        },
+        number: {
+          title: 'Scegli il tuo numero',
+          description:
+            'Qualsiasi numero da 0 a {max}. Ogni numero può appartenere a un solo biglietto all’ora, quindi sii veloce.',
+          when: 'Fino alla fine dell’ora',
+        },
+        pot: {
+          title: 'Guarda crescere il montepremi',
+          description:
+            'Ogni biglietto aggiunge il suo prezzo al montepremi, custodito dall’account del round su Solana. Nessun altro può spostarlo.',
+          when: 'Per tutta l’ora',
+        },
+        win: {
+          title: 'Vinci allo scoccare dell’ora',
+          description:
+            'Viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round dell’ora successiva.',
+          when: 'Subito dopo la fine dell’ora',
+        },
+      },
+      cta: {
+        kicker: 'Estrazione ogni ora, allo scoccare dell’ora',
+        title: 'Il montepremi di quest’ora ti aspetta',
+        description: 'Scegli un numero che nessuno ha ancora preso in quest’ora. Buona fortuna!',
+      },
+    },
+    guess: {
+      kicker: 'Indovina il numero · nessuna scadenza',
+      title: 'Trova il numero.',
+      titleEnd: 'Prima di tutti.',
+      lead: 'Ogni round si gioca come se nascondesse un numero da 0 a {max}, sconosciuto a tutti, operatore compreso. Ogni tentativo è un biglietto su un numero che nessuno ha ancora provato nel round. Ogni pochi secondi i nuovi tentativi vengono verificati: quello che trova il numero vince l’80% del montepremi, e un nuovo round parte subito.',
+      how: {
+        title: 'Quattro passi, nessuna scadenza',
+        description:
+          'Un round dura finché un tentativo non trova il suo numero. Poi si apre il round successivo, con un nuovo numero da trovare.',
+      },
+      steps: {
+        wallet: {
+          title: 'Collega un wallet',
+          description:
+            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+          when: 'In qualsiasi momento',
+        },
+        guess: {
+          title: 'Fai un tentativo',
+          description:
+            'Qualsiasi numero da 0 a {max} che nessuno ha ancora provato nel round. Ogni tentativo è un biglietto, e il suo prezzo va nel montepremi.',
+          when: 'In qualsiasi momento',
+        },
+        check: {
+          title: 'Verificato in pochi secondi',
+          description:
+            'Ogni pochi secondi, i nuovi tentativi vengono sigillati e verificati con l’hash di uno slot che nessuno poteva conoscere in anticipo. Un tentativo sbagliato toglie il suo numero dal round.',
+          when: 'Ogni pochi secondi',
+        },
+        win: {
+          title: 'Trovalo per primo',
+          description:
+            'Il tentativo che trova il numero vince l’80% del montepremi. La commissione della casa esce dal resto, ciò che avanza passa al round successivo, e un nuovo round parte subito.',
+          when: 'Nel momento in cui viene trovato',
+        },
+      },
+      cta: {
+        kicker: 'Verifica ogni pochi secondi',
+        title: 'Il numero è ancora là fuori',
+        description: 'Prova un numero che nessuno ha ancora provato. Buona fortuna!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: 'Un’estrazione al giorno · Estrazione dopo la mezzanotte UTC · Ogni biglietto su Solana',
     draw: 'Estrazione',
     pot: 'Montepremi di oggi',
+    potHour: 'Montepremi di quest’ora',
     toDraw: 'all’estrazione · {day}',
     tickets: '{n} biglietto oggi | {n} biglietti oggi',
+    ticketsHour: '{n} biglietto in quest’ora | {n} biglietti in quest’ora',
+    guesses: '{n} tentativo in questo round | {n} tentativi in questo round',
     entropy: 'Entropia · {cluster}',
     entropyTitle: 'Entropia: {hex}',
     noTickets: 'ancora nessun biglietto',
@@ -476,6 +584,9 @@ const it: Dict = {
     description:
       'Stessi numeri, da 0 a {max}. Il vincitore si prende l’80% del montepremi; la commissione della casa esce dal resto, e ciò che avanza passa al round successivo.',
     play: 'Gioca',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Altri due modi di giocare',
+    discover: 'Scopri',
     daily: {
       name: 'Lotteria quotidiana',
       short: 'Quotidiana',

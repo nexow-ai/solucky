@@ -1,7 +1,7 @@
 /**
- * Schema.org structured data (JSON-LD) for the landing page: who makes
- * S☉Lucky, what it is, its three games, how to play and the questions people
- * ask. Search engines and AI assistants read it to describe the site; every
+ * Schema.org structured data (JSON-LD) for a game's own page: who makes
+ * S☉Lucky, what it is, its three games, how to play this one and the
+ * questions people ask. Search engines and AI assistants read it to describe the site; every
  * word comes from the page's own dictionary, so it says no more than the page.
  */
 

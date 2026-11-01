@@ -11,9 +11,6 @@ const fr: Dict = {
 
   nav: {
     play: 'Jouer',
-    how: 'Comment ça marche',
-    fairness: 'Équité',
-    faq: 'FAQ',
     skip: 'Aller au contenu',
   },
 
@@ -86,9 +83,6 @@ const fr: Dict = {
   },
 
   home: {
-    kicker: 'Jeux de loterie sur Solana',
-    title: 'Choisis un numéro.',
-    titleEnd: 'Gagne à minuit.',
     lead: 'Un tirage chaque jour, un tirage chaque heure, et un numéro caché à débusquer. Le gagnant remporte 80 % de la cagnotte, et le reste est reporté sur la manche suivante. Chaque ticket, chaque lamport et chaque tirage vivent sur Solana, où n’importe qui peut les vérifier.',
     playNow: 'Jouer maintenant',
     howItWorks: 'Comment ça marche',
@@ -97,38 +91,8 @@ const fr: Dict = {
 
     how: {
       tag: 'Comment ça marche',
-      title: 'Quatre étapes, un tirage par jour',
-      description:
-        'Les manches suivent le calendrier UTC : une nouvelle manche s’ouvre à 00:00 UTC et est tirée juste après le minuit suivant.',
       opens: 'Ouverture de la manche',
-      draw: 'Tirage',
       now: 'Maintenant',
-      steps: {
-        wallet: {
-          title: 'Connecte un portefeuille',
-          description:
-            'Phantom, Solflare, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
-          when: 'À tout moment',
-        },
-        number: {
-          title: 'Choisis ton numéro',
-          description:
-            'N’importe quel numéro de 0 à {max}. Chaque numéro ne peut être détenu que par un seul ticket par jour, alors fais vite.',
-          when: 'Jusqu’à minuit UTC',
-        },
-        pot: {
-          title: 'Regarde la cagnotte grossir',
-          description:
-            'Chaque ticket ajoute son prix à la cagnotte, détenue par le compte propre de la manche sur Solana. Personne d’autre ne peut la déplacer.',
-          when: 'Toute la journée',
-        },
-        win: {
-          title: 'Gagne à minuit UTC',
-          description:
-            'Un numéro est tiré au hasard, et le ticket le plus proche remporte 80 % de la cagnotte. La commission de la maison est prélevée sur le reste, et le solde est reporté sur le lendemain.',
-          when: 'Juste après minuit UTC',
-        },
-      },
     },
 
     fairness: {
@@ -161,6 +125,16 @@ const fr: Dict = {
           title: 'Des limites strictes pour la maison',
           description:
             'Le programme verse toujours 80 % de la cagnotte au gagnant et plafonne la commission à 20 %. Les changements de prix et de commission ne s’appliquent qu’aux manches ouvertes ensuite, et un acheteur ne paie jamais plus que le prix qui lui a été affiché.',
+        },
+        guessDraw: {
+          title: 'Une vérification que personne ne peut prédire',
+          description:
+            'Chaque proposition est mélangée à l’entropie de la manche. Sceller les nouvelles propositions fixe un slot quelques secondes dans le futur ; le hash de ce slot, inconnu de tous jusque-là, décide si l’une d’elles a trouvé le numéro.',
+        },
+        guessBrowser: {
+          title: 'Vérifiable dans ton navigateur',
+          description:
+            'Chaque page de manche recalcule, à partir des données publiques, la vérification qui y a mis fin : l’entropie, le hash du slot et la proposition qui a trouvé le numéro. Mêmes entrées, même gagnant.',
         },
         open: {
           title: 'Open source',
@@ -248,26 +222,160 @@ const fr: Dict = {
       tag: 'Gagnants',
       title: 'Chaque gagnant, on-chain',
       description:
-        'Les dernières manches réglées des trois jeux, lues dans les comptes du programme. Chacune renvoie à sa manche, où le tirage peut être recalculé.',
+        'Les dernières manches réglées de ce jeu, lues dans les comptes du programme. Chacune renvoie à la page de sa manche, où le résultat peut être recalculé.',
       paid: 'Versé aux gagnants',
       rounds: 'Manches réglées',
       empty: 'Aucune manche n’a encore été réglée.',
       drawn: 'Tiré : {number}',
       found: 'Numéro trouvé',
     },
-    cta: {
-      title: 'La cagnotte du jour t’attend',
-      description: 'Choisis un numéro que personne n’a encore pris. Bonne chance !',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    /** The hourly and Guess pages' title; the daily lottery's page is the site's home and keeps meta.title. */
+    title: '{game} sur Solana',
+    daily: {
+      kicker: 'Loterie quotidienne · un tirage par jour',
+      title: 'Choisis un numéro.',
+      titleEnd: 'Gagne à minuit.',
+      lead: 'Une manche par jour, de 00:00 à 24:00 UTC. Choisis n’importe quel numéro de 0 à {max} : juste après minuit, un numéro est tiré au hasard, et le ticket le plus proche remporte 80 % de la cagnotte. La commission de la maison est prélevée sur le reste, et le solde est reporté sur le lendemain.',
+      how: {
+        title: 'Quatre étapes, un tirage par jour',
+        description:
+          'Les manches suivent le calendrier UTC : une nouvelle manche s’ouvre à 00:00 UTC et est tirée juste après le minuit suivant.',
+      },
+      steps: {
+        wallet: {
+          title: 'Connecte un portefeuille',
+          description:
+            'Phantom, Solflare, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
+          when: 'À tout moment',
+        },
+        number: {
+          title: 'Choisis ton numéro',
+          description:
+            'N’importe quel numéro de 0 à {max}. Chaque numéro ne peut être détenu que par un seul ticket par jour, alors fais vite.',
+          when: 'Jusqu’à minuit UTC',
+        },
+        pot: {
+          title: 'Regarde la cagnotte grossir',
+          description:
+            'Chaque ticket ajoute son prix à la cagnotte, détenue par le compte propre de la manche sur Solana. Personne d’autre ne peut la déplacer.',
+          when: 'Toute la journée',
+        },
+        win: {
+          title: 'Gagne à minuit UTC',
+          description:
+            'Un numéro est tiré au hasard, et le ticket le plus proche remporte 80 % de la cagnotte. La commission de la maison est prélevée sur le reste, et le solde est reporté sur le lendemain.',
+          when: 'Juste après minuit UTC',
+        },
+      },
+      cta: {
+        kicker: 'Tiré chaque jour après minuit UTC',
+        title: 'La cagnotte du jour t’attend',
+        description: 'Choisis un numéro que personne n’a encore pris. Bonne chance !',
+      },
+    },
+    hourly: {
+      kicker: 'Loterie horaire · 24 tirages par jour',
+      title: 'Choisis un numéro.',
+      titleEnd: 'Gagne à l’heure pile.',
+      lead: 'Une nouvelle manche chaque heure, à l’heure pile (UTC). Choisis n’importe quel numéro de 0 à {max} : juste après la fin de l’heure, un numéro est tiré au hasard, et le ticket le plus proche remporte 80 % de la cagnotte. La commission de la maison est prélevée sur le reste, et le solde est reporté sur l’heure suivante.',
+      how: {
+        title: 'Quatre étapes, un tirage par heure',
+        description:
+          'Les manches suivent l’horloge UTC : une nouvelle manche s’ouvre au début de chaque heure et est tirée juste après sa fin.',
+      },
+      steps: {
+        wallet: {
+          title: 'Connecte un portefeuille',
+          description:
+            'Phantom, Solflare, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
+          when: 'À tout moment',
+        },
+        number: {
+          title: 'Choisis ton numéro',
+          description:
+            'N’importe quel numéro de 0 à {max}. Chaque numéro ne peut être détenu que par un seul ticket par heure, alors fais vite.',
+          when: 'Jusqu’à la fin de l’heure',
+        },
+        pot: {
+          title: 'Regarde la cagnotte grossir',
+          description:
+            'Chaque ticket ajoute son prix à la cagnotte, détenue par le compte propre de la manche sur Solana. Personne d’autre ne peut la déplacer.',
+          when: 'Toute l’heure',
+        },
+        win: {
+          title: 'Gagne à l’heure pile',
+          description:
+            'Un numéro est tiré au hasard, et le ticket le plus proche remporte 80 % de la cagnotte. La commission de la maison est prélevée sur le reste, et le solde est reporté sur l’heure suivante.',
+          when: 'Juste après la fin de l’heure',
+        },
+      },
+      cta: {
+        kicker: 'Tiré chaque heure, à l’heure pile',
+        title: 'La cagnotte de cette heure t’attend',
+        description: 'Choisis un numéro que personne n’a encore pris cette heure-ci. Bonne chance !',
+      },
+    },
+    guess: {
+      kicker: 'Devine le numéro · sans échéance',
+      title: 'Trouve le numéro.',
+      titleEnd: 'Avant tout le monde.',
+      lead: 'Chaque manche se joue comme si elle cachait un numéro de 0 à {max}, inconnu de tous, opérateur compris. Chaque proposition est un ticket sur un numéro que personne n’a encore essayé dans la manche. Toutes les quelques secondes, les nouvelles propositions sont vérifiées : celle qui trouve le numéro remporte 80 % de la cagnotte, et une nouvelle manche commence aussitôt.',
+      how: {
+        title: 'Quatre étapes, sans échéance',
+        description:
+          'Une manche dure jusqu’à ce qu’une proposition trouve son numéro. La manche suivante s’ouvre alors, avec un nouveau numéro à trouver.',
+      },
+      steps: {
+        wallet: {
+          title: 'Connecte un portefeuille',
+          description:
+            'Phantom, Solflare, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
+          when: 'À tout moment',
+        },
+        guess: {
+          title: 'Fais une proposition',
+          description:
+            'N’importe quel numéro de 0 à {max} que personne n’a encore essayé dans la manche. Chaque proposition est un ticket, et son prix va dans la cagnotte.',
+          when: 'À tout moment',
+        },
+        check: {
+          title: 'Vérifiée en quelques secondes',
+          description:
+            'Toutes les quelques secondes, les nouvelles propositions sont scellées puis vérifiées avec le hash d’un slot que personne ne pouvait connaître à l’avance. Une proposition ratée retire son numéro de la manche.',
+          when: 'Toutes les quelques secondes',
+        },
+        win: {
+          title: 'Trouve-le le premier',
+          description:
+            'La proposition qui trouve le numéro remporte 80 % de la cagnotte. La commission de la maison est prélevée sur le reste, le solde est reporté, et une nouvelle manche commence aussitôt.',
+          when: 'Dès qu’il est trouvé',
+        },
+      },
+      cta: {
+        kicker: 'Vérifié toutes les quelques secondes',
+        title: 'Le numéro court toujours',
+        description: 'Essaie un numéro que personne n’a encore essayé. Bonne chance !',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: 'Un tirage par jour · Tiré après minuit UTC · Chaque ticket sur Solana',
     draw: 'Tirage',
     pot: 'Cagnotte du jour',
+    potHour: 'Cagnotte de cette heure',
     toDraw: 'avant le tirage · {day}',
     tickets: '{n} ticket aujourd’hui | {n} tickets aujourd’hui',
+    ticketsHour: '{n} ticket cette heure-ci | {n} tickets cette heure-ci',
+    guesses: '{n} proposition dans cette manche | {n} propositions dans cette manche',
     entropy: 'Entropie · {cluster}',
     entropyTitle: 'Entropie : {hex}',
     noTickets: 'aucun ticket pour l’instant',
@@ -478,6 +586,9 @@ const fr: Dict = {
     description:
       'Les mêmes numéros, de 0 à {max}. Le gagnant remporte 80 % de la cagnotte ; la commission de la maison est prélevée sur le reste, et le solde est reporté sur la manche suivante.',
     play: 'Jouer',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Deux autres façons de jouer',
+    discover: 'Découvrir',
     daily: {
       name: 'Loterie quotidienne',
       short: 'Quotidienne',

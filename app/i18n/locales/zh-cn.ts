@@ -11,9 +11,6 @@ const zhcn: Dict = {
 
   nav: {
     play: '游戏',
-    how: '运作方式',
-    fairness: '公平性',
-    faq: '常见问题',
     skip: '跳到主要内容',
   },
 
@@ -85,9 +82,6 @@ const zhcn: Dict = {
   },
 
   home: {
-    kicker: 'Solana 上的彩票游戏',
-    title: '选一个号码。',
-    titleEnd: '午夜赢取奖金。',
     lead: '每天开奖一次，每小时开奖一次，还有一个等你找出的隐藏号码。赢家拿走奖池的 80%，其余部分滚入下一期。每一张彩票、每一个 lamport、每一次开奖都在 Solana 上，任何人都能查验。',
     playNow: '立即开玩',
     howItWorks: '运作方式',
@@ -95,34 +89,8 @@ const zhcn: Dict = {
 
     how: {
       tag: '运作方式',
-      title: '四个步骤，每天开奖一次',
-      description: '每期按 UTC 日历进行：新的一期在 UTC 00:00 开放，并在下一个午夜过后立即开奖。',
       opens: '本期开始',
-      draw: '开奖',
       now: '现在',
-      steps: {
-        wallet: {
-          title: '连接钱包',
-          description: 'Phantom、Solflare、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
-          when: '随时',
-        },
-        number: {
-          title: '选择你的号码',
-          description: '0 到 {max} 之间的任意号码。每个号码每天只能由一张彩票持有，所以要快。',
-          when: '直到 UTC 午夜',
-        },
-        pot: {
-          title: '看着奖池增长',
-          description: '每张彩票都会把票价加入奖池，奖池由该期在 Solana 上的专属账户持有。其他任何人都动不了它。',
-          when: '全天',
-        },
-        win: {
-          title: '在 UTC 午夜赢得奖池',
-          description:
-            '开出一个随机号码，离它最近的彩票赢得奖池的 80%。平台手续费从剩余部分中扣除，余下的滚入第二天的一期。',
-          when: 'UTC 午夜过后立即',
-        },
-      },
     },
 
     fairness: {
@@ -153,6 +121,16 @@ const zhcn: Dict = {
           title: '对平台的硬性限制',
           description:
             '程序始终把奖池的 80% 支付给赢家，并将手续费上限定为 20%。票价和手续费的变更只适用于之后开放的各期，而且买家支付的金额绝不会超过向其显示的价格。',
+        },
+        guessDraw: {
+          title: '无人能预测的检查',
+          description:
+            '每一次猜测都会混入该期的熵。封存新的猜测时，会锁定一个几秒后才到来的插槽；这个插槽的哈希在那之前没有任何人知道，由它决定其中是否有猜测找到了号码。',
+        },
+        guessBrowser: {
+          title: '在浏览器中即可查验',
+          description:
+            '每一期的页面都会用公开数据重新计算结束该期的那次检查：熵、插槽哈希和找到号码的猜测。输入相同，赢家就相同。',
         },
         open: {
           title: '开源',
@@ -238,26 +216,147 @@ const zhcn: Dict = {
     winners: {
       tag: '中奖者',
       title: '每位中奖者，都在链上',
-      description: '三个游戏最近结算的各期，直接读取自程序的账户。每一期都链接到其页面，可在那里重新计算开奖。',
+      description: '这个游戏最近结算的各期，直接读取自程序的账户。每一期都链接到其页面，可在那里重新计算结果。',
       paid: '已支付给中奖者',
       rounds: '已结算期数',
       empty: '尚无已结算的一期。',
       drawn: '开出：{number}',
       found: '号码已找到',
     },
-    cta: {
-      title: '今天的奖池在等你',
-      description: '选一个还没人选的号码。祝你好运！',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    title: 'Solana 上的{game}',
+    daily: {
+      kicker: '每日彩票 · 每天开奖一次',
+      title: '选一个号码。',
+      titleEnd: '午夜赢取奖金。',
+      lead: '每天一期，从 UTC 00:00 到 24:00。从 0 到 {max} 中任选一个号码：午夜一过就会随机开出一个号码，离它最近的彩票赢得奖池的 80%。平台手续费从剩余部分中扣除，余下的滚入第二天的一期。',
+      how: {
+        title: '四个步骤，每天开奖一次',
+        description: '每期按 UTC 日历进行：新的一期在 UTC 00:00 开放，并在下一个午夜过后立即开奖。',
+      },
+      steps: {
+        wallet: {
+          title: '连接钱包',
+          description: 'Phantom、Solflare、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
+          when: '随时',
+        },
+        number: {
+          title: '选择你的号码',
+          description: '0 到 {max} 之间的任意号码。每个号码每天只能由一张彩票持有，所以要快。',
+          when: '直到 UTC 午夜',
+        },
+        pot: {
+          title: '看着奖池增长',
+          description: '每张彩票都会把票价加入奖池，奖池由该期在 Solana 上的专属账户持有。其他任何人都动不了它。',
+          when: '全天',
+        },
+        win: {
+          title: '在 UTC 午夜赢得奖池',
+          description:
+            '开出一个随机号码，离它最近的彩票赢得奖池的 80%。平台手续费从剩余部分中扣除，余下的滚入第二天的一期。',
+          when: 'UTC 午夜过后立即',
+        },
+      },
+      cta: {
+        kicker: '每天 UTC 午夜后开奖',
+        title: '今天的奖池在等你',
+        description: '选一个还没人选的号码。祝你好运！',
+      },
+    },
+    hourly: {
+      kicker: '每小时彩票 · 每天开奖 24 次',
+      title: '选一个号码。',
+      titleEnd: '整点赢取奖金。',
+      lead: '每小时整点（UTC）开始新的一期。从 0 到 {max} 中任选一个号码：这一小时一结束就会随机开出一个号码，离它最近的彩票赢得奖池的 80%。平台手续费从剩余部分中扣除，余下的滚入下一小时的一期。',
+      how: {
+        title: '四个步骤，每小时开奖一次',
+        description: '每期按 UTC 时钟进行：新的一期在每个小时开始时开放，并在这一小时结束后立即开奖。',
+      },
+      steps: {
+        wallet: {
+          title: '连接钱包',
+          description: 'Phantom、Solflare、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
+          when: '随时',
+        },
+        number: {
+          title: '选择你的号码',
+          description: '0 到 {max} 之间的任意号码。每个号码每小时只能由一张彩票持有，所以要快。',
+          when: '直到本小时结束',
+        },
+        pot: {
+          title: '看着奖池增长',
+          description: '每张彩票都会把票价加入奖池，奖池由该期在 Solana 上的专属账户持有。其他任何人都动不了它。',
+          when: '整个小时',
+        },
+        win: {
+          title: '整点赢得奖池',
+          description:
+            '开出一个随机号码，离它最近的彩票赢得奖池的 80%。平台手续费从剩余部分中扣除，余下的滚入下一小时的一期。',
+          when: '整点过后立即',
+        },
+      },
+      cta: {
+        kicker: '每小时整点开奖',
+        title: '本小时的奖池在等你',
+        description: '选一个本小时还没人选的号码。祝你好运！',
+      },
+    },
+    guess: {
+      kicker: '猜数字 · 没有截止时间',
+      title: '找出那个号码。',
+      titleEnd: '抢在所有人之前。',
+      lead: '玩法就像每一期都藏着一个从 0 到 {max} 的号码，没有任何人知道，运营方也不例外。每次猜测都是一张押在本期尚未有人试过的号码上的彩票。每隔几秒，新的猜测就会被检查一次：找到号码的那一个赢得奖池的 80%，新的一期随即开始。',
+      how: {
+        title: '四个步骤，没有截止时间',
+        description: '一期会一直进行，直到有猜测找到它的号码。随后下一期开始，又有一个新的号码等你找出。',
+      },
+      steps: {
+        wallet: {
+          title: '连接钱包',
+          description: 'Phantom、Solflare、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
+          when: '随时',
+        },
+        guess: {
+          title: '猜一个号码',
+          description: '0 到 {max} 之间本期尚未有人试过的任意号码。每次猜测就是一张彩票，票价会进入奖池。',
+          when: '随时',
+        },
+        check: {
+          title: '几秒内完成检查',
+          description:
+            '每隔几秒，新的猜测会被封存，并用一个事先无人能知的插槽哈希来检查。没猜中的猜测，其号码会从本期出局。',
+          when: '每隔几秒',
+        },
+        win: {
+          title: '抢先找到它',
+          description: '找到号码的猜测赢得奖池的 80%。平台手续费从剩余部分中扣除，余下的滚入下一期，新的一期随即开始。',
+          when: '找到的那一刻',
+        },
+      },
+      cta: {
+        kicker: '每隔几秒检查一次',
+        title: '那个号码还没被找到',
+        description: '试一个还没人试过的号码。祝你好运！',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
     bezel: '每天开奖一次 · UTC 午夜后开奖 · 每张彩票都在 Solana 上',
     draw: '开奖',
     pot: '今日奖池',
+    potHour: '本小时奖池',
     toDraw: '距开奖 · {day}',
     tickets: '今日 {n} 张彩票',
+    ticketsHour: '本小时 {n} 张彩票',
+    guesses: '本期 {n} 次猜测',
     entropy: '熵 · {cluster}',
     entropyTitle: '熵：{hex}',
     noTickets: '还没有彩票',
@@ -461,6 +560,8 @@ const zhcn: Dict = {
     title: '三种玩法',
     description: '号码范围都一样，从 0 到 {max}。赢家拿走奖池的 80%；平台手续费从剩余部分中扣除，余下的滚入下一期。',
     play: '开玩',
+    others: '另外两种玩法',
+    discover: '了解更多',
     daily: {
       name: '每日彩票',
       short: '每日',
