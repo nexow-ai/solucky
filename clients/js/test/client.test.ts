@@ -1,7 +1,17 @@
 import { describe, expect, test } from 'bun:test';
 import {
+  AccountRole,
   address,
+  appendTransactionMessageInstruction,
   type Blockhash,
+  createTransactionMessage,
+  generateKeyPairSigner,
+  getTransactionMessageSize,
+  pipe,
+  setTransactionMessageComputeUnitLimit,
+  setTransactionMessageComputeUnitPrice,
+  setTransactionMessageFeePayerSigner,
+  setTransactionMessageLifetimeUsingBlockhash,
   getAddressEncoder,
   getBase64Decoder,
   getSolanaErrorFromTransactionError,
@@ -15,6 +25,7 @@ import { getSysvarSlotHashesEncoder } from '@solana/sysvars';
 
 import {
   carryFor,
+  chunk,
   closestNumber,
   computeRandomness,
   countryFromBytes,
@@ -26,6 +37,7 @@ import {
   fetchRoundHeader,
   findGamePda,
   findRoundPda,
+  findSessionPda,
   findTicketPda,
   flagEmoji,
   formatCountdown,
@@ -33,12 +45,15 @@ import {
   gameFromSlug,
   GameKind,
   getRoundEncoder,
+  getBuyTicketsWithTicketsInstruction,
   getRoundSize,
   getTicketEncoder,
   getTicketSize,
+  getTransferSolInstruction,
   guessOutcome,
   isPinnedSlotExpired,
   lamportsToSol,
+  MAX_TICKETS_PER_TRANSACTION,
   msUntilClose,
   parsePeriod,
   periodEnd,
@@ -47,6 +62,7 @@ import {
   prizeFor,
   roundNumbers,
   RoundStatus,
+  sessionBudget,
   SOLUCKY_ERROR__PAUSED,
   SOLUCKY_PROGRAM_ADDRESS,
   TICKET_OFFSETS,
@@ -387,5 +403,83 @@ describe('errors', () => {
     expect(describeError(failed(6004))).toBe('Ticket sales are paused.');
     expect(describeError(failed(0))).toMatch(/already holds this number in this round/);
     expect(describeError(new Error(''))).toBe('Something went wrong.');
+  });
+});
+
+describe('batches', () => {
+  test('chunk numbers into transactions', () => {
+    expect(chunk([1, 2, 3, 4, 5], 2)).toEqual([[1, 2], [3, 4], [5]]);
+    expect(chunk([], 2)).toEqual([]);
+    expect(chunk(Array.from({ length: 30 }, (_, i) => i)).map((run) => run.length)).toEqual([20, 10]);
+  });
+
+  test('a batch carries one writable ticket account per number, in order', async () => {
+    const buyer = await generateKeyPairSigner();
+    const numbers = [9, 3, 120_293];
+    const instruction = await getBuyTicketsWithTicketsInstruction({
+      buyer,
+      kind: Daily,
+      period: 20_000,
+      numbers,
+      country: countryToBytes('ES'),
+      maxPrice: 100_000_000n,
+    });
+    const [round] = await findRoundPda({ kind: Daily, period: 20_000 });
+    const accounts = instruction.accounts ?? [];
+    expect(accounts).toHaveLength(6 + numbers.length);
+    // No session: its slot holds the program's address.
+    expect(accounts[1]!.address).toBe(SOLUCKY_PROGRAM_ADDRESS);
+    expect(accounts[4]!.address).toBe(round);
+    for (const [i, number] of numbers.entries()) {
+      const [ticket] = await findTicketPda({ round, number });
+      expect(accounts[6 + i]).toEqual({ address: ticket, role: AccountRole.WRITABLE });
+    }
+  });
+
+  test('the most numbers per transaction fit with a wallet’s compute budget', async () => {
+    const key = await generateKeyPairSigner();
+    const [session] = await findSessionPda({ owner: key.address });
+    for (const withSession of [false, true]) {
+      const instruction = await getBuyTicketsWithTicketsInstruction({
+        buyer: key,
+        session: withSession ? session : undefined,
+        kind: Guess,
+        period: 4_000_000_000,
+        numbers: Array.from({ length: MAX_TICKETS_PER_TRANSACTION }, (_, i) => 21_000_000 - i),
+        country: countryToBytes('ES'),
+        maxPrice: 100_000_000n,
+      });
+      const message = pipe(
+        createTransactionMessage({ version: 0 }),
+        (m) => setTransactionMessageFeePayerSigner(key, m),
+        (m) =>
+          setTransactionMessageLifetimeUsingBlockhash(
+            { blockhash: '11111111111111111111111111111111' as Blockhash, lastValidBlockHeight: 0n },
+            m,
+          ),
+        (m) => appendTransactionMessageInstruction(instruction, m),
+        // What Kit's estimate and a wallet's priority fee add.
+        (m) => setTransactionMessageComputeUnitLimit(1_400_000, m),
+        (m) => setTransactionMessageComputeUnitPrice(1_000_000n, m),
+      );
+      expect(getTransactionMessageSize(message)).toBeLessThanOrEqual(1_232);
+    }
+  });
+
+  test('a session spends what it holds above its rent', () => {
+    expect(sessionBudget(1_500n, 1_000n)).toBe(500n);
+    expect(sessionBudget(900n, 1_000n)).toBe(0n);
+  });
+
+  test('a SOL transfer matches the System program’s layout', async () => {
+    const source = await generateKeyPairSigner();
+    const destination = address('So11111111111111111111111111111111111111112');
+    const instruction = getTransferSolInstruction({ source, destination, amount: 10_000_000n });
+    expect(instruction.programAddress).toBe(address('11111111111111111111111111111111'));
+    expect([...(instruction.data ?? [])]).toEqual([2, 0, 0, 0, 128, 150, 152, 0, 0, 0, 0, 0]);
+    expect(instruction.accounts).toEqual([
+      { address: source.address, role: AccountRole.WRITABLE_SIGNER, signer: source },
+      { address: destination, role: AccountRole.WRITABLE },
+    ]);
   });
 });

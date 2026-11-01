@@ -7,11 +7,13 @@
  * Copyright (c) 2022-2026 Nexow, Inc. (https://nexow.studio). MIT License.
  */
 export * from './generated';
+export * from './batch';
 export * from './country';
 export * from './draw';
 export * from './endpoint';
 export * from './errors';
 export * from './queries';
+export * from './session';
 export * from './time';
 
 /** Lamports in one SOL. */
