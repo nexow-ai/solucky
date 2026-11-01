@@ -62,6 +62,39 @@ pub mod solucky {
         instructions::buy_ticket::handle_buy_ticket(ctx, kind, period, number, country, max_price)
     }
 
+    /// Buys several numbers in the game's round on sale, one ticket account
+    /// each (passed as remaining accounts, in order). Numbers someone already
+    /// holds are skipped. With a quick-buy session, its key signs, the session
+    /// pays and the tickets belong to the session's owner.
+    pub fn buy_tickets<'info>(
+        ctx: Context<'info, BuyTickets<'info>>,
+        kind: u8,
+        period: u32,
+        numbers: Vec<u32>,
+        country: [u8; 2],
+        max_price: u64,
+    ) -> Result<()> {
+        instructions::buy_tickets::handle_buy_tickets(
+            ctx, kind, period, numbers, country, max_price,
+        )
+    }
+
+    /// Starts a quick-buy session for a key the owner's browser keeps, or
+    /// changes its key and end, and adds `deposit` lamports to its budget.
+    pub fn open_session(
+        ctx: Context<OpenSession>,
+        delegate: Pubkey,
+        expires_at: i64,
+        deposit: u64,
+    ) -> Result<()> {
+        instructions::open_session::handle_open_session(ctx, delegate, expires_at, deposit)
+    }
+
+    /// Ends a quick-buy session; everything it holds goes back to the owner.
+    pub fn close_session(ctx: Context<CloseSession>) -> Result<()> {
+        instructions::close_session::handle_close_session(ctx)
+    }
+
     /// Ends a finished lottery round, or seals a Guess round's unchecked
     /// guesses, and pins the slot that will seed the draw.
     pub fn close_round(ctx: Context<CloseRound>) -> Result<()> {

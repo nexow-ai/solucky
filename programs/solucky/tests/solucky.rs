@@ -11,7 +11,7 @@ use {
         solana_program::{
             bpf_loader_upgradeable::{get_program_data_address, UpgradeableLoaderState},
             clock::Clock,
-            instruction::Instruction,
+            instruction::{AccountMeta, Instruction},
             system_program,
         },
         AccountDeserialize, AccountSerialize, InstructionData, Space, ToAccountMetas,
@@ -30,9 +30,10 @@ use {
     solana_transaction_error::TransactionError,
     solucky::{
         accounts, error::SoluckyError, instruction, utils::guess_outcome, Config, ConfigUpdate,
-        Game, Round, RoundStatus, Ticket, CONFIG_SEED, DAILY, DAY_SECONDS, DRAW_DELAY_SLOTS,
-        DRAW_WINDOW_SLOTS, GAME_SEED, GUESS, HOURLY, HOUR_SECONDS, MAX_LOTTERY_TICKETS,
-        MIN_TICKET_PRICE, NO_COUNTRY, ROUND_SEED, SLOT_HASHES_ID, TICKET_SEED,
+        Game, Round, RoundStatus, Session, Ticket, CONFIG_SEED, DAILY, DAY_SECONDS,
+        DRAW_DELAY_SLOTS, DRAW_WINDOW_SLOTS, GAME_SEED, GUESS, HOURLY, HOUR_SECONDS,
+        MAX_LOTTERY_TICKETS, MAX_SESSION_SECONDS, MIN_TICKET_PRICE, NO_COUNTRY, ROUND_SEED,
+        SESSION_SEED, SLOT_HASHES_ID, TICKET_SEED,
     },
 };
 
@@ -70,6 +71,10 @@ fn ticket_pda(kind: u8, period: u32, number: u32) -> Pubkey {
         &solucky::ID,
     )
     .0
+}
+
+fn session_pda(owner: &Pubkey) -> Pubkey {
+    Pubkey::find_program_address(&[SESSION_SEED, owner.as_ref()], &solucky::ID).0
 }
 
 fn ix(data: impl InstructionData, accounts: impl ToAccountMetas) -> Instruction {
@@ -383,6 +388,118 @@ impl Env {
             self.sold.push((kind, period, number));
         }
         result
+    }
+
+    /// Buys `numbers` in one `buy_tickets`, paid by `buyer` or, with
+    /// `session`, by the session `buyer` is the key of.
+    fn buy_many(
+        &mut self,
+        buyer: &Keypair,
+        session: Option<Pubkey>,
+        kind: u8,
+        period: u32,
+        numbers: &[u32],
+    ) -> TxResult {
+        let tickets: Vec<Pubkey> = numbers
+            .iter()
+            .map(|n| ticket_pda(kind, period, *n))
+            .collect();
+        self.buy_many_with(buyer, session, kind, period, numbers, &tickets, u64::MAX)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn buy_many_with(
+        &mut self,
+        buyer: &Keypair,
+        session: Option<Pubkey>,
+        kind: u8,
+        period: u32,
+        numbers: &[u32],
+        tickets: &[Pubkey],
+        max_price: u64,
+    ) -> TxResult {
+        let mut instruction = ix(
+            instruction::BuyTickets {
+                kind,
+                period,
+                numbers: numbers.to_vec(),
+                country: *b"FR",
+                max_price,
+            },
+            accounts::BuyTickets {
+                buyer: buyer.pubkey(),
+                session,
+                config: config_pda(),
+                game: game_pda(kind),
+                round: round_pda(kind, period),
+                system_program: system_program::ID,
+            },
+        );
+        instruction
+            .accounts
+            .extend(tickets.iter().map(|t| AccountMeta::new(*t, false)));
+        let before: Vec<bool> = numbers
+            .iter()
+            .map(|n| {
+                self.svm
+                    .get_account(&ticket_pda(kind, period, *n))
+                    .is_some_and(|a| a.owner == solucky::ID)
+            })
+            .collect();
+        let result = self.send(instruction, buyer, &[]);
+        if result.is_ok() {
+            for (number, held) in numbers.iter().zip(before) {
+                let entry = (kind, period, *number);
+                if !held && !self.sold.contains(&entry) {
+                    self.sold.push(entry);
+                }
+            }
+        }
+        result
+    }
+
+    fn open_session(
+        &mut self,
+        owner: &Keypair,
+        delegate: Pubkey,
+        expires_at: i64,
+        deposit: u64,
+    ) -> TxResult {
+        self.send(
+            ix(
+                instruction::OpenSession {
+                    delegate,
+                    expires_at,
+                    deposit,
+                },
+                accounts::OpenSession {
+                    owner: owner.pubkey(),
+                    session: session_pda(&owner.pubkey()),
+                    system_program: system_program::ID,
+                },
+            ),
+            owner,
+            &[],
+        )
+    }
+
+    fn close_session(&mut self, authority: &Keypair, owner: Pubkey) -> TxResult {
+        self.send(
+            ix(
+                instruction::CloseSession {},
+                accounts::CloseSession {
+                    authority: authority.pubkey(),
+                    session: session_pda(&owner),
+                    owner,
+                },
+            ),
+            authority,
+            &[],
+        )
+    }
+
+    fn now(&self) -> i64 {
+        self.svm.get_sysvar::<Clock>().unix_timestamp
     }
 
     fn close(&mut self, kind: u8, period: u32) -> TxResult {
@@ -1289,4 +1406,367 @@ fn a_full_lottery_round_stays_cheap_and_refuses_more_tickets() {
     );
 
     assert_error(env.buy(&alice, DAILY, DAY, 3), SoluckyError::RoundFull);
+}
+
+#[test]
+fn many_numbers_sell_in_one_transaction() {
+    let mut env = Env::new();
+    let alice = env.player();
+    let bob = env.player();
+    let before = env.balance(&alice.pubkey());
+
+    let meta = assert_ok(env.buy_many(&alice, None, DAILY, DAY, &[9, 3, 1_000, 5]));
+    println!(
+        "buy 4 numbers in a new round: {} CU",
+        meta.compute_units_consumed
+    );
+    let round = env.round(DAILY, DAY);
+    assert_eq!(round.ticket_count, 4);
+    assert_eq!(round.pot, 4 * PRICE);
+    assert_eq!(env.numbers(DAILY, DAY), [3, 5, 9, 1_000]);
+    // Indexes follow the order the numbers were given in.
+    for (index, number) in [9, 3, 1_000, 5].into_iter().enumerate() {
+        let ticket = env.ticket(DAILY, DAY, number);
+        assert_eq!(ticket.owner, alice.pubkey());
+        assert_eq!(ticket.round, round_pda(DAILY, DAY));
+        assert_eq!((ticket.number, ticket.index), (number, index as u32));
+        assert_eq!(&ticket.country, b"FR");
+    }
+
+    // Alice paid the tickets, every account's rent and one network fee; the
+    // round holds exactly its rent and the pot.
+    let round_rent = env.rent(&round_pda(DAILY, DAY));
+    let ticket_rent = env.balance(&ticket_pda(DAILY, DAY, 9));
+    assert_eq!(env.balance(&round_pda(DAILY, DAY)), round_rent + 4 * PRICE);
+    assert_eq!(
+        before - env.balance(&alice.pubkey()),
+        4 * PRICE + round_rent + 4 * ticket_rent + TX_FEE
+    );
+
+    // Taken numbers and repeats are skipped; Bob pays for 4 and 7 only.
+    let before = env.balance(&bob.pubkey());
+    let rent_before = env.rent(&round_pda(DAILY, DAY));
+    assert_ok(env.buy_many(&bob, None, DAILY, DAY, &[3, 4, 4, 9, 7]));
+    let round = env.round(DAILY, DAY);
+    assert_eq!(round.ticket_count, 6);
+    assert_eq!(round.pot, 6 * PRICE);
+    assert_eq!(env.numbers(DAILY, DAY), [3, 4, 5, 7, 9, 1_000]);
+    assert_eq!(env.ticket(DAILY, DAY, 3).owner, alice.pubkey());
+    assert_eq!(env.ticket(DAILY, DAY, 4).owner, bob.pubkey());
+    assert_eq!(env.ticket(DAILY, DAY, 4).index, 4);
+    assert_eq!(env.ticket(DAILY, DAY, 7).index, 5);
+    let growth = env.rent(&round_pda(DAILY, DAY)) - rent_before;
+    assert_eq!(
+        before - env.balance(&bob.pubkey()),
+        2 * PRICE + 2 * ticket_rent + growth + TX_FEE
+    );
+    assert_eq!(
+        env.balance(&round_pda(DAILY, DAY)),
+        env.rent(&round_pda(DAILY, DAY)) + 6 * PRICE
+    );
+
+    // Nothing left to buy: the transaction fails instead of charging nothing.
+    assert_error(
+        env.buy_many(&bob, None, DAILY, DAY, &[3, 4]),
+        SoluckyError::AllTaken,
+    );
+    // Single and batch purchases share one list.
+    assert_code(env.buy(&bob, DAILY, DAY, 5), 0);
+    assert_ok(env.buy(&bob, DAILY, DAY, 6));
+    assert_eq!(env.numbers(DAILY, DAY), [3, 4, 5, 6, 7, 9, 1_000]);
+}
+
+#[test]
+fn batches_are_validated() {
+    let mut env = Env::new();
+    let carol = env.player();
+    assert_error(
+        env.buy_many(&carol, None, DAILY, DAY, &[]),
+        SoluckyError::TicketsMismatch,
+    );
+    let one = [ticket_pda(DAILY, DAY, 1)];
+    assert_error(
+        env.buy_many_with(&carol, None, DAILY, DAY, &[1, 2], &one, u64::MAX),
+        SoluckyError::TicketsMismatch,
+    );
+    let swapped = [ticket_pda(DAILY, DAY, 2), ticket_pda(DAILY, DAY, 1)];
+    assert_error(
+        env.buy_many_with(&carol, None, DAILY, DAY, &[1, 2], &swapped, u64::MAX),
+        SoluckyError::WrongTicketAccount,
+    );
+    assert_error(
+        env.buy_many(&carol, None, DAILY, DAY, &[1, MAX_NUMBER + 1]),
+        SoluckyError::NumberOutOfRange,
+    );
+    assert_error(
+        env.buy_many(&carol, None, DAILY, DAY + 1, &[1]),
+        SoluckyError::WrongRound,
+    );
+    let tickets = [ticket_pda(DAILY, DAY, 1)];
+    assert_error(
+        env.buy_many_with(&carol, None, DAILY, DAY, &[1], &tickets, PRICE - 1),
+        SoluckyError::PriceChanged,
+    );
+    // A session account needs its key to sign.
+    assert_code(
+        env.buy_many(&carol, Some(session_pda(&carol.pubkey())), DAILY, DAY, &[1]),
+        u32::from(ErrorCode::AccountNotInitialized),
+    );
+    assert_ok(env.buy_many(&carol, None, DAILY, DAY, &[1, 2]));
+}
+
+#[test]
+fn twenty_numbers_fit_in_one_transaction() {
+    let mut env = Env::new();
+    let alice = env.player();
+    assert_ok(env.buy(&alice, DAILY, DAY, 0));
+    let numbers: Vec<u32> = (1..=24).map(|i| i * 100_000).collect();
+    let meta = assert_ok(env.buy_many(&alice, None, DAILY, DAY, &numbers));
+    println!(
+        "buy 24 numbers in one transaction: {} CU",
+        meta.compute_units_consumed
+    );
+    assert!(meta.compute_units_consumed < 600_000);
+    assert_eq!(env.round(DAILY, DAY).ticket_count, 25);
+    let mut expected = vec![0];
+    expected.extend(&numbers);
+    assert_eq!(env.numbers(DAILY, DAY), expected);
+}
+
+#[test]
+fn a_batch_buys_guesses_too() {
+    let mut env = Env::new();
+    env.set_max_number(9);
+    let alice = env.player();
+    let bob = env.player();
+    assert_ok(env.buy_many(&alice, None, GUESS, 0, &[4, 2]));
+    assert_ok(env.buy(&bob, GUESS, 0, 9));
+    assert_ok(env.close(GUESS, 0));
+    // Sales go on while the batch waits for its check.
+    assert_ok(env.buy_many(&bob, None, GUESS, 0, &[8, 2]));
+    let round = env.round(GUESS, 0);
+    assert_eq!((round.ticket_count, round.sealed_count), (4, 3));
+    assert_eq!(env.ticket(GUESS, 0, 8).index, 3);
+    // Guess rounds keep no list of numbers.
+    assert_eq!(
+        env.svm
+            .get_account(&round_pda(GUESS, 0))
+            .unwrap()
+            .data
+            .len(),
+        8 + Round::INIT_SPACE
+    );
+
+    // Alice's first guess finds it.
+    assert_ok(env.draw_where(GUESS, 0, |x| guess_outcome(x, 0, 3, 9) == Some(0)));
+    let before = env.balance(&alice.pubkey());
+    assert_ok(env.claim(GUESS, 0, 4));
+    assert_eq!(env.balance(&alice.pubkey()) - before, payout_of(4 * PRICE));
+}
+
+#[test]
+fn a_prefunded_ticket_address_still_sells() {
+    let mut env = Env::new();
+    let alice = env.player();
+    // Someone sends lamports to the addresses of numbers 1 and 2 first: the
+    // least an empty account can hold, and more than a ticket's rent.
+    let empty = env.svm.minimum_balance_for_rent_exemption(0);
+    env.svm.airdrop(&ticket_pda(DAILY, DAY, 1), empty).unwrap();
+    env.svm.airdrop(&ticket_pda(DAILY, DAY, 2), SOL).unwrap();
+    assert_ok(env.buy_many(&alice, None, DAILY, DAY, &[1, 3]));
+    let ticket_rent = env.rent(&ticket_pda(DAILY, DAY, 3));
+    assert_eq!(env.balance(&ticket_pda(DAILY, DAY, 1)), ticket_rent);
+    assert_eq!(env.ticket(DAILY, DAY, 1).owner, alice.pubkey());
+
+    let delegate = Keypair::new();
+    env.svm.airdrop(&delegate.pubkey(), SOL / 100).unwrap();
+    let expires = env.now() + DAY_SECONDS;
+    assert_ok(env.open_session(&alice, delegate.pubkey(), expires, SOL));
+    let session = Some(session_pda(&alice.pubkey()));
+    assert_ok(env.buy_many(&delegate, session, DAILY, DAY, &[2, 4]));
+    assert_eq!(env.balance(&ticket_pda(DAILY, DAY, 2)), SOL);
+    assert_eq!(env.ticket(DAILY, DAY, 2).owner, alice.pubkey());
+    assert_eq!(env.numbers(DAILY, DAY), [1, 2, 3, 4]);
+}
+
+#[test]
+fn a_session_key_buys_for_its_owner_from_the_budget() {
+    let mut env = Env::new();
+    let alice = env.player();
+    let delegate = Keypair::new();
+    env.svm.airdrop(&delegate.pubkey(), SOL / 100).unwrap();
+    let session = session_pda(&alice.pubkey());
+    let expires = env.now() + DAY_SECONDS;
+
+    let before = env.balance(&alice.pubkey());
+    assert_ok(env.open_session(&alice, delegate.pubkey(), expires, 2 * SOL));
+    let state: Session = env.fetch(&session);
+    assert_eq!(state.owner, alice.pubkey());
+    assert_eq!(state.delegate, delegate.pubkey());
+    assert_eq!(state.expires_at, expires);
+    let session_rent = env.rent(&session);
+    assert_eq!(env.balance(&session), session_rent + 2 * SOL);
+    assert_eq!(
+        before - env.balance(&alice.pubkey()),
+        2 * SOL + session_rent + TX_FEE
+    );
+
+    // The key opens the round and buys three numbers: the session pays it
+    // all, the key only its network fee, and Alice owns the tickets.
+    let key_before = env.balance(&delegate.pubkey());
+    assert_ok(env.buy_many(&delegate, Some(session), DAILY, DAY, &[30, 10, 20]));
+    assert_eq!(env.balance(&delegate.pubkey()), key_before - TX_FEE);
+    let round_rent = env.rent(&round_pda(DAILY, DAY));
+    let ticket_rent = env.rent(&ticket_pda(DAILY, DAY, 10));
+    assert_eq!(
+        env.balance(&session),
+        session_rent + 2 * SOL - 3 * PRICE - round_rent - 3 * ticket_rent
+    );
+    assert_eq!(env.balance(&round_pda(DAILY, DAY)), round_rent + 3 * PRICE);
+    for number in [10, 20, 30] {
+        let ticket = env.ticket(DAILY, DAY, number);
+        assert_eq!(ticket.owner, alice.pubkey());
+        assert_eq!(env.balance(&ticket_pda(DAILY, DAY, number)), ticket_rent);
+    }
+    assert_eq!(env.numbers(DAILY, DAY), [10, 20, 30]);
+
+    // In an open round, the key still pays nothing but the fee.
+    let key_before = env.balance(&delegate.pubkey());
+    assert_ok(env.buy_many(&delegate, Some(session), DAILY, DAY, &[40]));
+    assert_eq!(env.balance(&delegate.pubkey()), key_before - TX_FEE);
+
+    // Another key cannot spend it, even for Alice.
+    let mallory = env.player();
+    assert_error(
+        env.buy_many(&mallory, Some(session), DAILY, DAY, &[50]),
+        SoluckyError::NotSessionKey,
+    );
+    // The budget is a hard limit: what is left cannot pay for 20 more.
+    let numbers: Vec<u32> = (100..120).collect();
+    assert_error(
+        env.buy_many(&delegate, Some(session), DAILY, DAY, &numbers),
+        SoluckyError::SessionBudgetLow,
+    );
+
+    // A ticket bought with the session wins for Alice.
+    let winner = env.close_and_draw(DAILY, DAY);
+    assert_eq!(winner.owner, alice.pubkey());
+    let before = env.balance(&alice.pubkey());
+    assert_ok(env.claim(DAILY, DAY, winner.number));
+    assert_eq!(env.balance(&alice.pubkey()) - before, payout_of(4 * PRICE));
+    // And the rent of its tickets goes back to her, not to the key.
+    let before = env.balance(&alice.pubkey());
+    assert_ok(env.close_ticket(&alice, DAILY, DAY, 10));
+    assert_eq!(env.balance(&alice.pubkey()) - before, ticket_rent - TX_FEE);
+}
+
+#[test]
+fn a_session_ends_on_time_and_returns_everything_to_its_owner() {
+    let mut env = Env::new();
+    let alice = env.player();
+    let delegate = Keypair::new();
+    env.svm.airdrop(&delegate.pubkey(), SOL / 100).unwrap();
+    let session = session_pda(&alice.pubkey());
+    let now = env.now();
+
+    assert_error(
+        env.open_session(&alice, delegate.pubkey(), now, SOL),
+        SoluckyError::InvalidSessionExpiry,
+    );
+    assert_error(
+        env.open_session(
+            &alice,
+            delegate.pubkey(),
+            now + MAX_SESSION_SECONDS + 1,
+            SOL,
+        ),
+        SoluckyError::InvalidSessionExpiry,
+    );
+    assert_ok(env.open_session(&alice, delegate.pubkey(), now + HOUR_SECONDS, SOL));
+
+    // Past its end, the key can no longer buy.
+    env.set_time(now + HOUR_SECONDS);
+    assert_error(
+        env.buy_many(&delegate, Some(session), DAILY, DAY, &[1]),
+        SoluckyError::SessionExpired,
+    );
+
+    // Opening again moves it to a new key and end, and adds to the budget.
+    let other = Keypair::new();
+    env.svm.airdrop(&other.pubkey(), SOL / 100).unwrap();
+    let rent = env.rent(&session);
+    assert_ok(env.open_session(&alice, other.pubkey(), now + 2 * HOUR_SECONDS, SOL / 2));
+    assert_eq!(env.balance(&session), rent + SOL + SOL / 2);
+    assert_error(
+        env.buy_many(&delegate, Some(session), DAILY, DAY, &[1]),
+        SoluckyError::NotSessionKey,
+    );
+    assert_ok(env.buy_many(&other, Some(session), DAILY, DAY, &[1]));
+
+    // Only the owner and the key can end it, and the lamports go to the owner.
+    let mallory = env.player();
+    assert_error(
+        env.close_session(&mallory, alice.pubkey()),
+        SoluckyError::Unauthorized,
+    );
+    assert!(env.close_session(&other, mallory.pubkey()).is_err());
+    let left = env.balance(&session);
+    let before = env.balance(&alice.pubkey());
+    assert_ok(env.close_session(&other, alice.pubkey()));
+    assert_eq!(env.balance(&alice.pubkey()) - before, left);
+    assert!(env
+        .svm
+        .get_account(&session)
+        .is_none_or(|a| a.lamports == 0));
+
+    // The owner can end a session on its own too.
+    assert_ok(env.open_session(&alice, other.pubkey(), now + 2 * HOUR_SECONDS, SOL));
+    assert_ok(env.close_session(&alice, alice.pubkey()));
+    assert_code(
+        env.buy_many(&other, Some(session), DAILY, DAY, &[2]),
+        u32::from(ErrorCode::AccountNotInitialized),
+    );
+}
+
+#[test]
+fn a_batch_into_a_crowded_round_stays_cheap() {
+    let mut env = Env::new();
+    let alice = env.player();
+    assert_ok(env.buy(&alice, DAILY, DAY, 0));
+
+    // Fill the round to 20 tickets short of the cap with the even numbers.
+    let address = round_pda(DAILY, DAY);
+    let mut account = env.svm.get_account(&address).unwrap();
+    let mut round = env.round(DAILY, DAY);
+    round.ticket_count = MAX_LOTTERY_TICKETS - 20;
+    round.pot = u64::from(round.ticket_count) * PRICE;
+    account.data.truncate(8 + Round::INIT_SPACE);
+    round
+        .try_serialize(&mut account.data.as_mut_slice())
+        .unwrap();
+    account
+        .data
+        .extend((0..round.ticket_count).flat_map(|i| (2 * i).to_le_bytes()));
+    account.lamports = env
+        .svm
+        .minimum_balance_for_rent_exemption(account.data.len())
+        + round.pot;
+    env.svm.set_account(address, account).unwrap();
+
+    // Twenty odd numbers spread over the list: every number moves once.
+    let numbers: Vec<u32> = (0..20).map(|i| 100_001 * i * 2 + 1).collect();
+    let meta = assert_ok(env.buy_many(&alice, None, DAILY, DAY, &numbers));
+    println!(
+        "buy 20 numbers into a full lottery round: {} CU",
+        meta.compute_units_consumed
+    );
+    assert!(meta.compute_units_consumed < 400_000);
+    let list = env.numbers(DAILY, DAY);
+    assert_eq!(list.len(), MAX_LOTTERY_TICKETS as usize);
+    assert!(list.windows(2).all(|pair| pair[0] < pair[1]));
+    assert_eq!(&list[..3], [0, 1, 2]);
+    assert_error(
+        env.buy_many(&alice, None, DAILY, DAY, &[3]),
+        SoluckyError::RoundFull,
+    );
 }

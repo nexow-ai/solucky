@@ -7,11 +7,14 @@
  */
 
 export * from './buyTicket';
+export * from './buyTickets';
 export * from './claimPrize';
 export * from './closeRound';
+export * from './closeSession';
 export * from './closeTicket';
 export * from './collectFee';
 export * from './drawRound';
 export * from './initialize';
+export * from './openSession';
 export * from './setGame';
 export * from './updateConfig';

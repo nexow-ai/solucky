@@ -30,9 +30,13 @@ export const MAX_FEE_BPS: number = 2000;
 
 export const MAX_LOTTERY_TICKETS: number = 1000000;
 
+export const MAX_SESSION_SECONDS: bigint = 2592000n;
+
 export const MIN_TICKET_PRICE: bigint = 2000000n;
 
 export const ROUND_SEED: ReadonlyUint8Array = new Uint8Array([114, 111, 117, 110, 100]);
+
+export const SESSION_SEED: ReadonlyUint8Array = new Uint8Array([115, 101, 115, 115, 105, 111, 110]);
 
 export const TICKET_SEED: ReadonlyUint8Array = new Uint8Array([116, 105, 99, 107, 101, 116]);
 

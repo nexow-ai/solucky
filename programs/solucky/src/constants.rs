@@ -12,6 +12,9 @@ pub const ROUND_SEED: &[u8] = b"round";
 #[constant]
 pub const TICKET_SEED: &[u8] = b"ticket";
 
+#[constant]
+pub const SESSION_SEED: &[u8] = b"session";
+
 /// Daily lottery: round `d` is open from `d * 86_400` to `(d + 1) * 86_400`
 /// seconds after the Unix epoch.
 #[constant]
@@ -64,6 +67,11 @@ pub const DRAW_DELAY_SLOTS: u64 = 8;
 /// pins a new slot once SlotHashes proves the old one is out of reach.
 #[constant]
 pub const DRAW_WINDOW_SLOTS: u64 = 500;
+
+/// Longest a quick-buy session can last: 30 days. Its owner can end it at
+/// any time before.
+#[constant]
+pub const MAX_SESSION_SECONDS: i64 = 30 * DAY_SECONDS;
 
 pub const BPS_DENOMINATOR: u128 = 10_000;
 

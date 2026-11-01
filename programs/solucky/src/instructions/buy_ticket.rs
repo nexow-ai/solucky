@@ -52,67 +52,24 @@ pub fn handle_buy_ticket(
     country: [u8; 2],
     max_price: u64,
 ) -> Result<()> {
-    let config = &ctx.accounts.config;
-    let game = &ctx.accounts.game;
     let clock = Clock::get()?;
-    require!(!config.paused, SoluckyError::Paused);
     require!(is_valid_country(&country), SoluckyError::InvalidCountry);
-    let on_sale = match period_seconds(kind) {
-        Some(seconds) => period_of(clock.unix_timestamp, seconds)?,
-        None => game.current_round,
-    };
-    require!(period == on_sale, SoluckyError::WrongRound);
 
     let buyer = ctx.accounts.buyer.key();
     let round_key = ctx.accounts.round.key();
     let ticket_key = ctx.accounts.ticket.key();
     let round_info = ctx.accounts.round.to_account_info();
 
+    prepare_round(
+        &mut ctx.accounts.round,
+        &ctx.accounts.config,
+        &ctx.accounts.game,
+        kind,
+        period,
+        ctx.bumps.round,
+        &clock,
+    )?;
     let round = &mut ctx.accounts.round;
-    // A new account is all zeros, and a round's price is never zero.
-    if round.ticket_price == 0 {
-        round.set_inner(Round {
-            kind,
-            period,
-            status: RoundStatus::Open,
-            ticket_price: game.ticket_price,
-            fee_bps: game.fee_bps,
-            max_number: config.max_number,
-            ticket_count: 0,
-            pot: 0,
-            entropy: hashv(&[
-                b"solucky",
-                &[kind],
-                &period.to_le_bytes(),
-                round_key.as_ref(),
-            ])
-            .to_bytes(),
-            target_slot: 0,
-            checked: 0,
-            sealed_count: 0,
-            draw_slot: 0,
-            slot_hash: [0; 32],
-            randomness: [0; 32],
-            drawn_number: 0,
-            winning_index: 0,
-            winning_number: 0,
-            winner: Pubkey::default(),
-            winner_country: [0; 2],
-            payout: 0,
-            fee: 0,
-            fee_collected: false,
-            bump: ctx.bumps.round,
-        });
-    }
-    match round.status {
-        RoundStatus::Open => {}
-        // Guess: sales go on while the last guesses wait for their check, but
-        // stop once the pinned slot's hash, and so the check's result, is out.
-        RoundStatus::Closed if !round.is_lottery() => {
-            require!(clock.slot <= round.target_slot, SoluckyError::BatchSealed)
-        }
-        _ => return err!(SoluckyError::RoundNotOpen),
-    }
     require!(number <= round.max_number, SoluckyError::NumberOutOfRange);
 
     let price = round.ticket_price;
@@ -186,4 +143,72 @@ pub fn handle_buy_ticket(
         pot,
     });
     Ok(())
+}
+
+/// Checks that `period` is the game's round on sale and that it still takes
+/// tickets, opening it at the game's price if it is new. Returns whether it
+/// was opened now.
+pub(crate) fn prepare_round(
+    round: &mut Account<Round>,
+    config: &Config,
+    game: &Game,
+    kind: u8,
+    period: u32,
+    bump: u8,
+    clock: &Clock,
+) -> Result<bool> {
+    require!(!config.paused, SoluckyError::Paused);
+    let on_sale = match period_seconds(kind) {
+        Some(seconds) => period_of(clock.unix_timestamp, seconds)?,
+        None => game.current_round,
+    };
+    require!(period == on_sale, SoluckyError::WrongRound);
+
+    // A new account is all zeros, and a round's price is never zero.
+    let opened = round.ticket_price == 0;
+    if opened {
+        let round_key = round.key();
+        round.set_inner(Round {
+            kind,
+            period,
+            status: RoundStatus::Open,
+            ticket_price: game.ticket_price,
+            fee_bps: game.fee_bps,
+            max_number: config.max_number,
+            ticket_count: 0,
+            pot: 0,
+            entropy: hashv(&[
+                b"solucky",
+                &[kind],
+                &period.to_le_bytes(),
+                round_key.as_ref(),
+            ])
+            .to_bytes(),
+            target_slot: 0,
+            checked: 0,
+            sealed_count: 0,
+            draw_slot: 0,
+            slot_hash: [0; 32],
+            randomness: [0; 32],
+            drawn_number: 0,
+            winning_index: 0,
+            winning_number: 0,
+            winner: Pubkey::default(),
+            winner_country: [0; 2],
+            payout: 0,
+            fee: 0,
+            fee_collected: false,
+            bump,
+        });
+    }
+    match round.status {
+        RoundStatus::Open => {}
+        // Guess: sales go on while the last guesses wait for their check, but
+        // stop once the pinned slot's hash, and so the check's result, is out.
+        RoundStatus::Closed if !round.is_lottery() => {
+            require!(clock.slot <= round.target_slot, SoluckyError::BatchSealed)
+        }
+        _ => return err!(SoluckyError::RoundNotOpen),
+    }
+    Ok(opened)
 }

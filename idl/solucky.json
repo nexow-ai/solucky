@@ -163,6 +163,145 @@
       ]
     },
     {
+      "name": "buy_tickets",
+      "docs": [
+        "Buys several numbers in the game's round on sale, one ticket account",
+        "each (passed as remaining accounts, in order). Numbers someone already",
+        "holds are skipped. With a quick-buy session, its key signs, the session",
+        "pays and the tickets belong to the session's owner."
+      ],
+      "discriminator": [
+        48,
+        16,
+        122,
+        137,
+        24,
+        214,
+        198,
+        58
+      ],
+      "accounts": [
+        {
+          "name": "buyer",
+          "docs": [
+            "Pays the network fee and opens the round if needed. Without a session",
+            "it pays for the tickets and owns them."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "session",
+          "docs": [
+            "A quick-buy session whose key is `buyer`: the tickets are paid from it",
+            "and belong to its owner."
+          ],
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "game",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  97,
+                  109,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "kind"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "docs": [
+            "See `BuyTicket::round`."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "kind"
+              },
+              {
+                "kind": "arg",
+                "path": "period"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "kind",
+          "type": "u8"
+        },
+        {
+          "name": "period",
+          "type": "u32"
+        },
+        {
+          "name": "numbers",
+          "type": {
+            "vec": "u32"
+          }
+        },
+        {
+          "name": "country",
+          "type": {
+            "array": [
+              "u8",
+              2
+            ]
+          }
+        },
+        {
+          "name": "max_price",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "claim_prize",
       "docs": [
         "Pays the winner."
@@ -294,6 +433,60 @@
         {
           "name": "slot_hashes",
           "address": "SysvarS1otHashes111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_session",
+      "docs": [
+        "Ends a quick-buy session; everything it holds goes back to the owner."
+      ],
+      "discriminator": [
+        68,
+        114,
+        178,
+        140,
+        222,
+        38,
+        248,
+        211
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "docs": [
+            "The owner, or the session's key."
+          ],
+          "signer": true
+        },
+        {
+          "name": "session",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true
         }
       ],
       "args": []
@@ -600,6 +793,72 @@
       ]
     },
     {
+      "name": "open_session",
+      "docs": [
+        "Starts a quick-buy session for a key the owner's browser keeps, or",
+        "changes its key and end, and adds `deposit` lamports to its budget."
+      ],
+      "discriminator": [
+        130,
+        54,
+        124,
+        7,
+        236,
+        20,
+        104,
+        104
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "session",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  101,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "delegate",
+          "type": "pubkey"
+        },
+        {
+          "name": "expires_at",
+          "type": "i64"
+        },
+        {
+          "name": "deposit",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "set_game",
       "docs": [
         "Opens a game, or changes its price and fee for the next rounds."
@@ -775,6 +1034,19 @@
         78,
         116,
         174
+      ]
+    },
+    {
+      "name": "Session",
+      "discriminator": [
+        243,
+        81,
+        72,
+        115,
+        214,
+        188,
+        72,
+        144
       ]
     },
     {
@@ -1009,6 +1281,41 @@
       "code": 6024,
       "name": "InvalidGame",
       "msg": "Unknown game"
+    },
+    {
+      "code": 6025,
+      "name": "TicketsMismatch",
+      "msg": "Give one ticket account for each number, and at least one number"
+    },
+    {
+      "code": 6026,
+      "name": "WrongTicketAccount",
+      "msg": "A ticket account does not match its number"
+    },
+    {
+      "code": 6027,
+      "name": "AllTaken",
+      "msg": "Every number was already taken"
+    },
+    {
+      "code": 6028,
+      "name": "NotSessionKey",
+      "msg": "This key cannot spend from this session"
+    },
+    {
+      "code": 6029,
+      "name": "SessionExpired",
+      "msg": "The quick-buy session has ended"
+    },
+    {
+      "code": 6030,
+      "name": "SessionBudgetLow",
+      "msg": "The quick-buy session has too little left for these tickets"
+    },
+    {
+      "code": 6031,
+      "name": "InvalidSessionExpiry",
+      "msg": "A quick-buy session must end in the future, within 30 days"
     }
   ],
   "types": [
@@ -1537,6 +1844,43 @@
       }
     },
     {
+      "name": "Session",
+      "docs": [
+        "A quick-buy session: lets a key the owner's browser keeps buy tickets for",
+        "the owner without asking the owner's wallet each time. The budget is the",
+        "lamports this account holds above its rent. The key can only spend it on",
+        "tickets owned by the owner, and closing the session, which the owner or",
+        "the key can do, sends every lamport back to the owner."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "delegate",
+            "docs": [
+              "The key that signs purchases paid from this session."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "expires_at",
+            "docs": [
+              "Purchases stop at this time (cluster clock, Unix seconds)."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
       "name": "Ticket",
       "docs": [
         "A number held by one player in one round. Its address is derived from the",
@@ -1714,6 +2058,15 @@
       "value": "1000000"
     },
     {
+      "name": "MAX_SESSION_SECONDS",
+      "docs": [
+        "Longest a quick-buy session can last: 30 days. Its owner can end it at",
+        "any time before."
+      ],
+      "type": "i64",
+      "value": "2592000"
+    },
+    {
       "name": "MIN_TICKET_PRICE",
       "docs": [
         "Lowest ticket price: 0.002 SOL. The winner's 80% of the smallest pot is",
@@ -1727,6 +2080,11 @@
       "name": "ROUND_SEED",
       "type": "bytes",
       "value": "[114, 111, 117, 110, 100]"
+    },
+    {
+      "name": "SESSION_SEED",
+      "type": "bytes",
+      "value": "[115, 101, 115, 115, 105, 111, 110]"
     },
     {
       "name": "TICKET_SEED",

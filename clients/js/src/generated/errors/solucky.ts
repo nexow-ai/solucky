@@ -65,8 +65,23 @@ export const SOLUCKY_ERROR__NOTHING_TO_CHECK = 0x1786; // 6022
 export const SOLUCKY_ERROR__BATCH_SEALED = 0x1787; // 6023
 /** InvalidGame: Unknown game */
 export const SOLUCKY_ERROR__INVALID_GAME = 0x1788; // 6024
+/** TicketsMismatch: Give one ticket account for each number, and at least one number */
+export const SOLUCKY_ERROR__TICKETS_MISMATCH = 0x1789; // 6025
+/** WrongTicketAccount: A ticket account does not match its number */
+export const SOLUCKY_ERROR__WRONG_TICKET_ACCOUNT = 0x178a; // 6026
+/** AllTaken: Every number was already taken */
+export const SOLUCKY_ERROR__ALL_TAKEN = 0x178b; // 6027
+/** NotSessionKey: This key cannot spend from this session */
+export const SOLUCKY_ERROR__NOT_SESSION_KEY = 0x178c; // 6028
+/** SessionExpired: The quick-buy session has ended */
+export const SOLUCKY_ERROR__SESSION_EXPIRED = 0x178d; // 6029
+/** SessionBudgetLow: The quick-buy session has too little left for these tickets */
+export const SOLUCKY_ERROR__SESSION_BUDGET_LOW = 0x178e; // 6030
+/** InvalidSessionExpiry: A quick-buy session must end in the future, within 30 days */
+export const SOLUCKY_ERROR__INVALID_SESSION_EXPIRY = 0x178f; // 6031
 
 export type SoluckyError =
+  | typeof SOLUCKY_ERROR__ALL_TAKEN
   | typeof SOLUCKY_ERROR__BATCH_SEALED
   | typeof SOLUCKY_ERROR__DRAW_STILL_POSSIBLE
   | typeof SOLUCKY_ERROR__FEE_ALREADY_COLLECTED
@@ -74,8 +89,10 @@ export type SoluckyError =
   | typeof SOLUCKY_ERROR__INVALID_COUNTRY
   | typeof SOLUCKY_ERROR__INVALID_GAME
   | typeof SOLUCKY_ERROR__INVALID_MAX_NUMBER
+  | typeof SOLUCKY_ERROR__INVALID_SESSION_EXPIRY
   | typeof SOLUCKY_ERROR__INVALID_TICKET_PRICE
   | typeof SOLUCKY_ERROR__NOTHING_TO_CHECK
+  | typeof SOLUCKY_ERROR__NOT_SESSION_KEY
   | typeof SOLUCKY_ERROR__NOT_WINNING_TICKET
   | typeof SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE
   | typeof SOLUCKY_ERROR__OVERFLOW
@@ -89,13 +106,18 @@ export type SoluckyError =
   | typeof SOLUCKY_ERROR__ROUND_NOT_OPEN
   | typeof SOLUCKY_ERROR__ROUND_NOT_OVER
   | typeof SOLUCKY_ERROR__ROUND_NOT_SETTLED
+  | typeof SOLUCKY_ERROR__SESSION_BUDGET_LOW
+  | typeof SOLUCKY_ERROR__SESSION_EXPIRED
   | typeof SOLUCKY_ERROR__TARGET_SLOT_NOT_REACHED
+  | typeof SOLUCKY_ERROR__TICKETS_MISMATCH
   | typeof SOLUCKY_ERROR__UNAUTHORIZED
-  | typeof SOLUCKY_ERROR__WRONG_ROUND;
+  | typeof SOLUCKY_ERROR__WRONG_ROUND
+  | typeof SOLUCKY_ERROR__WRONG_TICKET_ACCOUNT;
 
 let soluckyErrorMessages: Record<SoluckyError, string> | undefined;
 if (process.env['NODE_ENV'] !== 'production') {
   soluckyErrorMessages = {
+    [SOLUCKY_ERROR__ALL_TAKEN]: `Every number was already taken`,
     [SOLUCKY_ERROR__BATCH_SEALED]: `The latest guesses are being checked; try again in a few seconds`,
     [SOLUCKY_ERROR__DRAW_STILL_POSSIBLE]: `The pinned slot can still be drawn`,
     [SOLUCKY_ERROR__FEE_ALREADY_COLLECTED]: `The fee of this round was already collected`,
@@ -103,8 +125,10 @@ if (process.env['NODE_ENV'] !== 'production') {
     [SOLUCKY_ERROR__INVALID_COUNTRY]: `The country must be an uppercase ISO 3166-1 alpha-2 code`,
     [SOLUCKY_ERROR__INVALID_GAME]: `Unknown game`,
     [SOLUCKY_ERROR__INVALID_MAX_NUMBER]: `The highest number must be greater than zero`,
+    [SOLUCKY_ERROR__INVALID_SESSION_EXPIRY]: `A quick-buy session must end in the future, within 30 days`,
     [SOLUCKY_ERROR__INVALID_TICKET_PRICE]: `The ticket price must be at least 0.002 SOL`,
     [SOLUCKY_ERROR__NOTHING_TO_CHECK]: `There are no new guesses to check`,
+    [SOLUCKY_ERROR__NOT_SESSION_KEY]: `This key cannot spend from this session`,
     [SOLUCKY_ERROR__NOT_WINNING_TICKET]: `This is not the winning ticket`,
     [SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE]: `The number is out of range`,
     [SOLUCKY_ERROR__OVERFLOW]: `Arithmetic overflow`,
@@ -118,9 +142,13 @@ if (process.env['NODE_ENV'] !== 'production') {
     [SOLUCKY_ERROR__ROUND_NOT_OPEN]: `The round is not open`,
     [SOLUCKY_ERROR__ROUND_NOT_OVER]: `The round has not ended yet`,
     [SOLUCKY_ERROR__ROUND_NOT_SETTLED]: `The round has not been settled`,
+    [SOLUCKY_ERROR__SESSION_BUDGET_LOW]: `The quick-buy session has too little left for these tickets`,
+    [SOLUCKY_ERROR__SESSION_EXPIRED]: `The quick-buy session has ended`,
     [SOLUCKY_ERROR__TARGET_SLOT_NOT_REACHED]: `The pinned slot has not been reached yet`,
+    [SOLUCKY_ERROR__TICKETS_MISMATCH]: `Give one ticket account for each number, and at least one number`,
     [SOLUCKY_ERROR__UNAUTHORIZED]: `Only the authority can do this`,
     [SOLUCKY_ERROR__WRONG_ROUND]: `Tickets can only be bought for the round on sale`,
+    [SOLUCKY_ERROR__WRONG_TICKET_ACCOUNT]: `A ticket account does not match its number`,
   };
 }
 
