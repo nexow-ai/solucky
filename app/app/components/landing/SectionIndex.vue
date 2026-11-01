@@ -2,8 +2,9 @@
 /**
  * The landing's right-hand index: Play and the page's section anchors, with a
  * marker that slides along the rail as you scroll. Labels sit to the left of
- * the rail in LTR (mirrored in RTL). Hidden below lg; the header keeps the
- * links on other routes.
+ * the rail in LTR (mirrored in RTL). It only shows where it fits in the margin
+ * beside the 80rem page container (its 11rem plus a gap, each side): any
+ * narrower and it would cover the content, and the header's menu has the links.
  */
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -55,7 +56,7 @@ onBeforeUnmount(() => window.removeEventListener('resize', syncMarker));
   <nav
     ref="nav"
     :aria-label="t('legal.onThisPage')"
-    class="section-index pointer-events-none fixed z-40 hidden lg:block"
+    class="section-index pointer-events-none fixed z-40 hidden min-[1720px]:block"
   >
     <div class="rail" aria-hidden="true">
       <span class="meter" />
