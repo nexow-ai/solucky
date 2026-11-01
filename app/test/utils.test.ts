@@ -15,6 +15,7 @@ import {
   roundTitle,
   shortAddress,
 } from '../app/utils/format';
+import { FAUCET_SOL, faucetUrl, networkHref } from '../app/utils/network';
 import { matchLocale } from '../i18n/languages';
 
 function programError(code: number) {
@@ -134,5 +135,34 @@ describe('errors', () => {
     expect(isUserRejection(rejected)).toBe(true);
     expect(friendlyError(rejected)).toBe('You cancelled the request in your wallet.');
     expect(isUserRejection(programError(6000))).toBe(false);
+  });
+});
+
+describe('network', () => {
+  const owner = 'CKnNUtHfhuzMejTj1DVy3vEBWB4Cmyh79L5Zrxj2baka';
+
+  it('fills in the faucet with the wallet, ◎5 and the cluster', () => {
+    const url = new URL(faucetUrl('devnet', owner)!);
+    expect(url.origin).toBe('https://faucet.solana.com');
+    expect(url.searchParams.get('walletAddress')).toBe(owner);
+    expect(url.searchParams.get('amount')).toBe(String(FAUCET_SOL));
+    expect(url.searchParams.get('cluster')).toBe('devnet');
+    expect(new URL(faucetUrl('testnet', owner)!).searchParams.get('cluster')).toBe('testnet');
+  });
+
+  it('leaves the address out without a wallet', () => {
+    expect(new URL(faucetUrl('devnet')!).searchParams.has('walletAddress')).toBe(false);
+  });
+
+  it('has no faucet on mainnet or localnet', () => {
+    expect(faucetUrl('mainnet', owner)).toBeNull();
+    expect(faucetUrl('localnet', owner)).toBeNull();
+  });
+
+  it('keeps the page when switching deployments', () => {
+    expect(networkHref('https://solucky.me/', '/es/play/hourly?x=1')).toBe('https://solucky.me/es/play/hourly?x=1');
+    expect(networkHref('https://solucky.me', '/')).toBe('https://solucky.me/');
+    expect(networkHref('', '/play')).toBeNull();
+    expect(networkHref(undefined, '/play')).toBeNull();
   });
 });

@@ -64,7 +64,8 @@ const de: Dict = {
 
   faucet: {
     request: 'Fordere Test-SOL im Faucet an',
-    requestHint: 'Deine Adresse und ◎{amount} sind schon eingetragen: Schließ die Prüfung ab und tippe dann auf „Confirm Airdrop“.',
+    requestHint:
+      'Deine Adresse und ◎{amount} sind schon eingetragen: Schließ die Prüfung ab und tippe dann auf „Confirm Airdrop“.',
     airdropped: 'Airdrop von ◎1 erhalten',
     airdroppedHint: 'Die Test-SOL sind auf {cluster} angekommen. Du kannst jetzt Tickets kaufen.',
     failed: 'Airdrop fehlgeschlagen',

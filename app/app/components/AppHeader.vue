@@ -50,7 +50,11 @@ const items = computed<NavigationMenuItem[]>(() => [
       <AppNetwork class="hidden sm:inline-grid" />
       <!-- The wallet's address lives in the browser, so the faucet button does too. -->
       <ClientOnly>
-        <UTooltip v-if="faucet.available.value" :text="t('header.faucetTip', { amount: FAUCET_SOL })">
+        <UTooltip
+          v-if="faucet.available.value"
+          :text="t('header.faucetTip', { amount: FAUCET_SOL })"
+          :disabled="!faucet.url.value"
+        >
           <UButton
             :label="t('header.getSol')"
             :aria-label="t('header.getSol')"
