@@ -2,9 +2,12 @@ import {
   type Account,
   type Address,
   type Base58EncodedBytes,
+  type Commitment,
   type EncodedAccount,
   getBase58Decoder,
+  type GetAccountInfoApi,
   type GetProgramAccountsApi,
+  type MaybeAccount,
   parseBase64RpcAccount,
   type ReadonlyUint8Array,
   type Rpc,
@@ -112,6 +115,23 @@ export async function fetchRounds(
   if (kind !== undefined) filters.push(memcmp(8, Uint8Array.of(kind)));
   const rounds = await programAccounts(rpc, filters, decodeRound, programAddress, getRoundSize());
   return rounds.sort((a, b) => b.data.period - a.data.period);
+}
+
+/**
+ * A round's fields without the sorted numbers a lottery round stores after
+ * them (4 bytes a ticket, up to 4 MB): what a page polls.
+ */
+export async function fetchRoundHeader(
+  rpc: Rpc<GetAccountInfoApi>,
+  round: Address,
+  { commitment = 'confirmed' }: { commitment?: Commitment } = {},
+): Promise<MaybeAccount<Round>> {
+  const { value } = await rpc
+    .getAccountInfo(round, { encoding: 'base64', commitment, dataSlice: { offset: 0, length: getRoundSize() } })
+    .send();
+  return value
+    ? { ...decodeRound(parseBase64RpcAccount(round, value)), exists: true }
+    : { address: round, exists: false };
 }
 
 /** The sorted numbers a lottery round stores after its fields, from the account's full data. */

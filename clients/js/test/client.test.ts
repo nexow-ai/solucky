@@ -23,6 +23,7 @@ import {
   drawnNumber,
   errorReason,
   feeFor,
+  fetchRoundHeader,
   findGamePda,
   findRoundPda,
   findTicketPda,
@@ -47,6 +48,7 @@ import {
   roundNumbers,
   RoundStatus,
   SOLUCKY_ERROR__PAUSED,
+  SOLUCKY_PROGRAM_ADDRESS,
   TICKET_OFFSETS,
   winShare,
 } from '../src';
@@ -250,6 +252,67 @@ describe('accounts', () => {
     const data = new Uint8Array([...fields, 7, 0, 0, 0, 0x40, 0x6f, 0x40, 0x01]);
     expect(roundNumbers(data)).toEqual([7, 21_000_000]);
     expect(roundNumbers(fields)).toEqual([]);
+  });
+
+  test('a page reads only the round header, not the sorted numbers', async () => {
+    const header = getRoundEncoder().encode({
+      kind: Daily,
+      period: 20_758,
+      status: RoundStatus.Open,
+      ticketPrice: 100_000_000n,
+      feeBps: 500,
+      maxNumber: 21_000_000,
+      ticketCount: 2,
+      pot: 200_000_000n,
+      entropy: new Uint8Array(32),
+      targetSlot: 0n,
+      checked: 0,
+      sealedCount: 0,
+      drawSlot: 0n,
+      slotHash: new Uint8Array(32),
+      randomness: new Uint8Array(32),
+      drawnNumber: 0,
+      winningIndex: 0,
+      winningNumber: 0,
+      winner: address('11111111111111111111111111111111'),
+      winnerCountry: new Uint8Array(2),
+      payout: 0n,
+      fee: 0n,
+      feeCollected: false,
+      bump: 254,
+    });
+    const asked: unknown[] = [];
+    const rpc = {
+      getAccountInfo: (_address: string, config: unknown) => {
+        asked.push(config);
+        return {
+          send: async () => ({
+            value: {
+              data: [getBase64Decoder().decode(header), 'base64'],
+              executable: false,
+              lamports: 1n,
+              owner: SOLUCKY_PROGRAM_ADDRESS,
+              space: BigInt(header.length + 8),
+            },
+          }),
+        };
+      },
+    };
+    const [roundAddress] = await findRoundPda({ kind: Daily, period: 20_758 });
+    const round = await fetchRoundHeader(rpc as never, roundAddress);
+    expect(round.exists && round.data.pot).toBe(200_000_000n);
+    expect(asked[0]).toMatchObject({ dataSlice: { offset: 0, length: getRoundSize() } });
+
+    const missing = { getAccountInfo: () => ({ send: async () => ({ value: null }) }) };
+    expect((await fetchRoundHeader(missing as never, roundAddress)).exists).toBe(false);
+  });
+
+  test('PDA seeds match the program: fixed addresses on the deployed program', async () => {
+    // Seeds: "round", kind as one byte, period as u32 LE (programs/solucky/src/instructions/buy_ticket.rs).
+    const [round] = await findRoundPda({ kind: Daily, period: 20_758 });
+    expect(round).toBe(address('H9ukcLBatBGuWiBhrc6mTCehbLBEEjdAoyPXLhgD34s3'));
+    const [game] = await findGamePda({ kind: Guess });
+    expect(game).toBe(address('51qixxK5d8myuYRki4254Bzf47Pd1AydHh79mNGBBBqv'));
   });
 
   test('PDAs are derived from the game, the period and the number', async () => {
