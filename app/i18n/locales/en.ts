@@ -97,13 +97,9 @@ const en = {
     lead: 'A draw every day, a draw every hour, and a hidden number to hunt down. The winner takes 80% of the pot, and the rest carries over to the next round. Every ticket, every lamport and every draw lives on Solana, where anyone can check it.',
     playNow: 'Play now',
     howItWorks: 'How it works',
-    dialCaption:
-      'Each dot is one of today’s tickets: around the dial by the time it was bought, outwards by its number.',
 
     how: {
       tag: 'How it works',
-      opens: 'Round opens',
-      now: 'Now',
     },
 
     fairness: {
@@ -196,26 +192,8 @@ const en = {
     },
 
     live: {
-      title: 'Pots right now',
       drawIn: 'Draw in',
       noDeadline: 'No deadline',
-    },
-
-    practice: {
-      notice: 'Practice: it runs in your browser and nothing is sent to Solana',
-      title: 'Try it: the closest number wins',
-      lead: 'The marks are today’s real tickets. Place yours: every number closer to it than to any other ticket is yours, and the draw picks one number from 0 to {max}.',
-      drawn: 'Drawn number',
-      yourNumber: 'Your number',
-      best: 'Best free spot',
-      draw: 'Practice draw',
-      share: 'Your share of the draw',
-      today: 'Tickets today',
-      record: 'Practice wins',
-      won: '{drawn} was drawn: your number is the closest. You win!',
-      lost: '{drawn} was drawn: {number} is closer, so that ticket wins.',
-      taken: 'Someone already holds this number today. In the real game, pick another one.',
-      alone: 'No tickets yet today: on its own, your number would win any draw.',
     },
 
     split: {
@@ -224,8 +202,6 @@ const en = {
       winner: 'Winner',
       fee: 'House fee',
       carry: 'Next round',
-      feeNote: 'The daily lottery’s fee, set on-chain: {fee}. The program caps it at {cap}.',
-      example: 'Amounts for today’s pot of {pot}.',
     },
 
     winners: {
@@ -376,7 +352,6 @@ const en = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: 'One draw a day · Drawn after midnight UTC · Every ticket on Solana',
     draw: 'Draw',
     pot: "Today's pot",
     potHour: 'This hour’s pot',
@@ -384,50 +359,6 @@ const en = {
     tickets: '{n} ticket today | {n} tickets today',
     ticketsHour: '{n} ticket this hour | {n} tickets this hour',
     guesses: '{n} guess in this round | {n} guesses in this round',
-    entropy: 'Entropy · {cluster}',
-    entropyTitle: 'Entropy: {hex}',
-    noTickets: 'no tickets yet',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'New ticket',
-    rules: {
-      daily: 'New round every day at 00:00 UTC',
-      hourly: 'And one every hour',
-      pot: 'The closest number wins 80% of the pot',
-      carry: 'The rest carries over to the next round',
-      guess: 'Guess the number: no deadline, until someone finds it',
-      numbers: 'Numbers from 0 to {max}',
-      fee: 'House fee capped at 20% by the program',
-      anyone: 'Anyone can close, draw and pay a round',
-      check: 'Recompute every draw in your browser',
-      open: 'Open source',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Verified',
-    title: 'Draw receipt',
-    round: 'Round',
-    noneYet: 'none settled yet',
-    tickets: 'Tickets',
-    pot: 'Pot',
-    entropy: 'Entropy',
-    slotHash: 'Slot hash · slot {slot}',
-    formula: 'sha256(entropy ‖ slot hash ‖ slot ‖ round) =',
-    mod: 'first 8 bytes as u64 mod {count} = {drawn}',
-    ticketCount: 'numbers',
-    closest: 'closest ticket: {number}',
-    number: 'Number',
-    paidTo: 'Paid to',
-    payout: 'Payout',
-    check: 'Check this draw',
-    roundPage: 'Round page',
-    nextDraw: 'Next draw after 00:00 UTC',
-    ok: 'Recomputed in your browser: same hash, number {number} wins.',
-    mismatch: 'The hash recomputed in your browser does not match this round.',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -440,7 +371,6 @@ const en = {
     winChance: 'Win chance',
     chance: 'Chance',
     todaysPot: 'Pot',
-    checked: 'Checked',
     waiting: 'Waiting',
     numbersLeft: 'Numbers left',
     winners: 'Winners',
@@ -456,7 +386,6 @@ const en = {
   },
 
   play: {
-    title: 'Play',
     description:
       'Pick a number in the daily or hourly lottery, or hunt down the hidden one, and watch the pot grow live on Solana.',
     testMoney: 'You are playing on Solana {cluster}: tickets cost test SOL with no real value.',
@@ -474,7 +403,6 @@ const en = {
     kicker: 'Pick a',
     title: 'Number',
     win: 'Win',
-    in: 'in',
     taken: 'Already taken in this round',
     range: '0 to {max}, one ticket per number',
     pad: 'Number pad',
@@ -578,7 +506,6 @@ const en = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · closes in',
     carried: 'Includes ◎{carry} carried over from the last round',
     split: '80% to the winner · {fee} house fee · the rest to the next round',
     inPlay: 'Numbers in play',
@@ -592,7 +519,6 @@ const en = {
     title: 'Three ways to play',
     description:
       'Same numbers, from 0 to {max}. The winner takes 80% of the pot; the house fee comes out of the rest, and what is left carries over to the next round.',
-    play: 'Play',
     /** On a game's page, over the cards of the two others. */
     others: 'Two more ways to play',
     discover: 'Discover',

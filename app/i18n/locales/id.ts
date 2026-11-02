@@ -85,13 +85,9 @@ const id: Dict = {
     lead: 'Undian setiap hari, undian setiap jam, dan angka tersembunyi untuk diburu. Pemenang mendapat 80% pot, dan sisanya dibawa ke ronde berikutnya. Setiap tiket, setiap lamport, dan setiap undian ada di Solana, tempat siapa pun bisa memeriksanya.',
     playNow: 'Main sekarang',
     howItWorks: 'Cara kerja',
-    dialCaption:
-      'Setiap titik adalah salah satu tiket hari ini: posisinya di sekeliling dial menunjukkan waktu pembeliannya, dan jaraknya ke luar menunjukkan angkanya.',
 
     how: {
       tag: 'Cara kerja',
-      opens: 'Ronde dibuka',
-      now: 'Sekarang',
     },
 
     fairness: {
@@ -184,26 +180,8 @@ const id: Dict = {
     },
 
     live: {
-      title: 'Pot saat ini',
       drawIn: 'Undian dalam',
       noDeadline: 'Tanpa tenggat',
-    },
-
-    practice: {
-      notice: 'Latihan: berjalan di browser-mu, tidak ada yang dikirim ke Solana',
-      title: 'Coba: angka terdekat yang menang',
-      lead: 'Tanda-tanda ini adalah tiket asli hari ini. Taruh punyamu: setiap angka yang lebih dekat ke angkamu daripada ke tiket lain jadi milikmu, dan undian memilih satu angka dari 0 sampai {max}.',
-      drawn: 'Angka yang keluar',
-      yourNumber: 'Angkamu',
-      best: 'Tempat kosong terbaik',
-      draw: 'Undian latihan',
-      share: 'Bagianmu dari undian',
-      today: 'Tiket hari ini',
-      record: 'Menang latihan',
-      won: '{drawn} keluar: angkamu yang paling dekat. Kamu menang!',
-      lost: '{drawn} keluar: {number} lebih dekat, jadi tiket itu yang menang.',
-      taken: 'Angka ini sudah dipegang orang lain hari ini. Di permainan sungguhan, pilih angka lain.',
-      alone: 'Belum ada tiket hari ini: sendirian, angkamu akan memenangkan undian apa pun.',
     },
 
     split: {
@@ -212,8 +190,6 @@ const id: Dict = {
       winner: 'Pemenang',
       fee: 'Biaya pengelola',
       carry: 'Ronde berikutnya',
-      feeNote: 'Biaya lotere harian, ditetapkan on-chain: {fee}. Program membatasinya maksimal {cap}.',
-      example: 'Jumlah untuk pot hari ini sebesar {pot}.',
     },
 
     winners: {
@@ -365,7 +341,6 @@ const id: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: 'Satu undian sehari · Diundi setelah tengah malam UTC · Setiap tiket di Solana',
     draw: 'Undian',
     pot: 'Pot hari ini',
     potHour: 'Pot jam ini',
@@ -373,50 +348,6 @@ const id: Dict = {
     tickets: '{n} tiket hari ini',
     ticketsHour: '{n} tiket jam ini',
     guesses: '{n} tebakan di ronde ini',
-    entropy: 'Entropi · {cluster}',
-    entropyTitle: 'Entropi: {hex}',
-    noTickets: 'belum ada tiket',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Tiket baru',
-    rules: {
-      daily: 'Ronde baru setiap hari pukul 00:00 UTC',
-      hourly: 'Dan satu setiap jam',
-      pot: 'Angka terdekat memenangkan 80% pot',
-      carry: 'Sisanya dibawa ke ronde berikutnya',
-      guess: 'Tebak Angka: tanpa batas waktu, sampai ada yang menemukannya',
-      numbers: 'Angka dari 0 sampai {max}',
-      fee: 'Biaya pengelola dibatasi maksimal 20% oleh program',
-      anyone: 'Siapa pun bisa menutup, mengundi, dan membayar ronde',
-      check: 'Hitung ulang setiap undian di browser-mu',
-      open: 'Sumber terbuka',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Terverifikasi',
-    title: 'Struk undian',
-    round: 'Ronde',
-    noneYet: 'belum ada yang diselesaikan',
-    tickets: 'Tiket',
-    pot: 'Pot',
-    entropy: 'Entropi',
-    slotHash: 'Hash slot · slot {slot}',
-    formula: 'sha256(entropi ‖ hash slot ‖ slot ‖ ronde) =',
-    mod: '8 byte pertama sebagai u64 mod {count} = {drawn}',
-    ticketCount: 'angka',
-    closest: 'tiket terdekat: {number}',
-    number: 'Angka',
-    paidTo: 'Dibayar ke',
-    payout: 'Pembayaran',
-    check: 'Periksa undian ini',
-    roundPage: 'Halaman ronde',
-    nextDraw: 'Undian berikutnya setelah 00:00 UTC',
-    ok: 'Dihitung ulang di browser-mu: hash sama, angka {number} menang.',
-    mismatch: 'Hash yang dihitung ulang di browser-mu tidak cocok dengan ronde ini.',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -429,7 +360,6 @@ const id: Dict = {
     winChance: 'Peluang menang',
     chance: 'Peluang',
     todaysPot: 'Pot',
-    checked: 'Diperiksa',
     waiting: 'Menunggu',
     numbersLeft: 'Angka tersisa',
     winners: 'Pemenang',
@@ -445,7 +375,6 @@ const id: Dict = {
   },
 
   play: {
-    title: 'Main',
     description:
       'Pilih angka di lotre harian atau lotre per jam, atau buru angka yang tersembunyi, dan saksikan pot bertambah secara langsung di Solana.',
     testMoney: 'Kamu bermain di Solana {cluster}: tiket dibayar dengan SOL uji coba yang tidak punya nilai sungguhan.',
@@ -463,7 +392,6 @@ const id: Dict = {
     kicker: 'Pilih',
     title: 'Angka',
     win: 'Menangkan',
-    in: 'dalam',
     taken: 'Sudah diambil di ronde ini',
     range: '0 sampai {max}, satu tiket per angka',
     pad: 'Papan angka',
@@ -566,7 +494,6 @@ const id: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · tutup dalam',
     carried: 'Termasuk ◎{carry} yang dibawa dari ronde sebelumnya',
     split: '80% untuk pemenang · {fee} biaya pengelola · sisanya ke ronde berikutnya',
     inPlay: 'Angka yang dimainkan',
@@ -580,7 +507,6 @@ const id: Dict = {
     title: 'Tiga cara bermain',
     description:
       'Angka yang sama, dari 0 sampai {max}. Pemenang mendapat 80% pot; biaya pengelola diambil dari sisanya, dan yang tersisa dibawa ke ronde berikutnya.',
-    play: 'Main',
     /** On a game's page, over the cards of the two others. */
     others: 'Dua cara bermain lainnya',
     discover: 'Jelajahi',

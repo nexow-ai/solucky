@@ -86,13 +86,9 @@ const es: Dict = {
     lead: 'Un sorteo cada día, un sorteo cada hora y un número oculto por descubrir. El ganador se lleva el 80 % del pozo, y el resto pasa a la siguiente ronda. Cada boleto, cada lamport y cada sorteo vive en Solana, donde cualquiera puede comprobarlo.',
     playNow: 'Jugar ahora',
     howItWorks: 'Cómo funciona',
-    dialCaption:
-      'Cada punto es uno de los boletos de hoy: alrededor de la esfera según la hora en que se compró, hacia fuera según su número.',
 
     how: {
       tag: 'Cómo funciona',
-      opens: 'Abre la ronda',
-      now: 'Ahora',
     },
 
     fairness: {
@@ -185,26 +181,8 @@ const es: Dict = {
     },
 
     live: {
-      title: 'Pozos ahora mismo',
       drawIn: 'Sorteo en',
       noDeadline: 'Sin fecha límite',
-    },
-
-    practice: {
-      notice: 'Práctica: se ejecuta en tu navegador y no se envía nada a Solana',
-      title: 'Pruébalo: gana el número más cercano',
-      lead: 'Las marcas son los boletos reales de hoy. Coloca el tuyo: cada número más cerca de él que de cualquier otro boleto es tuyo, y el sorteo elige un número del 0 al {max}.',
-      drawn: 'Número sorteado',
-      yourNumber: 'Tu número',
-      best: 'Mejor hueco libre',
-      draw: 'Sorteo de práctica',
-      share: 'Tu parte del sorteo',
-      today: 'Boletos hoy',
-      record: 'Victorias de práctica',
-      won: 'Salió el {drawn}: tu número es el más cercano. ¡Ganas!',
-      lost: 'Salió el {drawn}: el {number} está más cerca, así que gana ese boleto.',
-      taken: 'Alguien ya tiene este número hoy. En el juego real, elige otro.',
-      alone: 'Aún no hay boletos hoy: solo, tu número ganaría cualquier sorteo.',
     },
 
     split: {
@@ -213,8 +191,6 @@ const es: Dict = {
       winner: 'Ganador',
       fee: 'Comisión de la casa',
       carry: 'Siguiente ronda',
-      feeNote: 'Comisión de la lotería diaria, fijada on-chain: {fee}. El programa la limita a {cap}.',
-      example: 'Importes para el pozo de hoy de {pot}.',
     },
 
     winners: {
@@ -367,7 +343,6 @@ const es: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: 'Un sorteo al día · Se sortea tras la medianoche UTC · Cada boleto en Solana',
     draw: 'Sorteo',
     pot: 'Pozo de hoy',
     potHour: 'Pozo de esta hora',
@@ -375,50 +350,6 @@ const es: Dict = {
     tickets: '{n} boleto hoy | {n} boletos hoy',
     ticketsHour: '{n} boleto en esta hora | {n} boletos en esta hora',
     guesses: '{n} intento en esta ronda | {n} intentos en esta ronda',
-    entropy: 'Entropía · {cluster}',
-    entropyTitle: 'Entropía: {hex}',
-    noTickets: 'aún no hay boletos',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Nuevo boleto',
-    rules: {
-      daily: 'Nueva ronda cada día a las 00:00 UTC',
-      hourly: 'Y otra cada hora',
-      pot: 'El número más cercano gana el 80 % del pozo',
-      carry: 'El resto pasa a la siguiente ronda',
-      guess: 'Adivina el número: sin plazo, hasta que alguien lo encuentre',
-      numbers: 'Números del 0 al {max}',
-      fee: 'Comisión de la casa limitada al 20 % por el programa',
-      anyone: 'Cualquiera puede cerrar, sortear y pagar una ronda',
-      check: 'Recalcula cada sorteo en tu navegador',
-      open: 'Código abierto',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Verificado',
-    title: 'Recibo del sorteo',
-    round: 'Ronda',
-    noneYet: 'ninguna liquidada aún',
-    tickets: 'Boletos',
-    pot: 'Pozo',
-    entropy: 'Entropía',
-    slotHash: 'Hash del slot · slot {slot}',
-    formula: 'sha256(entropía ‖ hash del slot ‖ slot ‖ ronda) =',
-    mod: 'primeros 8 bytes como u64 mod {count} = {drawn}',
-    ticketCount: 'números',
-    closest: 'boleto más cercano: {number}',
-    number: 'Número',
-    paidTo: 'Pagado a',
-    payout: 'Pago',
-    check: 'Verificar este sorteo',
-    roundPage: 'Página de la ronda',
-    nextDraw: 'Próximo sorteo después de las 00:00 UTC',
-    ok: 'Recalculado en tu navegador: mismo hash, gana el número {number}.',
-    mismatch: 'El hash recalculado en tu navegador no coincide con esta ronda.',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -431,7 +362,6 @@ const es: Dict = {
     winChance: 'Probabilidad',
     chance: 'Prob.',
     todaysPot: 'Pozo',
-    checked: 'Comprobados',
     waiting: 'En espera',
     numbersLeft: 'Números restantes',
     winners: 'Ganadores',
@@ -447,7 +377,6 @@ const es: Dict = {
   },
 
   play: {
-    title: 'Jugar',
     description:
       'Elige un número en la lotería diaria o en la horaria, o da con el número oculto, y mira cómo crece el pozo en tiempo real en Solana.',
     testMoney: 'Estás jugando en Solana {cluster}: los boletos cuestan SOL de prueba sin valor real.',
@@ -465,7 +394,6 @@ const es: Dict = {
     kicker: 'Elige un',
     title: 'Número',
     win: 'Gana',
-    in: 'en',
     taken: 'Ya ocupado en esta ronda',
     range: 'Del 0 al {max}, un boleto por número',
     pad: 'Teclado numérico',
@@ -570,7 +498,6 @@ const es: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · cierra en',
     carried: 'Incluye ◎{carry} que pasaron de la ronda anterior',
     split: '80 % al ganador · {fee} de comisión de la casa · el resto a la siguiente ronda',
     inPlay: 'Números en juego',
@@ -584,7 +511,6 @@ const es: Dict = {
     title: 'Tres formas de jugar',
     description:
       'Los mismos números, del 0 al {max}. El ganador se lleva el 80 % del pozo; la comisión de la casa sale del resto, y lo que queda pasa a la siguiente ronda.',
-    play: 'Jugar',
     /** On a game's page, over the cards of the two others. */
     others: 'Dos formas más de jugar',
     discover: 'Descubrir',

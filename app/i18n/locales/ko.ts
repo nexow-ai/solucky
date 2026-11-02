@@ -85,13 +85,9 @@ const ko: Dict = {
     lead: '매일 추첨, 매시간 추첨, 그리고 찾아내야 할 숨겨진 번호. 당첨자는 상금의 80%를 가져가고, 나머지는 다음 라운드로 이월돼요. 모든 티켓, 모든 lamport, 모든 추첨이 Solana에 기록되어 누구나 확인할 수 있어요.',
     playNow: '지금 플레이',
     howItWorks: '작동 방식',
-    dialCaption:
-      '점 하나하나가 오늘의 티켓이에요. 다이얼을 따라 도는 위치는 구매 시각을, 바깥쪽으로 떨어진 거리는 번호를 나타내요.',
 
     how: {
       tag: '작동 방식',
-      opens: '라운드 시작',
-      now: '지금',
     },
 
     fairness: {
@@ -184,26 +180,8 @@ const ko: Dict = {
     },
 
     live: {
-      title: '지금 상금',
       drawIn: '추첨까지',
       noDeadline: '마감 없음',
-    },
-
-    practice: {
-      notice: '연습: 브라우저에서 실행되며 Solana로 아무것도 전송되지 않아요',
-      title: '해 보세요: 가장 가까운 번호가 이겨요',
-      lead: '이 표시들은 오늘의 실제 티켓이에요. 내 번호를 놓아 보세요: 다른 어떤 티켓보다 내 번호에 더 가까운 번호는 모두 내 것이고, 추첨은 0부터 {max}까지 중 번호 하나를 골라요.',
-      drawn: '추첨된 번호',
-      yourNumber: '내 번호',
-      best: '가장 좋은 빈자리',
-      draw: '연습 추첨',
-      share: '추첨에서 내 몫',
-      today: '오늘의 티켓',
-      record: '연습 당첨',
-      won: '{drawn}이(가) 나왔어요: 내 번호가 가장 가까워요. 당첨이에요!',
-      lost: '{drawn}이(가) 나왔어요: {number}이(가) 더 가까워서 그 티켓이 이겨요.',
-      taken: '오늘 이미 다른 사람이 가진 번호예요. 실제 게임에서는 다른 번호를 고르세요.',
-      alone: '오늘은 아직 티켓이 없어요: 혼자라면 내 번호가 어떤 추첨이든 이겨요.',
     },
 
     split: {
@@ -212,8 +190,6 @@ const ko: Dict = {
       winner: '당첨자',
       fee: '운영 수수료',
       carry: '다음 라운드',
-      feeNote: '일일 복권의 수수료, 온체인에 설정됨: {fee}. 프로그램이 최대 {cap}로 제한해요.',
-      example: '오늘 상금 {pot} 기준 금액이에요.',
     },
 
     winners: {
@@ -364,7 +340,6 @@ const ko: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: '하루 한 번 추첨 · UTC 자정 이후 추첨 · 모든 티켓은 Solana에',
     draw: '추첨',
     pot: '오늘의 상금',
     potHour: '이번 시간의 상금',
@@ -372,50 +347,6 @@ const ko: Dict = {
     tickets: '오늘 티켓 {n}장',
     ticketsHour: '이번 시간 티켓 {n}장',
     guesses: '이번 라운드 추측 {n}개',
-    entropy: '엔트로피 · {cluster}',
-    entropyTitle: '엔트로피: {hex}',
-    noTickets: '아직 티켓 없음',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: '새 티켓',
-    rules: {
-      daily: '매일 UTC 00:00에 새 라운드',
-      hourly: '그리고 매시간 한 번 더',
-      pot: '가장 가까운 번호가 상금의 80%를 가져가요',
-      carry: '나머지는 다음 라운드로 이월돼요',
-      guess: '숫자 맞히기: 마감 없이, 누군가 찾을 때까지',
-      numbers: '번호는 0부터 {max}까지',
-      fee: '운영 수수료는 프로그램이 최대 20%로 제한',
-      anyone: '누구나 라운드를 마감, 추첨, 지급할 수 있어요',
-      check: '모든 추첨을 브라우저에서 다시 계산',
-      open: '오픈 소스',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: '검증됨',
-    title: '추첨 영수증',
-    round: '라운드',
-    noneYet: '아직 정산된 라운드 없음',
-    tickets: '티켓',
-    pot: '상금',
-    entropy: '엔트로피',
-    slotHash: '슬롯 해시 · 슬롯 {slot}',
-    formula: 'sha256(엔트로피 ‖ 슬롯 해시 ‖ 슬롯 ‖ 라운드) =',
-    mod: '앞 8바이트를 u64로 mod {count} = {drawn}',
-    ticketCount: '번호 수',
-    closest: '가장 가까운 티켓: {number}',
-    number: '번호',
-    paidTo: '지급 대상',
-    payout: '지급액',
-    check: '이 추첨 확인하기',
-    roundPage: '라운드 페이지',
-    nextDraw: '다음 추첨은 UTC 00:00 이후',
-    ok: '브라우저에서 다시 계산했어요. 해시가 같고, {number}번 당첨이에요.',
-    mismatch: '브라우저에서 다시 계산한 해시가 이 라운드와 일치하지 않아요.',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -428,7 +359,6 @@ const ko: Dict = {
     winChance: '당첨 확률',
     chance: '확률',
     todaysPot: '상금',
-    checked: '확인됨',
     waiting: '대기 중',
     numbersLeft: '남은 번호',
     winners: '당첨자',
@@ -444,7 +374,6 @@ const ko: Dict = {
   },
 
   play: {
-    title: '플레이',
     description:
       '매일 또는 매시간 추첨하는 복권에서 번호를 고르거나 숨겨진 번호를 찾아내고, Solana에서 상금이 커지는 모습을 실시간으로 지켜보세요.',
     testMoney: 'Solana {cluster}에서 플레이하고 있어요. 티켓은 실제 가치가 없는 테스트 SOL로 사요.',
@@ -462,7 +391,6 @@ const ko: Dict = {
     kicker: '원하는',
     title: '번호',
     win: '상금',
-    in: '남은 시간',
     taken: '이번 라운드에서 이미 선택된 번호',
     range: '0부터 {max}까지, 번호당 티켓 한 장',
     pad: '숫자 패드',
@@ -564,7 +492,6 @@ const ko: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · 마감까지',
     carried: '지난 라운드에서 이월된 ◎{carry} 포함',
     split: '80%는 당첨자에게 · 운영 수수료 {fee} · 나머지는 다음 라운드로',
     inPlay: '참여 중인 번호',
@@ -578,7 +505,6 @@ const ko: Dict = {
     title: '세 가지 플레이 방법',
     description:
       '번호는 모두 똑같이 0부터 {max}까지예요. 당첨자는 상금의 80%를 가져가고, 운영 수수료는 나머지에서 빠지며, 남은 금액은 다음 라운드로 이월돼요.',
-    play: '플레이',
     others: '다른 플레이 방법 두 가지',
     discover: '자세히 보기',
     daily: {

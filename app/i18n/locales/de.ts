@@ -87,13 +87,9 @@ const de: Dict = {
     lead: 'Eine Ziehung jeden Tag, eine Ziehung jede Stunde und eine versteckte Zahl zum Aufspüren. Der Gewinner erhält 80 % des Pots, und der Rest geht in die nächste Runde über. Jedes Ticket, jeder Lamport und jede Ziehung liegt auf Solana, wo alle es überprüfen können.',
     playNow: 'Jetzt spielen',
     howItWorks: 'So funktioniert’s',
-    dialCaption:
-      'Jeder Punkt ist eines der heutigen Tickets: rund ums Zifferblatt nach seiner Kaufzeit, nach außen nach seiner Zahl.',
 
     how: {
       tag: 'So funktioniert’s',
-      opens: 'Runde öffnet',
-      now: 'Jetzt',
     },
 
     fairness: {
@@ -186,26 +182,8 @@ const de: Dict = {
     },
 
     live: {
-      title: 'Pots gerade jetzt',
       drawIn: 'Ziehung in',
       noDeadline: 'Ohne Frist',
-    },
-
-    practice: {
-      notice: 'Übung: läuft in deinem Browser, nichts wird an Solana gesendet',
-      title: 'Probier’s aus: Die nächste Zahl gewinnt',
-      lead: 'Die Markierungen sind die echten Tickets von heute. Setz deine: Jede Zahl, die näher an ihr liegt als an jedem anderen Ticket, gehört dir, und die Ziehung wählt eine Zahl von 0 bis {max}.',
-      drawn: 'Gezogene Zahl',
-      yourNumber: 'Deine Zahl',
-      best: 'Beste freie Stelle',
-      draw: 'Übungsziehung',
-      share: 'Dein Anteil an der Ziehung',
-      today: 'Tickets heute',
-      record: 'Übungsgewinne',
-      won: '{drawn} wurde gezogen: Deine Zahl liegt am nächsten. Du gewinnst!',
-      lost: '{drawn} wurde gezogen: {number} liegt näher, also gewinnt dieses Ticket.',
-      taken: 'Diese Zahl hat heute schon jemand. Wähl im echten Spiel eine andere.',
-      alone: 'Heute noch keine Tickets: Allein würde deine Zahl jede Ziehung gewinnen.',
     },
 
     split: {
@@ -214,8 +192,6 @@ const de: Dict = {
       winner: 'Gewinner',
       fee: 'Hausgebühr',
       carry: 'Nächste Runde',
-      feeNote: 'Gebühr der Tageslotterie, on-chain festgelegt: {fee}. Das Programm begrenzt sie auf {cap}.',
-      example: 'Beträge für den heutigen Pot von {pot}.',
     },
 
     winners: {
@@ -368,7 +344,6 @@ const de: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: 'Eine Ziehung am Tag · Gezogen nach Mitternacht UTC · Jedes Ticket auf Solana',
     draw: 'Ziehung',
     pot: 'Heutiger Pot',
     potHour: 'Pot dieser Stunde',
@@ -376,50 +351,6 @@ const de: Dict = {
     tickets: 'heute {n} Ticket | heute {n} Tickets',
     ticketsHour: '{n} Ticket in dieser Stunde | {n} Tickets in dieser Stunde',
     guesses: '{n} Tipp in dieser Runde | {n} Tipps in dieser Runde',
-    entropy: 'Entropie · {cluster}',
-    entropyTitle: 'Entropie: {hex}',
-    noTickets: 'noch keine Tickets',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Neues Ticket',
-    rules: {
-      daily: 'Jeden Tag um 00:00 UTC eine neue Runde',
-      hourly: 'Und eine jede Stunde',
-      pot: 'Die nächstgelegene Zahl gewinnt 80 % des Pots',
-      carry: 'Der Rest geht in die nächste Runde über',
-      guess: 'Errate die Zahl: ohne Frist, bis jemand sie findet',
-      numbers: 'Zahlen von 0 bis {max}',
-      fee: 'Hausgebühr vom Programm auf 20 % begrenzt',
-      anyone: 'Alle können eine Runde schließen, ziehen und auszahlen',
-      check: 'Rechne jede Ziehung in deinem Browser nach',
-      open: 'Open Source',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Geprüft',
-    title: 'Ziehungsbeleg',
-    round: 'Runde',
-    noneYet: 'noch keine abgewickelt',
-    tickets: 'Tickets',
-    pot: 'Pot',
-    entropy: 'Entropie',
-    slotHash: 'Slot-Hash · Slot {slot}',
-    formula: 'sha256(Entropie ‖ Slot-Hash ‖ Slot ‖ Runde) =',
-    mod: 'erste 8 Bytes als u64 mod {count} = {drawn}',
-    ticketCount: 'Zahlen',
-    closest: 'nächstgelegenes Ticket: {number}',
-    number: 'Zahl',
-    paidTo: 'Ausgezahlt an',
-    payout: 'Auszahlung',
-    check: 'Diese Ziehung prüfen',
-    roundPage: 'Rundenseite',
-    nextDraw: 'Nächste Ziehung nach 00:00 UTC',
-    ok: 'In deinem Browser nachgerechnet: gleicher Hash, die Zahl {number} gewinnt.',
-    mismatch: 'Der in deinem Browser nachgerechnete Hash passt nicht zu dieser Runde.',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -432,7 +363,6 @@ const de: Dict = {
     winChance: 'Gewinnchance',
     chance: 'Chance',
     todaysPot: 'Pot',
-    checked: 'Geprüft',
     waiting: 'Wartend',
     numbersLeft: 'Übrige Zahlen',
     winners: 'Gewinner',
@@ -448,7 +378,6 @@ const de: Dict = {
   },
 
   play: {
-    title: 'Spielen',
     description:
       'Wähle eine Zahl in der täglichen oder stündlichen Lotterie, oder spür die versteckte auf, und sieh live auf Solana zu, wie der Pot wächst.',
     testMoney: 'Du spielst auf Solana {cluster}: Tickets kosten Test-SOL ohne echten Wert.',
@@ -466,7 +395,6 @@ const de: Dict = {
     kicker: 'Wähle eine',
     title: 'Zahl',
     win: 'Gewinne',
-    in: 'in',
     taken: 'In dieser Runde schon vergeben',
     range: '0 bis {max}, ein Ticket pro Zahl',
     pad: 'Ziffernblock',
@@ -571,7 +499,6 @@ const de: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · schließt in',
     carried: 'Enthält ◎{carry}, übertragen aus der letzten Runde',
     split: '80 % an den Gewinner · {fee} Hausgebühr · der Rest an die nächste Runde',
     inPlay: 'Zahlen im Spiel',
@@ -585,7 +512,6 @@ const de: Dict = {
     title: 'Drei Arten zu spielen',
     description:
       'Dieselben Zahlen, von 0 bis {max}. Der Gewinner erhält 80 % des Pots; die Hausgebühr geht vom Rest ab, und was übrig bleibt, geht in die nächste Runde über.',
-    play: 'Spielen',
     /** On a game's page, over the cards of the two others. */
     others: 'Zwei weitere Arten zu spielen',
     discover: 'Entdecken',

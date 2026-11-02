@@ -85,13 +85,9 @@ const tr: Dict = {
     lead: 'Her gün bir çekiliş, her saat bir çekiliş ve bulunmayı bekleyen gizli bir sayı. Kazanan, havuzun %80’ini alır; kalanı bir sonraki tura aktarılır. Her bilet, her lamport ve her çekiliş Solana’da yer alır; orada herkes kontrol edebilir.',
     playNow: 'Hemen oynayın',
     howItWorks: 'Nasıl çalışır',
-    dialCaption:
-      'Her nokta bugünkü biletlerden biridir: kadranın çevresindeki yeri satın alındığı saati, merkezden uzaklığı numarasını gösterir.',
 
     how: {
       tag: 'Nasıl çalışır',
-      opens: 'Tur açılır',
-      now: 'Şimdi',
     },
 
     fairness: {
@@ -183,26 +179,8 @@ const tr: Dict = {
     },
 
     live: {
-      title: 'Şu anki havuzlar',
       drawIn: 'Çekilişe kalan',
       noDeadline: 'Süre sınırı yok',
-    },
-
-    practice: {
-      notice: 'Deneme: tarayıcınızda çalışır, Solana’ya hiçbir şey gönderilmez',
-      title: 'Deneyin: en yakın sayı kazanır',
-      lead: 'İşaretler bugünün gerçek biletleri. Sizinkini yerleştirin: ona diğer biletlerden daha yakın olan her sayı sizindir ve çekiliş 0 ile {max} arasında bir sayı seçer.',
-      drawn: 'Çekilen sayı',
-      yourNumber: 'Sayınız',
-      best: 'En iyi boş yer',
-      draw: 'Deneme çekilişi',
-      share: 'Çekilişteki payınız',
-      today: 'Bugünkü biletler',
-      record: 'Deneme kazançları',
-      won: '{drawn} çekildi: en yakın sayı sizinki. Kazandınız!',
-      lost: '{drawn} çekildi: {number} daha yakın, yani o bilet kazanır.',
-      taken: 'Bu sayı bugün zaten başkasında. Gerçek oyunda başka bir sayı seçin.',
-      alone: 'Bugün henüz bilet yok: tek başına sayınız her çekilişi kazanırdı.',
     },
 
     split: {
@@ -211,9 +189,6 @@ const tr: Dict = {
       winner: 'Kazanan',
       fee: 'Kasa payı',
       carry: 'Sonraki tur',
-      feeNote:
-        'Günlük piyangonun zincir üstünde belirlenen kasa payı: {fee}. Program bunu en fazla {cap} ile sınırlar.',
-      example: 'Bugünkü {pot} havuz için tutarlar.',
     },
 
     winners: {
@@ -364,7 +339,6 @@ const tr: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: 'Günde bir çekiliş · UTC gece yarısından sonra çekilir · Her bilet Solana’da',
     draw: 'Çekiliş',
     pot: 'Bugünkü havuz',
     potHour: 'Bu saatin havuzu',
@@ -372,50 +346,6 @@ const tr: Dict = {
     tickets: 'bugün {n} bilet | bugün {n} bilet',
     ticketsHour: 'bu saat {n} bilet | bu saat {n} bilet',
     guesses: 'bu turda {n} tahmin | bu turda {n} tahmin',
-    entropy: 'Entropi · {cluster}',
-    entropyTitle: 'Entropi: {hex}',
-    noTickets: 'henüz bilet yok',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Yeni bilet',
-    rules: {
-      daily: 'Her gün 00:00 UTC’de yeni tur',
-      hourly: 'Ve her saat bir tane',
-      pot: 'En yakın sayı havuzun %80’ini kazanır',
-      carry: 'Kalanı bir sonraki tura aktarılır',
-      guess: 'Sayıyı Tahmin Et: süre sınırı yok, biri bulana kadar',
-      numbers: '0 ile {max} arası sayılar',
-      fee: 'Kasa payı program tarafından %20 ile sınırlı',
-      anyone: 'Herkes bir turu kapatabilir, çekilişini yapabilir ve ödeyebilir',
-      check: 'Her çekilişi tarayıcınızda yeniden hesaplayın',
-      open: 'Açık kaynak',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Doğrulandı',
-    title: 'Çekiliş makbuzu',
-    round: 'Tur',
-    noneYet: 'henüz sonuçlanan tur yok',
-    tickets: 'Biletler',
-    pot: 'Havuz',
-    entropy: 'Entropi',
-    slotHash: 'Slot hash’i · slot {slot}',
-    formula: 'sha256(entropi ‖ slot hash’i ‖ slot ‖ tur) =',
-    mod: 'ilk 8 bayt u64 olarak mod {count} = {drawn}',
-    ticketCount: 'sayı',
-    closest: 'en yakın bilet: {number}',
-    number: 'Sayı',
-    paidTo: 'Alıcı',
-    payout: 'Ödeme',
-    check: 'Bu çekilişi kontrol edin',
-    roundPage: 'Tur sayfası',
-    nextDraw: 'Sonraki çekiliş 00:00 UTC’den sonra',
-    ok: 'Tarayıcınızda yeniden hesaplandı: aynı hash, {number} sayısı kazanır.',
-    mismatch: 'Tarayıcınızda yeniden hesaplanan hash bu turla eşleşmiyor.',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -428,7 +358,6 @@ const tr: Dict = {
     winChance: 'Kazanma şansı',
     chance: 'Şans',
     todaysPot: 'Havuz',
-    checked: 'Kontrol edilen',
     waiting: 'Bekleyen',
     numbersLeft: 'Kalan sayılar',
     winners: 'Kazananlar',
@@ -444,7 +373,6 @@ const tr: Dict = {
   },
 
   play: {
-    title: 'Oyna',
     description:
       'Günlük ya da saatlik piyangoda bir sayı seçin veya gizli sayının peşine düşün ve havuzun Solana’da canlı olarak büyümesini izleyin.',
     testMoney: 'Solana {cluster} üzerinde oynuyorsunuz: biletlerin bedeli, gerçek değeri olmayan test SOL ile ödenir.',
@@ -462,7 +390,6 @@ const tr: Dict = {
     kicker: 'Bir sayı',
     title: 'Seçin',
     win: 'Kazanın',
-    in: 'kalan',
     taken: 'Bu turda zaten alınmış',
     range: '0 ile {max} arası, her sayı için bir bilet',
     pad: 'Sayı tuş takımı',
@@ -565,7 +492,6 @@ const tr: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · kapanışa kalan',
     carried: 'Önceki turdan aktarılan ◎{carry} dahil',
     split: 'Kazanana %80 · {fee} kasa payı · kalanı bir sonraki tura',
     inPlay: 'Oyundaki sayılar',
@@ -579,7 +505,6 @@ const tr: Dict = {
     title: 'Oynamanın üç yolu',
     description:
       'Aynı sayılar, 0 ile {max} arası. Kazanan, havuzun %80’ini alır; kasa payı kalandan düşülür, geriye kalan da bir sonraki tura aktarılır.',
-    play: 'Oyna',
     /** On a game's page, over the cards of the two others. */
     others: 'Oynamanın iki yolu daha',
     discover: 'Keşfedin',

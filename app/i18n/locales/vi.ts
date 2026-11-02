@@ -85,13 +85,9 @@ const vi: Dict = {
     lead: 'Mỗi ngày một lượt quay số, mỗi giờ một lượt quay số, và một con số ẩn để truy tìm. Người thắng nhận 80% quỹ thưởng, phần còn lại được chuyển sang vòng tiếp theo. Mọi vé, mọi lamport và mọi lượt quay số đều nằm trên Solana, nơi ai cũng có thể kiểm tra.',
     playNow: 'Chơi ngay',
     howItWorks: 'Cách hoạt động',
-    dialCaption:
-      'Mỗi chấm là một vé của hôm nay: vị trí quanh mặt đồng hồ theo thời điểm mua, khoảng cách ra phía ngoài theo con số của vé.',
 
     how: {
       tag: 'Cách hoạt động',
-      opens: 'Vòng mở',
-      now: 'Bây giờ',
     },
 
     fairness: {
@@ -184,26 +180,8 @@ const vi: Dict = {
     },
 
     live: {
-      title: 'Quỹ thưởng lúc này',
       drawIn: 'Quay số sau',
       noDeadline: 'Không có hạn chót',
-    },
-
-    practice: {
-      notice: 'Luyện tập: chạy trong trình duyệt của bạn, không có gì được gửi lên Solana',
-      title: 'Thử xem: số gần nhất sẽ thắng',
-      lead: 'Các vạch là vé thật của hôm nay. Đặt vé của bạn: mọi số gần vé của bạn hơn bất kỳ vé nào khác đều thuộc về bạn, và lần quay chọn một số từ 0 đến {max}.',
-      drawn: 'Số được quay',
-      yourNumber: 'Số của bạn',
-      best: 'Chỗ trống tốt nhất',
-      draw: 'Quay thử',
-      share: 'Phần của bạn trong lần quay',
-      today: 'Vé hôm nay',
-      record: 'Số lần thắng thử',
-      won: 'Quay ra {drawn}: số của bạn gần nhất. Bạn thắng!',
-      lost: 'Quay ra {drawn}: {number} gần hơn, nên vé đó thắng.',
-      taken: 'Hôm nay đã có người giữ số này. Trong trò chơi thật, hãy chọn số khác.',
-      alone: 'Hôm nay chưa có vé nào: một mình, số của bạn sẽ thắng mọi lần quay.',
     },
 
     split: {
@@ -212,8 +190,6 @@ const vi: Dict = {
       winner: 'Người thắng',
       fee: 'Phí nhà cái',
       carry: 'Vòng tiếp theo',
-      feeNote: 'Phí của xổ số hằng ngày, đặt trên chuỗi: {fee}. Chương trình giới hạn ở {cap}.',
-      example: 'Số tiền cho quỹ thưởng hôm nay là {pot}.',
     },
 
     winners: {
@@ -363,7 +339,6 @@ const vi: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: 'Mỗi ngày một lượt quay số · Quay sau nửa đêm UTC · Mọi vé trên Solana',
     draw: 'Quay số',
     pot: 'Quỹ thưởng hôm nay',
     potHour: 'Quỹ thưởng giờ này',
@@ -371,50 +346,6 @@ const vi: Dict = {
     tickets: '{n} vé hôm nay',
     ticketsHour: '{n} vé trong giờ này',
     guesses: '{n} lượt đoán trong vòng này',
-    entropy: 'Entropy · {cluster}',
-    entropyTitle: 'Entropy: {hex}',
-    noTickets: 'chưa có vé nào',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Vé mới',
-    rules: {
-      daily: 'Vòng mới mỗi ngày lúc 00:00 UTC',
-      hourly: 'Và một vòng mỗi giờ',
-      pot: 'Số gần nhất giành 80% quỹ thưởng',
-      carry: 'Phần còn lại chuyển sang vòng tiếp theo',
-      guess: 'Đoán số: không có hạn chót, cho đến khi có người tìm ra',
-      numbers: 'Các số từ 0 đến {max}',
-      fee: 'Phí nhà cái được chương trình giới hạn ở 20%',
-      anyone: 'Ai cũng có thể đóng, quay số và trả thưởng một vòng',
-      check: 'Tính lại mọi lượt quay số trong trình duyệt của bạn',
-      open: 'Mã nguồn mở',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Đã xác minh',
-    title: 'Biên nhận quay số',
-    round: 'Vòng',
-    noneYet: 'chưa có vòng nào được tất toán',
-    tickets: 'Vé',
-    pot: 'Quỹ thưởng',
-    entropy: 'Entropy',
-    slotHash: 'Hash của slot · slot {slot}',
-    formula: 'sha256(entropy ‖ hash của slot ‖ slot ‖ vòng) =',
-    mod: '8 byte đầu dưới dạng u64 mod {count} = {drawn}',
-    ticketCount: 'số lượng số',
-    closest: 'vé gần nhất: {number}',
-    number: 'Số',
-    paidTo: 'Trả cho',
-    payout: 'Tiền thưởng',
-    check: 'Kiểm tra lượt quay số này',
-    roundPage: 'Trang của vòng',
-    nextDraw: 'Lượt quay số tiếp theo sau 00:00 UTC',
-    ok: 'Đã tính lại trong trình duyệt của bạn: cùng hash, số {number} thắng.',
-    mismatch: 'Hash được tính lại trong trình duyệt của bạn không khớp với vòng này.',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -427,7 +358,6 @@ const vi: Dict = {
     winChance: 'Cơ hội thắng',
     chance: 'Cơ hội',
     todaysPot: 'Quỹ thưởng',
-    checked: 'Đã kiểm tra',
     waiting: 'Đang chờ',
     numbersLeft: 'Số còn lại',
     winners: 'Người thắng',
@@ -443,7 +373,6 @@ const vi: Dict = {
   },
 
   play: {
-    title: 'Chơi',
     description:
       'Chọn một con số trong xổ số hằng ngày hoặc hằng giờ, hoặc truy tìm con số ẩn, và xem quỹ thưởng tăng lên trực tiếp trên Solana.',
     testMoney: 'Bạn đang chơi trên Solana {cluster}: vé được trả bằng SOL thử nghiệm, không có giá trị thật.',
@@ -461,7 +390,6 @@ const vi: Dict = {
     kicker: 'Chọn một',
     title: 'Con số',
     win: 'Thắng',
-    in: 'sau',
     taken: 'Đã có người chọn trong vòng này',
     range: '0 đến {max}, mỗi số một vé',
     pad: 'Bàn phím số',
@@ -564,7 +492,6 @@ const vi: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · đóng sau',
     carried: 'Bao gồm ◎{carry} chuyển sang từ vòng trước',
     split: '80% cho người thắng · {fee} phí nhà cái · phần còn lại cho vòng tiếp theo',
     inPlay: 'Các số đang chơi',
@@ -578,7 +505,6 @@ const vi: Dict = {
     title: 'Ba cách để chơi',
     description:
       'Cùng các số, từ 0 đến {max}. Người thắng nhận 80% quỹ thưởng; phí nhà cái được trừ từ phần còn lại, và phần dư được chuyển sang vòng tiếp theo.',
-    play: 'Chơi',
     /** On a game's page, over the cards of the two others. */
     others: 'Thêm hai cách để chơi',
     discover: 'Khám phá',

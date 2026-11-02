@@ -85,12 +85,9 @@ const zhtw: Dict = {
     lead: '每天開獎一次，每小時開獎一次，還有一個等你找出的隱藏號碼。贏家拿走獎池的 80%，其餘累積到下一期。每一張彩券、每一個 lamport、每一次開獎都在 Solana 上，任何人都能查證。',
     playNow: '立即開玩',
     howItWorks: '運作方式',
-    dialCaption: '每個點代表今天的一張彩券：繞錶盤一圈的位置代表購買時間，往外的距離代表它的號碼。',
 
     how: {
       tag: '運作方式',
-      opens: '本期開始',
-      now: '現在',
     },
 
     fairness: {
@@ -181,26 +178,8 @@ const zhtw: Dict = {
     },
 
     live: {
-      title: '目前獎池',
       drawIn: '距開獎',
       noDeadline: '沒有截止時間',
-    },
-
-    practice: {
-      notice: '練習：在你的瀏覽器中執行，不會向 Solana 傳送任何內容',
-      title: '試試看：最接近的號碼獲勝',
-      lead: '這些標記是今天真實的彩券。放上你的號碼：離它比離其他任何彩券都近的號碼都歸你，開獎會從 0 到 {max} 中選出一個號碼。',
-      drawn: '開出的號碼',
-      yourNumber: '你的號碼',
-      best: '最佳空位',
-      draw: '練習開獎',
-      share: '你在開獎中的份額',
-      today: '今日彩券數',
-      record: '練習獲勝',
-      won: '開出 {drawn}：你的號碼最接近。你贏了！',
-      lost: '開出 {drawn}：{number} 更接近，所以那張彩券獲勝。',
-      taken: '今天已有人持有這個號碼。在真實遊戲中，請換一個。',
-      alone: '今天還沒有彩券：只有你一張時，你的號碼會贏下任何一次開獎。',
     },
 
     split: {
@@ -209,8 +188,6 @@ const zhtw: Dict = {
       winner: '贏家',
       fee: '平台手續費',
       carry: '下一期',
-      feeNote: '每日彩券的手續費，設定在鏈上：{fee}。程式將其上限設為 {cap}。',
-      example: '以下金額依今日獎池 {pot} 計算。',
     },
 
     winners: {
@@ -349,7 +326,6 @@ const zhtw: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: '每天開獎一次 · UTC 午夜後開獎 · 每張彩券都在 Solana 上',
     draw: '開獎',
     pot: '今日獎池',
     potHour: '這個小時的獎池',
@@ -357,50 +333,6 @@ const zhtw: Dict = {
     tickets: '今天 {n} 張彩券',
     ticketsHour: '這個小時 {n} 張彩券',
     guesses: '本期 {n} 次猜測',
-    entropy: '熵 · {cluster}',
-    entropyTitle: '熵：{hex}',
-    noTickets: '還沒有彩券',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: '新彩券',
-    rules: {
-      daily: '每天 UTC 00:00 開始新的一期',
-      hourly: '每小時也有一期',
-      pot: '最接近的號碼贏得獎池的 80%',
-      carry: '其餘累積到下一期',
-      guess: '猜數字：沒有截止時間，直到有人猜中',
-      numbers: '號碼從 0 到 {max}',
-      fee: '程式將平台手續費上限設為 20%',
-      anyone: '任何人都能關閉一期、開獎並派彩',
-      check: '在你的瀏覽器中重新計算每一次開獎',
-      open: '開源',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: '已驗證',
-    title: '開獎收據',
-    round: '期別',
-    noneYet: '尚無已結算的一期',
-    tickets: '彩券數',
-    pot: '獎池',
-    entropy: '熵',
-    slotHash: '插槽雜湊值 · 插槽 {slot}',
-    formula: 'sha256(熵 ‖ 插槽雜湊值 ‖ 插槽 ‖ 期) =',
-    mod: '前 8 個位元組作為 u64 mod {count} = {drawn}',
-    ticketCount: '號碼數',
-    closest: '最接近的彩券：{number}',
-    number: '號碼',
-    paidTo: '支付給',
-    payout: '派彩金額',
-    check: '查證這次開獎',
-    roundPage: '該期頁面',
-    nextDraw: '下次開獎在 UTC 00:00 之後',
-    ok: '已在你的瀏覽器中重新計算：雜湊值相同，號碼 {number} 中獎。',
-    mismatch: '在你的瀏覽器中重新計算的雜湊值與這一期不符。',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -413,7 +345,6 @@ const zhtw: Dict = {
     winChance: '中獎機率',
     chance: '機率',
     todaysPot: '獎池',
-    checked: '已檢查',
     waiting: '待檢查',
     numbersLeft: '剩餘號碼',
     winners: '中獎者',
@@ -429,7 +360,6 @@ const zhtw: Dict = {
   },
 
   play: {
-    title: '遊玩',
     description: '在每日或每小時彩券中選一個號碼，或是找出隱藏的號碼，在 Solana 上即時看著獎池變大。',
     testMoney: '你正在 Solana {cluster} 上遊玩：彩券以測試 SOL 支付，沒有實際價值。',
     localFunds: '將你的錢包指向 {url}，然後用以下指令為它儲值：{command}',
@@ -446,7 +376,6 @@ const zhtw: Dict = {
     kicker: '選一個',
     title: '號碼',
     win: '贏得',
-    in: '倒數',
     taken: '本期已被選走',
     range: '0 到 {max}，每個號碼一張彩券',
     pad: '數字鍵盤',
@@ -546,7 +475,6 @@ const zhtw: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · 截止倒數',
     carried: '含從上一期累積的 ◎{carry}',
     split: '80% 歸贏家 · {fee} 平台手續費 · 其餘累積到下一期',
     inPlay: '已選號碼',
@@ -559,7 +487,6 @@ const zhtw: Dict = {
     tag: '遊戲',
     title: '三種玩法',
     description: '號碼範圍都一樣，從 0 到 {max}。贏家拿走獎池的 80%；平台手續費從剩下的部分扣除，其餘累積到下一期。',
-    play: '開玩',
     others: '另外兩種玩法',
     discover: '了解更多',
     daily: {

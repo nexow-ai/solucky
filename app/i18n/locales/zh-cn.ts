@@ -85,12 +85,9 @@ const zhcn: Dict = {
     lead: '每天开奖一次，每小时开奖一次，还有一个等你找出的隐藏号码。赢家拿走奖池的 80%，其余部分滚入下一期。每一张彩票、每一个 lamport、每一次开奖都在 Solana 上，任何人都能查验。',
     playNow: '立即开玩',
     howItWorks: '运作方式',
-    dialCaption: '每个点代表今天的一张彩票：绕表盘一圈的位置代表购买时间，向外的距离代表它的号码。',
 
     how: {
       tag: '运作方式',
-      opens: '本期开始',
-      now: '现在',
     },
 
     fairness: {
@@ -181,26 +178,8 @@ const zhcn: Dict = {
     },
 
     live: {
-      title: '当前奖池',
       drawIn: '距开奖',
       noDeadline: '没有截止时间',
-    },
-
-    practice: {
-      notice: '练习：在你的浏览器中运行，不会向 Solana 发送任何内容',
-      title: '试一试：最接近的号码获胜',
-      lead: '这些标记是今天真实的票。放上你的号码：离它比离其他任何票都近的号码都归你，开奖会从 0 到 {max} 中选出一个号码。',
-      drawn: '开出的号码',
-      yourNumber: '你的号码',
-      best: '最佳空位',
-      draw: '练习开奖',
-      share: '你在开奖中的份额',
-      today: '今日票数',
-      record: '练习获胜',
-      won: '开出 {drawn}：你的号码最接近。你赢了！',
-      lost: '开出 {drawn}：{number} 更接近，所以那张票获胜。',
-      taken: '今天已有人持有这个号码。在真实游戏中，请换一个。',
-      alone: '今天还没有票：只有你一张时，你的号码会赢下任何一次开奖。',
     },
 
     split: {
@@ -209,8 +188,6 @@ const zhcn: Dict = {
       winner: '赢家',
       fee: '平台手续费',
       carry: '下一期',
-      feeNote: '每日彩票的手续费，设定在链上：{fee}。程序将其上限定为 {cap}。',
-      example: '以下金额按今日奖池 {pot} 计算。',
     },
 
     winners: {
@@ -349,7 +326,6 @@ const zhcn: Dict = {
 
   /** The dial on each game's page. */
   dial: {
-    bezel: '每天开奖一次 · UTC 午夜后开奖 · 每张彩票都在 Solana 上',
     draw: '开奖',
     pot: '今日奖池',
     potHour: '本小时奖池',
@@ -357,50 +333,6 @@ const zhcn: Dict = {
     tickets: '今日 {n} 张彩票',
     ticketsHour: '本小时 {n} 张彩票',
     guesses: '本期 {n} 次猜测',
-    entropy: '熵 · {cluster}',
-    entropyTitle: '熵：{hex}',
-    noTickets: '还没有彩票',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: '新彩票',
-    rules: {
-      daily: '每天 UTC 00:00 开始新的一期',
-      hourly: '每小时也有一期',
-      pot: '最接近的号码赢得奖池的 80%',
-      carry: '其余部分滚入下一期',
-      guess: '猜数字：没有截止时间，直到有人猜中',
-      numbers: '号码从 0 到 {max}',
-      fee: '程序将平台手续费上限定为 20%',
-      anyone: '任何人都能关闭一期、开奖并派奖',
-      check: '在你的浏览器中重新计算每一次开奖',
-      open: '开源',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: '已验证',
-    title: '开奖小票',
-    round: '期号',
-    noneYet: '尚无已结算的一期',
-    tickets: '票数',
-    pot: '奖池',
-    entropy: '熵',
-    slotHash: '插槽哈希 · 插槽 {slot}',
-    formula: 'sha256(熵 ‖ 插槽哈希 ‖ 插槽 ‖ 期) =',
-    mod: '前 8 个字节作为 u64 mod {count} = {drawn}',
-    ticketCount: '号码数',
-    closest: '最近的彩票：{number}',
-    number: '号码',
-    paidTo: '支付给',
-    payout: '派奖金额',
-    check: '查验这次开奖',
-    roundPage: '该期页面',
-    nextDraw: '下次开奖在 UTC 00:00 之后',
-    ok: '已在你的浏览器中重新计算：哈希相同，号码 {number} 中奖。',
-    mismatch: '在你的浏览器中重新计算的哈希与这一期不符。',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -413,7 +345,6 @@ const zhcn: Dict = {
     winChance: '中奖概率',
     chance: '概率',
     todaysPot: '奖池',
-    checked: '已检查',
     waiting: '待检查',
     numbersLeft: '剩余号码',
     winners: '中奖者',
@@ -429,7 +360,6 @@ const zhcn: Dict = {
   },
 
   play: {
-    title: '游戏',
     description: '在每日或每小时彩票中选一个号码，或者找出隐藏的号码，在 Solana 上实时看着奖池增长。',
     testMoney: '你正在 Solana {cluster} 上游戏：彩票用测试 SOL 支付，没有实际价值。',
     localFunds: '把你的钱包指向 {url}，然后用这条命令为它充值：{command}',
@@ -446,7 +376,6 @@ const zhcn: Dict = {
     kicker: '选一个',
     title: '号码',
     win: '赢取',
-    in: '倒计时',
     taken: '本期已被选走',
     range: '0 到 {max}，每个号码一张彩票',
     pad: '数字键盘',
@@ -546,7 +475,6 @@ const zhcn: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · 截止倒计时',
     carried: '含从上一期滚入的 ◎{carry}',
     split: '80% 归赢家 · {fee} 平台手续费 · 其余滚入下一期',
     inPlay: '已选号码',
@@ -559,7 +487,6 @@ const zhcn: Dict = {
     tag: '游戏',
     title: '三种玩法',
     description: '号码范围都一样，从 0 到 {max}。赢家拿走奖池的 80%；平台手续费从剩余部分中扣除，余下的滚入下一期。',
-    play: '开玩',
     others: '另外两种玩法',
     discover: '了解更多',
     daily: {
