@@ -22,16 +22,21 @@ const en = {
 
   nav: {
     play: 'Play',
-    how: 'How it works',
-    fairness: 'Fairness',
-    faq: 'FAQ',
     // The keyboard's first stop on every page: past the header to the page itself.
     skip: 'Skip to content',
   },
 
   lang: {
     label: 'Language',
-    choose: 'Language: {name}',
+  },
+
+  settings: {
+    label: 'Settings',
+    theme: 'Theme',
+    light: 'Light',
+    dark: 'Dark',
+    sound: 'Sound',
+    back: 'Back',
   },
 
   update: {
@@ -71,7 +76,7 @@ const en = {
     mainHere: 'Solana Mainnet: tickets cost real SOL',
     goTest: 'Play with free test SOL',
     goMain: 'Play with real SOL on Solana Mainnet',
-    notYet: 'S☉Lucky is not on {network} yet',
+    soon: 'Coming soon',
   },
 
   faucet: {
@@ -92,53 +97,15 @@ const en = {
     source: 'Source code',
     builtOn: 'Built on {solana}',
     madeBy: 'Made by {nexow}',
-    mute: 'Mute sounds',
-    unmute: 'Play sounds',
   },
 
   home: {
-    kicker: 'Lottery games on Solana',
-    title: 'Pick a number.',
-    titleEnd: 'Win at midnight.',
     lead: 'A draw every day, a draw every hour, and a hidden number to hunt down. The winner takes 80% of the pot, and the rest carries over to the next round. Every ticket, every lamport and every draw lives on Solana, where anyone can check it.',
     playNow: 'Play now',
     howItWorks: 'How it works',
-    dialCaption:
-      'Each dot is one of today’s tickets: around the dial by the time it was bought, outwards by its number.',
 
     how: {
       tag: 'How it works',
-      title: 'Four steps, one draw a day',
-      description:
-        'Rounds follow the UTC calendar: a new one opens at 00:00 UTC and is drawn right after the next midnight.',
-      opens: 'Round opens',
-      draw: 'Draw',
-      now: 'Now',
-      steps: {
-        wallet: {
-          title: 'Connect a wallet',
-          description:
-            'Phantom, Solflare, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
-          when: 'Any time',
-        },
-        number: {
-          title: 'Pick your number',
-          description: 'Any number from 0 to {max}. Each number can be held by one ticket per day, so be quick.',
-          when: 'Until midnight UTC',
-        },
-        pot: {
-          title: 'Watch the pot grow',
-          description:
-            'Every ticket adds its price to the pot, held by the round’s own account on Solana. Nobody else can move it.',
-          when: 'All day',
-        },
-        win: {
-          title: 'Win at midnight UTC',
-          description:
-            'A random number is drawn, and the ticket closest to it wins 80% of the pot. The house fee comes out of the rest, and what is left carries over to the next day.',
-          when: 'Right after midnight UTC',
-        },
-      },
     },
 
     fairness: {
@@ -171,6 +138,16 @@ const en = {
           title: 'Hard limits on the house',
           description:
             'The program always pays the winner 80% of the pot and caps the fee at 20%. Price and fee changes only apply to rounds opened afterwards, and a buyer never pays more than the price they were shown.',
+        },
+        guessDraw: {
+          title: 'A check nobody can predict',
+          description:
+            'Every guess is mixed into the round’s entropy. Sealing the new guesses pins a slot a few seconds in the future; that slot’s hash, unknown to everyone until then, decides whether one of them found the number.',
+        },
+        guessBrowser: {
+          title: 'Checkable in your browser',
+          description:
+            'Each round page recomputes the check that ended it from public data: the entropy, the slot hash and the guess that found the number. Same inputs, same winner.',
         },
         open: {
           title: 'Open source',
@@ -221,26 +198,8 @@ const en = {
     },
 
     live: {
-      title: 'Pots right now',
       drawIn: 'Draw in',
       noDeadline: 'No deadline',
-    },
-
-    practice: {
-      notice: 'Practice: it runs in your browser and nothing is sent to Solana',
-      title: 'Try it: the closest number wins',
-      lead: 'The marks are today’s real tickets. Place yours: every number closer to it than to any other ticket is yours, and the draw picks one number from 0 to {max}.',
-      drawn: 'Drawn number',
-      yourNumber: 'Your number',
-      best: 'Best free spot',
-      draw: 'Practice draw',
-      share: 'Your share of the draw',
-      today: 'Tickets today',
-      record: 'Practice wins',
-      won: '{drawn} was drawn: your number is the closest. You win!',
-      lost: '{drawn} was drawn: {number} is closer, so that ticket wins.',
-      taken: 'Someone already holds this number today. In the real game, pick another one.',
-      alone: 'No tickets yet today: on its own, your number would win any draw.',
     },
 
     split: {
@@ -249,78 +208,163 @@ const en = {
       winner: 'Winner',
       fee: 'House fee',
       carry: 'Next round',
-      feeNote: 'The daily lottery’s fee, set on-chain: {fee}. The program caps it at {cap}.',
-      example: 'Amounts for today’s pot of {pot}.',
     },
 
     winners: {
       tag: 'Winners',
       title: 'Every winner, on-chain',
       description:
-        'The latest settled rounds of the three games, read from the program’s accounts. Each one links to its round, where the draw can be recomputed.',
+        'The latest settled rounds of this game, read from the program’s accounts. Each one links to its round page, where the result can be recomputed.',
       paid: 'Paid to winners',
       rounds: 'Rounds settled',
       empty: 'No round has been settled yet.',
       drawn: 'Drawn: {number}',
       found: 'Number found',
     },
-    cta: {
-      title: 'Today’s pot is waiting',
-      description: 'Pick a number nobody has taken yet. Good luck!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    /** The hourly and Guess pages' title; the daily lottery's page is the site's home and keeps meta.title. */
+    title: '{game} on Solana',
+    daily: {
+      kicker: 'Daily lottery · one draw a day',
+      title: 'Pick a number.',
+      titleEnd: 'Win at midnight.',
+      lead: 'One round a day, from 00:00 to 24:00 UTC. Pick any number from 0 to {max}: right after midnight a number is drawn at random, and the ticket closest to it wins 80% of the pot. The house fee comes out of the rest, and what is left carries over to the next day.',
+      how: {
+        title: 'Four steps, one draw a day',
+        description:
+          'Rounds follow the UTC calendar: a new one opens at 00:00 UTC and is drawn right after the next midnight.',
+      },
+      steps: {
+        wallet: {
+          title: 'Connect a wallet',
+          description:
+            'Solflare, Phantom, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
+          when: 'Any time',
+        },
+        number: {
+          title: 'Pick your number',
+          description: 'Any number from 0 to {max}. Each number can be held by one ticket per day, so be quick.',
+          when: 'Until midnight UTC',
+        },
+        pot: {
+          title: 'Watch the pot grow',
+          description:
+            'Every ticket adds its price to the pot, held by the round’s own account on Solana. Nobody else can move it.',
+          when: 'All day',
+        },
+        win: {
+          title: 'Win at midnight UTC',
+          description:
+            'A random number is drawn, and the ticket closest to it wins 80% of the pot. The house fee comes out of the rest, and what is left carries over to the next day.',
+          when: 'Right after midnight UTC',
+        },
+      },
+      cta: {
+        kicker: 'Drawn every day after midnight UTC',
+        title: 'Today’s pot is waiting',
+        description: 'Pick a number nobody has taken yet. Good luck!',
+      },
+    },
+    hourly: {
+      kicker: 'Hourly lottery · 24 draws a day',
+      title: 'Pick a number.',
+      titleEnd: 'Win on the hour.',
+      lead: 'A new round every hour, on the hour (UTC). Pick any number from 0 to {max}: right after the hour ends, a number is drawn at random, and the ticket closest to it wins 80% of the pot. The house fee comes out of the rest, and what is left carries over to the next hour.',
+      how: {
+        title: 'Four steps, one draw an hour',
+        description:
+          'Rounds follow the UTC clock: a new one opens at the start of every hour and is drawn right after it ends.',
+      },
+      steps: {
+        wallet: {
+          title: 'Connect a wallet',
+          description:
+            'Solflare, Phantom, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
+          when: 'Any time',
+        },
+        number: {
+          title: 'Pick your number',
+          description: 'Any number from 0 to {max}. Each number can be held by one ticket per hour, so be quick.',
+          when: 'Until the end of the hour',
+        },
+        pot: {
+          title: 'Watch the pot grow',
+          description:
+            'Every ticket adds its price to the pot, held by the round’s own account on Solana. Nobody else can move it.',
+          when: 'All hour',
+        },
+        win: {
+          title: 'Win on the hour',
+          description:
+            'A random number is drawn, and the ticket closest to it wins 80% of the pot. The house fee comes out of the rest, and what is left carries over to the next hour.',
+          when: 'Right after the hour',
+        },
+      },
+      cta: {
+        kicker: 'Drawn every hour, on the hour',
+        title: 'This hour’s pot is waiting',
+        description: 'Pick a number nobody has taken this hour. Good luck!',
+      },
+    },
+    guess: {
+      kicker: 'Guess the number · no deadline',
+      title: 'Find the number.',
+      titleEnd: 'Before anyone else.',
+      lead: 'Each round plays as if it hid one number from 0 to {max}, unknown to everyone, the operator included. Every guess is a ticket on a number nobody has tried yet in the round. Every few seconds the new guesses are checked: the one that finds the number wins 80% of the pot, and a new round starts at once.',
+      how: {
+        title: 'Four steps, no deadline',
+        description:
+          'A round lasts until a guess finds its number. Then the next round opens, with a new number to find.',
+      },
+      steps: {
+        wallet: {
+          title: 'Connect a wallet',
+          description:
+            'Solflare, Phantom, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
+          when: 'Any time',
+        },
+        guess: {
+          title: 'Make a guess',
+          description:
+            'Any number from 0 to {max} that nobody has tried yet in the round. Each guess is one ticket, and its price goes into the pot.',
+          when: 'Any time',
+        },
+        check: {
+          title: 'Checked in seconds',
+          description:
+            'Every few seconds, the new guesses are sealed and checked against the hash of a slot nobody could know in advance. A guess that misses takes its number out of the round.',
+          when: 'Every few seconds',
+        },
+        win: {
+          title: 'Find it first',
+          description:
+            'The guess that finds the number wins 80% of the pot. The house fee comes out of the rest, what is left carries over, and a new round starts at once.',
+          when: 'The moment it is found',
+        },
+      },
+      cta: {
+        kicker: 'Checked every few seconds',
+        title: 'The number is still out there',
+        description: 'Try a number nobody has tried yet. Good luck!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
-    bezel: 'One draw a day · Drawn after midnight UTC · Every ticket on Solana',
     draw: 'Draw',
     pot: "Today's pot",
+    potHour: 'This hour’s pot',
     toDraw: 'to the draw · {day}',
     tickets: '{n} ticket today | {n} tickets today',
-    entropy: 'Entropy · {cluster}',
-    entropyTitle: 'Entropy: {hex}',
-    noTickets: 'no tickets yet',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'New ticket',
-    rules: {
-      daily: 'New round every day at 00:00 UTC',
-      hourly: 'And one every hour',
-      pot: 'The closest number wins 80% of the pot',
-      carry: 'The rest carries over to the next round',
-      guess: 'Guess the number: no deadline, until someone finds it',
-      numbers: 'Numbers from 0 to {max}',
-      fee: 'House fee capped at 20% by the program',
-      anyone: 'Anyone can close, draw and pay a round',
-      check: 'Recompute every draw in your browser',
-      open: 'Open source',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Verified',
-    title: 'Draw receipt',
-    round: 'Round',
-    noneYet: 'none settled yet',
-    tickets: 'Tickets',
-    pot: 'Pot',
-    entropy: 'Entropy',
-    slotHash: 'Slot hash · slot {slot}',
-    formula: 'sha256(entropy ‖ slot hash ‖ slot ‖ round) =',
-    mod: 'first 8 bytes as u64 mod {count} = {drawn}',
-    ticketCount: 'numbers',
-    closest: 'closest ticket: {number}',
-    number: 'Number',
-    paidTo: 'Paid to',
-    payout: 'Payout',
-    check: 'Check this draw',
-    roundPage: 'Round page',
-    nextDraw: 'Next draw after 00:00 UTC',
-    ok: 'Recomputed in your browser: same hash, number {number} wins.',
-    mismatch: 'The hash recomputed in your browser does not match this round.',
+    ticketsHour: '{n} ticket this hour | {n} tickets this hour',
+    guesses: '{n} guess in this round | {n} guesses in this round',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -333,7 +377,6 @@ const en = {
     winChance: 'Win chance',
     chance: 'Chance',
     todaysPot: 'Pot',
-    checked: 'Checked',
     waiting: 'Waiting',
     numbersLeft: 'Numbers left',
     winners: 'Winners',
@@ -349,7 +392,6 @@ const en = {
   },
 
   play: {
-    title: 'Play',
     description:
       'Pick a number in the daily or hourly lottery, or hunt down the hidden one, and watch the pot grow live on Solana.',
     testMoney: 'You are playing on Solana {cluster}: tickets cost test SOL with no real value.',
@@ -367,7 +409,6 @@ const en = {
     kicker: 'Pick a',
     title: 'Number',
     win: 'Win',
-    in: 'in',
     taken: 'Already taken in this round',
     range: '0 to {max}, one ticket per number',
     pad: 'Number pad',
@@ -471,12 +512,14 @@ const en = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · closes in',
     carried: 'Includes ◎{carry} carried over from the last round',
     split: '80% to the winner · {fee} house fee · the rest to the next round',
     inPlay: 'Numbers in play',
     empty: 'No tickets yet',
     beFirst: 'Be the first to pick a number in this round.',
+    search: 'Find a number, wallet or country',
+    clearSearch: 'Clear the search',
+    noMatch: 'Nothing in play matches “{query}”',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */
@@ -485,7 +528,9 @@ const en = {
     title: 'Three ways to play',
     description:
       'Same numbers, from 0 to {max}. The winner takes 80% of the pot; the house fee comes out of the rest, and what is left carries over to the next round.',
-    play: 'Play',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Two more ways to play',
+    discover: 'Discover',
     daily: {
       name: 'Daily lottery',
       short: 'Daily',
@@ -620,6 +665,8 @@ const en = {
 
   wallet: {
     connect: 'Connect wallet',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Recommended',
     title: 'Connect a wallet',
     description: 'Any Solana wallet that supports the Wallet Standard works.',
     none: 'No Solana wallet was found in this browser. Install one, then reload the page:',
@@ -925,7 +972,7 @@ const en = {
         rpcHost: '{host} on this site',
         rpcPublic: 'Solana’s public endpoint for {cluster}',
         wallet:
-          '{name}, such as Phantom, Solflare or Backpack, which is software from its own maker, with its own policy. The site only asks it to connect and to sign the transactions you approve.',
+          '{name}, such as Solflare, Phantom or Backpack, which is software from its own maker, with its own policy. The site only asks it to connect and to sign the transactions you approve.',
         walletName: 'Your wallet',
         links:
           '{name}: Solana Explorer, the Solana faucet, GitHub and our social accounts are other sites, with their own policies.',

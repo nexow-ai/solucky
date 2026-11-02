@@ -22,6 +22,8 @@ import {
   zh_tw,
 } from '@nuxt/ui/locale';
 
+import { GAME_SLUGS } from '@solucky/client';
+
 import type { Locale } from '~~/i18n/languages';
 
 /** Nuxt UI's own words (close, search, theme…) and direction, for each of the site's languages. */
@@ -62,12 +64,17 @@ useHead(() => ({
   meta: localeHead.value.meta,
 }));
 
+// A game's pages (its own page, its table, its rounds) share its card; the other pages, the home page's.
+const game = useGame();
+const section = usePageSection();
+const shareImage = computed(() => shareImagePath(section.value === null ? 'daily' : GAME_SLUGS[game.value]));
+
 // Defaults; each page sets its own title and summary over them.
 useSeoMeta({
   title: () => t('meta.title'),
   description: () => t('meta.description'),
   ogDescription: () => t('meta.description'),
-  ogImage: `${origin}/og.png`,
+  ogImage: () => `${origin}${shareImage.value}`,
   ogImageWidth: 1200,
   ogImageHeight: 630,
   ogImageAlt: () => t('meta.ogImageAlt'),

@@ -16,11 +16,12 @@ const open = ref(false);
 const dashOpen = ref(false);
 const connecting = ref<string | null>(null);
 
-const INSTALL = [
+// The recommended wallet (Solflare) first.
+const INSTALL = recommendedFirst([
   { name: 'Phantom', to: 'https://phantom.com/download' },
   { name: 'Solflare', to: 'https://www.solflare.com/download/' },
   { name: 'Backpack', to: 'https://backpack.app/downloads' },
-];
+]);
 
 const ticketNumbers = computed(() =>
   [...myTickets.value]
@@ -80,9 +81,11 @@ async function signOut() {
     :ui="{ content: 'w-[min(100vw-2rem,22rem)] p-0' }"
   >
     <UButton color="neutral" variant="outline" :block="block" trailing-icon="i-lucide-chevron-down">
-      <img v-if="connected.wallet.icon" :src="connected.wallet.icon" alt="" class="size-5 rounded" />
+      <!-- No max-width: a percentage one lets the button size itself without the icon, and the chevron spills out. -->
+      <img v-if="connected.wallet.icon" :src="connected.wallet.icon" alt="" class="size-5 max-w-none rounded" />
       <span class="font-mono" dir="ltr">{{ shortAddress(address) }}</span>
-      <span v-if="balance !== null" class="text-muted">◎{{ formatSol(balance, 2) }}</span>
+      <!-- On phones the bar is tight: the balance waits in the popover. -->
+      <span v-if="balance !== null" class="hidden text-muted sm:inline">◎{{ formatSol(balance, 2) }}</span>
     </UButton>
 
     <template #content>
@@ -229,6 +232,14 @@ async function signOut() {
         >
           <img :src="wallet.icon" alt="" class="size-6 rounded" />
           {{ wallet.name }}
+          <UBadge
+            v-if="wallet.name === RECOMMENDED_WALLET"
+            :label="t('wallet.recommended')"
+            color="primary"
+            variant="subtle"
+            size="sm"
+            class="ms-auto"
+          />
         </UButton>
       </div>
       <div v-else class="space-y-3 text-sm text-muted">
@@ -237,13 +248,21 @@ async function signOut() {
           <UButton
             v-for="wallet in INSTALL"
             :key="wallet.name"
-            :label="wallet.name"
             :to="wallet.to"
             target="_blank"
             color="neutral"
             variant="subtle"
             trailing-icon="i-lucide-external-link"
-          />
+          >
+            {{ wallet.name }}
+            <UBadge
+              v-if="wallet.name === RECOMMENDED_WALLET"
+              :label="t('wallet.recommended')"
+              color="primary"
+              variant="subtle"
+              size="sm"
+            />
+          </UButton>
         </div>
       </div>
     </template>

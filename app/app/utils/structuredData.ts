@@ -1,7 +1,7 @@
 /**
- * Schema.org structured data (JSON-LD) for the landing page: who makes
- * S☉Lucky, what it is, its three games, how to play and the questions people
- * ask. Search engines and AI assistants read it to describe the site; every
+ * Schema.org structured data (JSON-LD) for a game's own page: who makes
+ * S☉Lucky, what it is, its three games, how to play this one and the
+ * questions people ask. Search engines and AI assistants read it to describe the site; every
  * word comes from the page's own dictionary, so it says no more than the page.
  */
 
@@ -14,6 +14,8 @@ export interface HomeGraphInput {
   title: string;
   description: string;
   lead: string;
+  /** The page's card (absolute); the site's own, `/og.png`, by default. */
+  image?: string;
   imageAlt: string;
   operator: { name: string; site: string; email: string };
   /** Code repository and social profiles; empty ones are left out. */
@@ -68,7 +70,13 @@ export function homeGraph(input: HomeGraphInput) {
         inLanguage: input.language,
         isPartOf: { '@id': site },
         about: { '@id': app },
-        primaryImageOfPage: { '@type': 'ImageObject', url: image, width: 1200, height: 630, caption: input.imageAlt },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          url: input.image ?? image,
+          width: 1200,
+          height: 630,
+          caption: input.imageAlt,
+        },
       },
       {
         '@type': 'WebApplication',

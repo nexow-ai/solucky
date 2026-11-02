@@ -93,6 +93,7 @@ watch(pot, (to, from) => {
             {{ t(`games.${slug}.description`) }}
           </p>
         </div>
+        <LotteryNotifyButton class="shrink-0" />
       </div>
 
       <!-- The pot, in a window pressed into the panel; a chip floats off it each time it grows. -->

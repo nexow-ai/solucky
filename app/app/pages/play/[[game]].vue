@@ -65,9 +65,9 @@ const testFunds = computed(() =>
 <script lang="ts">
 /**
  * Switching games remounts this page. These tell an arrival (the panels rise
- * in) from a switch (the view transition cross-fades and the game pill glides
- * to the new game): a switch mounts the new page while the old one is still
- * up, or right after it left.
+ * in) from a switch (the view transition cross-fades and the header's game
+ * pill glides to the new game): a switch mounts the new page while the old
+ * one is still up, or right after it left.
  */
 let mounted = 0;
 let leftAt = 0;
@@ -107,19 +107,14 @@ let leftAt = 0;
         :actions="[{ label: t('play.retry'), color: 'error', variant: 'outline', loading: retrying, onClick: retry }]"
       />
 
-      <div class="enter flex items-center justify-center gap-3" style="--i: 1">
-        <LotteryGameTabs />
-        <LotteryNotifyButton />
-      </div>
-
-      <LotteryStage class="enter" style="--i: 2" />
-      <LotteryLiveBar class="enter" style="--i: 3" :feed="feed" />
+      <LotteryStage class="enter" style="--i: 1" />
+      <LotteryLiveBar class="enter" style="--i: 2" :feed="feed" />
 
       <div class="grid items-start gap-7 lg:grid-cols-12 lg:items-stretch">
-        <LotteryPlayPanel class="enter lg:col-span-7" style="--i: 4" />
-        <LotteryTicketsPanel class="enter lg:col-span-5" style="--i: 5" />
+        <LotteryPlayPanel class="enter lg:col-span-7" style="--i: 3" />
+        <LotteryTicketsPanel class="enter lg:col-span-5" style="--i: 4" />
       </div>
-      <LotteryHistoryPanel class="enter" style="--i: 6" />
+      <LotteryHistoryPanel class="enter" style="--i: 5" />
     </UContainer>
     <LotteryDrawReveal />
   </div>

@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { countryFromBytes, flagEmoji, GAME_SLUGS, GameKind, isLottery } from '@solucky/client';
+import { countryFromBytes, flagEmoji, GAME_SLUGS, type GameKind, isLottery } from '@solucky/client';
 
 /**
- * The latest settled rounds of the three games, newest draw first, as a
- * departure board, with what every game has paid so far. Browser only.
+ * A game's latest settled rounds, newest draw first, as a departure board,
+ * with what the game has paid so far. Browser only.
  */
+// The kind as a number (0 daily, 1 hourly, 2 guess), as `GAME_SLUGS` indexes it.
+const props = defineProps<{ kind: number }>();
+
 const { t } = useI18n();
 const localePath = useLocalePath();
 const intl = useIntlLocale();
 const price = useSolPrice();
 
-const games = [GameKind.Daily, GameKind.Hourly, GameKind.Guess].map((kind) => ({ kind, state: useLottery(kind) }));
-const loading = computed(() => games.some(({ state }) => state.loading.value));
-const all = computed(() => games.flatMap(({ state }) => state.settled.value));
-const wins = computed(() => latestWins(games.map(({ kind, state }) => ({ kind, rounds: state.settled.value }))));
-const totals = computed(() => winTotals(all.value));
+const kind = computed(() => props.kind as GameKind);
+const { loading, settled } = useLottery(kind);
+const wins = computed(() => latestWins([{ kind: kind.value, rounds: settled.value }]));
+const totals = computed(() => winTotals(settled.value));
 </script>
 
 <template>

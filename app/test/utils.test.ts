@@ -11,6 +11,7 @@ import {
   formatUnit,
   formatUsd,
   formatUtcTime,
+  percentParts,
   roundPath,
   roundTitle,
   shortAddress,
@@ -50,6 +51,19 @@ describe('format', () => {
     expect(formatPercent(null)).toBe('—');
     expect(formatPercent(0.225)).toBe('22.5%');
     expect(formatPercent(1)).toBe('100.0%');
+    expect(formatPercent(0)).toBe('0.0%');
+    expect(formatPercent(0.0005)).toBe('0.050%');
+  });
+
+  it('gives a tiny chance the decimals it needs to show its first two digits', () => {
+    // One number in 21 million: never 0.000%.
+    expect(formatPercent(1 / 21_000_000)).toBe('0.0000048%');
+    expect(percentParts(1 / 21_000_000)).toEqual({ head: '0.000', tail: '0048', rest: '%' });
+    expect(percentParts(0.225)).toEqual({ head: '22.5', tail: '', rest: '%' });
+    expect(percentParts(null)).toEqual({ head: '—', tail: '', rest: '' });
+    // The percent sign stays where the language puts it.
+    expect(percentParts(1 / 21_000_000, 'fr')).toEqual({ head: '0,000', tail: '0048', rest: ' %' });
+    expect(percentParts(1 / 21_000_000, 'tr')).toEqual({ head: '%0,000', tail: '0048', rest: '' });
   });
 
   it("writes dollars, odds, units and dates the way the page's language does", () => {

@@ -11,15 +11,20 @@ const ja: Dict = {
 
   nav: {
     play: 'プレイ',
-    how: '仕組み',
-    fairness: '公平性',
-    faq: 'FAQ',
     skip: 'メインコンテンツへ移動',
   },
 
   lang: {
     label: '言語',
-    choose: '言語：{name}',
+  },
+
+  settings: {
+    label: '設定',
+    theme: 'テーマ',
+    light: 'ライト',
+    dark: 'ダーク',
+    sound: 'サウンド',
+    back: '戻る',
   },
 
   update: {
@@ -59,7 +64,7 @@ const ja: Dict = {
     mainHere: 'Solana Mainnet：チケットの代金は本物のSOLです',
     goTest: '無料のテストSOLでプレイ',
     goMain: 'Solana Mainnetで本物のSOLを使ってプレイ',
-    notYet: 'S☉Luckyはまだ{network}にありません',
+    soon: '近日公開',
   },
 
   faucet: {
@@ -80,51 +85,15 @@ const ja: Dict = {
     source: 'ソースコード',
     builtOn: '{solana}で構築',
     madeBy: '制作：{nexow}',
-    mute: 'サウンドをオフ',
-    unmute: 'サウンドをオン',
   },
 
   home: {
-    kicker: 'Solana上の宝くじゲーム',
-    title: '番号を選ぶ。',
-    titleEnd: '午前0時に当選。',
     lead: '毎日の抽選、毎時の抽選、そして探し当てる隠された番号。当選者はポットの80%を獲得し、残りは次のラウンドに繰り越されます。すべてのチケット、すべてのlamport、すべての抽選がSolana上にあり、誰でも確認できます。',
     playNow: '今すぐプレイ',
     howItWorks: '仕組みを見る',
-    dialCaption: '点の一つひとつが今日のチケットです。文字盤を回る位置は購入時刻を、外側への距離は番号を表します。',
 
     how: {
       tag: '仕組み',
-      title: '4つのステップ、抽選は1日1回',
-      description: 'ラウンドはUTCの暦に従います。新しいラウンドはUTC 00:00に始まり、次の午前0時の直後に抽選されます。',
-      opens: 'ラウンド開始',
-      draw: '抽選',
-      now: '現在',
-      steps: {
-        wallet: {
-          title: 'ウォレットを接続',
-          description:
-            'Phantom、Solflare、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
-          when: 'いつでも',
-        },
-        number: {
-          title: '番号を選ぶ',
-          description: '0から{max}までの好きな番号を選べます。各番号を持てるのは1日1枚のチケットだけなので、お早めに。',
-          when: 'UTCの午前0時まで',
-        },
-        pot: {
-          title: 'ポットが増えるのを見守る',
-          description:
-            'チケットが売れるたびに、その価格がポットに加わります。ポットはSolana上のそのラウンド専用のアカウントに保管され、ほかの誰も動かせません。',
-          when: '一日中',
-        },
-        win: {
-          title: 'UTCの午前0時に当選',
-          description:
-            'ランダムな番号が抽選され、それに最も近いチケットがポットの80%を獲得します。運営手数料は残りから差し引かれ、余った分は翌日に繰り越されます。',
-          when: 'UTCの午前0時の直後',
-        },
-      },
     },
 
     fairness: {
@@ -157,6 +126,16 @@ const ja: Dict = {
           title: '運営側への厳格な制限',
           description:
             'プログラムは常にポットの80%を当選者に支払い、手数料の上限を20%に定めています。価格や手数料の変更が適用されるのはその後に始まるラウンドからで、購入者が表示された価格より多く支払うことはありません。',
+        },
+        guessDraw: {
+          title: '誰にも予測できない判定',
+          description:
+            '予想のたびに、その内容がラウンドのエントロピーに混ぜ込まれます。新しい予想を封印すると、数秒先のスロットが固定されます。その時点まで誰も知らないそのスロットのハッシュが、どれかの予想が番号を見つけたかどうかを決めます。',
+        },
+        guessBrowser: {
+          title: 'ブラウザで検証できる',
+          description:
+            '各ラウンドのページは、公開データ（エントロピー、スロットハッシュ、番号を見つけた予想）から、そのラウンドを終わらせた判定を再計算します。入力が同じなら、当選者も同じです。',
         },
         open: {
           title: 'オープンソース',
@@ -207,26 +186,8 @@ const ja: Dict = {
     },
 
     live: {
-      title: '現在のポット',
       drawIn: '抽選まで',
       noDeadline: '期限なし',
-    },
-
-    practice: {
-      notice: '練習：ブラウザ内で動き、Solanaには何も送信されません',
-      title: '試してみよう：いちばん近い番号が勝ち',
-      lead: 'これらの印は今日の実際のチケットです。あなたの番号を置いてみましょう。ほかのどのチケットよりもあなたの番号に近い番号はすべてあなたのもので、抽選は0から{max}までの番号を1つ選びます。',
-      drawn: '抽選された番号',
-      yourNumber: 'あなたの番号',
-      best: 'いちばん良い空き位置',
-      draw: '練習抽選',
-      share: '抽選でのあなたの取り分',
-      today: '今日のチケット',
-      record: '練習での当選',
-      won: '{drawn}が出ました：あなたの番号がいちばん近いです。当選です！',
-      lost: '{drawn}が出ました：{number}のほうが近いので、そのチケットの当選です。',
-      taken: 'この番号は今日すでにほかの人が持っています。本番では別の番号を選んでください。',
-      alone: '今日はまだチケットがありません：1枚だけなら、あなたの番号がどの抽選でも勝ちます。',
     },
 
     split: {
@@ -235,78 +196,163 @@ const ja: Dict = {
       winner: '当選者',
       fee: '運営手数料',
       carry: '次のラウンド',
-      feeNote: 'デイリー抽選の手数料（オンチェーンで設定）：{fee}。プログラムが上限を{cap}にしています。',
-      example: '今日のポット{pot}での金額です。',
     },
 
     winners: {
       tag: '当選者',
       title: 'すべての当選者がオンチェーンに',
       description:
-        '3つのゲームで最近精算されたラウンドを、プログラムのアカウントから直接読み取っています。それぞれのラウンドページで抽選を再計算できます。',
+        'このゲームで最近精算されたラウンドを、プログラムのアカウントから直接読み取っています。それぞれのラウンドページで結果を再計算できます。',
       paid: '当選者への支払い',
       rounds: '精算済みラウンド',
       empty: '精算済みのラウンドはまだありません。',
       drawn: '抽選番号：{number}',
       found: '番号が見つかりました',
     },
-    cta: {
-      title: '今日のポットがあなたを待っています',
-      description: 'まだ誰も選んでいない番号を選びましょう。幸運を祈ります！',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    title: 'Solana上の{game}',
+    daily: {
+      kicker: '毎日の宝くじ · 抽選は1日1回',
+      title: '番号を選ぶ。',
+      titleEnd: '午前0時に当選。',
+      lead: 'ラウンドは1日1回、UTC 00:00から24:00まで。0から{max}までの好きな番号を選びましょう。午前0時の直後にランダムな番号が抽選され、それに最も近いチケットがポットの80%を獲得します。運営手数料は残りから差し引かれ、余った分は翌日に繰り越されます。',
+      how: {
+        title: '4つのステップ、抽選は1日1回',
+        description:
+          'ラウンドはUTCの暦に従います。新しいラウンドはUTC 00:00に始まり、次の午前0時の直後に抽選されます。',
+      },
+      steps: {
+        wallet: {
+          title: 'ウォレットを接続',
+          description:
+            'Solflare、Phantom、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
+          when: 'いつでも',
+        },
+        number: {
+          title: '番号を選ぶ',
+          description: '0から{max}までの好きな番号を選べます。各番号を持てるのは1日1枚のチケットだけなので、お早めに。',
+          when: 'UTCの午前0時まで',
+        },
+        pot: {
+          title: 'ポットが増えるのを見守る',
+          description:
+            'チケットが売れるたびに、その価格がポットに加わります。ポットはSolana上のそのラウンド専用のアカウントに保管され、ほかの誰も動かせません。',
+          when: '一日中',
+        },
+        win: {
+          title: 'UTCの午前0時に当選',
+          description:
+            'ランダムな番号が抽選され、それに最も近いチケットがポットの80%を獲得します。運営手数料は残りから差し引かれ、余った分は翌日に繰り越されます。',
+          when: 'UTCの午前0時の直後',
+        },
+      },
+      cta: {
+        kicker: '毎日UTCの午前0時過ぎに抽選',
+        title: '今日のポットがあなたを待っています',
+        description: 'まだ誰も選んでいない番号を選びましょう。幸運を祈ります！',
+      },
+    },
+    hourly: {
+      kicker: '毎時の宝くじ · 抽選は1日24回',
+      title: '番号を選ぶ。',
+      titleEnd: '毎時ちょうどに当選。',
+      lead: '毎時ちょうど（UTC）に新しいラウンドが始まります。0から{max}までの好きな番号を選びましょう。その1時間が終わった直後にランダムな番号が抽選され、それに最も近いチケットがポットの80%を獲得します。運営手数料は残りから差し引かれ、余った分は次の1時間に繰り越されます。',
+      how: {
+        title: '4つのステップ、抽選は1時間に1回',
+        description:
+          'ラウンドはUTCの時刻に従います。新しいラウンドは毎時ちょうどに始まり、その1時間が終わった直後に抽選されます。',
+      },
+      steps: {
+        wallet: {
+          title: 'ウォレットを接続',
+          description:
+            'Solflare、Phantom、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
+          when: 'いつでも',
+        },
+        number: {
+          title: '番号を選ぶ',
+          description:
+            '0から{max}までの好きな番号を選べます。各番号を持てるのは1時間に1枚のチケットだけなので、お早めに。',
+          when: 'その1時間の終わりまで',
+        },
+        pot: {
+          title: 'ポットが増えるのを見守る',
+          description:
+            'チケットが売れるたびに、その価格がポットに加わります。ポットはSolana上のそのラウンド専用のアカウントに保管され、ほかの誰も動かせません。',
+          when: '1時間ずっと',
+        },
+        win: {
+          title: '毎時ちょうどに当選',
+          description:
+            'ランダムな番号が抽選され、それに最も近いチケットがポットの80%を獲得します。運営手数料は残りから差し引かれ、余った分は次の1時間に繰り越されます。',
+          when: '毎時ちょうどの直後',
+        },
+      },
+      cta: {
+        kicker: '毎時ちょうどに抽選',
+        title: 'この1時間のポットがあなたを待っています',
+        description: 'この1時間でまだ誰も選んでいない番号を選びましょう。幸運を祈ります！',
+      },
+    },
+    guess: {
+      kicker: '数字当て · 締め切りなし',
+      title: '番号を見つける。',
+      titleEnd: '誰よりも先に。',
+      lead: '各ラウンドは、運営者を含め誰も知らない0から{max}までの番号を1つ隠しているかのように進みます。予想はそれぞれ、そのラウンドでまだ誰も試していない番号へのチケットです。数秒ごとに新しい予想が判定され、番号を見つけた予想がポットの80%を獲得し、すぐに新しいラウンドが始まります。',
+      how: {
+        title: '4つのステップ、締め切りなし',
+        description:
+          'ラウンドは、予想がその番号を見つけるまで続きます。見つかると次のラウンドが始まり、また新しい番号を探します。',
+      },
+      steps: {
+        wallet: {
+          title: 'ウォレットを接続',
+          description:
+            'Solflare、Phantom、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
+          when: 'いつでも',
+        },
+        guess: {
+          title: '予想する',
+          description:
+            '0から{max}までで、そのラウンドでまだ誰も試していない番号なら何でも選べます。予想1回がチケット1枚で、その価格はポットに入ります。',
+          when: 'いつでも',
+        },
+        check: {
+          title: '数秒で判定',
+          description:
+            '数秒ごとに新しい予想が封印され、事前には誰にも分からないスロットのハッシュで判定されます。外れた予想の番号は、そのラウンドから除外されます。',
+          when: '数秒ごと',
+        },
+        win: {
+          title: '誰よりも先に見つける',
+          description:
+            '番号を見つけた予想がポットの80%を獲得します。運営手数料は残りから差し引かれ、余った分は繰り越され、すぐに新しいラウンドが始まります。',
+          when: '見つかった瞬間',
+        },
+      },
+      cta: {
+        kicker: '数秒ごとに判定',
+        title: '番号はまだ見つかっていません',
+        description: 'まだ誰も試していない番号を試しましょう。幸運を祈ります！',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
-    bezel: '抽選は1日1回 · UTCの午前0時過ぎに抽選 · すべてのチケットはSolana上に',
     draw: '抽選',
     pot: '今日のポット',
+    potHour: 'この1時間のポット',
     toDraw: '抽選まで · {day}',
     tickets: '今日のチケット{n}枚',
-    entropy: 'エントロピー · {cluster}',
-    entropyTitle: 'エントロピー：{hex}',
-    noTickets: 'チケットはまだありません',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: '新しいチケット',
-    rules: {
-      daily: '毎日UTC 00:00に新しいラウンド',
-      hourly: 'さらに1時間ごとにも',
-      pot: '最も近い番号がポットの80%を獲得',
-      carry: '残りは次のラウンドに繰り越し',
-      guess: '数字当て：締め切りなし、誰かが見つけるまで',
-      numbers: '番号は0から{max}まで',
-      fee: '運営手数料はプログラムにより上限20%',
-      anyone: 'ラウンドの締め切り・抽選・支払いは誰でも可能',
-      check: 'すべての抽選をブラウザで再計算',
-      open: 'オープンソース',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: '検証済み',
-    title: '抽選レシート',
-    round: 'ラウンド',
-    noneYet: '精算済みのラウンドはまだありません',
-    tickets: 'チケット',
-    pot: 'ポット',
-    entropy: 'エントロピー',
-    slotHash: 'スロットハッシュ · スロット{slot}',
-    formula: 'sha256(エントロピー ‖ スロットハッシュ ‖ スロット ‖ ラウンド) =',
-    mod: '先頭8バイトをu64として mod {count} = {drawn}',
-    ticketCount: '番号の数',
-    closest: '最も近いチケット：{number}',
-    number: '番号',
-    paidTo: '支払先',
-    payout: '払い出し額',
-    check: 'この抽選を検証',
-    roundPage: 'ラウンドのページ',
-    nextDraw: '次の抽選はUTC 00:00以降',
-    ok: 'ブラウザで再計算しました：ハッシュは同じで、番号{number}が当選です。',
-    mismatch: 'ブラウザで再計算したハッシュが、このラウンドと一致しません。',
+    ticketsHour: 'この1時間のチケット{n}枚',
+    guesses: 'このラウンドの予想{n}件',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -319,7 +365,6 @@ const ja: Dict = {
     winChance: '当選確率',
     chance: '確率',
     todaysPot: 'ポット',
-    checked: '判定済み',
     waiting: '判定待ち',
     numbersLeft: '残りの番号',
     winners: '当選者',
@@ -335,7 +380,6 @@ const ja: Dict = {
   },
 
   play: {
-    title: 'プレイ',
     description:
       '毎日または毎時の宝くじで番号を選ぶか、隠された番号を探し当て、Solana上でポットが増えていく様子をライブで見守りましょう。',
     testMoney: 'Solana {cluster}でプレイしています。チケットの代金は、実際の価値がないテストSOLです。',
@@ -353,7 +397,6 @@ const ja: Dict = {
     kicker: '好きな',
     title: '番号',
     win: '賞金',
-    in: 'あと',
     taken: 'このラウンドではすでに選ばれています',
     range: '0〜{max}、1つの番号につきチケット1枚',
     pad: '数字パッド',
@@ -456,12 +499,14 @@ const ja: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · 締め切りまで',
     carried: '前のラウンドから繰り越された◎{carry}を含みます',
     split: '80%は当選者へ · 運営手数料{fee} · 残りは次のラウンドへ',
     inPlay: '参加中の番号',
     empty: 'チケットはまだありません',
     beFirst: 'このラウンドで最初に番号を選びましょう。',
+    search: '番号・ウォレット・国で検索',
+    clearSearch: '検索をクリア',
+    noMatch: '「{query}」に一致するものはありません',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */
@@ -470,7 +515,8 @@ const ja: Dict = {
     title: '3つの遊び方',
     description:
       '番号はどれも同じく0から{max}まで。当選者はポットの80%を獲得し、運営手数料は残りから差し引かれ、余った分は次のラウンドに繰り越されます。',
-    play: 'プレイ',
+    others: 'ほかの2つの遊び方',
+    discover: '詳しく見る',
     daily: {
       name: '毎日の宝くじ',
       short: '毎日',
@@ -605,6 +651,8 @@ const ja: Dict = {
 
   wallet: {
     connect: 'ウォレットを接続',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'おすすめ',
     title: 'ウォレットを接続',
     description: 'Wallet Standardに対応したSolanaウォレットなら、どれでも使えます。',
     none: 'このブラウザにSolanaウォレットが見つかりません。ウォレットをインストールしてから、ページを再読み込みしてください：',
@@ -914,7 +962,7 @@ const ja: Dict = {
         rpcHost: 'このサイト上の{host}',
         rpcPublic: '{cluster}向けのSolana公開エンドポイント',
         wallet:
-          '{name}（Phantom、Solflare、Backpackなど）：それぞれの開発元が提供するソフトウェアで、独自のポリシーがあります。サイトがウォレットに求めるのは、接続と、あなたが承認したトランザクションへの署名だけです。',
+          '{name}（Solflare、Phantom、Backpackなど）：それぞれの開発元が提供するソフトウェアで、独自のポリシーがあります。サイトがウォレットに求めるのは、接続と、あなたが承認したトランザクションへの署名だけです。',
         walletName: 'あなたのウォレット',
         links:
           '{name}：Solana Explorer、Solanaのフォーセット、GitHub、当社のソーシャルアカウントはほかのサイトであり、それぞれ独自のポリシーがあります。',

@@ -2,6 +2,7 @@ import { type Address, address as toAddress, lamports } from '@solana/kit';
 import { isWalletWarmingUp, type WalletState } from '@solana/kit-plugin-wallet';
 
 import { connectionKey, visibleConnection, WALLET_STORAGE_KEY, walletToRestore } from '../utils/walletRestore';
+import { recommendedFirst } from '../utils/wallets';
 
 const state = shallowRef<WalletState | null>(null);
 const balance = ref<bigint | null>(null);
@@ -72,7 +73,8 @@ export function useWallet() {
   }
 
   return {
-    wallets: computed(() => state.value?.wallets ?? []),
+    /** The Solana wallets in this browser, the recommended one (Solflare) first. */
+    wallets: computed(() => recommendedFirst(state.value?.wallets ?? [])),
     connected,
     address,
     status: computed(() => state.value?.status ?? 'pending'),

@@ -15,6 +15,20 @@ const { explorer } = useSolana();
 const sorted = computed(() => sortNumbers(takenNumbers.value));
 const newestFirst = computed(() => [...tickets.value].reverse());
 
+/** The search over the numbers in play: a number, a wallet or a country. */
+const query = ref('');
+const searching = computed(() => query.value.trim() !== '');
+const shown = computed(() =>
+  searchTickets(newestFirst.value, query.value, (ticket) => ({
+    number: ticket.data.number,
+    owner: ticket.data.owner,
+    country: countryName(countryFromBytes(ticket.data.country), intl.value, t('country.private')),
+  })),
+);
+// A new search starts at the top of the list.
+const well = useTemplateRef('well');
+watch(query, () => well.value?.scrollTo({ top: 0 }));
+
 interface Stub {
   key: string;
   number: number;
@@ -50,7 +64,7 @@ const stubs = computed(() => {
           </h2>
           <p v-if="myChance !== null" class="flex items-baseline gap-2">
             <span class="kicker text-[0.65rem]">{{ t('stat.winChance') }}</span>
-            <span class="chance font-mono text-lg tabular-nums">{{ formatPercent(myChance, intl) }}</span>
+            <LotteryPercent :ratio="myChance" class="chance font-mono text-lg tabular-nums" />
           </p>
         </header>
 
@@ -65,9 +79,7 @@ const stubs = computed(() => {
             >
               <span class="stub-flag" aria-hidden="true">{{ flagEmoji(stub.cc) }}</span>
               <span class="stub-number font-mono tabular-nums" dir="ltr">{{ formatNumber(stub.number) }}</span>
-              <span v-if="stub.share !== null" class="stub-meta font-mono tabular-nums">
-                {{ formatPercent(stub.share, intl) }}
-              </span>
+              <LotteryPercent v-if="stub.share !== null" :ratio="stub.share" class="stub-meta font-mono tabular-nums" />
               <span v-else class="stub-meta">
                 {{
                   stub.state === 'won'
@@ -92,46 +104,92 @@ const stubs = computed(() => {
         <h2 class="kicker mb-3 flex items-center gap-2">
           <span class="live-dot" aria-hidden="true" />
           {{ t('pot.inPlay') }}
-          <span class="ms-auto font-mono tabular-nums">{{ formatNumber(tickets.length) }}</span>
+          <span class="ms-auto font-mono tabular-nums" dir="ltr">
+            <template v-if="searching">{{ formatNumber(shown.length) }} / </template>{{ formatNumber(tickets.length) }}
+          </span>
         </h2>
-        <div class="well h-80 flex-1 overflow-y-auto p-2.5 lg:h-0 lg:min-h-72" data-ticket-well>
-          <div v-if="loading" class="space-y-2 p-1">
-            <USkeleton v-for="i in 6" :key="i" class="h-5 w-full" />
+        <UInput
+          v-if="tickets.length"
+          v-model="query"
+          icon="i-lucide-search"
+          size="sm"
+          :placeholder="t('pot.search')"
+          :aria-label="t('pot.search')"
+          autocomplete="off"
+          spellcheck="false"
+          enterkeyhint="search"
+          class="mb-3 w-full"
+          :ui="{ base: 'text-base sm:text-sm', trailing: 'pe-1' }"
+          data-ticket-search
+          @keydown.esc="query = ''"
+        >
+          <template v-if="query" #trailing>
+            <UButton
+              color="neutral"
+              variant="link"
+              size="xs"
+              icon="i-lucide-circle-x"
+              :aria-label="t('pot.clearSearch')"
+              @click="query = ''"
+            />
+          </template>
+        </UInput>
+        <!--
+          The list scrolls in its well and never makes the panel taller: the
+          well fills this box (its content cannot size it), which is 20rem high
+          below lg and, from lg, the height the play panel beside it leaves
+          (at least 18rem).
+        -->
+        <div class="relative h-80 lg:h-auto lg:min-h-72 lg:flex-1">
+          <div ref="well" class="well absolute inset-0 overflow-y-auto overscroll-contain p-2.5" data-ticket-well>
+            <div v-if="loading" class="space-y-2 p-1">
+              <USkeleton v-for="i in 6" :key="i" class="h-5 w-full" />
+            </div>
+            <UEmpty
+              v-else-if="!tickets.length"
+              icon="i-lucide-ticket"
+              :title="t('pot.empty')"
+              :description="t('pot.beFirst')"
+              variant="naked"
+              class="h-full"
+            />
+            <UEmpty
+              v-else-if="!shown.length"
+              icon="i-lucide-search-x"
+              :title="t('pot.noMatch', { query: query.trim() })"
+              variant="naked"
+              class="h-full"
+            />
+            <!-- Keyed by the search, so a new one swaps the list instead of dropping its rows in as new tickets. -->
+            <TransitionGroup v-else :key="query.trim()" tag="ol" name="row" class="space-y-0.5 text-xs">
+              <li
+                v-for="ticket in shown"
+                :key="ticket.address"
+                class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
+                :class="ticket.data.owner === address ? 'mine text-primary' : 'text-toned'"
+              >
+                <span class="col-span-3 font-mono text-muted">{{ formatUtcTime(ticket.data.createdAt) }}</span>
+                <ULink
+                  :to="explorer('address', ticket.data.owner)"
+                  target="_blank"
+                  class="col-span-4 font-mono hover:text-primary"
+                  :title="ticket.data.owner"
+                  dir="ltr"
+                >
+                  {{ shortAddress(ticket.data.owner, 5) }}
+                </ULink>
+                <span
+                  class="col-span-1 text-center"
+                  :title="countryName(countryFromBytes(ticket.data.country), intl, t('country.private'))"
+                >
+                  {{ flagEmoji(countryFromBytes(ticket.data.country)) }}
+                </span>
+                <span class="col-span-4 text-end font-mono text-highlighted">{{
+                  formatNumber(ticket.data.number)
+                }}</span>
+              </li>
+            </TransitionGroup>
           </div>
-          <UEmpty
-            v-else-if="!tickets.length"
-            icon="i-lucide-ticket"
-            :title="t('pot.empty')"
-            :description="t('pot.beFirst')"
-            variant="naked"
-            class="h-full"
-          />
-          <TransitionGroup v-else tag="ol" name="row" class="space-y-0.5 text-xs">
-            <li
-              v-for="ticket in newestFirst"
-              :key="ticket.address"
-              class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
-              :class="ticket.data.owner === address ? 'mine text-primary' : 'text-toned'"
-            >
-              <span class="col-span-3 font-mono text-muted">{{ formatUtcTime(ticket.data.createdAt) }}</span>
-              <ULink
-                :to="explorer('address', ticket.data.owner)"
-                target="_blank"
-                class="col-span-4 font-mono hover:text-primary"
-                :title="ticket.data.owner"
-                dir="ltr"
-              >
-                {{ shortAddress(ticket.data.owner, 5) }}
-              </ULink>
-              <span
-                class="col-span-1 text-center"
-                :title="countryName(countryFromBytes(ticket.data.country), intl, t('country.private'))"
-              >
-                {{ flagEmoji(countryFromBytes(ticket.data.country)) }}
-              </span>
-              <span class="col-span-4 text-end font-mono text-highlighted">{{ formatNumber(ticket.data.number) }}</span>
-            </li>
-          </TransitionGroup>
         </div>
       </section>
     </div>

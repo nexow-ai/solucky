@@ -11,15 +11,20 @@ const it: Dict = {
 
   nav: {
     play: 'Gioca',
-    how: 'Come funziona',
-    fairness: 'Equità',
-    faq: 'FAQ',
     skip: 'Vai al contenuto',
   },
 
   lang: {
     label: 'Lingua',
-    choose: 'Lingua: {name}',
+  },
+
+  settings: {
+    label: 'Impostazioni',
+    theme: 'Tema',
+    light: 'Chiaro',
+    dark: 'Scuro',
+    sound: 'Suono',
+    back: 'Indietro',
   },
 
   update: {
@@ -59,7 +64,7 @@ const it: Dict = {
     mainHere: 'Solana Mainnet: i biglietti costano SOL veri',
     goTest: 'Gioca con SOL di test gratuiti',
     goMain: 'Gioca con SOL veri su Solana Mainnet',
-    notYet: 'S☉Lucky non è ancora su {network}',
+    soon: 'In arrivo',
   },
 
   faucet: {
@@ -80,54 +85,15 @@ const it: Dict = {
     source: 'Codice sorgente',
     builtOn: 'Costruito su {solana}',
     madeBy: 'Realizzato da {nexow}',
-    mute: 'Disattiva i suoni',
-    unmute: 'Attiva i suoni',
   },
 
   home: {
-    kicker: 'Giochi di lotteria su Solana',
-    title: 'Scegli un numero.',
-    titleEnd: 'Vinci a mezzanotte.',
     lead: 'Un’estrazione al giorno, un’estrazione ogni ora e un numero nascosto da scovare. Il vincitore si prende l’80% del montepremi, e il resto passa al round successivo. Ogni biglietto, ogni lamport e ogni estrazione vivono su Solana, dove chiunque può verificarli.',
     playNow: 'Gioca ora',
     howItWorks: 'Come funziona',
-    dialCaption:
-      'Ogni punto è uno dei biglietti di oggi: lungo il quadrante in base all’ora dell’acquisto, verso l’esterno in base al suo numero.',
 
     how: {
       tag: 'Come funziona',
-      title: 'Quattro passi, un’estrazione al giorno',
-      description:
-        'I round seguono il calendario UTC: uno nuovo si apre alle 00:00 UTC e viene estratto subito dopo la mezzanotte successiva.',
-      opens: 'Apertura del round',
-      draw: 'Estrazione',
-      now: 'Ora',
-      steps: {
-        wallet: {
-          title: 'Collega un wallet',
-          description:
-            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
-          when: 'In qualsiasi momento',
-        },
-        number: {
-          title: 'Scegli il tuo numero',
-          description:
-            'Qualsiasi numero da 0 a {max}. Ogni numero può appartenere a un solo biglietto al giorno, quindi sii veloce.',
-          when: 'Fino a mezzanotte UTC',
-        },
-        pot: {
-          title: 'Guarda crescere il montepremi',
-          description:
-            'Ogni biglietto aggiunge il suo prezzo al montepremi, custodito dall’account del round su Solana. Nessun altro può spostarlo.',
-          when: 'Tutto il giorno',
-        },
-        win: {
-          title: 'Vinci a mezzanotte UTC',
-          description:
-            'Viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round del giorno dopo.',
-          when: 'Subito dopo la mezzanotte UTC',
-        },
-      },
     },
 
     fairness: {
@@ -160,6 +126,16 @@ const it: Dict = {
           title: 'Limiti rigidi per la casa',
           description:
             'Il programma paga sempre al vincitore l’80% del montepremi e limita la commissione al 20%. Le modifiche di prezzo e commissione valgono solo per i round aperti in seguito, e chi compra non paga mai più del prezzo che gli è stato mostrato.',
+        },
+        guessDraw: {
+          title: 'Una verifica che nessuno può prevedere',
+          description:
+            'Ogni tentativo viene mescolato nell’entropia del round. Sigillare i nuovi tentativi fissa uno slot qualche secondo nel futuro; l’hash di quello slot, sconosciuto a tutti fino ad allora, decide se uno di essi ha trovato il numero.',
+        },
+        guessBrowser: {
+          title: 'Verificabile nel tuo browser',
+          description:
+            'La pagina di ogni round ricalcola dai dati pubblici la verifica che lo ha concluso: l’entropia, l’hash dello slot e il tentativo che ha trovato il numero. Stessi input, stesso vincitore.',
         },
         open: {
           title: 'Open source',
@@ -210,26 +186,8 @@ const it: Dict = {
     },
 
     live: {
-      title: 'Montepremi in questo momento',
       drawIn: 'Estrazione tra',
       noDeadline: 'Nessuna scadenza',
-    },
-
-    practice: {
-      notice: 'Prova: gira nel tuo browser e non viene inviato nulla a Solana',
-      title: 'Provalo: vince il numero più vicino',
-      lead: 'I segni sono i biglietti reali di oggi. Metti il tuo: ogni numero più vicino a lui che a qualsiasi altro biglietto è tuo, e l’estrazione sceglie un numero da 0 a {max}.',
-      drawn: 'Numero estratto',
-      yourNumber: 'Il tuo numero',
-      best: 'Miglior posto libero',
-      draw: 'Estrazione di prova',
-      share: 'La tua quota dell’estrazione',
-      today: 'Biglietti di oggi',
-      record: 'Vittorie di prova',
-      won: 'È uscito {drawn}: il tuo numero è il più vicino. Hai vinto!',
-      lost: 'È uscito {drawn}: {number} è più vicino, quindi vince quel biglietto.',
-      taken: 'Qualcuno ha già questo numero oggi. Nel gioco vero, scegline un altro.',
-      alone: 'Ancora nessun biglietto oggi: da solo, il tuo numero vincerebbe qualsiasi estrazione.',
     },
 
     split: {
@@ -238,78 +196,165 @@ const it: Dict = {
       winner: 'Vincitore',
       fee: 'Commissione',
       carry: 'Round successivo',
-      feeNote: 'Commissione della lotteria giornaliera, fissata on-chain: {fee}. Il programma la limita al {cap}.',
-      example: 'Importi per il montepremi di oggi di {pot}.',
     },
 
     winners: {
       tag: 'Vincitori',
       title: 'Ogni vincitore, on-chain',
       description:
-        'Gli ultimi round liquidati dei tre giochi, letti dagli account del programma. Ognuno porta al suo round, dove l’estrazione si può ricalcolare.',
+        'Gli ultimi round liquidati di questo gioco, letti dagli account del programma. Ognuno porta alla pagina del suo round, dove il risultato si può ricalcolare.',
       paid: 'Pagato ai vincitori',
       rounds: 'Round liquidati',
       empty: 'Nessun round è stato ancora liquidato.',
       drawn: 'Estratto: {number}',
       found: 'Numero trovato',
     },
-    cta: {
-      title: 'Il montepremi di oggi ti aspetta',
-      description: 'Scegli un numero che nessuno ha ancora preso. Buona fortuna!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    /** The hourly and Guess pages' title; the daily lottery's page is the site's home and keeps meta.title. */
+    title: '{game} su Solana',
+    daily: {
+      kicker: 'Lotteria quotidiana · un’estrazione al giorno',
+      title: 'Scegli un numero.',
+      titleEnd: 'Vinci a mezzanotte.',
+      lead: 'Un round al giorno, dalle 00:00 alle 24:00 UTC. Scegli un numero qualsiasi da 0 a {max}: subito dopo la mezzanotte viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round del giorno dopo.',
+      how: {
+        title: 'Quattro passi, un’estrazione al giorno',
+        description:
+          'I round seguono il calendario UTC: uno nuovo si apre alle 00:00 UTC e viene estratto subito dopo la mezzanotte successiva.',
+      },
+      steps: {
+        wallet: {
+          title: 'Collega un wallet',
+          description:
+            'Solflare, Phantom, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+          when: 'In qualsiasi momento',
+        },
+        number: {
+          title: 'Scegli il tuo numero',
+          description:
+            'Qualsiasi numero da 0 a {max}. Ogni numero può appartenere a un solo biglietto al giorno, quindi sii veloce.',
+          when: 'Fino a mezzanotte UTC',
+        },
+        pot: {
+          title: 'Guarda crescere il montepremi',
+          description:
+            'Ogni biglietto aggiunge il suo prezzo al montepremi, custodito dall’account del round su Solana. Nessun altro può spostarlo.',
+          when: 'Tutto il giorno',
+        },
+        win: {
+          title: 'Vinci a mezzanotte UTC',
+          description:
+            'Viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round del giorno dopo.',
+          when: 'Subito dopo la mezzanotte UTC',
+        },
+      },
+      cta: {
+        kicker: 'Estrazione ogni giorno dopo la mezzanotte UTC',
+        title: 'Il montepremi di oggi ti aspetta',
+        description: 'Scegli un numero che nessuno ha ancora preso. Buona fortuna!',
+      },
+    },
+    hourly: {
+      kicker: 'Lotteria oraria · 24 estrazioni al giorno',
+      title: 'Scegli un numero.',
+      titleEnd: 'Vinci allo scoccare dell’ora.',
+      lead: 'Un nuovo round ogni ora, allo scoccare dell’ora (UTC). Scegli un numero qualsiasi da 0 a {max}: subito dopo la fine dell’ora viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round dell’ora successiva.',
+      how: {
+        title: 'Quattro passi, un’estrazione all’ora',
+        description:
+          'I round seguono l’orologio UTC: uno nuovo si apre all’inizio di ogni ora e viene estratto subito dopo la sua fine.',
+      },
+      steps: {
+        wallet: {
+          title: 'Collega un wallet',
+          description:
+            'Solflare, Phantom, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+          when: 'In qualsiasi momento',
+        },
+        number: {
+          title: 'Scegli il tuo numero',
+          description:
+            'Qualsiasi numero da 0 a {max}. Ogni numero può appartenere a un solo biglietto all’ora, quindi sii veloce.',
+          when: 'Fino alla fine dell’ora',
+        },
+        pot: {
+          title: 'Guarda crescere il montepremi',
+          description:
+            'Ogni biglietto aggiunge il suo prezzo al montepremi, custodito dall’account del round su Solana. Nessun altro può spostarlo.',
+          when: 'Per tutta l’ora',
+        },
+        win: {
+          title: 'Vinci allo scoccare dell’ora',
+          description:
+            'Viene estratto un numero a caso, e il biglietto più vicino vince l’80% del montepremi. La commissione della casa esce dal resto, e ciò che avanza passa al round dell’ora successiva.',
+          when: 'Subito dopo la fine dell’ora',
+        },
+      },
+      cta: {
+        kicker: 'Estrazione ogni ora, allo scoccare dell’ora',
+        title: 'Il montepremi di quest’ora ti aspetta',
+        description: 'Scegli un numero che nessuno ha ancora preso in quest’ora. Buona fortuna!',
+      },
+    },
+    guess: {
+      kicker: 'Indovina il numero · nessuna scadenza',
+      title: 'Trova il numero.',
+      titleEnd: 'Prima di tutti.',
+      lead: 'Ogni round si gioca come se nascondesse un numero da 0 a {max}, sconosciuto a tutti, operatore compreso. Ogni tentativo è un biglietto su un numero che nessuno ha ancora provato nel round. Ogni pochi secondi i nuovi tentativi vengono verificati: quello che trova il numero vince l’80% del montepremi, e un nuovo round parte subito.',
+      how: {
+        title: 'Quattro passi, nessuna scadenza',
+        description:
+          'Un round dura finché un tentativo non trova il suo numero. Poi si apre il round successivo, con un nuovo numero da trovare.',
+      },
+      steps: {
+        wallet: {
+          title: 'Collega un wallet',
+          description:
+            'Solflare, Phantom, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+          when: 'In qualsiasi momento',
+        },
+        guess: {
+          title: 'Fai un tentativo',
+          description:
+            'Qualsiasi numero da 0 a {max} che nessuno ha ancora provato nel round. Ogni tentativo è un biglietto, e il suo prezzo va nel montepremi.',
+          when: 'In qualsiasi momento',
+        },
+        check: {
+          title: 'Verificato in pochi secondi',
+          description:
+            'Ogni pochi secondi, i nuovi tentativi vengono sigillati e verificati con l’hash di uno slot che nessuno poteva conoscere in anticipo. Un tentativo sbagliato toglie il suo numero dal round.',
+          when: 'Ogni pochi secondi',
+        },
+        win: {
+          title: 'Trovalo per primo',
+          description:
+            'Il tentativo che trova il numero vince l’80% del montepremi. La commissione della casa esce dal resto, ciò che avanza passa al round successivo, e un nuovo round parte subito.',
+          when: 'Nel momento in cui viene trovato',
+        },
+      },
+      cta: {
+        kicker: 'Verifica ogni pochi secondi',
+        title: 'Il numero è ancora là fuori',
+        description: 'Prova un numero che nessuno ha ancora provato. Buona fortuna!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
-    bezel: 'Un’estrazione al giorno · Estrazione dopo la mezzanotte UTC · Ogni biglietto su Solana',
     draw: 'Estrazione',
     pot: 'Montepremi di oggi',
+    potHour: 'Montepremi di quest’ora',
     toDraw: 'all’estrazione · {day}',
     tickets: '{n} biglietto oggi | {n} biglietti oggi',
-    entropy: 'Entropia · {cluster}',
-    entropyTitle: 'Entropia: {hex}',
-    noTickets: 'ancora nessun biglietto',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Nuovo biglietto',
-    rules: {
-      daily: 'Nuovo round ogni giorno alle 00:00 UTC',
-      hourly: 'E uno ogni ora',
-      pot: 'Il numero più vicino vince l’80% del montepremi',
-      carry: 'Il resto passa al round successivo',
-      guess: 'Indovina il numero: nessuna scadenza, finché qualcuno non lo trova',
-      numbers: 'Numeri da 0 a {max}',
-      fee: 'Commissione della casa limitata al 20% dal programma',
-      anyone: 'Chiunque può chiudere, estrarre e pagare un round',
-      check: 'Ricalcola ogni estrazione nel tuo browser',
-      open: 'Open source',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Verificato',
-    title: 'Ricevuta dell’estrazione',
-    round: 'Round',
-    noneYet: 'nessuno ancora liquidato',
-    tickets: 'Biglietti',
-    pot: 'Montepremi',
-    entropy: 'Entropia',
-    slotHash: 'Hash dello slot · slot {slot}',
-    formula: 'sha256(entropia ‖ hash dello slot ‖ slot ‖ round) =',
-    mod: 'primi 8 byte come u64 mod {count} = {drawn}',
-    ticketCount: 'numeri',
-    closest: 'biglietto più vicino: {number}',
-    number: 'Numero',
-    paidTo: 'Pagato a',
-    payout: 'Vincita',
-    check: 'Verifica questa estrazione',
-    roundPage: 'Pagina del round',
-    nextDraw: 'Prossima estrazione dopo le 00:00 UTC',
-    ok: 'Ricalcolato nel tuo browser: stesso hash, vince il numero {number}.',
-    mismatch: 'L’hash ricalcolato nel tuo browser non corrisponde a questo round.',
+    ticketsHour: '{n} biglietto in quest’ora | {n} biglietti in quest’ora',
+    guesses: '{n} tentativo in questo round | {n} tentativi in questo round',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -322,7 +367,6 @@ const it: Dict = {
     winChance: 'Prob. di vincita',
     chance: 'Probabilità',
     todaysPot: 'Montepremi',
-    checked: 'Verificati',
     waiting: 'In attesa',
     numbersLeft: 'Numeri rimasti',
     winners: 'Vincitori',
@@ -338,7 +382,6 @@ const it: Dict = {
   },
 
   play: {
-    title: 'Gioca',
     description:
       'Scegli un numero nella lotteria quotidiana o in quella oraria, oppure scova quello nascosto, e guarda il montepremi crescere in diretta su Solana.',
     testMoney: 'Stai giocando su Solana {cluster}: i biglietti costano SOL di test senza alcun valore reale.',
@@ -356,7 +399,6 @@ const it: Dict = {
     kicker: 'Scegli un',
     title: 'Numero',
     win: 'Vinci',
-    in: 'tra',
     taken: 'Già preso in questo round',
     range: 'Da 0 a {max}, un biglietto per numero',
     pad: 'Tastierino numerico',
@@ -461,12 +503,14 @@ const it: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · chiude tra',
     carried: 'Include ◎{carry} riportati dal round precedente',
     split: '80% al vincitore · {fee} di commissione della casa · il resto al round successivo',
     inPlay: 'Numeri in gioco',
     empty: 'Ancora nessun biglietto',
     beFirst: 'Sii la prima persona a scegliere un numero in questo round.',
+    search: 'Cerca un numero, un wallet o un paese',
+    clearSearch: 'Cancella la ricerca',
+    noMatch: 'Niente in gioco corrisponde a «{query}»',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */
@@ -475,7 +519,9 @@ const it: Dict = {
     title: 'Tre modi di giocare',
     description:
       'Stessi numeri, da 0 a {max}. Il vincitore si prende l’80% del montepremi; la commissione della casa esce dal resto, e ciò che avanza passa al round successivo.',
-    play: 'Gioca',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Altri due modi di giocare',
+    discover: 'Scopri',
     daily: {
       name: 'Lotteria quotidiana',
       short: 'Quotidiana',
@@ -613,6 +659,8 @@ const it: Dict = {
 
   wallet: {
     connect: 'Collega wallet',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Consigliato',
     title: 'Collega un wallet',
     description: 'Funziona qualsiasi wallet Solana che supporti il Wallet Standard.',
     none: 'In questo browser non è stato trovato nessun wallet Solana. Installane uno, poi ricarica la pagina:',
@@ -923,7 +971,7 @@ const it: Dict = {
         rpcHost: '{host} su questo sito',
         rpcPublic: 'l’endpoint pubblico di Solana per {cluster}',
         wallet:
-          '{name}, come Phantom, Solflare o Backpack, che è un software del suo produttore, con la sua politica. Il sito gli chiede solo di collegarsi e di firmare le transazioni che approvi.',
+          '{name}, come Solflare, Phantom o Backpack, che è un software del suo produttore, con la sua politica. Il sito gli chiede solo di collegarsi e di firmare le transazioni che approvi.',
         walletName: 'Il tuo wallet',
         links:
           '{name}: Solana Explorer, il faucet di Solana, GitHub e i nostri account social sono altri siti, con le loro politiche.',

@@ -11,15 +11,20 @@ const nl: Dict = {
 
   nav: {
     play: 'Spelen',
-    how: 'Zo werkt het',
-    fairness: 'Eerlijkheid',
-    faq: 'FAQ',
     skip: 'Naar de inhoud',
   },
 
   lang: {
     label: 'Taal',
-    choose: 'Taal: {name}',
+  },
+
+  settings: {
+    label: 'Instellingen',
+    theme: 'Thema',
+    light: 'Licht',
+    dark: 'Donker',
+    sound: 'Geluid',
+    back: 'Terug',
   },
 
   update: {
@@ -60,7 +65,7 @@ const nl: Dict = {
     mainHere: 'Solana Mainnet: loten kosten echte SOL',
     goTest: 'Speel met gratis test-SOL',
     goMain: 'Speel met echte SOL op Solana Mainnet',
-    notYet: 'S☉Lucky staat nog niet op {network}',
+    soon: 'Binnenkort',
   },
 
   faucet: {
@@ -81,54 +86,15 @@ const nl: Dict = {
     source: 'Broncode',
     builtOn: 'Gebouwd op {solana}',
     madeBy: 'Gemaakt door {nexow}',
-    mute: 'Geluid uit',
-    unmute: 'Geluid aan',
   },
 
   home: {
-    kicker: 'Loterijspellen op Solana',
-    title: 'Kies een getal.',
-    titleEnd: 'Win om middernacht.',
     lead: 'Elke dag een trekking, elk uur een trekking, en een verborgen getal om op te sporen. De winnaar krijgt 80% van de pot, en de rest schuift door naar de volgende ronde. Elk lot, elke lamport en elke trekking staat op Solana, waar iedereen het kan controleren.',
     playNow: 'Nu spelen',
     howItWorks: 'Zo werkt het',
-    dialCaption:
-      'Elke stip is een van de loten van vandaag: rond de wijzerplaat volgens het moment van aankoop, naar buiten volgens het getal.',
 
     how: {
       tag: 'Zo werkt het',
-      title: 'Vier stappen, één trekking per dag',
-      description:
-        'Rondes volgen de UTC-kalender: om 00:00 UTC opent een nieuwe, die direct na de volgende middernacht wordt getrokken.',
-      opens: 'Ronde opent',
-      draw: 'Trekking',
-      now: 'Nu',
-      steps: {
-        wallet: {
-          title: 'Koppel een wallet',
-          description:
-            'Phantom, Solflare, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
-          when: 'Altijd',
-        },
-        number: {
-          title: 'Kies je getal',
-          description:
-            'Elk getal van 0 tot {max}. Elk getal kan per dag door één lot worden bezet, dus wees er snel bij.',
-          when: 'Tot middernacht UTC',
-        },
-        pot: {
-          title: 'Zie de pot groeien',
-          description:
-            'Elk lot voegt zijn prijs toe aan de pot, die wordt bewaard door het eigen account van de ronde op Solana. Niemand anders kan hem verplaatsen.',
-          when: 'De hele dag',
-        },
-        win: {
-          title: 'Win om middernacht UTC',
-          description:
-            'Er wordt een willekeurig getal getrokken, en het lot dat er het dichtst bij ligt, wint 80% van de pot. De huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende dag.',
-          when: 'Direct na middernacht UTC',
-        },
-      },
     },
 
     fairness: {
@@ -161,6 +127,16 @@ const nl: Dict = {
           title: 'Harde grenzen voor het huis',
           description:
             'Het programma betaalt de winnaar altijd 80% van de pot uit en begrenst de commissie op 20%. Wijzigingen in prijs en commissie gelden pas voor rondes die daarna openen, en een koper betaalt nooit meer dan de prijs die hij te zien kreeg.',
+        },
+        guessDraw: {
+          title: 'Een controle die niemand kan voorspellen',
+          description:
+            'Elke poging wordt in de entropie van de ronde gemengd. Het verzegelen van de nieuwe pogingen legt een slot een paar seconden in de toekomst vast; de hash van dat slot, tot dan voor iedereen onbekend, bepaalt of een van die pogingen het getal heeft gevonden.',
+        },
+        guessBrowser: {
+          title: 'Te controleren in je browser',
+          description:
+            'Elke rondepagina berekent de controle die de ronde beëindigde opnieuw uit openbare gegevens: de entropie, de slothash en de poging die het getal vond. Dezelfde invoer, dezelfde winnaar.',
         },
         open: {
           title: 'Open source',
@@ -211,26 +187,8 @@ const nl: Dict = {
     },
 
     live: {
-      title: 'Potten op dit moment',
       drawIn: 'Trekking over',
       noDeadline: 'Geen deadline',
-    },
-
-    practice: {
-      notice: 'Oefenen: draait in je browser, er wordt niets naar Solana gestuurd',
-      title: 'Probeer het: het dichtstbijzijnde getal wint',
-      lead: 'De markeringen zijn de echte loten van vandaag. Zet het jouwe: elk getal dat dichter bij het jouwe ligt dan bij een ander lot is van jou, en de trekking kiest één getal van 0 tot {max}.',
-      drawn: 'Getrokken getal',
-      yourNumber: 'Jouw getal',
-      best: 'Beste vrije plek',
-      draw: 'Oefentrekking',
-      share: 'Jouw deel van de trekking',
-      today: 'Loten vandaag',
-      record: 'Oefenwinsten',
-      won: '{drawn} is getrokken: jouw getal ligt het dichtstbij. Je wint!',
-      lost: '{drawn} is getrokken: {number} ligt dichterbij, dus dat lot wint.',
-      taken: 'Iemand heeft dit getal vandaag al. Kies in het echte spel een ander.',
-      alone: 'Vandaag nog geen loten: in je eentje zou je getal elke trekking winnen.',
     },
 
     split: {
@@ -239,78 +197,164 @@ const nl: Dict = {
       winner: 'Winnaar',
       fee: 'Huiscommissie',
       carry: 'Volgende ronde',
-      feeNote: 'Commissie van de dagloterij, on-chain vastgelegd: {fee}. Het programma begrenst die op {cap}.',
-      example: 'Bedragen voor de pot van vandaag van {pot}.',
     },
 
     winners: {
       tag: 'Winnaars',
       title: 'Elke winnaar, on-chain',
       description:
-        'De laatst afgewikkelde rondes van de drie spellen, gelezen uit de accounts van het programma. Elke ronde linkt naar haar pagina, waar de trekking opnieuw te berekenen is.',
+        'De laatst afgewikkelde rondes van dit spel, gelezen uit de accounts van het programma. Elke ronde linkt naar haar pagina, waar het resultaat opnieuw te berekenen is.',
       paid: 'Uitbetaald aan winnaars',
       rounds: 'Afgewikkelde rondes',
       empty: 'Er is nog geen ronde afgewikkeld.',
       drawn: 'Getrokken: {number}',
       found: 'Getal gevonden',
     },
-    cta: {
-      title: 'De pot van vandaag wacht',
-      description: 'Kies een getal dat nog niemand heeft genomen. Veel geluk!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    title: '{game} op Solana',
+    daily: {
+      kicker: 'Dagelijkse loterij · één trekking per dag',
+      title: 'Kies een getal.',
+      titleEnd: 'Win om middernacht.',
+      lead: 'Eén ronde per dag, van 00:00 tot 24:00 UTC. Kies een getal van 0 tot {max}: direct na middernacht wordt er willekeurig een getal getrokken, en het lot dat er het dichtst bij ligt, wint 80% van de pot. De huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende dag.',
+      how: {
+        title: 'Vier stappen, één trekking per dag',
+        description:
+          'Rondes volgen de UTC-kalender: om 00:00 UTC opent een nieuwe, die direct na de volgende middernacht wordt getrokken.',
+      },
+      steps: {
+        wallet: {
+          title: 'Koppel een wallet',
+          description:
+            'Solflare, Phantom, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
+          when: 'Altijd',
+        },
+        number: {
+          title: 'Kies je getal',
+          description:
+            'Elk getal van 0 tot {max}. Elk getal kan per dag door één lot worden bezet, dus wees er snel bij.',
+          when: 'Tot middernacht UTC',
+        },
+        pot: {
+          title: 'Zie de pot groeien',
+          description:
+            'Elk lot voegt zijn prijs toe aan de pot, die wordt bewaard door het eigen account van de ronde op Solana. Niemand anders kan hem verplaatsen.',
+          when: 'De hele dag',
+        },
+        win: {
+          title: 'Win om middernacht UTC',
+          description:
+            'Er wordt een willekeurig getal getrokken, en het lot dat er het dichtst bij ligt, wint 80% van de pot. De huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende dag.',
+          when: 'Direct na middernacht UTC',
+        },
+      },
+      cta: {
+        kicker: 'Elke dag getrokken na middernacht UTC',
+        title: 'De pot van vandaag wacht',
+        description: 'Kies een getal dat nog niemand heeft genomen. Veel geluk!',
+      },
+    },
+    hourly: {
+      kicker: 'Uurloterij · 24 trekkingen per dag',
+      title: 'Kies een getal.',
+      titleEnd: 'Win op het hele uur.',
+      lead: 'Elk uur een nieuwe ronde, op het hele uur (UTC). Kies een getal van 0 tot {max}: direct na het einde van het uur wordt er willekeurig een getal getrokken, en het lot dat er het dichtst bij ligt, wint 80% van de pot. De huiscommissie gaat van de rest af, en wat overblijft, schuift door naar het volgende uur.',
+      how: {
+        title: 'Vier stappen, één trekking per uur',
+        description:
+          'Rondes volgen de UTC-klok: aan het begin van elk uur opent een nieuwe, die direct na het einde ervan wordt getrokken.',
+      },
+      steps: {
+        wallet: {
+          title: 'Koppel een wallet',
+          description:
+            'Solflare, Phantom, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
+          when: 'Altijd',
+        },
+        number: {
+          title: 'Kies je getal',
+          description:
+            'Elk getal van 0 tot {max}. Elk getal kan per uur door één lot worden bezet, dus wees er snel bij.',
+          when: 'Tot het einde van het uur',
+        },
+        pot: {
+          title: 'Zie de pot groeien',
+          description:
+            'Elk lot voegt zijn prijs toe aan de pot, die wordt bewaard door het eigen account van de ronde op Solana. Niemand anders kan hem verplaatsen.',
+          when: 'Het hele uur',
+        },
+        win: {
+          title: 'Win op het hele uur',
+          description:
+            'Er wordt een willekeurig getal getrokken, en het lot dat er het dichtst bij ligt, wint 80% van de pot. De huiscommissie gaat van de rest af, en wat overblijft, schuift door naar het volgende uur.',
+          when: 'Direct na afloop van het uur',
+        },
+      },
+      cta: {
+        kicker: 'Elk uur getrokken, op het hele uur',
+        title: 'De pot van dit uur wacht',
+        description: 'Kies een getal dat dit uur nog niemand heeft genomen. Veel geluk!',
+      },
+    },
+    guess: {
+      kicker: 'Raad het getal · geen deadline',
+      title: 'Vind het getal.',
+      titleEnd: 'Vóór iemand anders.',
+      lead: 'Elke ronde speelt alsof ze één getal van 0 tot {max} verstopt, voor iedereen onbekend, ook voor de beheerder. Elke poging is een lot op een getal dat in de ronde nog niemand heeft geprobeerd. Om de paar seconden worden de nieuwe pogingen gecontroleerd: de poging die het getal vindt, wint 80% van de pot, en er begint meteen een nieuwe ronde.',
+      how: {
+        title: 'Vier stappen, geen deadline',
+        description:
+          'Een ronde duurt tot een poging het getal ervan vindt. Dan opent de volgende ronde, met een nieuw getal om te vinden.',
+      },
+      steps: {
+        wallet: {
+          title: 'Koppel een wallet',
+          description:
+            'Solflare, Phantom, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
+          when: 'Altijd',
+        },
+        guess: {
+          title: 'Doe een poging',
+          description:
+            'Elk getal van 0 tot {max} dat in de ronde nog niemand heeft geprobeerd. Elke poging is één lot, en de prijs ervan gaat in de pot.',
+          when: 'Altijd',
+        },
+        check: {
+          title: 'Binnen seconden gecontroleerd',
+          description:
+            'Om de paar seconden worden de nieuwe pogingen verzegeld en gecontroleerd met de hash van een slot dat niemand vooraf kon kennen. Een poging die mist, haalt haar getal uit de ronde.',
+          when: 'Om de paar seconden',
+        },
+        win: {
+          title: 'Vind het als eerste',
+          description:
+            'De poging die het getal vindt, wint 80% van de pot. De huiscommissie gaat van de rest af, wat overblijft schuift door, en er begint meteen een nieuwe ronde.',
+          when: 'Zodra het gevonden is',
+        },
+      },
+      cta: {
+        kicker: 'Om de paar seconden gecontroleerd',
+        title: 'Het getal is nog niet gevonden',
+        description: 'Probeer een getal dat nog niemand heeft geprobeerd. Veel geluk!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
-    bezel: 'Eén trekking per dag · Getrokken na middernacht UTC · Elk lot op Solana',
     draw: 'Trekking',
     pot: 'Pot van vandaag',
+    potHour: 'Pot van dit uur',
     toDraw: 'tot de trekking · {day}',
     tickets: 'vandaag {n} lot | vandaag {n} loten',
-    entropy: 'Entropie · {cluster}',
-    entropyTitle: 'Entropie: {hex}',
-    noTickets: 'nog geen loten',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Nieuw lot',
-    rules: {
-      daily: 'Elke dag om 00:00 UTC een nieuwe ronde',
-      hourly: 'En elk uur één',
-      pot: 'Het dichtstbijzijnde getal wint 80% van de pot',
-      carry: 'De rest schuift door naar de volgende ronde',
-      guess: 'Raad het getal: geen deadline, tot iemand het vindt',
-      numbers: 'Getallen van 0 tot {max}',
-      fee: 'Huiscommissie door het programma begrensd op 20%',
-      anyone: 'Iedereen kan een ronde sluiten, trekken en uitbetalen',
-      check: 'Reken elke trekking na in je browser',
-      open: 'Open source',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Gecontroleerd',
-    title: 'Trekkingsbewijs',
-    round: 'Ronde',
-    noneYet: 'nog geen afgewikkeld',
-    tickets: 'Loten',
-    pot: 'Pot',
-    entropy: 'Entropie',
-    slotHash: 'Slothash · slot {slot}',
-    formula: 'sha256(entropie ‖ slothash ‖ slot ‖ ronde) =',
-    mod: 'eerste 8 bytes als u64 mod {count} = {drawn}',
-    ticketCount: 'getallen',
-    closest: 'dichtstbijzijnde lot: {number}',
-    number: 'Getal',
-    paidTo: 'Betaald aan',
-    payout: 'Uitbetaling',
-    check: 'Controleer deze trekking',
-    roundPage: 'Rondepagina',
-    nextDraw: 'Volgende trekking na 00:00 UTC',
-    ok: 'Nagerekend in je browser: dezelfde hash, getal {number} wint.',
-    mismatch: 'De hash die je browser heeft nagerekend, komt niet overeen met deze ronde.',
+    ticketsHour: 'dit uur {n} lot | dit uur {n} loten',
+    guesses: '{n} poging in deze ronde | {n} pogingen in deze ronde',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -323,7 +367,6 @@ const nl: Dict = {
     winChance: 'Winkans',
     chance: 'Kans',
     todaysPot: 'Pot',
-    checked: 'Gecontroleerd',
     waiting: 'Wachtend',
     numbersLeft: 'Getallen over',
     winners: 'Winnaars',
@@ -339,7 +382,6 @@ const nl: Dict = {
   },
 
   play: {
-    title: 'Spelen',
     description:
       'Kies een getal in de dagelijkse loterij of de uurloterij, of spoor het verborgen getal op, en zie de pot live groeien op Solana.',
     testMoney: 'Je speelt op Solana {cluster}: loten kosten test-SOL zonder echte waarde.',
@@ -357,7 +399,6 @@ const nl: Dict = {
     kicker: 'Kies een',
     title: 'Getal',
     win: 'Win',
-    in: 'over',
     taken: 'Al bezet in deze ronde',
     range: '0 tot {max}, één lot per getal',
     pad: 'Cijferblok',
@@ -461,12 +502,14 @@ const nl: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · sluit over',
     carried: 'Inclusief ◎{carry} doorgeschoven uit de vorige ronde',
     split: '80% naar de winnaar · {fee} huiscommissie · de rest naar de volgende ronde',
     inPlay: 'Getallen in het spel',
     empty: 'Nog geen loten',
     beFirst: 'Kies in deze ronde als eerste een getal.',
+    search: 'Zoek een getal, wallet of land',
+    clearSearch: 'Zoekopdracht wissen',
+    noMatch: 'Niets in het spel komt overeen met ‘{query}’',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */
@@ -475,7 +518,9 @@ const nl: Dict = {
     title: 'Drie manieren om te spelen',
     description:
       'Dezelfde getallen, van 0 tot {max}. De winnaar krijgt 80% van de pot; de huiscommissie gaat van de rest af, en wat overblijft, schuift door naar de volgende ronde.',
-    play: 'Spelen',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Nog twee manieren om te spelen',
+    discover: 'Ontdekken',
     daily: {
       name: 'Dagelijkse loterij',
       short: 'Dagelijks',
@@ -613,6 +658,8 @@ const nl: Dict = {
 
   wallet: {
     connect: 'Wallet koppelen',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Aanbevolen',
     title: 'Koppel een wallet',
     description: 'Elke Solana-wallet die de Wallet Standard ondersteunt, werkt.',
     none: 'In deze browser is geen Solana-wallet gevonden. Installeer er een en laad de pagina daarna opnieuw:',
@@ -922,7 +969,7 @@ const nl: Dict = {
         rpcHost: '{host} op deze site',
         rpcPublic: 'het openbare endpoint van Solana voor {cluster}',
         wallet:
-          '{name}, zoals Phantom, Solflare of Backpack, is software van een eigen maker, met een eigen beleid. De site vraagt hem alleen om te koppelen en de transacties te ondertekenen die jij goedkeurt.',
+          '{name}, zoals Solflare, Phantom of Backpack, is software van een eigen maker, met een eigen beleid. De site vraagt hem alleen om te koppelen en de transacties te ondertekenen die jij goedkeurt.',
         walletName: 'Je wallet',
         links:
           '{name}: Solana Explorer, de Solana-faucet, GitHub en onze sociale accounts zijn andere sites, met hun eigen beleid.',

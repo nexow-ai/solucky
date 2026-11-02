@@ -11,7 +11,7 @@
 import { GAME_SLUGS, type GameSlug } from '@solucky/client';
 
 import { LEGAL_PAGES, LEGAL_UPDATED, OPERATOR } from '../../app/utils/legal';
-import { playPath } from '../../app/utils/play';
+import { homePath, playPath, shareImagePath } from '../../app/utils/play';
 import { DEFAULT_LOCALE, type Locale, type LocaleInfo, LOCALES } from '../../i18n/languages';
 import ar from '../../i18n/locales/ar';
 import de from '../../i18n/locales/de';
@@ -68,9 +68,15 @@ export function localizedPath(code: string, path: string): string {
   return path === '/' ? `/${code}` : `/${code}${path}`;
 }
 
-/** The pages worth indexing, in every language. The daily lottery's own address is `/play`. */
+/**
+ * The pages worth indexing, in every language: each game's own page (the
+ * daily lottery's is the home, `/`) and its table (the daily lottery's is
+ * `/play`), then the legal pages.
+ */
 export const INDEXED_PATHS: readonly { path: string; lastmod?: string }[] = [
   { path: '/' },
+  { path: '/hourly' },
+  { path: '/guess' },
   { path: '/play' },
   { path: '/play/hourly' },
   { path: '/play/guess' },
@@ -137,14 +143,23 @@ export function llmsTxt(facts: SiteFacts, d: Dict = en): string {
   const max = new Intl.NumberFormat('en-US').format(facts.maxNumber);
   const url = (path: string) => `${facts.origin}${path}`;
   const games = GAME_SLUGS.map(
-    (slug: GameSlug) => `- [${d.games[slug].name}](${url(playPath(slug))}): ${d.games[slug].description}`,
+    (slug: GameSlug) =>
+      `- [${d.games[slug].name}](${url(homePath(slug))}): ${d.games[slug].description} [${d.nav.play}](${url(playPath(slug))})`,
   );
-  const steps = (['wallet', 'number', 'pot', 'win'] as const).map((id, i) => {
-    const step = d.home.how.steps[id];
-    return `${i + 1}. **${step.title}** (${step.when}): ${fill(step.description, { max })}`;
+  // Each game's four steps, in the dictionary's order.
+  const how = GAME_SLUGS.map((slug: GameSlug) => {
+    const steps = Object.values(d.landing[slug].steps).map(
+      (step, i) => `${i + 1}. **${step.title}** (${step.when}): ${fill(step.description, { max })}`,
+    );
+    return `### ${d.games[slug].name}\n\n${d.landing[slug].how.description}\n\n${steps.join('\n')}`;
   });
-  const rules = (['locked', 'draw', 'anyone', 'browser', 'limits', 'open'] as const).map(
-    (id) => `- **${d.home.fairness.rules[id].title}**: ${d.home.fairness.rules[id].description}`,
+  // Guess the number's check stands in for the lotteries' draw.
+  const rules = (['locked', 'draw', 'guessDraw', 'anyone', 'browser', 'guessBrowser', 'limits', 'open'] as const).map(
+    (id) => {
+      const rule = d.home.fairness.rules[id];
+      const game = id === 'guessDraw' || id === 'guessBrowser' ? ` (${d.games.guess.name})` : '';
+      return `- **${rule.title}**${game}: ${rule.description}`;
+    },
   );
   const faq = (['what', 'real', 'price', 'odds', 'guess', 'draw', 'country', 'validator'] as const).map(
     (id) => `### ${d.home.faq.items[id].q}\n\n${fill(d.home.faq.items[id].a, { max })}`,
@@ -168,9 +183,7 @@ ${games.join('\n')}
 
 ## How it works
 
-${d.home.how.description}
-
-${steps.join('\n')}
+${how.join('\n\n')}
 
 ## Fairness
 
@@ -230,7 +243,7 @@ export function shellHead(
     `<meta data-shell property="og:title" content="${attr(title)}">`,
     `<meta data-shell property="og:description" content="${attr(description)}">`,
     `<meta data-shell property="og:url" content="${attr(canonical)}">`,
-    `<meta data-shell property="og:image" content="${attr(`${origin}/og.png`)}">`,
+    `<meta data-shell property="og:image" content="${attr(`${origin}${shareImagePath(page.slug)}`)}">`,
     `<meta data-shell property="og:image:width" content="1200">`,
     `<meta data-shell property="og:image:height" content="630">`,
     `<meta data-shell property="og:image:alt" content="${attr(d.meta.ogImageAlt)}">`,
@@ -245,7 +258,8 @@ export function shellHead(
     }
     tags.push(`<link data-shell rel="alternate" hreflang="x-default" href="${attr(`${origin}${route}`)}">`);
   }
-  const home = `${origin}${localizedPath(page.locale.code, '/')}`;
-  const noscript = `<noscript><h1>${xml(title)}</h1><p>${xml(description)}</p><p><a href="${attr(home)}">${xml(d.meta.title)}</a></p></noscript>`;
+  // The game's own page renders on the server, so it reads without scripts.
+  const home = `${origin}${localizedPath(page.locale.code, homePath(page.slug))}`;
+  const noscript = `<noscript><h1>${xml(title)}</h1><p>${xml(description)}</p><p><a href="${attr(home)}">${xml(fill(d.landing.title, { game: game.name }))}</a></p></noscript>`;
   return { title, head: tags.join(''), noscript };
 }

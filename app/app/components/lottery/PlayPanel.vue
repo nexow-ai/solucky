@@ -341,9 +341,7 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
           <div class="odds" :class="{ off: !preview }">
             <div class="flex items-baseline justify-between gap-3">
               <span class="kicker text-[0.65rem]">{{ t('pick.share', { number: formatNumber(number) }) }}</span>
-              <span class="odds-value font-mono text-2xl tabular-nums">
-                {{ preview ? formatPercent(shareShown, intl) : '—' }}
-              </span>
+              <LotteryPercent :ratio="preview ? shareShown : null" class="odds-value font-mono text-2xl tabular-nums" />
             </div>
             <div
               class="gauge mt-3"

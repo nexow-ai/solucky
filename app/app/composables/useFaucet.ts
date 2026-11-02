@@ -3,6 +3,9 @@ import { lamports } from '@solana/kit';
 /** What the local validator airdrops: enough for a handful of tickets. */
 const LOCAL_AIRDROP_LAMPORTS = 1_000_000_000n;
 
+/** Under ◎0.1 a wallet runs low, and the header offers the faucet. */
+const LOW_BALANCE_LAMPORTS = 100_000_000n;
+
 const airdropping = ref(false);
 
 /**
@@ -20,6 +23,8 @@ export function useFaucet() {
   const available = computed(() => !isMainnet && !!address.value);
   /** The faucet page for this wallet; null on localnet, which airdrops instead. */
   const url = computed(() => (available.value ? faucetUrl(cluster, address.value) : null));
+  /** The connected wallet holds less than ◎0.1; false while its balance is unknown. */
+  const low = computed(() => available.value && balance.value !== null && balance.value < LOW_BALANCE_LAMPORTS);
 
   /** Wait until the wallet balance rises after a local airdrop. */
   async function waitForAirdrop(before: bigint | null) {
@@ -72,5 +77,5 @@ export function useFaucet() {
     }
   }
 
-  return { available, url, busy: readonly(airdropping), request };
+  return { available, low, url, busy: readonly(airdropping), request };
 }

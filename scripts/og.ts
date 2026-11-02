@@ -1,16 +1,19 @@
 /**
- * The image that shared links show (app/public/og.png, 1200×630): the
- * landing's hero, laid out as a card and taken from a running site. Retake it
- * when the hero changes.
+ * The images that shared links show (1200×630), one per game: each game's
+ * own page's hero, laid out as a card and taken from a running site. The
+ * daily lottery's is the site's own card, app/public/og.png; the others are
+ * og-hourly.png and og-guess.png (`shareImagePath`). Retake them when a hero
+ * changes.
  *
  *   bun run og                       the app on http://127.0.0.1:3000
  *   bun run og https://solucky.me    the live site
  *
- * The card keeps what lasts: the headline, the games, and the dial with its
- * draw time, not today's pot or countdown, which would be stale wherever the
- * card is shared. It finds the hero by its `data-hero*` marks in
- * app/app/pages/index.vue and the dial's core by its `data-dial-*` marks in
- * components/landing/HeroDialLive.vue; keep them when changing those.
+ * A card keeps what lasts: the headline, the games, and the dial with its
+ * draw time (or, for Guess the number, its open hunt), not the pot or the
+ * countdown, which would be stale wherever the card is shared. It finds the
+ * hero by its `data-hero*` marks in app/app/pages/[[game]].vue and the dial's
+ * core by its `data-dial-*` marks in components/landing/HeroDialLive.vue;
+ * keep them when changing those.
  *
  * Uses Playwright's Chromium (`bunx playwright install chromium`), or the
  * browser at CHROME_PATH.
@@ -18,48 +21,67 @@
 import { chromium } from '@playwright/test';
 import sharp from 'sharp';
 
+import { GAME_SLUGS, type GameSlug } from '@solucky/client';
+
+import { homePath, shareImagePath } from '../app/app/utils/play';
 import en from '../app/i18n/locales/en';
 
 const site = (process.argv[2] ?? 'http://127.0.0.1:3000').replace(/\/$/, '');
-const file = new URL('../app/public/og.png', import.meta.url).pathname;
 
-const words = {
-  // The live site's address, whichever site the card is taken from.
-  address: 'solucky.me',
-  games: [en.games.daily.name, en.games.hourly.name, en.games.guess.name].join(' · '),
-  draw: en.dial.draw,
-  beta: en.header.beta,
+/** What a card's dial core says instead of the live pot and clock: the draw's time, or Guess's open hunt. */
+const CORES: Record<GameSlug, { label: string; big: string; small: string | null }> = {
+  daily: { label: en.dial.draw, big: '00:00', small: 'UTC' },
+  hourly: { label: en.dial.draw, big: ':00', small: 'UTC' },
+  guess: { label: en.guess.noDeadline, big: '?', small: null },
 };
 
 const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH });
-const page = await browser.newPage({
-  viewport: { width: 1200, height: 630 },
-  colorScheme: 'dark',
-  locale: 'en-US',
-  // The entrances would still be running when the card is taken.
-  reducedMotion: 'reduce',
-});
-await page.addInitScript(() => {
-  try {
-    localStorage.setItem('nuxt-color-mode', 'dark');
-  } catch {
-    // about:blank has no storage.
-  }
-});
-await page.goto(site);
-// Today's pot (and the tickets with it) loads after the page.
-await page.waitForSelector('[data-hero-dial] [data-dial-pot]', { timeout: 60_000 });
-await page.evaluate(layOut, words);
-await page.waitForTimeout(1_000);
-const shot = await page.screenshot();
+for (const slug of GAME_SLUGS) {
+  const words = {
+    // The live site's address, whichever site the card is taken from.
+    address: 'solucky.me',
+    games: [en.games.daily.name, en.games.hourly.name, en.games.guess.name].join(' · '),
+    beta: en.header.beta,
+    ...CORES[slug],
+  };
+  const file = new URL(`../app/public${shareImagePath(slug)}`, import.meta.url).pathname;
+  await card(`${site}${homePath(slug)}`, words, file);
+  console.log(`app/public${shareImagePath(slug)}`);
+}
 await browser.close();
 
-// A 256-colour palette keeps the file small; the card has few colours.
-await sharp(shot).png({ palette: true, colours: 256, dither: 1, effort: 10 }).toFile(file);
-console.log('app/public/og.png');
+type Words = { address: string; games: string; beta: string; label: string; big: string; small: string | null };
+
+/** Takes one game's card from its page. */
+async function card(url: string, words: Words, file: string) {
+  const page = await browser.newPage({
+    viewport: { width: 1200, height: 630 },
+    colorScheme: 'dark',
+    locale: 'en-US',
+    // The entrances would still be running when the card is taken.
+    reducedMotion: 'reduce',
+  });
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('nuxt-color-mode', 'dark');
+    } catch {
+      // about:blank has no storage.
+    }
+  });
+  await page.goto(url);
+  // The pot (and the tickets with it) loads after the page.
+  await page.waitForSelector('[data-hero-dial] [data-dial-pot]', { timeout: 60_000 });
+  await page.evaluate(layOut, words);
+  await page.waitForTimeout(1_000);
+  const shot = await page.screenshot();
+  await page.close();
+
+  // A 256-colour palette keeps the file small; the card has few colours.
+  await sharp(shot).png({ palette: true, colours: 256, dither: 1, effort: 10 }).toFile(file);
+}
 
 /** Runs in the page: lays the hero out as the card. */
-function layOut(words: { address: string; games: string; draw: string; beta: string }) {
+function layOut(words: Words) {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   const text = hero?.querySelector<HTMLElement>('[data-hero-text]');
   const dial = hero?.querySelector<HTMLElement>('[data-hero-dial]');
@@ -83,10 +105,11 @@ function layOut(words: { address: string; games: string; draw: string; beta: str
   address.textContent = words.address;
   text.append(games, address);
 
-  // The dial's core: the draw's time instead of today's pot and countdown.
-  label.textContent = words.draw;
-  pot.textContent = '00:00';
-  day.textContent = 'UTC';
+  // The dial's core: what lasts (the draw's time, or Guess's open hunt) instead of the pot and the clock.
+  label.textContent = words.label;
+  pot.textContent = words.big;
+  if (words.small) day.textContent = words.small;
+  else day.remove();
   usd.remove();
   countdown.remove();
 

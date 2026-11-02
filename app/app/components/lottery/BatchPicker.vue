@@ -286,9 +286,10 @@ async function buy() {
       <div class="space-y-1 rounded-[1.25rem] px-4 py-3 shadow-(--neu-in-sm)">
         <p class="flex items-baseline justify-between gap-3">
           <span class="kicker text-[0.65rem]">{{ isLottery ? t('batch.share') : t('batch.chance') }}</span>
-          <span class="odds-value font-mono text-xl tabular-nums">
-            {{ chance === null ? '—' : formatPercent(chanceShown, intl) }}
-          </span>
+          <LotteryPercent
+            :ratio="chance === null ? null : chanceShown"
+            class="odds-value font-mono text-xl tabular-nums"
+          />
         </p>
         <p class="text-xs text-pretty text-muted">
           {{ isLottery ? t('batch.shareHint') : t('guess.perGuess', { n: formatNumber(numbersLeft) }) }}

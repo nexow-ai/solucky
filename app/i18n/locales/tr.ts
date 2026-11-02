@@ -11,15 +11,20 @@ const tr: Dict = {
 
   nav: {
     play: 'Oyna',
-    how: 'Nasıl çalışır',
-    fairness: 'Adillik',
-    faq: 'SSS',
     skip: 'İçeriğe geç',
   },
 
   lang: {
     label: 'Dil',
-    choose: 'Dil: {name}',
+  },
+
+  settings: {
+    label: 'Ayarlar',
+    theme: 'Tema',
+    light: 'Açık',
+    dark: 'Koyu',
+    sound: 'Ses',
+    back: 'Geri',
   },
 
   update: {
@@ -59,7 +64,7 @@ const tr: Dict = {
     mainHere: 'Solana Mainnet: biletler gerçek SOL ile alınır',
     goTest: 'Ücretsiz test SOL ile oynayın',
     goMain: 'Solana Mainnet’te gerçek SOL ile oynayın',
-    notYet: 'S☉Lucky henüz {network} üzerinde değil',
+    soon: 'Yakında',
   },
 
   faucet: {
@@ -80,54 +85,15 @@ const tr: Dict = {
     source: 'Kaynak kod',
     builtOn: '{solana} üzerinde geliştirildi',
     madeBy: '{nexow} tarafından yapıldı',
-    mute: 'Sesleri kapatın',
-    unmute: 'Sesleri açın',
   },
 
   home: {
-    kicker: 'Solana’da piyango oyunları',
-    title: 'Bir sayı seçin.',
-    titleEnd: 'Gece yarısı kazanın.',
     lead: 'Her gün bir çekiliş, her saat bir çekiliş ve bulunmayı bekleyen gizli bir sayı. Kazanan, havuzun %80’ini alır; kalanı bir sonraki tura aktarılır. Her bilet, her lamport ve her çekiliş Solana’da yer alır; orada herkes kontrol edebilir.',
     playNow: 'Hemen oynayın',
     howItWorks: 'Nasıl çalışır',
-    dialCaption:
-      'Her nokta bugünkü biletlerden biridir: kadranın çevresindeki yeri satın alındığı saati, merkezden uzaklığı numarasını gösterir.',
 
     how: {
       tag: 'Nasıl çalışır',
-      title: 'Dört adım, günde bir çekiliş',
-      description:
-        'Turlar UTC takvimini izler: yeni tur 00:00 UTC’de açılır ve bir sonraki gece yarısının hemen ardından çekilir.',
-      opens: 'Tur açılır',
-      draw: 'Çekiliş',
-      now: 'Şimdi',
-      steps: {
-        wallet: {
-          title: 'Bir cüzdan bağlayın',
-          description:
-            'Phantom, Solflare, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
-          when: 'Her zaman',
-        },
-        number: {
-          title: 'Sayınızı seçin',
-          description:
-            '0 ile {max} arasında herhangi bir sayı. Her sayı günde yalnızca bir bilete ait olabilir; bu yüzden çabuk olun.',
-          when: 'UTC gece yarısına kadar',
-        },
-        pot: {
-          title: 'Havuzun büyümesini izleyin',
-          description:
-            'Her bilet, fiyatını havuza ekler; havuz, turun Solana’daki kendi hesabında tutulur. Onu başka hiç kimse hareket ettiremez.',
-          when: 'Gün boyu',
-        },
-        win: {
-          title: 'UTC gece yarısı kazanın',
-          description:
-            'Rastgele bir sayı çekilir ve ona en yakın bilet havuzun %80’ini kazanır. Kasa payı kalandan düşülür; geriye kalan da ertesi güne aktarılır.',
-          when: 'UTC gece yarısından hemen sonra',
-        },
-      },
     },
 
     fairness: {
@@ -159,6 +125,16 @@ const tr: Dict = {
           title: 'Kasaya kesin sınırlar',
           description:
             'Program kazanana her zaman havuzun %80’ini öder ve kasa payını %20 ile sınırlar. Fiyat ve pay değişiklikleri yalnızca sonradan açılan turlarda geçerli olur ve bir alıcı, kendisine gösterilen fiyattan asla fazlasını ödemez.',
+        },
+        guessDraw: {
+          title: 'Kimsenin tahmin edemeyeceği bir kontrol',
+          description:
+            'Her tahmin, turun entropisine karıştırılır. Yeni tahminlerin mühürlenmesi, birkaç saniye sonrasındaki bir slotu sabitler; o ana kadar kimsenin bilmediği bu slotun hash’i, tahminlerden birinin sayıyı bulup bulmadığına karar verir.',
+        },
+        guessBrowser: {
+          title: 'Tarayıcınızda kontrol edilebilir',
+          description:
+            'Her tur sayfası, turu bitiren kontrolü herkese açık verilerden yeniden hesaplar: entropi, slot hash’i ve sayıyı bulan tahmin. Aynı girdiler, aynı kazanan.',
         },
         open: {
           title: 'Açık kaynak',
@@ -209,26 +185,8 @@ const tr: Dict = {
     },
 
     live: {
-      title: 'Şu anki havuzlar',
       drawIn: 'Çekilişe kalan',
       noDeadline: 'Süre sınırı yok',
-    },
-
-    practice: {
-      notice: 'Deneme: tarayıcınızda çalışır, Solana’ya hiçbir şey gönderilmez',
-      title: 'Deneyin: en yakın sayı kazanır',
-      lead: 'İşaretler bugünün gerçek biletleri. Sizinkini yerleştirin: ona diğer biletlerden daha yakın olan her sayı sizindir ve çekiliş 0 ile {max} arasında bir sayı seçer.',
-      drawn: 'Çekilen sayı',
-      yourNumber: 'Sayınız',
-      best: 'En iyi boş yer',
-      draw: 'Deneme çekilişi',
-      share: 'Çekilişteki payınız',
-      today: 'Bugünkü biletler',
-      record: 'Deneme kazançları',
-      won: '{drawn} çekildi: en yakın sayı sizinki. Kazandınız!',
-      lost: '{drawn} çekildi: {number} daha yakın, yani o bilet kazanır.',
-      taken: 'Bu sayı bugün zaten başkasında. Gerçek oyunda başka bir sayı seçin.',
-      alone: 'Bugün henüz bilet yok: tek başına sayınız her çekilişi kazanırdı.',
     },
 
     split: {
@@ -237,79 +195,163 @@ const tr: Dict = {
       winner: 'Kazanan',
       fee: 'Kasa payı',
       carry: 'Sonraki tur',
-      feeNote:
-        'Günlük piyangonun zincir üstünde belirlenen kasa payı: {fee}. Program bunu en fazla {cap} ile sınırlar.',
-      example: 'Bugünkü {pot} havuz için tutarlar.',
     },
 
     winners: {
       tag: 'Kazananlar',
       title: 'Her kazanan zincir üstünde',
       description:
-        'Üç oyunun en son sonuçlanan turları, doğrudan programın hesaplarından okunur. Her biri kendi turuna bağlanır; çekiliş orada yeniden hesaplanabilir.',
+        'Bu oyunun en son sonuçlanan turları, doğrudan programın hesaplarından okunur. Her biri kendi tur sayfasına bağlanır; sonuç orada yeniden hesaplanabilir.',
       paid: 'Kazananlara ödenen',
       rounds: 'Sonuçlanan turlar',
       empty: 'Henüz sonuçlanan tur yok.',
       drawn: 'Çekilen: {number}',
       found: 'Sayı bulundu',
     },
-    cta: {
-      title: 'Bugünkü havuz sizi bekliyor',
-      description: 'Henüz kimsenin almadığı bir sayı seçin. Bol şans!',
+  },
+
+  /**
+   * Each game's own page: the daily lottery's at the root (/), the others at
+   * /hourly and /guess. The header's game tabs switch between them.
+   */
+  landing: {
+    title: 'Solana’da {game}',
+    daily: {
+      kicker: 'Günlük piyango · günde bir çekiliş',
+      title: 'Bir sayı seçin.',
+      titleEnd: 'Gece yarısı kazanın.',
+      lead: 'Günde bir tur, UTC saatiyle 00:00’dan 24:00’e kadar. 0 ile {max} arasında herhangi bir sayı seçin: gece yarısının hemen ardından rastgele bir sayı çekilir ve ona en yakın bilet havuzun %80’ini kazanır. Kasa payı kalandan düşülür; geriye kalan da ertesi güne aktarılır.',
+      how: {
+        title: 'Dört adım, günde bir çekiliş',
+        description:
+          'Turlar UTC takvimini izler: yeni tur 00:00 UTC’de açılır ve bir sonraki gece yarısının hemen ardından çekilir.',
+      },
+      steps: {
+        wallet: {
+          title: 'Bir cüzdan bağlayın',
+          description:
+            'Solflare, Phantom, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
+          when: 'Her zaman',
+        },
+        number: {
+          title: 'Sayınızı seçin',
+          description:
+            '0 ile {max} arasında herhangi bir sayı. Her sayı günde yalnızca bir bilete ait olabilir; bu yüzden çabuk olun.',
+          when: 'UTC gece yarısına kadar',
+        },
+        pot: {
+          title: 'Havuzun büyümesini izleyin',
+          description:
+            'Her bilet, fiyatını havuza ekler; havuz, turun Solana’daki kendi hesabında tutulur. Onu başka hiç kimse hareket ettiremez.',
+          when: 'Gün boyu',
+        },
+        win: {
+          title: 'UTC gece yarısı kazanın',
+          description:
+            'Rastgele bir sayı çekilir ve ona en yakın bilet havuzun %80’ini kazanır. Kasa payı kalandan düşülür; geriye kalan da ertesi güne aktarılır.',
+          when: 'UTC gece yarısından hemen sonra',
+        },
+      },
+      cta: {
+        kicker: 'Her gün UTC gece yarısından sonra çekilir',
+        title: 'Bugünkü havuz sizi bekliyor',
+        description: 'Henüz kimsenin almadığı bir sayı seçin. Bol şans!',
+      },
+    },
+    hourly: {
+      kicker: 'Saatlik piyango · günde 24 çekiliş',
+      title: 'Bir sayı seçin.',
+      titleEnd: 'Saat başı kazanın.',
+      lead: 'Her saat başı yeni bir tur (UTC). 0 ile {max} arasında herhangi bir sayı seçin: saat biter bitmez rastgele bir sayı çekilir ve ona en yakın bilet havuzun %80’ini kazanır. Kasa payı kalandan düşülür; geriye kalan da bir sonraki saate aktarılır.',
+      how: {
+        title: 'Dört adım, saatte bir çekiliş',
+        description: 'Turlar UTC saatini izler: her saatin başında yeni bir tur açılır ve saat biter bitmez çekilir.',
+      },
+      steps: {
+        wallet: {
+          title: 'Bir cüzdan bağlayın',
+          description:
+            'Solflare, Phantom, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
+          when: 'Her zaman',
+        },
+        number: {
+          title: 'Sayınızı seçin',
+          description:
+            '0 ile {max} arasında herhangi bir sayı. Her sayı saatte yalnızca bir bilete ait olabilir; bu yüzden çabuk olun.',
+          when: 'Saat bitene kadar',
+        },
+        pot: {
+          title: 'Havuzun büyümesini izleyin',
+          description:
+            'Her bilet, fiyatını havuza ekler; havuz, turun Solana’daki kendi hesabında tutulur. Onu başka hiç kimse hareket ettiremez.',
+          when: 'Saat boyunca',
+        },
+        win: {
+          title: 'Saat başı kazanın',
+          description:
+            'Rastgele bir sayı çekilir ve ona en yakın bilet havuzun %80’ini kazanır. Kasa payı kalandan düşülür; geriye kalan da bir sonraki saate aktarılır.',
+          when: 'Saat biter bitmez',
+        },
+      },
+      cta: {
+        kicker: 'Her saat başı çekilir',
+        title: 'Bu saatin havuzu sizi bekliyor',
+        description: 'Bu saat henüz kimsenin almadığı bir sayı seçin. Bol şans!',
+      },
+    },
+    guess: {
+      kicker: 'Sayıyı Tahmin Et · süre sınırı yok',
+      title: 'Sayıyı bulun.',
+      titleEnd: 'Herkesten önce.',
+      lead: 'Her tur, operatör dahil kimsenin bilmediği, 0 ile {max} arasında tek bir sayı saklıyormuş gibi oynanır. Her tahmin, o turda henüz kimsenin denemediği bir sayıya alınmış bir bilettir. Birkaç saniyede bir yeni tahminler kontrol edilir: sayıyı bulan tahmin havuzun %80’ini kazanır ve hemen yeni bir tur başlar.',
+      how: {
+        title: 'Dört adım, süre sınırı yok',
+        description:
+          'Bir tur, tahminlerden biri turun sayısını bulana kadar sürer. Ardından bulunacak yeni bir sayıyla bir sonraki tur açılır.',
+      },
+      steps: {
+        wallet: {
+          title: 'Bir cüzdan bağlayın',
+          description:
+            'Solflare, Phantom, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
+          when: 'Her zaman',
+        },
+        guess: {
+          title: 'Bir tahmin yapın',
+          description:
+            '0 ile {max} arasında, o turda henüz kimsenin denemediği herhangi bir sayı. Her tahmin bir bilettir ve fiyatı havuza eklenir.',
+          when: 'Her zaman',
+        },
+        check: {
+          title: 'Saniyeler içinde kontrol edilir',
+          description:
+            'Birkaç saniyede bir yeni tahminler mühürlenir ve kimsenin önceden bilemeyeceği bir slotun hash’iyle kontrol edilir. Tutmayan bir tahmin, sayısını turdan çıkarır.',
+          when: 'Birkaç saniyede bir',
+        },
+        win: {
+          title: 'İlk siz bulun',
+          description:
+            'Sayıyı bulan tahmin havuzun %80’ini kazanır. Kasa payı kalandan düşülür, geriye kalan aktarılır ve hemen yeni bir tur başlar.',
+          when: 'Bulunduğu anda',
+        },
+      },
+      cta: {
+        kicker: 'Birkaç saniyede bir kontrol edilir',
+        title: 'Sayı hâlâ bulunmayı bekliyor',
+        description: 'Henüz kimsenin denemediği bir sayı deneyin. Bol şans!',
+      },
     },
   },
 
-  /** The solar dial on the landing page. */
+  /** The dial on each game's page. */
   dial: {
-    bezel: 'Günde bir çekiliş · UTC gece yarısından sonra çekilir · Her bilet Solana’da',
     draw: 'Çekiliş',
     pot: 'Bugünkü havuz',
+    potHour: 'Bu saatin havuzu',
     toDraw: 'çekilişe kalan · {day}',
     tickets: 'bugün {n} bilet | bugün {n} bilet',
-    entropy: 'Entropi · {cluster}',
-    entropyTitle: 'Entropi: {hex}',
-    noTickets: 'henüz bilet yok',
-  },
-
-  /** The band of news under the landing's hero. */
-  ticker: {
-    newTicket: 'Yeni bilet',
-    rules: {
-      daily: 'Her gün 00:00 UTC’de yeni tur',
-      hourly: 'Ve her saat bir tane',
-      pot: 'En yakın sayı havuzun %80’ini kazanır',
-      carry: 'Kalanı bir sonraki tura aktarılır',
-      guess: 'Sayıyı Tahmin Et: süre sınırı yok, biri bulana kadar',
-      numbers: '0 ile {max} arası sayılar',
-      fee: 'Kasa payı program tarafından %20 ile sınırlı',
-      anyone: 'Herkes bir turu kapatabilir, çekilişini yapabilir ve ödeyebilir',
-      check: 'Her çekilişi tarayıcınızda yeniden hesaplayın',
-      open: 'Açık kaynak',
-    },
-  },
-
-  /** The last draw, printed like a receipt, in the Fairness section. */
-  receipt: {
-    stamp: 'Doğrulandı',
-    title: 'Çekiliş makbuzu',
-    round: 'Tur',
-    noneYet: 'henüz sonuçlanan tur yok',
-    tickets: 'Biletler',
-    pot: 'Havuz',
-    entropy: 'Entropi',
-    slotHash: 'Slot hash’i · slot {slot}',
-    formula: 'sha256(entropi ‖ slot hash’i ‖ slot ‖ tur) =',
-    mod: 'ilk 8 bayt u64 olarak mod {count} = {drawn}',
-    ticketCount: 'sayı',
-    closest: 'en yakın bilet: {number}',
-    number: 'Sayı',
-    paidTo: 'Alıcı',
-    payout: 'Ödeme',
-    check: 'Bu çekilişi kontrol edin',
-    roundPage: 'Tur sayfası',
-    nextDraw: 'Sonraki çekiliş 00:00 UTC’den sonra',
-    ok: 'Tarayıcınızda yeniden hesaplandı: aynı hash, {number} sayısı kazanır.',
-    mismatch: 'Tarayıcınızda yeniden hesaplanan hash bu turla eşleşmiyor.',
+    ticketsHour: 'bu saat {n} bilet | bu saat {n} bilet',
+    guesses: 'bu turda {n} tahmin | bu turda {n} tahmin',
   },
 
   /** Short labels over the numbers in the panels. */
@@ -322,7 +364,6 @@ const tr: Dict = {
     winChance: 'Kazanma şansı',
     chance: 'Şans',
     todaysPot: 'Havuz',
-    checked: 'Kontrol edilen',
     waiting: 'Bekleyen',
     numbersLeft: 'Kalan sayılar',
     winners: 'Kazananlar',
@@ -338,7 +379,6 @@ const tr: Dict = {
   },
 
   play: {
-    title: 'Oyna',
     description:
       'Günlük ya da saatlik piyangoda bir sayı seçin veya gizli sayının peşine düşün ve havuzun Solana’da canlı olarak büyümesini izleyin.',
     testMoney: 'Solana {cluster} üzerinde oynuyorsunuz: biletlerin bedeli, gerçek değeri olmayan test SOL ile ödenir.',
@@ -356,7 +396,6 @@ const tr: Dict = {
     kicker: 'Bir sayı',
     title: 'Seçin',
     win: 'Kazanın',
-    in: 'kalan',
     taken: 'Bu turda zaten alınmış',
     range: '0 ile {max} arası, her sayı için bir bilet',
     pad: 'Sayı tuş takımı',
@@ -459,12 +498,14 @@ const tr: Dict = {
   /** The left panel of the play page: today's pot and tickets. */
   pot: {
     title: 'SOLPOT',
-    closesIn: '{day} · kapanışa kalan',
     carried: 'Önceki turdan aktarılan ◎{carry} dahil',
     split: 'Kazanana %80 · {fee} kasa payı · kalanı bir sonraki tura',
     inPlay: 'Oyundaki sayılar',
     empty: 'Henüz bilet yok',
     beFirst: 'Bu turda bir sayı seçen ilk kişi siz olun.',
+    search: 'Sayı, cüzdan veya ülke arayın',
+    clearSearch: 'Aramayı temizle',
+    noMatch: 'Oyunda “{query}” ile eşleşen bir şey yok',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */
@@ -473,7 +514,9 @@ const tr: Dict = {
     title: 'Oynamanın üç yolu',
     description:
       'Aynı sayılar, 0 ile {max} arası. Kazanan, havuzun %80’ini alır; kasa payı kalandan düşülür, geriye kalan da bir sonraki tura aktarılır.',
-    play: 'Oyna',
+    /** On a game's page, over the cards of the two others. */
+    others: 'Oynamanın iki yolu daha',
+    discover: 'Keşfedin',
     daily: {
       name: 'Günlük piyango',
       short: 'Günlük',
@@ -609,6 +652,8 @@ const tr: Dict = {
 
   wallet: {
     connect: 'Cüzdan bağlayın',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Önerilen',
     title: 'Bir cüzdan bağlayın',
     description: 'Wallet Standard destekli her Solana cüzdanı çalışır.',
     none: 'Bu tarayıcıda Solana cüzdanı bulunamadı. Bir tane kurun, ardından sayfayı yenileyin:',
@@ -918,7 +963,7 @@ const tr: Dict = {
         rpcHost: 'bu sitedeki {host}',
         rpcPublic: 'Solana’nın {cluster} için herkese açık uç noktası',
         wallet:
-          '{name} (Phantom, Solflare ya da Backpack gibi): kendi üreticisinin yazılımıdır ve kendi politikasına tabidir. Site ondan yalnızca bağlanmasını ve onayladığınız işlemleri imzalamasını ister.',
+          '{name} (Solflare, Phantom ya da Backpack gibi): kendi üreticisinin yazılımıdır ve kendi politikasına tabidir. Site ondan yalnızca bağlanmasını ve onayladığınız işlemleri imzalamasını ister.',
         walletName: 'Cüzdanınız',
         links:
           '{name}: Solana Explorer, Solana faucet sitesi, GitHub ve sosyal medya hesaplarımız, kendi politikaları olan başka sitelerdir.',
