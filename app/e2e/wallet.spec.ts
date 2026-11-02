@@ -65,7 +65,7 @@ test('MetaMask-like: a wallet without a Solana account says so', async ({ page }
   await page.goto('/play');
   await chooseWallet(page, 'MetaMask');
 
-  await expect(page.getByText('Could not connect MetaMask')).toBeVisible();
+  await expect(toasts(page).getByText('Could not connect MetaMask')).toBeVisible();
   await expect(
     toasts(page).getByText(
       'MetaMask did not share a Solana account. Add or select a Solana account in MetaMask, then connect again.',
@@ -101,7 +101,7 @@ test('a purchase the wallet never answers can be cancelled', async ({ page }) =>
 
   const number = pick();
   const buy = await startBuying(page, number);
-  await expect(page.getByText('Confirm in your wallet…')).toBeVisible();
+  await expect(toasts(page).getByText('Confirm in your wallet…')).toBeVisible();
   await page.getByRole('button', { name: 'Cancel' }).click();
 
   await expect(page.getByText(`Buying number ${spaced(number)}: cancelled`)).toBeVisible();
@@ -142,7 +142,7 @@ test('Enter on the toast’s Cancel cancels instead of buying a second ticket', 
 
   const number = pick();
   const buy = await startBuying(page, number);
-  await expect(page.getByText('Confirm in your wallet…')).toBeVisible();
+  await expect(toasts(page).getByText('Confirm in your wallet…')).toBeVisible();
   await page.getByRole('button', { name: 'Cancel' }).focus();
   await page.keyboard.press('Enter');
 
