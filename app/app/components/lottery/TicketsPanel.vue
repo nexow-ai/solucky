@@ -54,7 +54,7 @@ const stubs = computed(() => {
 
 <template>
   <LotterySurface>
-    <div class="flex h-full flex-col gap-7 p-6 sm:p-7">
+    <div class="flex h-full flex-col gap-7 p-5 sm:p-7">
       <section>
         <header class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
           <h2 class="kicker flex items-center gap-2">
@@ -165,26 +165,26 @@ const stubs = computed(() => {
               <li
                 v-for="ticket in shown"
                 :key="ticket.address"
-                class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
+                class="row grid grid-cols-[auto_minmax(0,1fr)_1.25rem_auto] items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums sm:gap-3"
                 :class="ticket.data.owner === address ? 'mine text-primary' : 'text-toned'"
               >
-                <span class="col-span-3 font-mono text-muted">{{ formatUtcTime(ticket.data.createdAt) }}</span>
+                <span class="font-mono text-muted">{{ formatUtcTime(ticket.data.createdAt) }}</span>
                 <ULink
                   :to="explorer('address', ticket.data.owner)"
                   target="_blank"
-                  class="col-span-4 font-mono hover:text-primary"
+                  class="truncate font-mono hover:text-primary"
                   :title="ticket.data.owner"
                   dir="ltr"
                 >
                   {{ shortAddress(ticket.data.owner, 5) }}
                 </ULink>
                 <span
-                  class="col-span-1 text-center"
+                  class="text-center"
                   :title="countryName(countryFromBytes(ticket.data.country), intl, t('country.private'))"
                 >
                   {{ flagEmoji(countryFromBytes(ticket.data.country)) }}
                 </span>
-                <span class="col-span-4 text-end font-mono text-highlighted">{{
+                <span class="text-end font-mono whitespace-nowrap text-highlighted">{{
                   formatNumber(ticket.data.number)
                 }}</span>
               </li>
@@ -315,8 +315,10 @@ const stubs = computed(() => {
   transition: background 0.3s;
 }
 
-.row:hover {
-  background: color-mix(in oklab, var(--ui-text-muted) 7%, transparent);
+@media (hover: hover) {
+  .row:hover {
+    background: color-mix(in oklab, var(--ui-text-muted) 7%, transparent);
+  }
 }
 
 .row.mine {

@@ -331,9 +331,13 @@ const facts = computed(() => {
 
         <i18n-t keypath="round.account" tag="p" scope="global" class="text-center text-xs text-muted">
           <template #address>
-            <ULink :to="explorer('address', round.address)" target="_blank" class="font-mono hover:text-primary">{{
-              round.address
-            }}</ULink>
+            <ULink
+              :to="explorer('address', round.address)"
+              target="_blank"
+              dir="ltr"
+              class="font-mono wrap-anywhere hover:text-primary"
+              >{{ round.address }}</ULink
+            >
           </template>
           <template #day>
             <span dir="ltr">{{ title }}</span>

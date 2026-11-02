@@ -41,7 +41,7 @@ const games = computed(() =>
         <NuxtLink
           :to="g.to"
           :aria-current="g.here"
-          class="tab relative flex items-center justify-center gap-2 rounded-full py-1 ps-2 pe-3 sm:gap-2.5 sm:ps-2.5 sm:pe-4"
+          class="tab relative flex items-center justify-center gap-1.5 rounded-full py-1 ps-1.5 pe-2 min-[22.5rem]:gap-2 min-[22.5rem]:ps-2 min-[22.5rem]:pe-3 sm:gap-2.5 sm:ps-2.5 sm:pe-4"
           :class="g.current ? 'text-highlighted' : 'text-muted hover:text-highlighted'"
         >
           <span v-if="g.current" class="game-pill" aria-hidden="true" />

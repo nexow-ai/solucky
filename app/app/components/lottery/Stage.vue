@@ -76,14 +76,16 @@ watch(pot, (to, from) => {
 
 <template>
   <LotterySurface hero>
-    <div class="grid items-center gap-6 p-6 sm:gap-8 sm:p-8 lg:grid-cols-[1fr_auto_1fr] lg:gap-10">
+    <div
+      class="grid grid-cols-1 items-center gap-6 p-5 sm:gap-8 sm:p-8 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-10"
+    >
       <!-- The game and its round. -->
-      <div class="flex items-center justify-center gap-5 lg:justify-start">
-        <span class="grid size-16 shrink-0 place-items-center rounded-full shadow-(--neu-in) sm:size-20">
-          <LandingGameEmblem :kind="kind" size="size-10 sm:size-12" />
+      <div class="flex items-center justify-center gap-4 sm:gap-5 lg:justify-start">
+        <span class="grid size-14 shrink-0 place-items-center rounded-full shadow-(--neu-in) sm:size-20">
+          <LandingGameEmblem :kind="kind" size="size-9 sm:size-12" />
         </span>
         <div class="min-w-0">
-          <p class="kicker truncate text-[0.65rem]">
+          <p class="kicker text-[0.65rem]">
             {{ period === null ? '…' : t('stage.round', { round: roundTitle(kind, period) }) }}
           </p>
           <h1 class="mt-1 text-2xl font-light tracking-tight text-highlighted sm:text-3xl">
@@ -99,8 +101,10 @@ watch(pot, (to, from) => {
       <!-- The pot, in a window pressed into the panel; a chip floats off it each time it grows. -->
       <div class="text-center">
         <p class="kicker">{{ t('pot.title') }}</p>
-        <div class="relative mx-auto mt-3 w-fit rounded-[1.75rem] px-7 py-4 shadow-(--neu-in) sm:px-9">
-          <p class="readout text-5xl leading-none sm:text-6xl" dir="ltr">◎{{ formatSol(Math.round(potShown), 3) }}</p>
+        <div class="relative mx-auto mt-3 w-fit max-w-full rounded-[1.75rem] px-5 py-4 shadow-(--neu-in) sm:px-9">
+          <p class="readout text-[2.75rem] leading-none min-[24rem]:text-5xl sm:text-6xl" dir="ltr">
+            ◎{{ formatSol(Math.round(potShown), 3) }}
+          </p>
           <span v-for="g in gains" :key="g.id" class="gain font-mono text-sm text-secondary" aria-hidden="true">
             +◎{{ formatSol(g.amount, 3) }}
           </span>
@@ -139,9 +143,9 @@ watch(pot, (to, from) => {
 
     <!-- The table's counters, the split, and the last draw. -->
     <div
-      class="mx-4 mb-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-[1.5rem] px-5 py-3 shadow-(--neu-in-sm) sm:mx-6 sm:mb-6 lg:justify-between"
+      class="mx-3 mb-3 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-[1.5rem] px-4 py-3 shadow-(--neu-in-sm) sm:mx-6 sm:mb-6 sm:px-5 lg:justify-between"
     >
-      <div class="flex gap-6 sm:gap-8">
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-3 sm:gap-8">
         <LotteryStat :label="t('stat.tickets')" :value="tickets.length" />
         <LotteryStat :label="t('stat.players')" :value="players" />
         <LotteryStat :label="t('stat.countries')" :value="countries" />
@@ -151,10 +155,10 @@ watch(pot, (to, from) => {
       <NuxtLink
         v-if="drawing"
         :to="localePath(roundPath(drawing.data.kind, drawing.data.period))"
-        class="chip flex items-center gap-2.5 rounded-full py-1.5 ps-3.5 pe-2 text-sm"
+        class="chip flex max-w-full min-w-0 items-center gap-2.5 rounded-full py-1.5 ps-3.5 pe-2 text-sm"
       >
-        <span class="led-dot animate-breathe text-warning" aria-hidden="true" />
-        <span class="font-mono text-xs text-toned" dir="ltr">{{
+        <span class="led-dot animate-breathe shrink-0 text-warning" aria-hidden="true" />
+        <span class="min-w-0 truncate font-mono text-xs text-toned" dir="ltr">{{
           roundTitle(drawing.data.kind, drawing.data.period)
         }}</span>
         <span class="font-mono text-warning tabular-nums" dir="ltr">◎{{ formatSol(drawing.data.pot, 3) }}</span>
@@ -163,7 +167,7 @@ watch(pot, (to, from) => {
       <NuxtLink
         v-else-if="last"
         :to="localePath(roundPath(last.data.kind, last.data.period))"
-        class="chip group flex items-center gap-2.5 rounded-full py-1.5 ps-4 pe-3 text-sm"
+        class="chip group flex max-w-full min-w-0 items-center gap-2.5 rounded-full py-1.5 ps-4 pe-3 text-sm"
       >
         <span class="kicker text-[0.6rem]">{{ t('stage.lastDraw') }}</span>
         <span class="ball font-mono text-xs tabular-nums" dir="ltr">{{ formatNumber(last.data.winningNumber) }}</span>
@@ -179,7 +183,11 @@ watch(pot, (to, from) => {
 </template>
 
 <style scoped>
-/* Phones get a smaller clock, so the pot and the buy button come up sooner. */
+/*
+ * Phones get a smaller clock, so the pot and the buy button come up sooner;
+ * so does the narrow side column of the three-column layout (lg), until xl
+ * makes room for the large one.
+ */
 .stage-clock :deep(.countdown) {
   font-size: 1.75rem;
 }
@@ -187,6 +195,12 @@ watch(pot, (to, from) => {
 @media (min-width: 40rem) {
   .stage-clock :deep(.countdown) {
     font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 64rem) and (max-width: 79.99rem) {
+  .stage-clock :deep(.countdown) {
+    font-size: 1.75rem;
   }
 }
 
@@ -219,8 +233,14 @@ watch(pot, (to, from) => {
   transition: box-shadow 0.3s;
 }
 
-.chip:hover {
+.chip:active {
   box-shadow: var(--neu-in-sm);
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    box-shadow: var(--neu-in-sm);
+  }
 }
 
 /* The winning number, on a ball pressed into the key. */

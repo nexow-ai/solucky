@@ -281,17 +281,21 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
 <template>
   <LotterySurface hero>
-    <div ref="panel" class="grid gap-6 p-6 sm:p-7 md:grid-cols-[1.25fr_1fr] md:gap-7">
-      <header class="flex items-end justify-between gap-3 md:col-span-2">
-        <h2 class="leading-none">
+    <div ref="panel" class="grid grid-cols-1 gap-6 p-5 sm:p-7 md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] md:gap-7">
+      <header class="flex flex-wrap items-end justify-between gap-x-3 gap-y-2 md:col-span-2">
+        <h2 class="min-w-0 leading-none">
           <span class="kicker block">{{ t('pick.kicker') }}</span>
-          <span class="mt-1.5 block text-3xl font-light tracking-[0.24em] text-highlighted uppercase">
+          <span
+            class="mt-1.5 block text-2xl font-light tracking-[0.16em] wrap-break-word text-highlighted uppercase sm:text-3xl sm:tracking-[0.24em]"
+          >
             {{ t('pick.title') }}
           </span>
         </h2>
-        <p class="text-end leading-none">
+        <p class="ms-auto text-end leading-none">
           <span class="kicker block">{{ t('pick.win') }}</span>
-          <span class="readout mt-1.5 block text-3xl" dir="ltr"> ◎{{ formatSol(Math.round(prizeShown), 3) }} </span>
+          <span class="readout mt-1.5 block text-2xl sm:text-3xl" dir="ltr">
+            ◎{{ formatSol(Math.round(prizeShown), 3) }}
+          </span>
         </p>
       </header>
 
@@ -624,9 +628,12 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
     color 0.2s ease;
 }
 
-.keycap:hover {
-  color: var(--ui-primary);
-  background: var(--ui-bg);
+/* Only where there is a pointer to hover with: on a touch screen the tapped key would stay lit. */
+@media (hover: hover) {
+  .keycap:hover {
+    color: var(--ui-primary);
+    background: var(--ui-bg);
+  }
 }
 
 .keycap:active {
@@ -653,7 +660,8 @@ const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 /* The phone buy bar: a panel floating at the bottom edge, above the home indicator. */
 .buy-bar {
   position: fixed;
-  inset-inline: 0.75rem;
+  left: max(0.75rem, env(safe-area-inset-left));
+  right: max(0.75rem, env(safe-area-inset-right));
   bottom: calc(0.75rem + env(safe-area-inset-bottom));
   z-index: 40;
   padding: 0.6rem 0.6rem 0.6rem 1.1rem;

@@ -31,10 +31,14 @@ async function reclaimAll() {
 
 <template>
   <LotterySurface>
-    <div class="grid gap-8 p-6 sm:p-8 lg:grid-cols-2 lg:gap-10">
+    <div class="grid grid-cols-1 gap-8 p-5 sm:p-8 lg:grid-cols-2 lg:gap-10">
       <div class="min-w-0 space-y-6">
         <header class="flex flex-wrap items-end justify-between gap-4">
-          <h2 class="text-3xl font-light tracking-[0.24em] text-highlighted uppercase">{{ t('history.title') }}</h2>
+          <h2
+            class="min-w-0 text-2xl font-light tracking-[0.16em] wrap-break-word text-highlighted uppercase sm:text-3xl sm:tracking-[0.24em]"
+          >
+            {{ t('history.title') }}
+          </h2>
           <p class="flex items-baseline gap-2.5">
             <span class="kicker">{{ t('history.total') }}</span>
             <span class="readout font-mono text-4xl leading-none">{{ Math.round(roundsShown) }}</span>
@@ -130,20 +134,16 @@ async function reclaimAll() {
               <li v-for="(round, i) in settled" :key="round.address" class="appear" :style="{ '--i': Math.min(i, 14) }">
                 <NuxtLink
                   :to="localePath(roundPath(round.data.kind, round.data.period))"
-                  class="row grid grid-cols-12 items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums"
+                  class="row grid grid-cols-[auto_4rem_minmax(0,1fr)_1.25rem_auto] items-center gap-2 rounded-lg px-2 py-1.5 tabular-nums sm:gap-3"
                   :class="round.data.winner === address ? 'mine text-primary' : 'text-toned'"
                 >
-                  <span class="col-span-3 truncate font-mono text-muted" dir="ltr">{{
+                  <span class="font-mono whitespace-nowrap text-muted" dir="ltr">{{
                     shortTitle(round.data.kind, round.data.period)
                   }}</span>
-                  <span class="col-span-2 font-mono text-secondary">◎{{ formatSol(round.data.pot, 2) }}</span>
-                  <span class="col-span-3 truncate font-mono" dir="ltr">{{ shortAddress(round.data.winner) }}</span>
-                  <span class="col-span-1 text-center">{{
-                    flagEmoji(countryFromBytes(round.data.winnerCountry))
-                  }}</span>
-                  <span class="col-span-3 text-end font-mono whitespace-nowrap">{{
-                    formatNumber(round.data.winningNumber)
-                  }}</span>
+                  <span class="truncate font-mono text-secondary">◎{{ formatSol(round.data.pot, 2) }}</span>
+                  <span class="truncate font-mono" dir="ltr">{{ shortAddress(round.data.winner) }}</span>
+                  <span class="text-center">{{ flagEmoji(countryFromBytes(round.data.winnerCountry)) }}</span>
+                  <span class="text-end font-mono whitespace-nowrap">{{ formatNumber(round.data.winningNumber) }}</span>
                 </NuxtLink>
               </li>
             </ol>
@@ -194,8 +194,10 @@ async function reclaimAll() {
   transition: background 0.3s;
 }
 
-.row:hover {
-  background: color-mix(in oklab, var(--ui-text-muted) 7%, transparent);
+@media (hover: hover) {
+  .row:hover {
+    background: color-mix(in oklab, var(--ui-text-muted) 7%, transparent);
+  }
 }
 
 .row.mine {

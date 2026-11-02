@@ -141,9 +141,18 @@ const summary = computed(() => {
         >
           {{ countdown }}
         </p>
-        <p class="kicker mt-1 text-[0.55rem]" data-dial-day>
-          {{ t('dial.toDraw', { day: round }) }}
-        </p>
+        <!-- On a phone's small dial the line breaks before the round, never inside it. -->
+        <i18n-t
+          keypath="dial.toDraw"
+          tag="p"
+          scope="global"
+          class="kicker mt-1 text-[0.55rem] text-balance"
+          data-dial-day
+        >
+          <template #day>
+            <span class="whitespace-nowrap">{{ round }}</span>
+          </template>
+        </i18n-t>
       </template>
       <template v-else>
         <p

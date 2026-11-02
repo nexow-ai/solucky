@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
           role="dialog"
           aria-modal="false"
           :aria-labelledby="titleId"
-          class="reveal-card w-full max-w-md"
+          class="reveal-card m-auto w-full max-w-md"
         >
           <div class="relative space-y-6 p-7 text-center sm:p-8">
             <div>
@@ -167,17 +167,20 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* The card sits in the middle; on a short screen (a phone on its side) the layer scrolls instead of cutting it off. */
 .reveal-layer {
   position: fixed;
   inset: 0;
   z-index: 60;
-  display: grid;
-  place-items: center;
-  padding: 1rem;
+  display: flex;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 
 .reveal-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: color-mix(in oklab, var(--ui-bg) 60%, transparent);
   -webkit-backdrop-filter: blur(8px);
