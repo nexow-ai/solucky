@@ -55,6 +55,12 @@ const countdown = computed(() => {
   return (kind.value === GameKind.Hourly ? parts.slice(1) : parts).map((n) => String(n).padStart(2, '0')).join(':');
 });
 
+// The round under the clock: its day, or for the hourly lottery just its hour (`23:00 UTC`), so it fits the core.
+const round = computed(() => {
+  const title = roundTitle(kind.value, period.value ?? 0);
+  return kind.value === GameKind.Hourly ? title.slice(11) : title;
+});
+
 const label = computed(() =>
   kind.value === GameKind.Daily
     ? t('dial.pot')
@@ -136,7 +142,7 @@ const summary = computed(() => {
           {{ countdown }}
         </p>
         <p class="kicker mt-1 text-[0.55rem]" data-dial-day>
-          {{ t('dial.toDraw', { day: roundTitle(kind, period ?? 0) }) }}
+          {{ t('dial.toDraw', { day: round }) }}
         </p>
       </template>
       <template v-else>
