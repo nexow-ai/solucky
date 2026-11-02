@@ -225,7 +225,7 @@ const id: Dict = {
         wallet: {
           title: 'Hubungkan dompet',
           description:
-            'Phantom, Solflare, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
+            'Solflare, Phantom, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
           when: 'Kapan saja',
         },
         number: {
@@ -267,7 +267,7 @@ const id: Dict = {
         wallet: {
           title: 'Hubungkan dompet',
           description:
-            'Phantom, Solflare, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
+            'Solflare, Phantom, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
           when: 'Kapan saja',
         },
         number: {
@@ -309,7 +309,7 @@ const id: Dict = {
         wallet: {
           title: 'Hubungkan dompet',
           description:
-            'Phantom, Solflare, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
+            'Solflare, Phantom, Backpack, atau dompet apa pun yang mendukung Wallet Standard. Tanpa akun, tanpa email.',
           when: 'Kapan saja',
         },
         guess: {
@@ -649,6 +649,8 @@ const id: Dict = {
 
   wallet: {
     connect: 'Hubungkan dompet',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Disarankan',
     title: 'Hubungkan dompet',
     description: 'Dompet Solana apa pun yang mendukung Wallet Standard bisa dipakai.',
     none: 'Tidak ada dompet Solana di browser ini. Pasang salah satunya, lalu muat ulang halaman:',
@@ -960,7 +962,7 @@ const id: Dict = {
         rpcHost: '{host} di situs ini',
         rpcPublic: 'endpoint publik Solana untuk {cluster}',
         wallet:
-          '{name}, seperti Phantom, Solflare, atau Backpack, yang merupakan perangkat lunak dari pembuatnya sendiri, dengan kebijakannya sendiri. Situs ini hanya memintanya untuk terhubung dan menandatangani transaksi yang kamu setujui.',
+          '{name}, seperti Solflare, Phantom, atau Backpack, yang merupakan perangkat lunak dari pembuatnya sendiri, dengan kebijakannya sendiri. Situs ini hanya memintanya untuk terhubung dan menandatangani transaksi yang kamu setujui.',
         walletName: 'Dompetmu',
         links:
           '{name}: Solana Explorer, faucet Solana, GitHub, dan akun media sosial kami adalah situs lain, dengan kebijakannya masing-masing.',

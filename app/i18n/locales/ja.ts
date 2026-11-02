@@ -225,7 +225,7 @@ const ja: Dict = {
         wallet: {
           title: 'ウォレットを接続',
           description:
-            'Phantom、Solflare、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
+            'Solflare、Phantom、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
           when: 'いつでも',
         },
         number: {
@@ -266,7 +266,7 @@ const ja: Dict = {
         wallet: {
           title: 'ウォレットを接続',
           description:
-            'Phantom、Solflare、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
+            'Solflare、Phantom、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
           when: 'いつでも',
         },
         number: {
@@ -308,7 +308,7 @@ const ja: Dict = {
         wallet: {
           title: 'ウォレットを接続',
           description:
-            'Phantom、Solflare、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
+            'Solflare、Phantom、Backpack、またはWallet Standardに対応したウォレットなら何でも使えます。アカウントもメールアドレスも不要です。',
           when: 'いつでも',
         },
         guess: {
@@ -645,6 +645,8 @@ const ja: Dict = {
 
   wallet: {
     connect: 'ウォレットを接続',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'おすすめ',
     title: 'ウォレットを接続',
     description: 'Wallet Standardに対応したSolanaウォレットなら、どれでも使えます。',
     none: 'このブラウザにSolanaウォレットが見つかりません。ウォレットをインストールしてから、ページを再読み込みしてください：',
@@ -954,7 +956,7 @@ const ja: Dict = {
         rpcHost: 'このサイト上の{host}',
         rpcPublic: '{cluster}向けのSolana公開エンドポイント',
         wallet:
-          '{name}（Phantom、Solflare、Backpackなど）：それぞれの開発元が提供するソフトウェアで、独自のポリシーがあります。サイトがウォレットに求めるのは、接続と、あなたが承認したトランザクションへの署名だけです。',
+          '{name}（Solflare、Phantom、Backpackなど）：それぞれの開発元が提供するソフトウェアで、独自のポリシーがあります。サイトがウォレットに求めるのは、接続と、あなたが承認したトランザクションへの署名だけです。',
         walletName: 'あなたのウォレット',
         links:
           '{name}：Solana Explorer、Solanaのフォーセット、GitHub、当社のソーシャルアカウントはほかのサイトであり、それぞれ独自のポリシーがあります。',

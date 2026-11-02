@@ -238,7 +238,7 @@ const en = {
         wallet: {
           title: 'Connect a wallet',
           description:
-            'Phantom, Solflare, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
+            'Solflare, Phantom, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
           when: 'Any time',
         },
         number: {
@@ -279,7 +279,7 @@ const en = {
         wallet: {
           title: 'Connect a wallet',
           description:
-            'Phantom, Solflare, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
+            'Solflare, Phantom, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
           when: 'Any time',
         },
         number: {
@@ -320,7 +320,7 @@ const en = {
         wallet: {
           title: 'Connect a wallet',
           description:
-            'Phantom, Solflare, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
+            'Solflare, Phantom, Backpack or any wallet that speaks the Wallet Standard. No account, no email.',
           when: 'Any time',
         },
         guess: {
@@ -659,6 +659,8 @@ const en = {
 
   wallet: {
     connect: 'Connect wallet',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Recommended',
     title: 'Connect a wallet',
     description: 'Any Solana wallet that supports the Wallet Standard works.',
     none: 'No Solana wallet was found in this browser. Install one, then reload the page:',
@@ -964,7 +966,7 @@ const en = {
         rpcHost: '{host} on this site',
         rpcPublic: 'Solana’s public endpoint for {cluster}',
         wallet:
-          '{name}, such as Phantom, Solflare or Backpack, which is software from its own maker, with its own policy. The site only asks it to connect and to sign the transactions you approve.',
+          '{name}, such as Solflare, Phantom or Backpack, which is software from its own maker, with its own policy. The site only asks it to connect and to sign the transactions you approve.',
         walletName: 'Your wallet',
         links:
           '{name}: Solana Explorer, the Solana faucet, GitHub and our social accounts are other sites, with their own policies.',

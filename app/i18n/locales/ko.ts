@@ -224,7 +224,7 @@ const ko: Dict = {
         wallet: {
           title: '지갑 연결하기',
           description:
-            'Phantom, Solflare, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
+            'Solflare, Phantom, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
           when: '언제든',
         },
         number: {
@@ -266,7 +266,7 @@ const ko: Dict = {
         wallet: {
           title: '지갑 연결하기',
           description:
-            'Phantom, Solflare, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
+            'Solflare, Phantom, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
           when: '언제든',
         },
         number: {
@@ -308,7 +308,7 @@ const ko: Dict = {
         wallet: {
           title: '지갑 연결하기',
           description:
-            'Phantom, Solflare, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
+            'Solflare, Phantom, Backpack 또는 Wallet Standard를 지원하는 지갑이면 무엇이든 돼요. 계정도 이메일도 필요 없어요.',
           when: '언제든',
         },
         guess: {
@@ -643,6 +643,8 @@ const ko: Dict = {
 
   wallet: {
     connect: '지갑 연결',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: '추천',
     title: '지갑 연결하기',
     description: 'Wallet Standard를 지원하는 Solana 지갑이면 무엇이든 쓸 수 있어요.',
     none: '이 브라우저에서 Solana 지갑을 찾지 못했어요. 지갑을 설치한 뒤 페이지를 새로고침하세요:',
@@ -948,7 +950,7 @@ const ko: Dict = {
         rpcHost: '이 사이트의 {host}',
         rpcPublic: '{cluster}용 Solana 공개 엔드포인트',
         wallet:
-          '{name}: Phantom, Solflare, Backpack 등 각 제작사가 만든 소프트웨어로, 자체 정책이 있어요. 사이트는 지갑에 연결과, 내가 승인한 트랜잭션의 서명만 요청해요.',
+          '{name}: Solflare, Phantom, Backpack 등 각 제작사가 만든 소프트웨어로, 자체 정책이 있어요. 사이트는 지갑에 연결과, 내가 승인한 트랜잭션의 서명만 요청해요.',
         walletName: '내 지갑',
         links: '{name}: Solana Explorer, Solana 포셋, GitHub, 저희 소셜 계정은 각자의 정책이 있는 다른 사이트예요.',
         linksName: '내가 여는 링크',

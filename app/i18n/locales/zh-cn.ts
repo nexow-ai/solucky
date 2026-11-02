@@ -220,7 +220,7 @@ const zhcn: Dict = {
       steps: {
         wallet: {
           title: '连接钱包',
-          description: 'Phantom、Solflare、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
+          description: 'Solflare、Phantom、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
           when: '随时',
         },
         number: {
@@ -258,7 +258,7 @@ const zhcn: Dict = {
       steps: {
         wallet: {
           title: '连接钱包',
-          description: 'Phantom、Solflare、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
+          description: 'Solflare、Phantom、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
           when: '随时',
         },
         number: {
@@ -296,7 +296,7 @@ const zhcn: Dict = {
       steps: {
         wallet: {
           title: '连接钱包',
-          description: 'Phantom、Solflare、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
+          description: 'Solflare、Phantom、Backpack，或任何支持 Wallet Standard 的钱包。无需账号，无需邮箱。',
           when: '随时',
         },
         guess: {
@@ -623,6 +623,8 @@ const zhcn: Dict = {
 
   wallet: {
     connect: '连接钱包',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: '推荐',
     title: '连接钱包',
     description: '任何支持 Wallet Standard 的 Solana 钱包都可以使用。',
     none: '在此浏览器中没有找到 Solana 钱包。请安装一个，然后重新加载页面：',
@@ -920,7 +922,7 @@ const zhcn: Dict = {
         rpcHost: '本网站上的 {host}',
         rpcPublic: 'Solana 为 {cluster} 提供的公共节点',
         wallet:
-          '{name}：例如 Phantom、Solflare 或 Backpack，是其开发商提供的软件，有自己的政策。本网站只会请求它连接，以及签署你批准的交易。',
+          '{name}：例如 Solflare、Phantom 或 Backpack，是其开发商提供的软件，有自己的政策。本网站只会请求它连接，以及签署你批准的交易。',
         walletName: '你的钱包',
         links: '{name}：Solana Explorer、Solana 水龙头、GitHub 以及我们的社交账号都是其他网站，有各自的政策。',
         linksName: '你打开的链接',

@@ -224,7 +224,7 @@ const uk: Dict = {
         wallet: {
           title: 'Під’єднайте гаманець',
           description:
-            'Phantom, Solflare, Backpack або будь-який гаманець із підтримкою Wallet Standard. Без акаунта, без пошти.',
+            'Solflare, Phantom, Backpack або будь-який гаманець із підтримкою Wallet Standard. Без акаунта, без пошти.',
           when: 'Будь-коли',
         },
         number: {
@@ -266,7 +266,7 @@ const uk: Dict = {
         wallet: {
           title: 'Під’єднайте гаманець',
           description:
-            'Phantom, Solflare, Backpack або будь-який гаманець із підтримкою Wallet Standard. Без акаунта, без пошти.',
+            'Solflare, Phantom, Backpack або будь-який гаманець із підтримкою Wallet Standard. Без акаунта, без пошти.',
           when: 'Будь-коли',
         },
         number: {
@@ -308,7 +308,7 @@ const uk: Dict = {
         wallet: {
           title: 'Під’єднайте гаманець',
           description:
-            'Phantom, Solflare, Backpack або будь-який гаманець із підтримкою Wallet Standard. Без акаунта, без пошти.',
+            'Solflare, Phantom, Backpack або будь-який гаманець із підтримкою Wallet Standard. Без акаунта, без пошти.',
           when: 'Будь-коли',
         },
         guess: {
@@ -652,6 +652,8 @@ const uk: Dict = {
 
   wallet: {
     connect: 'Під’єднати гаманець',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Рекомендуємо',
     title: 'Під’єднайте гаманець',
     description: 'Підійде будь-який гаманець Solana з підтримкою Wallet Standard.',
     none: 'У цьому браузері не знайдено гаманця Solana. Установіть його, потім перезавантажте сторінку:',
@@ -957,7 +959,7 @@ const uk: Dict = {
         rpcHost: '{host} на цьому сайті',
         rpcPublic: 'публічний ендпоінт Solana для {cluster}',
         wallet:
-          '{name}, наприклад Phantom, Solflare чи Backpack, — це програмне забезпечення від власного розробника з власною політикою. Сайт лише просить його під’єднатися й підписати транзакції, які ви схвалюєте.',
+          '{name}, наприклад Solflare, Phantom чи Backpack, — це програмне забезпечення від власного розробника з власною політикою. Сайт лише просить його під’єднатися й підписати транзакції, які ви схвалюєте.',
         walletName: 'Ваш гаманець',
         links:
           '{name}: Solana Explorer, кран Solana, GitHub і наші акаунти в соцмережах — це інші сайти з власними політиками.',

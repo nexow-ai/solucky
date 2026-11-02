@@ -224,7 +224,7 @@ const ar: Dict = {
         wallet: {
           title: 'اربط محفظة',
           description:
-            'Phantom أو Solflare أو Backpack أو أي محفظة تتعامل بمعيار Wallet Standard. لا حساب ولا بريد إلكتروني.',
+            'Solflare أو Phantom أو Backpack أو أي محفظة تتعامل بمعيار Wallet Standard. لا حساب ولا بريد إلكتروني.',
           when: 'في أي وقت',
         },
         number: {
@@ -264,7 +264,7 @@ const ar: Dict = {
         wallet: {
           title: 'اربط محفظة',
           description:
-            'Phantom أو Solflare أو Backpack أو أي محفظة تتعامل بمعيار Wallet Standard. لا حساب ولا بريد إلكتروني.',
+            'Solflare أو Phantom أو Backpack أو أي محفظة تتعامل بمعيار Wallet Standard. لا حساب ولا بريد إلكتروني.',
           when: 'في أي وقت',
         },
         number: {
@@ -304,7 +304,7 @@ const ar: Dict = {
         wallet: {
           title: 'اربط محفظة',
           description:
-            'Phantom أو Solflare أو Backpack أو أي محفظة تتعامل بمعيار Wallet Standard. لا حساب ولا بريد إلكتروني.',
+            'Solflare أو Phantom أو Backpack أو أي محفظة تتعامل بمعيار Wallet Standard. لا حساب ولا بريد إلكتروني.',
           when: 'في أي وقت',
         },
         guess: {
@@ -649,6 +649,8 @@ const ar: Dict = {
 
   wallet: {
     connect: 'اربط المحفظة',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'موصى بها',
     title: 'اربط محفظة',
     description: 'تعمل أي محفظة Solana تدعم Wallet Standard.',
     none: 'لم يُعثر على أي محفظة Solana في هذا المتصفح. ثبّت واحدة، ثم أعد تحميل الصفحة:',
@@ -954,7 +956,7 @@ const ar: Dict = {
         rpcHost: '{host} على هذا الموقع',
         rpcPublic: 'نقطة نهاية Solana العامة لشبكة {cluster}',
         wallet:
-          '{name}، مثل Phantom أو Solflare أو Backpack، وهي برمجيات من صنع جهتها الخاصة، ولها سياستها الخاصة. ولا يطلب منها الموقع سوى الاتصال وتوقيع المعاملات التي توافق عليها.',
+          '{name}، مثل Solflare أو Phantom أو Backpack، وهي برمجيات من صنع جهتها الخاصة، ولها سياستها الخاصة. ولا يطلب منها الموقع سوى الاتصال وتوقيع المعاملات التي توافق عليها.',
         walletName: 'محفظتك',
         links:
           '{name}: كلٌّ من Solana Explorer، وصنبور Solana، وGitHub، وحساباتنا على وسائل التواصل الاجتماعي مواقعُ أخرى لها سياساتها الخاصة.',

@@ -225,7 +225,7 @@ const hi: Dict = {
         wallet: {
           title: 'वॉलेट कनेक्ट करें',
           description:
-            'Phantom, Solflare, Backpack या कोई भी वॉलेट जो Wallet Standard सपोर्ट करता हो। न अकाउंट, न ईमेल।',
+            'Solflare, Phantom, Backpack या कोई भी वॉलेट जो Wallet Standard सपोर्ट करता हो। न अकाउंट, न ईमेल।',
           when: 'कभी भी',
         },
         number: {
@@ -267,7 +267,7 @@ const hi: Dict = {
         wallet: {
           title: 'वॉलेट कनेक्ट करें',
           description:
-            'Phantom, Solflare, Backpack या कोई भी वॉलेट जो Wallet Standard सपोर्ट करता हो। न अकाउंट, न ईमेल।',
+            'Solflare, Phantom, Backpack या कोई भी वॉलेट जो Wallet Standard सपोर्ट करता हो। न अकाउंट, न ईमेल।',
           when: 'कभी भी',
         },
         number: {
@@ -309,7 +309,7 @@ const hi: Dict = {
         wallet: {
           title: 'वॉलेट कनेक्ट करें',
           description:
-            'Phantom, Solflare, Backpack या कोई भी वॉलेट जो Wallet Standard सपोर्ट करता हो। न अकाउंट, न ईमेल।',
+            'Solflare, Phantom, Backpack या कोई भी वॉलेट जो Wallet Standard सपोर्ट करता हो। न अकाउंट, न ईमेल।',
           when: 'कभी भी',
         },
         guess: {
@@ -651,6 +651,8 @@ const hi: Dict = {
 
   wallet: {
     connect: 'वॉलेट कनेक्ट करें',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'अनुशंसित',
     title: 'वॉलेट कनेक्ट करें',
     description: 'Wallet Standard सपोर्ट करने वाला कोई भी Solana वॉलेट काम करता है।',
     none: 'इस ब्राउज़र में कोई Solana वॉलेट नहीं मिला। एक इंस्टॉल करें, फिर पेज रीलोड करें:',
@@ -960,7 +962,7 @@ const hi: Dict = {
         rpcHost: 'इस साइट पर {host}',
         rpcPublic: '{cluster} के लिए Solana का सार्वजनिक एंडपॉइंट',
         wallet:
-          '{name}, जैसे Phantom, Solflare या Backpack, जो उसके अपने निर्माता का सॉफ़्टवेयर है, जिसकी अपनी नीति है। साइट उससे सिर्फ़ कनेक्ट होने और आपके मंज़ूर किए गए ट्रांज़ैक्शन पर साइन करने को कहती है।',
+          '{name}, जैसे Solflare, Phantom या Backpack, जो उसके अपने निर्माता का सॉफ़्टवेयर है, जिसकी अपनी नीति है। साइट उससे सिर्फ़ कनेक्ट होने और आपके मंज़ूर किए गए ट्रांज़ैक्शन पर साइन करने को कहती है।',
         walletName: 'आपका वॉलेट',
         links:
           '{name}: Solana Explorer, Solana फ़ॉसेट, GitHub और हमारे सोशल अकाउंट दूसरी साइटें हैं, जिनकी अपनी नीतियाँ हैं।',

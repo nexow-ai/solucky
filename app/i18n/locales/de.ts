@@ -228,7 +228,7 @@ const de: Dict = {
         wallet: {
           title: 'Verbinde eine Wallet',
           description:
-            'Phantom, Solflare, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
+            'Solflare, Phantom, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
           when: 'Jederzeit',
         },
         number: {
@@ -270,7 +270,7 @@ const de: Dict = {
         wallet: {
           title: 'Verbinde eine Wallet',
           description:
-            'Phantom, Solflare, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
+            'Solflare, Phantom, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
           when: 'Jederzeit',
         },
         number: {
@@ -312,7 +312,7 @@ const de: Dict = {
         wallet: {
           title: 'Verbinde eine Wallet',
           description:
-            'Phantom, Solflare, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
+            'Solflare, Phantom, Backpack oder jede Wallet, die den Wallet Standard unterstützt. Kein Konto, keine E-Mail.',
           when: 'Jederzeit',
         },
         guess: {
@@ -656,6 +656,8 @@ const de: Dict = {
 
   wallet: {
     connect: 'Wallet verbinden',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Empfohlen',
     title: 'Verbinde eine Wallet',
     description: 'Jede Solana-Wallet, die den Wallet Standard unterstützt, funktioniert.',
     none: 'In diesem Browser wurde keine Solana-Wallet gefunden. Installiere eine und lade die Seite dann neu:',
@@ -968,7 +970,7 @@ const de: Dict = {
         rpcHost: '{host} auf dieser Website',
         rpcPublic: 'der öffentliche Endpunkt von Solana für {cluster}',
         wallet:
-          '{name}, etwa Phantom, Solflare oder Backpack, ist Software ihres eigenen Herstellers, mit eigener Richtlinie. Die Website bittet sie nur, sich zu verbinden und die Transaktionen zu signieren, die du freigibst.',
+          '{name}, etwa Solflare, Phantom oder Backpack, ist Software ihres eigenen Herstellers, mit eigener Richtlinie. Die Website bittet sie nur, sich zu verbinden und die Transaktionen zu signieren, die du freigibst.',
         walletName: 'Deine Wallet',
         links:
           '{name}: Solana Explorer, der Solana-Faucet, GitHub und unsere Social-Media-Konten sind andere Websites mit eigenen Richtlinien.',

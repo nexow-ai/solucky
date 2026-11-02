@@ -225,7 +225,7 @@ const th: Dict = {
         wallet: {
           title: 'เชื่อมต่อวอลเล็ต',
           description:
-            'Phantom, Solflare, Backpack หรือวอลเล็ตใดก็ได้ที่รองรับ Wallet Standard ไม่ต้องมีบัญชี ไม่ต้องใช้อีเมล',
+            'Solflare, Phantom, Backpack หรือวอลเล็ตใดก็ได้ที่รองรับ Wallet Standard ไม่ต้องมีบัญชี ไม่ต้องใช้อีเมล',
           when: 'เมื่อไรก็ได้',
         },
         number: {
@@ -265,7 +265,7 @@ const th: Dict = {
         wallet: {
           title: 'เชื่อมต่อวอลเล็ต',
           description:
-            'Phantom, Solflare, Backpack หรือวอลเล็ตใดก็ได้ที่รองรับ Wallet Standard ไม่ต้องมีบัญชี ไม่ต้องใช้อีเมล',
+            'Solflare, Phantom, Backpack หรือวอลเล็ตใดก็ได้ที่รองรับ Wallet Standard ไม่ต้องมีบัญชี ไม่ต้องใช้อีเมล',
           when: 'เมื่อไรก็ได้',
         },
         number: {
@@ -306,7 +306,7 @@ const th: Dict = {
         wallet: {
           title: 'เชื่อมต่อวอลเล็ต',
           description:
-            'Phantom, Solflare, Backpack หรือวอลเล็ตใดก็ได้ที่รองรับ Wallet Standard ไม่ต้องมีบัญชี ไม่ต้องใช้อีเมล',
+            'Solflare, Phantom, Backpack หรือวอลเล็ตใดก็ได้ที่รองรับ Wallet Standard ไม่ต้องมีบัญชี ไม่ต้องใช้อีเมล',
           when: 'เมื่อไรก็ได้',
         },
         guess: {
@@ -642,6 +642,8 @@ const th: Dict = {
 
   wallet: {
     connect: 'เชื่อมต่อวอลเล็ต',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'แนะนำ',
     title: 'เชื่อมต่อวอลเล็ต',
     description: 'ใช้วอลเล็ต Solana ใดก็ได้ที่รองรับ Wallet Standard',
     none: 'ไม่พบวอลเล็ต Solana ในเบราว์เซอร์นี้ ติดตั้งสักตัว แล้วโหลดหน้าใหม่:',
@@ -945,7 +947,7 @@ const th: Dict = {
         rpcHost: '{host} บนเว็บไซต์นี้',
         rpcPublic: 'เอนด์พอยต์สาธารณะของ Solana สำหรับ {cluster}',
         wallet:
-          '{name} เช่น Phantom, Solflare หรือ Backpack ซึ่งเป็นซอฟต์แวร์จากผู้ผลิตแต่ละราย พร้อมนโยบายของตนเอง เว็บไซต์เพียงขอให้วอลเล็ตเชื่อมต่อ และเซ็นธุรกรรมที่คุณอนุมัติ',
+          '{name} เช่น Solflare, Phantom หรือ Backpack ซึ่งเป็นซอฟต์แวร์จากผู้ผลิตแต่ละราย พร้อมนโยบายของตนเอง เว็บไซต์เพียงขอให้วอลเล็ตเชื่อมต่อ และเซ็นธุรกรรมที่คุณอนุมัติ',
         walletName: 'วอลเล็ตของคุณ',
         links:
           '{name}: Solana Explorer, ฟอเซ็ตของ Solana, GitHub และบัญชีโซเชียลของเราเป็นเว็บไซต์อื่น ซึ่งมีนโยบายของตนเอง',

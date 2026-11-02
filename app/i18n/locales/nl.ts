@@ -226,7 +226,7 @@ const nl: Dict = {
         wallet: {
           title: 'Koppel een wallet',
           description:
-            'Phantom, Solflare, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
+            'Solflare, Phantom, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
           when: 'Altijd',
         },
         number: {
@@ -268,7 +268,7 @@ const nl: Dict = {
         wallet: {
           title: 'Koppel een wallet',
           description:
-            'Phantom, Solflare, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
+            'Solflare, Phantom, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
           when: 'Altijd',
         },
         number: {
@@ -310,7 +310,7 @@ const nl: Dict = {
         wallet: {
           title: 'Koppel een wallet',
           description:
-            'Phantom, Solflare, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
+            'Solflare, Phantom, Backpack of elke andere wallet die de Wallet Standard ondersteunt. Geen account, geen e-mail.',
           when: 'Altijd',
         },
         guess: {
@@ -652,6 +652,8 @@ const nl: Dict = {
 
   wallet: {
     connect: 'Wallet koppelen',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Aanbevolen',
     title: 'Koppel een wallet',
     description: 'Elke Solana-wallet die de Wallet Standard ondersteunt, werkt.',
     none: 'In deze browser is geen Solana-wallet gevonden. Installeer er een en laad de pagina daarna opnieuw:',
@@ -961,7 +963,7 @@ const nl: Dict = {
         rpcHost: '{host} op deze site',
         rpcPublic: 'het openbare endpoint van Solana voor {cluster}',
         wallet:
-          '{name}, zoals Phantom, Solflare of Backpack, is software van een eigen maker, met een eigen beleid. De site vraagt hem alleen om te koppelen en de transacties te ondertekenen die jij goedkeurt.',
+          '{name}, zoals Solflare, Phantom of Backpack, is software van een eigen maker, met een eigen beleid. De site vraagt hem alleen om te koppelen en de transacties te ondertekenen die jij goedkeurt.',
         walletName: 'Je wallet',
         links:
           '{name}: Solana Explorer, de Solana-faucet, GitHub en onze sociale accounts zijn andere sites, met hun eigen beleid.',

@@ -227,7 +227,7 @@ const pt: Dict = {
         wallet: {
           title: 'Conecte uma carteira',
           description:
-            'Phantom, Solflare, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
+            'Solflare, Phantom, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
           when: 'A qualquer hora',
         },
         number: {
@@ -269,7 +269,7 @@ const pt: Dict = {
         wallet: {
           title: 'Conecte uma carteira',
           description:
-            'Phantom, Solflare, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
+            'Solflare, Phantom, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
           when: 'A qualquer hora',
         },
         number: {
@@ -311,7 +311,7 @@ const pt: Dict = {
         wallet: {
           title: 'Conecte uma carteira',
           description:
-            'Phantom, Solflare, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
+            'Solflare, Phantom, Backpack ou qualquer carteira compatível com o Wallet Standard. Sem conta, sem e-mail.',
           when: 'A qualquer hora',
         },
         guess: {
@@ -652,6 +652,8 @@ const pt: Dict = {
 
   wallet: {
     connect: 'Conectar carteira',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Recomendada',
     title: 'Conecte uma carteira',
     description: 'Qualquer carteira da Solana compatível com o Wallet Standard funciona.',
     none: 'Nenhuma carteira da Solana foi encontrada neste navegador. Instale uma e depois recarregue a página:',
@@ -960,7 +962,7 @@ const pt: Dict = {
         rpcHost: '{host} neste site',
         rpcPublic: 'O endpoint público da Solana para a {cluster}',
         wallet:
-          '{name}, como Phantom, Solflare ou Backpack, que é um software do próprio fabricante, com a própria política. O site só pede que ela se conecte e assine as transações que você aprova.',
+          '{name}, como Solflare, Phantom ou Backpack, que é um software do próprio fabricante, com a própria política. O site só pede que ela se conecte e assine as transações que você aprova.',
         walletName: 'Sua carteira',
         links:
           '{name}: o Solana Explorer, o faucet da Solana, o GitHub e nossas redes sociais são outros sites, com as próprias políticas.',

@@ -222,7 +222,7 @@ const he: Dict = {
       steps: {
         wallet: {
           title: 'חברו ארנק',
-          description: 'Phantom, Solflare, Backpack או כל ארנק שתומך ב־Wallet Standard. בלי חשבון, בלי אימייל.',
+          description: 'Solflare, Phantom, Backpack או כל ארנק שתומך ב־Wallet Standard. בלי חשבון, בלי אימייל.',
           when: 'בכל זמן',
         },
         number: {
@@ -261,7 +261,7 @@ const he: Dict = {
       steps: {
         wallet: {
           title: 'חברו ארנק',
-          description: 'Phantom, Solflare, Backpack או כל ארנק שתומך ב־Wallet Standard. בלי חשבון, בלי אימייל.',
+          description: 'Solflare, Phantom, Backpack או כל ארנק שתומך ב־Wallet Standard. בלי חשבון, בלי אימייל.',
           when: 'בכל זמן',
         },
         number: {
@@ -300,7 +300,7 @@ const he: Dict = {
       steps: {
         wallet: {
           title: 'חברו ארנק',
-          description: 'Phantom, Solflare, Backpack או כל ארנק שתומך ב־Wallet Standard. בלי חשבון, בלי אימייל.',
+          description: 'Solflare, Phantom, Backpack או כל ארנק שתומך ב־Wallet Standard. בלי חשבון, בלי אימייל.',
           when: 'בכל זמן',
         },
         guess: {
@@ -636,6 +636,8 @@ const he: Dict = {
 
   wallet: {
     connect: 'חיבור ארנק',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'מומלץ',
     title: 'חברו ארנק',
     description: 'כל ארנק Solana שתומך ב־Wallet Standard עובד.',
     none: 'לא נמצא ארנק Solana בדפדפן הזה. התקינו אחד, ואז טענו מחדש את הדף:',
@@ -940,7 +942,7 @@ const he: Dict = {
         rpcHost: '{host} באתר הזה',
         rpcPublic: 'נקודת הקצה הציבורית של Solana עבור {cluster}',
         wallet:
-          '{name}, כמו Phantom, Solflare או Backpack, שהוא תוכנה של יצרן משלו, עם מדיניות משלו. האתר רק מבקש ממנו להתחבר ולחתום על העסקאות שאתם מאשרים.',
+          '{name}, כמו Solflare, Phantom או Backpack, שהוא תוכנה של יצרן משלו, עם מדיניות משלו. האתר רק מבקש ממנו להתחבר ולחתום על העסקאות שאתם מאשרים.',
         walletName: 'הארנק שלכם',
         links:
           '{name}: Solana Explorer, הברז של Solana, GitHub והחשבונות שלנו ברשתות החברתיות הם אתרים אחרים, עם מדיניות משלהם.',

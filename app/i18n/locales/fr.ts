@@ -228,7 +228,7 @@ const fr: Dict = {
         wallet: {
           title: 'Connecte un portefeuille',
           description:
-            'Phantom, Solflare, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
+            'Solflare, Phantom, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
           when: 'À tout moment',
         },
         number: {
@@ -270,7 +270,7 @@ const fr: Dict = {
         wallet: {
           title: 'Connecte un portefeuille',
           description:
-            'Phantom, Solflare, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
+            'Solflare, Phantom, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
           when: 'À tout moment',
         },
         number: {
@@ -312,7 +312,7 @@ const fr: Dict = {
         wallet: {
           title: 'Connecte un portefeuille',
           description:
-            'Phantom, Solflare, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
+            'Solflare, Phantom, Backpack ou n’importe quel portefeuille compatible avec le Wallet Standard. Pas de compte, pas d’e-mail.',
           when: 'À tout moment',
         },
         guess: {
@@ -655,6 +655,8 @@ const fr: Dict = {
 
   wallet: {
     connect: 'Se connecter',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Recommandé',
     title: 'Connecte un portefeuille',
     description: 'N’importe quel portefeuille Solana compatible avec le Wallet Standard fonctionne.',
     none: 'Aucun portefeuille Solana n’a été trouvé dans ce navigateur. Installes-en un, puis recharge la page :',
@@ -968,7 +970,7 @@ const fr: Dict = {
         rpcHost: '{host} sur ce site',
         rpcPublic: 'l’endpoint public de Solana pour {cluster}',
         wallet:
-          '{name}, comme Phantom, Solflare ou Backpack, qui est un logiciel de son propre éditeur, avec sa propre politique. Le site lui demande seulement de se connecter et de signer les transactions que tu approuves.',
+          '{name}, comme Solflare, Phantom ou Backpack, qui est un logiciel de son propre éditeur, avec sa propre politique. Le site lui demande seulement de se connecter et de signer les transactions que tu approuves.',
         walletName: 'Ton portefeuille',
         links:
           '{name} : Solana Explorer, le faucet Solana, GitHub et nos comptes sur les réseaux sociaux sont d’autres sites, avec leurs propres politiques.',

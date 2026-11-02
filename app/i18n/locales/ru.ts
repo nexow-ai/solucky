@@ -225,7 +225,7 @@ const ru: Dict = {
         wallet: {
           title: 'Подключите кошелёк',
           description:
-            'Phantom, Solflare, Backpack или любой кошелёк с поддержкой Wallet Standard. Ни аккаунта, ни почты.',
+            'Solflare, Phantom, Backpack или любой кошелёк с поддержкой Wallet Standard. Ни аккаунта, ни почты.',
           when: 'В любое время',
         },
         number: {
@@ -267,7 +267,7 @@ const ru: Dict = {
         wallet: {
           title: 'Подключите кошелёк',
           description:
-            'Phantom, Solflare, Backpack или любой кошелёк с поддержкой Wallet Standard. Ни аккаунта, ни почты.',
+            'Solflare, Phantom, Backpack или любой кошелёк с поддержкой Wallet Standard. Ни аккаунта, ни почты.',
           when: 'В любое время',
         },
         number: {
@@ -309,7 +309,7 @@ const ru: Dict = {
         wallet: {
           title: 'Подключите кошелёк',
           description:
-            'Phantom, Solflare, Backpack или любой кошелёк с поддержкой Wallet Standard. Ни аккаунта, ни почты.',
+            'Solflare, Phantom, Backpack или любой кошелёк с поддержкой Wallet Standard. Ни аккаунта, ни почты.',
           when: 'В любое время',
         },
         guess: {
@@ -654,6 +654,8 @@ const ru: Dict = {
 
   wallet: {
     connect: 'Подключить кошелёк',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Рекомендуем',
     title: 'Подключите кошелёк',
     description: 'Подойдёт любой кошелёк Solana с поддержкой Wallet Standard.',
     none: 'В этом браузере не найден кошелёк Solana. Установите его, затем перезагрузите страницу:',
@@ -961,7 +963,7 @@ const ru: Dict = {
         rpcHost: '{host} на этом сайте',
         rpcPublic: 'публичный эндпоинт Solana для {cluster}',
         wallet:
-          '{name}, например Phantom, Solflare или Backpack, — это программа от собственного разработчика со своей политикой. Сайт лишь просит его подключиться и подписать транзакции, которые вы одобряете.',
+          '{name}, например Solflare, Phantom или Backpack, — это программа от собственного разработчика со своей политикой. Сайт лишь просит его подключиться и подписать транзакции, которые вы одобряете.',
         walletName: 'Ваш кошелёк',
         links:
           '{name}: Solana Explorer, кран Solana, GitHub и наши аккаунты в соцсетях — это другие сайты со своими политиками.',

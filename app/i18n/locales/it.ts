@@ -226,7 +226,7 @@ const it: Dict = {
         wallet: {
           title: 'Collega un wallet',
           description:
-            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+            'Solflare, Phantom, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
           when: 'In qualsiasi momento',
         },
         number: {
@@ -268,7 +268,7 @@ const it: Dict = {
         wallet: {
           title: 'Collega un wallet',
           description:
-            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+            'Solflare, Phantom, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
           when: 'In qualsiasi momento',
         },
         number: {
@@ -310,7 +310,7 @@ const it: Dict = {
         wallet: {
           title: 'Collega un wallet',
           description:
-            'Phantom, Solflare, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
+            'Solflare, Phantom, Backpack o qualsiasi wallet compatibile con il Wallet Standard. Niente account, niente email.',
           when: 'In qualsiasi momento',
         },
         guess: {
@@ -653,6 +653,8 @@ const it: Dict = {
 
   wallet: {
     connect: 'Collega wallet',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Consigliato',
     title: 'Collega un wallet',
     description: 'Funziona qualsiasi wallet Solana che supporti il Wallet Standard.',
     none: 'In questo browser non è stato trovato nessun wallet Solana. Installane uno, poi ricarica la pagina:',
@@ -963,7 +965,7 @@ const it: Dict = {
         rpcHost: '{host} su questo sito',
         rpcPublic: 'l’endpoint pubblico di Solana per {cluster}',
         wallet:
-          '{name}, come Phantom, Solflare o Backpack, che è un software del suo produttore, con la sua politica. Il sito gli chiede solo di collegarsi e di firmare le transazioni che approvi.',
+          '{name}, come Solflare, Phantom o Backpack, che è un software del suo produttore, con la sua politica. Il sito gli chiede solo di collegarsi e di firmare le transazioni che approvi.',
         walletName: 'Il tuo wallet',
         links:
           '{name}: Solana Explorer, il faucet di Solana, GitHub e i nostri account social sono altri siti, con le loro politiche.',

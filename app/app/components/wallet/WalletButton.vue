@@ -16,11 +16,12 @@ const open = ref(false);
 const dashOpen = ref(false);
 const connecting = ref<string | null>(null);
 
-const INSTALL = [
+// The recommended wallet (Solflare) first.
+const INSTALL = recommendedFirst([
   { name: 'Phantom', to: 'https://phantom.com/download' },
   { name: 'Solflare', to: 'https://www.solflare.com/download/' },
   { name: 'Backpack', to: 'https://backpack.app/downloads' },
-];
+]);
 
 const ticketNumbers = computed(() =>
   [...myTickets.value]
@@ -231,6 +232,14 @@ async function signOut() {
         >
           <img :src="wallet.icon" alt="" class="size-6 rounded" />
           {{ wallet.name }}
+          <UBadge
+            v-if="wallet.name === RECOMMENDED_WALLET"
+            :label="t('wallet.recommended')"
+            color="primary"
+            variant="subtle"
+            size="sm"
+            class="ms-auto"
+          />
         </UButton>
       </div>
       <div v-else class="space-y-3 text-sm text-muted">
@@ -239,13 +248,21 @@ async function signOut() {
           <UButton
             v-for="wallet in INSTALL"
             :key="wallet.name"
-            :label="wallet.name"
             :to="wallet.to"
             target="_blank"
             color="neutral"
             variant="subtle"
             trailing-icon="i-lucide-external-link"
-          />
+          >
+            {{ wallet.name }}
+            <UBadge
+              v-if="wallet.name === RECOMMENDED_WALLET"
+              :label="t('wallet.recommended')"
+              color="primary"
+              variant="subtle"
+              size="sm"
+            />
+          </UButton>
         </div>
       </div>
     </template>

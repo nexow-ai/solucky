@@ -224,7 +224,7 @@ const tr: Dict = {
         wallet: {
           title: 'Bir cüzdan bağlayın',
           description:
-            'Phantom, Solflare, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
+            'Solflare, Phantom, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
           when: 'Her zaman',
         },
         number: {
@@ -265,7 +265,7 @@ const tr: Dict = {
         wallet: {
           title: 'Bir cüzdan bağlayın',
           description:
-            'Phantom, Solflare, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
+            'Solflare, Phantom, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
           when: 'Her zaman',
         },
         number: {
@@ -307,7 +307,7 @@ const tr: Dict = {
         wallet: {
           title: 'Bir cüzdan bağlayın',
           description:
-            'Phantom, Solflare, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
+            'Solflare, Phantom, Backpack ya da Wallet Standard ile uyumlu herhangi bir cüzdan. Hesap yok, e-posta yok.',
           when: 'Her zaman',
         },
         guess: {
@@ -646,6 +646,8 @@ const tr: Dict = {
 
   wallet: {
     connect: 'Cüzdan bağlayın',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Önerilen',
     title: 'Bir cüzdan bağlayın',
     description: 'Wallet Standard destekli her Solana cüzdanı çalışır.',
     none: 'Bu tarayıcıda Solana cüzdanı bulunamadı. Bir tane kurun, ardından sayfayı yenileyin:',
@@ -955,7 +957,7 @@ const tr: Dict = {
         rpcHost: 'bu sitedeki {host}',
         rpcPublic: 'Solana’nın {cluster} için herkese açık uç noktası',
         wallet:
-          '{name} (Phantom, Solflare ya da Backpack gibi): kendi üreticisinin yazılımıdır ve kendi politikasına tabidir. Site ondan yalnızca bağlanmasını ve onayladığınız işlemleri imzalamasını ister.',
+          '{name} (Solflare, Phantom ya da Backpack gibi): kendi üreticisinin yazılımıdır ve kendi politikasına tabidir. Site ondan yalnızca bağlanmasını ve onayladığınız işlemleri imzalamasını ister.',
         walletName: 'Cüzdanınız',
         links:
           '{name}: Solana Explorer, Solana faucet sitesi, GitHub ve sosyal medya hesaplarımız, kendi politikaları olan başka sitelerdir.',

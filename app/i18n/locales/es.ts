@@ -227,7 +227,7 @@ const es: Dict = {
         wallet: {
           title: 'Conecta una billetera',
           description:
-            'Phantom, Solflare, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
+            'Solflare, Phantom, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
           when: 'En cualquier momento',
         },
         number: {
@@ -269,7 +269,7 @@ const es: Dict = {
         wallet: {
           title: 'Conecta una billetera',
           description:
-            'Phantom, Solflare, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
+            'Solflare, Phantom, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
           when: 'En cualquier momento',
         },
         number: {
@@ -311,7 +311,7 @@ const es: Dict = {
         wallet: {
           title: 'Conecta una billetera',
           description:
-            'Phantom, Solflare, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
+            'Solflare, Phantom, Backpack o cualquier billetera compatible con el Wallet Standard. Sin cuenta y sin correo.',
           when: 'En cualquier momento',
         },
         guess: {
@@ -652,6 +652,8 @@ const es: Dict = {
 
   wallet: {
     connect: 'Conectar billetera',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Recomendada',
     title: 'Conecta una billetera',
     description: 'Funciona cualquier billetera de Solana compatible con el Wallet Standard.',
     none: 'No se encontró ninguna billetera de Solana en este navegador. Instala una y luego recarga la página:',
@@ -961,7 +963,7 @@ const es: Dict = {
         rpcHost: '{host} en este sitio',
         rpcPublic: 'El endpoint público de Solana para {cluster}',
         wallet:
-          '{name}, como Phantom, Solflare o Backpack, que es software de su propio fabricante, con su propia política. El sitio solo le pide conectarse y firmar las transacciones que apruebas.',
+          '{name}, como Solflare, Phantom o Backpack, que es software de su propio fabricante, con su propia política. El sitio solo le pide conectarse y firmar las transacciones que apruebas.',
         walletName: 'Tu billetera',
         links:
           '{name}: Solana Explorer, el faucet de Solana, GitHub y nuestras redes sociales son otros sitios, con sus propias políticas.',

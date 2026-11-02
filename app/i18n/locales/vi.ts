@@ -225,7 +225,7 @@ const vi: Dict = {
         wallet: {
           title: 'Kết nối ví',
           description:
-            'Phantom, Solflare, Backpack hoặc bất kỳ ví nào hỗ trợ Wallet Standard. Không cần tài khoản, không cần email.',
+            'Solflare, Phantom, Backpack hoặc bất kỳ ví nào hỗ trợ Wallet Standard. Không cần tài khoản, không cần email.',
           when: 'Bất cứ lúc nào',
         },
         number: {
@@ -266,7 +266,7 @@ const vi: Dict = {
         wallet: {
           title: 'Kết nối ví',
           description:
-            'Phantom, Solflare, Backpack hoặc bất kỳ ví nào hỗ trợ Wallet Standard. Không cần tài khoản, không cần email.',
+            'Solflare, Phantom, Backpack hoặc bất kỳ ví nào hỗ trợ Wallet Standard. Không cần tài khoản, không cần email.',
           when: 'Bất cứ lúc nào',
         },
         number: {
@@ -307,7 +307,7 @@ const vi: Dict = {
         wallet: {
           title: 'Kết nối ví',
           description:
-            'Phantom, Solflare, Backpack hoặc bất kỳ ví nào hỗ trợ Wallet Standard. Không cần tài khoản, không cần email.',
+            'Solflare, Phantom, Backpack hoặc bất kỳ ví nào hỗ trợ Wallet Standard. Không cần tài khoản, không cần email.',
           when: 'Bất cứ lúc nào',
         },
         guess: {
@@ -645,6 +645,8 @@ const vi: Dict = {
 
   wallet: {
     connect: 'Kết nối ví',
+    /** The badge on the wallet the site recommends (Solflare). */
+    recommended: 'Đề xuất',
     title: 'Kết nối ví',
     description: 'Mọi ví Solana hỗ trợ Wallet Standard đều dùng được.',
     none: 'Không tìm thấy ví Solana nào trong trình duyệt này. Hãy cài một ví, rồi tải lại trang:',
@@ -952,7 +954,7 @@ const vi: Dict = {
         rpcHost: '{host} trên trang web này',
         rpcPublic: 'endpoint công khai của Solana cho {cluster}',
         wallet:
-          '{name}, chẳng hạn Phantom, Solflare hoặc Backpack, là phần mềm của nhà phát triển riêng, với chính sách riêng. Trang web chỉ yêu cầu ví kết nối và ký các giao dịch bạn chấp thuận.',
+          '{name}, chẳng hạn Solflare, Phantom hoặc Backpack, là phần mềm của nhà phát triển riêng, với chính sách riêng. Trang web chỉ yêu cầu ví kết nối và ký các giao dịch bạn chấp thuận.',
         walletName: 'Ví của bạn',
         links:
           '{name}: Solana Explorer, faucet của Solana, GitHub và các tài khoản mạng xã hội của chúng tôi là những trang web khác, với chính sách riêng.',
