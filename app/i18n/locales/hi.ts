@@ -16,7 +16,15 @@ const hi: Dict = {
 
   lang: {
     label: 'भाषा',
-    choose: 'भाषा: {name}',
+  },
+
+  settings: {
+    label: 'सेटिंग्स',
+    theme: 'थीम',
+    light: 'लाइट',
+    dark: 'डार्क',
+    sound: 'ध्वनि',
+    back: 'वापस',
   },
 
   update: {
@@ -56,7 +64,7 @@ const hi: Dict = {
     mainHere: 'Solana Mainnet: टिकट असली SOL से ख़रीदे जाते हैं',
     goTest: 'मुफ़्त टेस्ट SOL से खेलें',
     goMain: 'Solana Mainnet पर असली SOL से खेलें',
-    notYet: 'S☉Lucky अभी {network} पर नहीं है',
+    soon: 'जल्द आ रहा है',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const hi: Dict = {
     source: 'सोर्स कोड',
     builtOn: '{solana} पर बना',
     madeBy: '{nexow} ने बनाया',
-    mute: 'आवाज़ बंद करें',
-    unmute: 'आवाज़ चालू करें',
   },
 
   home: {

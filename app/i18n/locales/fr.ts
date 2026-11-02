@@ -16,7 +16,15 @@ const fr: Dict = {
 
   lang: {
     label: 'Langue',
-    choose: 'Langue : {name}',
+  },
+
+  settings: {
+    label: 'Réglages',
+    theme: 'Thème',
+    light: 'Clair',
+    dark: 'Sombre',
+    sound: 'Son',
+    back: 'Retour',
   },
 
   update: {
@@ -57,7 +65,7 @@ const fr: Dict = {
     mainHere: 'Solana Mainnet : les tickets coûtent du vrai SOL',
     goTest: 'Joue avec du SOL de test gratuit',
     goMain: 'Joue avec du vrai SOL sur Solana Mainnet',
-    notYet: 'S☉Lucky n’est pas encore sur {network}',
+    soon: 'Bientôt',
   },
 
   faucet: {
@@ -78,8 +86,6 @@ const fr: Dict = {
     source: 'Code source',
     builtOn: 'Construit sur {solana}',
     madeBy: 'Conçu par {nexow}',
-    mute: 'Couper le son',
-    unmute: 'Activer le son',
   },
 
   home: {

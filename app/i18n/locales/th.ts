@@ -16,7 +16,15 @@ const th: Dict = {
 
   lang: {
     label: 'ภาษา',
-    choose: 'ภาษา: {name}',
+  },
+
+  settings: {
+    label: 'การตั้งค่า',
+    theme: 'ธีม',
+    light: 'สว่าง',
+    dark: 'มืด',
+    sound: 'เสียง',
+    back: 'ย้อนกลับ',
   },
 
   update: {
@@ -56,7 +64,7 @@ const th: Dict = {
     mainHere: 'Solana Mainnet: ตั๋วใช้ SOL จริง',
     goTest: 'เล่นด้วย SOL ทดสอบฟรี',
     goMain: 'เล่นด้วย SOL จริงบน Solana Mainnet',
-    notYet: 'S☉Lucky ยังไม่เปิดบน{network}',
+    soon: 'เร็ว ๆ นี้',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const th: Dict = {
     source: 'ซอร์สโค้ด',
     builtOn: 'สร้างบน {solana}',
     madeBy: 'สร้างโดย {nexow}',
-    mute: 'ปิดเสียง',
-    unmute: 'เปิดเสียง',
   },
 
   home: {

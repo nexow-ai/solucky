@@ -16,7 +16,15 @@ const ru: Dict = {
 
   lang: {
     label: 'Язык',
-    choose: 'Язык: {name}',
+  },
+
+  settings: {
+    label: 'Настройки',
+    theme: 'Тема',
+    light: 'Светлая',
+    dark: 'Тёмная',
+    sound: 'Звук',
+    back: 'Назад',
   },
 
   update: {
@@ -56,7 +64,7 @@ const ru: Dict = {
     mainHere: 'Solana Mainnet: билеты стоят настоящих SOL',
     goTest: 'Играть на бесплатные тестовые SOL',
     goMain: 'Играть на настоящие SOL в Solana Mainnet',
-    notYet: 'S☉Lucky пока нет в сети {network}',
+    soon: 'Скоро',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const ru: Dict = {
     source: 'Исходный код',
     builtOn: 'Построено на {solana}',
     madeBy: 'Разработано в {nexow}',
-    mute: 'Выключить звук',
-    unmute: 'Включить звук',
   },
 
   home: {

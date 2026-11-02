@@ -16,7 +16,15 @@ const tr: Dict = {
 
   lang: {
     label: 'Dil',
-    choose: 'Dil: {name}',
+  },
+
+  settings: {
+    label: 'Ayarlar',
+    theme: 'Tema',
+    light: 'Açık',
+    dark: 'Koyu',
+    sound: 'Ses',
+    back: 'Geri',
   },
 
   update: {
@@ -56,7 +64,7 @@ const tr: Dict = {
     mainHere: 'Solana Mainnet: biletler gerçek SOL ile alınır',
     goTest: 'Ücretsiz test SOL ile oynayın',
     goMain: 'Solana Mainnet’te gerçek SOL ile oynayın',
-    notYet: 'S☉Lucky henüz {network} üzerinde değil',
+    soon: 'Yakında',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const tr: Dict = {
     source: 'Kaynak kod',
     builtOn: '{solana} üzerinde geliştirildi',
     madeBy: '{nexow} tarafından yapıldı',
-    mute: 'Sesleri kapatın',
-    unmute: 'Sesleri açın',
   },
 
   home: {

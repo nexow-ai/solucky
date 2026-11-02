@@ -16,7 +16,15 @@ const zhcn: Dict = {
 
   lang: {
     label: '语言',
-    choose: '语言：{name}',
+  },
+
+  settings: {
+    label: '设置',
+    theme: '主题',
+    light: '浅色',
+    dark: '深色',
+    sound: '声音',
+    back: '返回',
   },
 
   update: {
@@ -56,7 +64,7 @@ const zhcn: Dict = {
     mainHere: 'Solana Mainnet：彩票用真实 SOL 支付',
     goTest: '用免费的测试 SOL 来玩',
     goMain: '在 Solana Mainnet 上用真实 SOL 来玩',
-    notYet: 'S☉Lucky 尚未上线{network}',
+    soon: '即将推出',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const zhcn: Dict = {
     source: '源代码',
     builtOn: '基于 {solana} 构建',
     madeBy: '由 {nexow} 打造',
-    mute: '关闭音效',
-    unmute: '开启音效',
   },
 
   home: {

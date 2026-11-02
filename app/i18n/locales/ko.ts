@@ -16,7 +16,15 @@ const ko: Dict = {
 
   lang: {
     label: '언어',
-    choose: '언어: {name}',
+  },
+
+  settings: {
+    label: '설정',
+    theme: '테마',
+    light: '라이트',
+    dark: '다크',
+    sound: '소리',
+    back: '뒤로',
   },
 
   update: {
@@ -56,7 +64,7 @@ const ko: Dict = {
     mainHere: 'Solana Mainnet: 티켓은 실제 SOL로 사요',
     goTest: '무료 테스트 SOL로 플레이하기',
     goMain: 'Solana Mainnet에서 실제 SOL로 플레이하기',
-    notYet: 'S☉Lucky는 아직 {network}에 없어요',
+    soon: '출시 예정',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const ko: Dict = {
     source: '소스 코드',
     builtOn: '{solana} 기반',
     madeBy: '{nexow} 제작',
-    mute: '소리 끄기',
-    unmute: '소리 켜기',
   },
 
   home: {

@@ -1,131 +1,110 @@
 <script setup lang="ts">
 /**
- * The network selector in the header: test SOL or real SOL. Each cluster is
- * its own deployment of the app, so the other side links to the same page
- * there (`NUXT_PUBLIC_MAINNET_URL`, `NUXT_PUBLIC_TESTNET_URL`) and stays
- * disabled while that deployment has no URL.
+ * The choice of network in the settings: test SOL or real SOL. Each cluster
+ * is its own deployment of the app, so the other side links to the same page
+ * there (`NUXT_PUBLIC_MAINNET_URL`, `NUXT_PUBLIC_TESTNET_URL`) and shows as
+ * coming soon while that deployment has no URL.
  */
-defineProps<{ block?: boolean }>();
-
 const config = useRuntimeConfig().public;
 const route = useRoute();
 const { t } = useI18n();
 const { clusterLabel, isMainnet } = useSolana();
 
-const options = computed(() => {
-  const test = {
+const options = computed(() => [
+  {
     key: 'test',
     label: t('network.test'),
+    tint: 'text-warning',
     current: !isMainnet,
     href: isMainnet ? networkHref(config.testnetUrl, route.fullPath) : null,
-  };
-  const main = {
+    hint: isMainnet ? t('network.goTest') : t('network.testHere', { cluster: clusterLabel }),
+  },
+  {
     key: 'main',
     label: t('network.main'),
+    tint: 'text-success',
     current: isMainnet,
     href: isMainnet ? null : networkHref(config.mainnetUrl, route.fullPath),
-  };
-  const tip = (option: typeof test, here: string, away: string) =>
-    option.current ? here : option.href ? away : t('network.notYet', { network: option.label });
-  return [
-    { ...test, tip: tip(test, t('network.testHere', { cluster: clusterLabel }), t('network.goTest')) },
-    { ...main, tip: tip(main, t('network.mainHere'), t('network.goMain')) },
-  ];
-});
+    hint: isMainnet ? t('network.mainHere') : t('network.goMain'),
+  },
+]);
 </script>
 
 <template>
-  <nav
-    :aria-label="t('network.label')"
-    class="shrink-0 grid-cols-[repeat(2,minmax(max-content,1fr))] gap-1 rounded-full p-1 font-mono shadow-(--neu-in-sm) text-[0.65rem] font-semibold tracking-[0.12em] uppercase"
-    :class="block ? 'grid w-full' : 'inline-grid'"
-  >
-    <UTooltip v-for="option in options" :key="option.key" :text="option.tip" :content="{ sideOffset: 10 }">
-      <a v-if="option.href" :href="option.href" class="segment" :data-network="option.key">
-        {{ option.label }}
-      </a>
-      <span
-        v-else
-        class="segment"
-        :data-network="option.key"
+  <ul class="grid gap-0.5">
+    <li v-for="option in options" :key="option.key">
+      <component
+        :is="option.href ? 'a' : 'div'"
+        :href="option.href ?? undefined"
+        class="option rounded-md"
         :aria-current="option.current ? 'true' : undefined"
-        :aria-disabled="option.current ? undefined : 'true'"
-        tabindex="0"
+        :aria-disabled="option.current || option.href ? undefined : 'true'"
       >
-        <span v-if="option.current" class="dot" aria-hidden="true" />
-        {{ option.label }}
-        <UIcon v-if="!option.current" name="i-lucide-lock" class="size-3 opacity-70" />
-      </span>
-    </UTooltip>
-  </nav>
+        <span
+          class="led-dot mt-1.5"
+          :class="[
+            option.href || option.current ? option.tint : 'text-dimmed',
+            option.current && 'motion-safe:animate-breathe',
+          ]"
+          aria-hidden="true"
+        />
+        <span class="min-w-0 flex-1">
+          <span class="label block" :class="option.current && option.tint">{{ option.label }}</span>
+          <span class="block text-xs text-muted">{{ option.hint }}</span>
+        </span>
+        <UIcon v-if="option.current" name="i-lucide-check" class="mt-0.5 size-4 shrink-0 text-primary" />
+        <UBadge
+          v-else-if="!option.href"
+          :label="t('network.soon')"
+          color="neutral"
+          variant="soft"
+          size="sm"
+          class="shrink-0 bg-transparent font-mono text-[0.6rem] tracking-[0.12em] uppercase shadow-(--neu-in-sm)"
+        />
+      </component>
+    </li>
+  </ul>
 </template>
 
 <style scoped>
-.segment {
-  --tint: var(--ui-warning);
-  display: inline-flex;
-  min-height: 1.6rem;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  border-radius: 9999px;
-  padding-inline: 0.7rem;
-  color: var(--ui-text-muted);
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   white-space: nowrap;
-  outline: none;
-  transition:
-    color 0.2s,
-    box-shadow 0.2s;
-}
-
-.segment[data-network='main'] {
-  --tint: var(--ui-success);
 }
 
 /* The mono face has no Arabic, Hebrew, Devanagari or Thai: its fallback draws them unjoined. */
-.segment:is(:lang(ar), :lang(he), :lang(hi), :lang(th)) {
+.label:is(:lang(ar), :lang(he), :lang(hi), :lang(th)) {
   font-family: var(--font-sans);
   font-size: 0.75rem;
 }
 
-.segment:focus-visible {
-  box-shadow: 0 0 0 2px var(--ui-primary);
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.5rem 0.625rem;
+  color: var(--ui-text-toned);
+  transition:
+    color 0.2s,
+    background-color 0.2s;
 }
 
-a.segment:hover {
+a.option:hover {
+  background: var(--ui-bg-elevated);
   color: var(--ui-text-highlighted);
 }
 
-.segment[aria-disabled='true'] {
+.option[aria-disabled='true'] {
   color: var(--ui-text-dimmed);
   cursor: not-allowed;
 }
 
-/* The network in use stands out of the track. */
-.segment[aria-current] {
-  color: var(--tint);
-  background: var(--ui-bg);
-  box-shadow: var(--neu-xs);
-}
-
-.segment[aria-current]:focus-visible {
-  box-shadow:
-    var(--neu-xs),
-    0 0 0 2px var(--ui-primary);
-}
-
-.dot {
-  width: 0.375rem;
-  height: 0.375rem;
-  flex-shrink: 0;
-  border-radius: 9999px;
-  background: currentColor;
-  box-shadow: 0 0 8px currentColor;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .dot {
-    animation: var(--animate-breathe);
-  }
+/* A network you cannot pick yet is not live: no halo. */
+.option[aria-disabled='true'] .led-dot {
+  box-shadow: none;
 }
 </style>

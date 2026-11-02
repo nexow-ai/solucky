@@ -5,7 +5,6 @@ const config = useRuntimeConfig().public;
 const { explorer, programAddress, clusterLabel } = useSolana();
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
-const sound = useSound();
 const switchLocalePath = useSwitchLocalePath();
 
 const links = computed(() =>
@@ -125,29 +124,6 @@ const links = computed(() =>
         color="neutral"
         variant="ghost"
       />
-      <!-- The header shows the network from lg. -->
-      <AppNetwork class="lg:hidden" />
-      <!-- The page's settings: sound effects and the light or dark theme. -->
-      <div class="flex items-center gap-1 rounded-full p-1 shadow-(--neu-in-sm)">
-        <!-- The sound setting is remembered in the browser, so it renders there. -->
-        <ClientOnly>
-          <UTooltip :text="sound.enabled.value ? t('footer.mute') : t('footer.unmute')">
-            <UButton
-              :icon="sound.enabled.value ? 'i-lucide-volume-2' : 'i-lucide-volume-x'"
-              :aria-label="sound.enabled.value ? t('footer.mute') : t('footer.unmute')"
-              color="neutral"
-              variant="ghost"
-              size="sm"
-              class="rounded-full"
-              @click="sound.toggle()"
-            />
-          </UTooltip>
-          <template #fallback>
-            <span class="block size-7" />
-          </template>
-        </ClientOnly>
-        <UColorModeButton size="sm" class="rounded-full" />
-      </div>
     </template>
   </UFooter>
 </template>

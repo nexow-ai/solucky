@@ -3,12 +3,12 @@ const { t } = useI18n();
 const localePath = useLocalePath();
 const faucet = useFaucet();
 
-// The bar is the same on every page: logo, the game tabs, network, language
-// and wallet, with no menu behind a toggle. The game tabs sit in its middle
-// on wide screens and get a row of their own under it below xl. UHeader
-// names the logo's link after the plain text in its title slot (comments
-// included, in development), so the slot holds components only: the Beta
-// badge is a UBadge.
+// The bar is the same on every page: logo, the game tabs, the settings
+// (network, theme, sound and language) and wallet, with no menu behind a
+// toggle. The game tabs sit in its middle on wide screens and get a row of
+// their own under it below xl. UHeader names the logo's link after the plain
+// text in its title slot (comments included, in development), so the slot
+// holds components only: the Beta badge is a UBadge.
 </script>
 
 <template>
@@ -48,7 +48,6 @@ const faucet = useFaucet();
     </template>
 
     <template #right>
-      <AppNetwork class="max-lg:hidden" />
       <!-- Only for a connected wallet under ◎0.1; its balance lives in the browser, so the button does too. -->
       <ClientOnly>
         <UTooltip
@@ -75,7 +74,7 @@ const faucet = useFaucet();
       <ClientOnly>
         <AppInstall />
       </ClientOnly>
-      <AppLangMenu />
+      <AppSettings />
       <ClientOnly>
         <LazyWalletButton />
         <template #fallback>

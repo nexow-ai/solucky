@@ -28,7 +28,15 @@ const en = {
 
   lang: {
     label: 'Language',
-    choose: 'Language: {name}',
+  },
+
+  settings: {
+    label: 'Settings',
+    theme: 'Theme',
+    light: 'Light',
+    dark: 'Dark',
+    sound: 'Sound',
+    back: 'Back',
   },
 
   update: {
@@ -68,7 +76,7 @@ const en = {
     mainHere: 'Solana Mainnet: tickets cost real SOL',
     goTest: 'Play with free test SOL',
     goMain: 'Play with real SOL on Solana Mainnet',
-    notYet: 'S☉Lucky is not on {network} yet',
+    soon: 'Coming soon',
   },
 
   faucet: {
@@ -89,8 +97,6 @@ const en = {
     source: 'Source code',
     builtOn: 'Built on {solana}',
     madeBy: 'Made by {nexow}',
-    mute: 'Mute sounds',
-    unmute: 'Play sounds',
   },
 
   home: {

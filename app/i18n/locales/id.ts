@@ -16,7 +16,15 @@ const id: Dict = {
 
   lang: {
     label: 'Bahasa',
-    choose: 'Bahasa: {name}',
+  },
+
+  settings: {
+    label: 'Pengaturan',
+    theme: 'Tema',
+    light: 'Terang',
+    dark: 'Gelap',
+    sound: 'Suara',
+    back: 'Kembali',
   },
 
   update: {
@@ -56,7 +64,7 @@ const id: Dict = {
     mainHere: 'Solana Mainnet: tiket dibayar dengan SOL sungguhan',
     goTest: 'Main dengan SOL uji coba gratis',
     goMain: 'Main dengan SOL sungguhan di Solana Mainnet',
-    notYet: 'S☉Lucky belum ada di {network}',
+    soon: 'Segera hadir',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const id: Dict = {
     source: 'Kode sumber',
     builtOn: 'Dibangun di atas {solana}',
     madeBy: 'Dibuat oleh {nexow}',
-    mute: 'Matikan suara',
-    unmute: 'Nyalakan suara',
   },
 
   home: {

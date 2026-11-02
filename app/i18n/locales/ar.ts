@@ -16,7 +16,15 @@ const ar: Dict = {
 
   lang: {
     label: 'اللغة',
-    choose: 'اللغة: {name}',
+  },
+
+  settings: {
+    label: 'الإعدادات',
+    theme: 'المظهر',
+    light: 'فاتح',
+    dark: 'داكن',
+    sound: 'الصوت',
+    back: 'رجوع',
   },
 
   update: {
@@ -56,7 +64,7 @@ const ar: Dict = {
     mainHere: 'Solana Mainnet: ثمن التذاكر SOL حقيقية',
     goTest: 'العب بعملة SOL تجريبية مجانية',
     goMain: 'العب بعملة SOL حقيقية على Solana Mainnet',
-    notYet: 'S☉Lucky غير متاح بعد على «{network}»',
+    soon: 'قريبًا',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const ar: Dict = {
     source: 'الشيفرة المصدرية',
     builtOn: 'مبني على {solana}',
     madeBy: 'من صنع {nexow}',
-    mute: 'كتم الأصوات',
-    unmute: 'تشغيل الأصوات',
   },
 
   home: {

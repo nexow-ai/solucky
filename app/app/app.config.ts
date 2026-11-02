@@ -78,6 +78,10 @@ export default defineAppConfig({
     accordion: {
       slots: { item: 'border-default/60' },
     },
+    // A switch's track is pressed into the page; its thumb stands out of it.
+    switch: {
+      slots: { base: 'shadow-(--neu-in-sm) data-[state=unchecked]:bg-default', thumb: 'shadow-(--neu-xs)' },
+    },
     badge: { slots: { base: 'rounded-full' } },
     alert: { slots: { root: 'rounded-2xl' } },
     popover: { slots: { content: floating } },

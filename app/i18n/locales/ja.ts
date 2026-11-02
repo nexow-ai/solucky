@@ -16,7 +16,15 @@ const ja: Dict = {
 
   lang: {
     label: '言語',
-    choose: '言語：{name}',
+  },
+
+  settings: {
+    label: '設定',
+    theme: 'テーマ',
+    light: 'ライト',
+    dark: 'ダーク',
+    sound: 'サウンド',
+    back: '戻る',
   },
 
   update: {
@@ -56,7 +64,7 @@ const ja: Dict = {
     mainHere: 'Solana Mainnet：チケットの代金は本物のSOLです',
     goTest: '無料のテストSOLでプレイ',
     goMain: 'Solana Mainnetで本物のSOLを使ってプレイ',
-    notYet: 'S☉Luckyはまだ{network}にありません',
+    soon: '近日公開',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const ja: Dict = {
     source: 'ソースコード',
     builtOn: '{solana}で構築',
     madeBy: '制作：{nexow}',
-    mute: 'サウンドをオフ',
-    unmute: 'サウンドをオン',
   },
 
   home: {

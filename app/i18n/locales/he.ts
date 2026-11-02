@@ -16,7 +16,15 @@ const he: Dict = {
 
   lang: {
     label: 'שפה',
-    choose: 'שפה: {name}',
+  },
+
+  settings: {
+    label: 'הגדרות',
+    theme: 'ערכת נושא',
+    light: 'בהירה',
+    dark: 'כהה',
+    sound: 'צליל',
+    back: 'חזרה',
   },
 
   update: {
@@ -56,7 +64,7 @@ const he: Dict = {
     mainHere: 'Solana Mainnet: הכרטיסים עולים SOL אמיתי',
     goTest: 'שחקו עם SOL לבדיקה בחינם',
     goMain: 'שחקו עם SOL אמיתי ב־Solana Mainnet',
-    notYet: 'S☉Lucky עדיין לא זמין ב{network}',
+    soon: 'בקרוב',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const he: Dict = {
     source: 'קוד מקור',
     builtOn: 'בנוי על {solana}',
     madeBy: 'מבית {nexow}',
-    mute: 'השתקת צלילים',
-    unmute: 'הפעלת צלילים',
   },
 
   home: {

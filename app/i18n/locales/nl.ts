@@ -16,7 +16,15 @@ const nl: Dict = {
 
   lang: {
     label: 'Taal',
-    choose: 'Taal: {name}',
+  },
+
+  settings: {
+    label: 'Instellingen',
+    theme: 'Thema',
+    light: 'Licht',
+    dark: 'Donker',
+    sound: 'Geluid',
+    back: 'Terug',
   },
 
   update: {
@@ -57,7 +65,7 @@ const nl: Dict = {
     mainHere: 'Solana Mainnet: loten kosten echte SOL',
     goTest: 'Speel met gratis test-SOL',
     goMain: 'Speel met echte SOL op Solana Mainnet',
-    notYet: 'S☉Lucky staat nog niet op {network}',
+    soon: 'Binnenkort',
   },
 
   faucet: {
@@ -78,8 +86,6 @@ const nl: Dict = {
     source: 'Broncode',
     builtOn: 'Gebouwd op {solana}',
     madeBy: 'Gemaakt door {nexow}',
-    mute: 'Geluid uit',
-    unmute: 'Geluid aan',
   },
 
   home: {

@@ -16,7 +16,15 @@ const vi: Dict = {
 
   lang: {
     label: 'Ngôn ngữ',
-    choose: 'Ngôn ngữ: {name}',
+  },
+
+  settings: {
+    label: 'Cài đặt',
+    theme: 'Giao diện',
+    light: 'Sáng',
+    dark: 'Tối',
+    sound: 'Âm thanh',
+    back: 'Quay lại',
   },
 
   update: {
@@ -56,7 +64,7 @@ const vi: Dict = {
     mainHere: 'Solana Mainnet: vé được trả bằng SOL thật',
     goTest: 'Chơi bằng SOL thử nghiệm miễn phí',
     goMain: 'Chơi bằng SOL thật trên Solana Mainnet',
-    notYet: 'S☉Lucky chưa có trên {network}',
+    soon: 'Sắp ra mắt',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const vi: Dict = {
     source: 'Mã nguồn',
     builtOn: 'Xây dựng trên {solana}',
     madeBy: 'Được tạo bởi {nexow}',
-    mute: 'Tắt âm thanh',
-    unmute: 'Bật âm thanh',
   },
 
   home: {

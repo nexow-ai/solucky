@@ -16,7 +16,15 @@ const uk: Dict = {
 
   lang: {
     label: 'Мова',
-    choose: 'Мова: {name}',
+  },
+
+  settings: {
+    label: 'Налаштування',
+    theme: 'Тема',
+    light: 'Світла',
+    dark: 'Темна',
+    sound: 'Звук',
+    back: 'Назад',
   },
 
   update: {
@@ -56,7 +64,7 @@ const uk: Dict = {
     mainHere: 'Solana Mainnet: квитки коштують справжніх SOL',
     goTest: 'Грати на безкоштовні тестові SOL',
     goMain: 'Грати на справжні SOL у Solana Mainnet',
-    notYet: 'S☉Lucky ще немає в мережі {network}',
+    soon: 'Незабаром',
   },
 
   faucet: {
@@ -77,8 +85,6 @@ const uk: Dict = {
     source: 'Вихідний код',
     builtOn: 'Побудовано на {solana}',
     madeBy: 'Розроблено в {nexow}',
-    mute: 'Вимкнути звук',
-    unmute: 'Увімкнути звук',
   },
 
   home: {
