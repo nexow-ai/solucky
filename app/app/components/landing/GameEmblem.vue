@@ -85,7 +85,7 @@ const ticks = Array.from({ length: 12 }, (_, i) => i * 30);
   animation: turn 4s linear infinite;
 }
 
-:global(.group:hover) .spin {
+.group:hover .spin {
   animation-duration: 12s;
 }
 

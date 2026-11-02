@@ -1,14 +1,18 @@
 name: Deploy
 
-# Builds the app for Cloudflare Workers and deploys it to solucky.me, by hand
-# from the Actions tab, so production follows a known commit instead of
-# whatever a laptop last built. Needs the repository secrets
-# CLOUDFLARE_API_TOKEN (Workers Scripts: Edit, Workers KV Storage: Edit) and
-# CLOUDFLARE_ACCOUNT_ID. Public settings come from app/wrangler.jsonc; secrets
-# (NUXT_VAPID_PRIVATE_KEY, NUXT_PUSH_SECRET) stay in Cloudflare.
+# Builds the app for Cloudflare Workers and deploys it to solucky.me once CI
+# passes on a push to main (or by hand from the Actions tab), so production
+# follows a known commit instead of whatever a laptop last built. Needs the
+# repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID. Public
+# settings come from app/wrangler.jsonc; secrets (NUXT_VAPID_PRIVATE_KEY,
+# NUXT_PUSH_SECRET) stay in Cloudflare.
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
 
 concurrency:
   group: deploy
@@ -26,8 +30,12 @@ jobs:
     name: Build and deploy to Cloudflare
     runs-on: ubuntu-latest
     environment: production
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The commit CI passed on; empty (the chosen branch) when run by hand.
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - uses: actions/setup-node@v7
         with:
