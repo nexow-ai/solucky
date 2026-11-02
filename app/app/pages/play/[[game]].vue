@@ -110,7 +110,7 @@ let leftAt = 0;
       <LotteryStage class="enter" style="--i: 1" />
       <LotteryLiveBar class="enter" style="--i: 2" :feed="feed" />
 
-      <div class="grid items-start gap-7 lg:grid-cols-12 lg:items-stretch">
+      <div class="grid grid-cols-1 items-start gap-7 lg:grid-cols-12 lg:items-stretch">
         <LotteryPlayPanel class="enter lg:col-span-7" style="--i: 3" />
         <LotteryTicketsPanel class="enter lg:col-span-5" style="--i: 4" />
       </div>

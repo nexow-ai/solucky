@@ -65,7 +65,10 @@ export default defineNuxtConfig({
       // The title, description, lang and dir come from the page's language (app.vue);
       // this title only stays on the shell of the browser-only pages until they load.
       title: 'S☉Lucky',
+      // Edge to edge on phones: main.css keeps the page clear of the notch and the home indicator.
+      viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
       meta: [
+        // The night page's color; app.vue follows the theme in use.
         { name: 'theme-color', content: '#1c1e23' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'S☉Lucky' },

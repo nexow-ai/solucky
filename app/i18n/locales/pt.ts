@@ -663,6 +663,10 @@ const pt: Dict = {
     title: 'Conecte uma carteira',
     description: 'Qualquer carteira da Solana compatível com o Wallet Standard funciona.',
     none: 'Nenhuma carteira da Solana foi encontrada neste navegador. Instale uma e depois recarregue a página:',
+    phone:
+      'Os navegadores do celular não têm extensões de carteira. Abra o S☉Lucky no app da sua carteira para conectar:',
+    openIn: 'Abrir no {wallet}',
+    getApp: 'Ainda não tem um app de carteira? Instale um e abra o S☉Lucky nele:',
     failed: 'Falha ao conectar {wallet}',
     noAccount:
       '{wallet} não compartilhou nenhuma conta Solana. Adicione ou selecione uma conta Solana em {wallet} e conecte de novo.',

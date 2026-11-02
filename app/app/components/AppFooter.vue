@@ -52,18 +52,19 @@ const links = computed(() =>
           </i18n-t>
           {{ t('footer.age') }}
         </p>
-        <nav :aria-label="t('footer.legal')" class="flex flex-wrap gap-x-4 gap-y-1 pt-2">
+        <!-- Links a finger can hit: each one at least 24px high. -->
+        <nav :aria-label="t('footer.legal')" class="flex flex-wrap gap-x-4 pt-2">
           <ULink
             v-for="page in LEGAL_PAGES"
             :key="page.to"
             :to="localePath(page.to)"
             exact
-            class="underline-offset-4 hover:text-primary hover:underline"
+            class="py-0.5 underline-offset-4 hover:text-primary hover:underline"
           >
             {{ t(`legal.pages.${page.key}.label`) }}
           </ULink>
         </nav>
-        <nav :aria-label="t('footer.languages')" class="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-xs text-dimmed">
+        <nav :aria-label="t('footer.languages')" class="flex flex-wrap gap-x-3 pt-1 text-xs text-dimmed">
           <ULink
             v-for="l in LOCALES"
             :key="l.code"
@@ -71,7 +72,7 @@ const links = computed(() =>
             :hreflang="l.language"
             :lang="l.language"
             :aria-current="l.code === locale ? 'true' : undefined"
-            class="hover:text-primary aria-[current]:text-toned"
+            class="py-1 hover:text-primary aria-[current]:text-toned"
             @click="rememberLanguage(l.code)"
           >
             {{ l.name }}
@@ -82,7 +83,7 @@ const links = computed(() =>
 
     <template #right>
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
-        <ULink to="https://solana.com" target="_blank" class="group text-muted hover:text-highlighted">
+        <ULink to="https://solana.com" target="_blank" class="group py-1 text-muted hover:text-highlighted">
           <i18n-t keypath="footer.builtOn" tag="span" scope="global">
             <template #solana>
               <span
@@ -99,7 +100,7 @@ const links = computed(() =>
           to="https://nexow.studio"
           target="_blank"
           :aria-label="t('footer.madeBy', { nexow: 'Nexow' })"
-          class="group text-muted hover:text-highlighted"
+          class="group py-1 text-muted hover:text-highlighted"
         >
           <i18n-t keypath="footer.madeBy" tag="span" scope="global">
             <template #nexow>

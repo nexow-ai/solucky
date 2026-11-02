@@ -201,8 +201,10 @@ function choose(code: string) {
     box-shadow 0.2s;
 }
 
-.segment:hover {
-  color: var(--ui-text-highlighted);
+@media (hover: hover) {
+  .segment:hover {
+    color: var(--ui-text-highlighted);
+  }
 }
 
 .segment[aria-pressed='true'] {

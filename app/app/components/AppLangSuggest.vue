@@ -41,7 +41,7 @@ function decide(code: string) {
     leave-active-class="transition duration-200"
   >
     <!-- Placed by the page's direction (away from the toasts), written in the offered language's. -->
-    <div v-if="offer && words && info" class="fixed start-4 bottom-4 z-50 w-[min(22rem,calc(100vw-2rem))]">
+    <div v-if="offer && words && info" class="fixed start-4 float-bottom z-50 w-[min(22rem,calc(100vw-2rem))]">
       <aside
         :lang="info.language"
         :dir="info.dir ?? 'ltr'"

@@ -657,6 +657,9 @@ const tr: Dict = {
     title: 'Bir cüzdan bağlayın',
     description: 'Wallet Standard destekli her Solana cüzdanı çalışır.',
     none: 'Bu tarayıcıda Solana cüzdanı bulunamadı. Bir tane kurun, ardından sayfayı yenileyin:',
+    phone: 'Telefon tarayıcılarında cüzdan eklentisi yoktur. Bağlanmak için S☉Lucky’yi cüzdan uygulamanızda açın:',
+    openIn: '{wallet} ile aç',
+    getApp: 'Henüz cüzdan uygulamanız yok mu? Bir tane kurun, ardından S☉Lucky’yi onda açın:',
     failed: '{wallet} bağlanamadı',
     noAccount:
       '{wallet} hiçbir Solana hesabı paylaşmadı. {wallet} içinde bir Solana hesabı ekleyin veya seçin, sonra yeniden bağlanın.',

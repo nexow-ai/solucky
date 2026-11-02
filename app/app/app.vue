@@ -55,6 +55,11 @@ const config = useRuntimeConfig().public;
 const origin = (config.siteUrl || config.i18n?.baseUrl || useRequestURL().origin).replace(/\/$/, '');
 const { t, locale } = useI18n();
 const ui = computed(() => UI_LOCALES[locale.value as Locale] ?? en);
+// Toasts at the end of the reading line; main.css lifts them (float-bottom) clear of the home indicator and the phone buy bar.
+const toaster = computed(() => ({
+  position: ui.value.dir === 'rtl' ? ('bottom-left' as const) : ('bottom-right' as const),
+  class: 'float-bottom',
+}));
 
 // <html lang dir>, the page in every other language (hreflang) and og:locale.
 const localeHead = useLocaleHead();
@@ -63,6 +68,10 @@ useHead(() => ({
   link: localeHead.value.link,
   meta: localeHead.value.meta,
 }));
+
+// A phone's browser bar takes the page's color (main.css's --ui-bg), in the theme in use.
+const colorMode = useColorMode();
+useHead({ meta: [{ name: 'theme-color', content: () => (colorMode.value === 'light' ? '#e7eaef' : '#1c1e23') }] });
 
 // A game's pages (its own page, its table, its rounds) share its card; the other pages, the home page's.
 const game = useGame();
@@ -82,7 +91,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <UApp :locale="ui" :toaster="{ position: ui.dir === 'rtl' ? 'bottom-left' : 'bottom-right' }">
+  <UApp :locale="ui" :toaster="toaster">
     <NuxtLoadingIndicator color="var(--ui-primary)" />
     <NuxtLayout>
       <NuxtPage />

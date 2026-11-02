@@ -663,6 +663,9 @@ const nl: Dict = {
     title: 'Koppel een wallet',
     description: 'Elke Solana-wallet die de Wallet Standard ondersteunt, werkt.',
     none: 'In deze browser is geen Solana-wallet gevonden. Installeer er een en laad de pagina daarna opnieuw:',
+    phone: 'Browsers op je telefoon hebben geen wallet-extensies. Open S☉Lucky in je wallet-app om te koppelen:',
+    openIn: 'Openen in {wallet}',
+    getApp: 'Nog geen wallet-app? Installeer er een en open S☉Lucky daarin:',
     failed: 'Kon {wallet} niet koppelen',
     noAccount:
       '{wallet} heeft geen Solana-account gedeeld. Voeg in {wallet} een Solana-account toe of kies er een, en koppel dan opnieuw.',

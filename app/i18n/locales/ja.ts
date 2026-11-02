@@ -656,6 +656,9 @@ const ja: Dict = {
     title: 'ウォレットを接続',
     description: 'Wallet Standardに対応したSolanaウォレットなら、どれでも使えます。',
     none: 'このブラウザにSolanaウォレットが見つかりません。ウォレットをインストールしてから、ページを再読み込みしてください：',
+    phone: 'スマホのブラウザにはウォレット拡張機能がありません。ウォレットアプリでS☉Luckyを開いて接続してください：',
+    openIn: '{wallet}で開く',
+    getApp: 'ウォレットアプリをお持ちでない場合は、インストールしてからその中でS☉Luckyを開いてください：',
     failed: '{wallet}に接続できませんでした',
     noAccount:
       '{wallet}からSolanaアカウントが共有されませんでした。{wallet}でSolanaアカウントを追加または選択してから、もう一度接続してください。',

@@ -660,6 +660,9 @@ const id: Dict = {
     title: 'Hubungkan dompet',
     description: 'Dompet Solana apa pun yang mendukung Wallet Standard bisa dipakai.',
     none: 'Tidak ada dompet Solana di browser ini. Pasang salah satunya, lalu muat ulang halaman:',
+    phone: 'Browser di ponsel tidak punya ekstensi dompet. Buka S☉Lucky di aplikasi dompetmu untuk terhubung:',
+    openIn: 'Buka di {wallet}',
+    getApp: 'Belum punya aplikasi dompet? Pasang salah satunya, lalu buka S☉Lucky di sana:',
     failed: 'Tidak dapat menghubungkan {wallet}',
     noAccount:
       '{wallet} tidak membagikan akun Solana. Tambahkan atau pilih akun Solana di {wallet}, lalu hubungkan ulang.',

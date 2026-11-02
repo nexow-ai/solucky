@@ -656,6 +656,9 @@ const vi: Dict = {
     title: 'Kết nối ví',
     description: 'Mọi ví Solana hỗ trợ Wallet Standard đều dùng được.',
     none: 'Không tìm thấy ví Solana nào trong trình duyệt này. Hãy cài một ví, rồi tải lại trang:',
+    phone: 'Trình duyệt trên điện thoại không có tiện ích ví. Hãy mở S☉Lucky trong ứng dụng ví của bạn để kết nối:',
+    openIn: 'Mở trong {wallet}',
+    getApp: 'Chưa có ứng dụng ví? Hãy cài một ứng dụng, rồi mở S☉Lucky trong đó:',
     failed: 'Không thể kết nối {wallet}',
     noAccount:
       '{wallet} không chia sẻ tài khoản Solana nào. Hãy thêm hoặc chọn một tài khoản Solana trong {wallet}, rồi kết nối lại.',

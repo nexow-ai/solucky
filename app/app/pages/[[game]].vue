@@ -125,7 +125,7 @@ useHead(() => ({
     <!-- Hero: the game's headline and its dial (scripts/og.ts lays the home page's out as the share card by its data-hero marks). -->
     <section class="overflow-hidden" data-hero>
       <UContainer
-        class="grid items-center gap-14 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10 lg:py-24"
+        class="grid items-center gap-12 py-10 sm:gap-14 sm:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10 lg:py-24"
       >
         <div data-hero-text>
           <span
@@ -135,7 +135,9 @@ useHead(() => ({
             <LandingGameEmblem :kind="game" size="size-5" />
             {{ t(`landing.${slug}.kicker`) }}
           </span>
-          <h1 class="mt-7 text-5xl leading-[1.02] font-light tracking-tight text-highlighted sm:text-7xl">
+          <h1
+            class="mt-7 text-[2.75rem] leading-[1.02] font-light tracking-tight wrap-break-word text-highlighted min-[24rem]:text-5xl sm:text-7xl"
+          >
             <span class="rise inline-block" style="--rise: 1">{{ t(`landing.${slug}.title`) }}</span
             ><br />
             <span class="rise text-lucky inline-block pb-1 font-normal" style="--rise: 2">{{
@@ -186,7 +188,7 @@ useHead(() => ({
     </section>
 
     <!-- How it works: the game's four steps, and the winner's share. -->
-    <section id="how-it-works" class="py-16 sm:py-24">
+    <section id="how-it-works" class="py-12 sm:py-24">
       <UContainer>
         <LandingSectionHead
           :tag="t('home.how.tag')"
@@ -233,7 +235,7 @@ useHead(() => ({
     </section>
 
     <!-- The game's winners, straight from the program's accounts. -->
-    <section id="winners" class="py-16 sm:py-24">
+    <section id="winners" class="py-12 sm:py-24">
       <UContainer>
         <LandingSectionHead
           :tag="t('home.winners.tag')"
@@ -245,7 +247,7 @@ useHead(() => ({
     </section>
 
     <!-- Fairness: the rules the program enforces. -->
-    <section id="fairness" class="py-16 sm:py-24">
+    <section id="fairness" class="py-12 sm:py-24">
       <UContainer>
         <LandingSectionHead
           :tag="t('home.fairness.tag')"
@@ -270,7 +272,7 @@ useHead(() => ({
     </section>
 
     <!-- Questions. -->
-    <section id="faq" class="py-16 sm:py-24">
+    <section id="faq" class="py-12 sm:py-24">
       <UContainer class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.7fr)] lg:items-start">
         <!-- Below xl the header has a second row (the game tabs), so the column sticks lower. -->
         <div class="lg:sticky lg:top-36 xl:top-28">
@@ -305,7 +307,7 @@ useHead(() => ({
     </section>
 
     <!-- The two other games. -->
-    <section id="games" class="py-16 sm:py-24">
+    <section id="games" class="py-12 sm:py-24">
       <UContainer>
         <LandingSectionHead
           :tag="t('games.tag')"
@@ -321,9 +323,9 @@ useHead(() => ({
     </section>
 
     <!-- The call to play this game. -->
-    <section class="py-16 sm:py-24">
+    <section class="py-12 sm:py-24">
       <UContainer>
-        <div class="reveal rounded-[2.5rem] bg-default px-6 py-16 text-center shadow-(--neu-lg) sm:py-20">
+        <div class="reveal rounded-[2.5rem] bg-default px-6 py-12 text-center shadow-(--neu-lg) sm:py-20">
           <p class="kicker inline-flex items-center gap-2.5">
             <span class="led-dot animate-breathe text-secondary" aria-hidden="true" />
             {{ t(`landing.${slug}.cta.kicker`) }}

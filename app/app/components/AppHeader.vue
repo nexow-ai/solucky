@@ -17,8 +17,10 @@ const faucet = useFaucet();
     title="S☉Lucky"
     :toggle="false"
     :ui="{
-      // The bar keeps its height; the game tabs' row (below xl) adds to it.
-      root: 'h-auto',
+      // The bar keeps its height; the game tabs' row (below xl) adds to it. On a
+      // short screen (a phone on its side) it scrolls away with the page
+      // instead of taking a third of it.
+      root: 'h-auto [@media(max-height:30rem)]:static',
       container: 'h-(--ui-header-height)',
       // Nuxt UI shows the middle from lg; the game tabs need it from xl only.
       center: 'hidden lg:hidden xl:flex',

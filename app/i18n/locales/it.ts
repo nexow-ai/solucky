@@ -664,6 +664,9 @@ const it: Dict = {
     title: 'Collega un wallet',
     description: 'Funziona qualsiasi wallet Solana che supporti il Wallet Standard.',
     none: 'In questo browser non è stato trovato nessun wallet Solana. Installane uno, poi ricarica la pagina:',
+    phone: 'I browser del telefono non hanno estensioni wallet. Apri S☉Lucky nell’app del tuo wallet per collegarti:',
+    openIn: 'Apri in {wallet}',
+    getApp: 'Non hai ancora un’app wallet? Installane una, poi apri S☉Lucky al suo interno:',
     failed: 'Impossibile collegare {wallet}',
     noAccount:
       '{wallet} non ha condiviso alcun account Solana. Aggiungi o seleziona un account Solana in {wallet}, poi ricollegati.',
