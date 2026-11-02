@@ -503,6 +503,9 @@ const ru: Dict = {
     inPlay: 'Числа в игре',
     empty: 'Билетов пока нет',
     beFirst: 'Станьте первым, кто выберет число в этом раунде.',
+    search: 'Найти число, кошелёк или страну',
+    clearSearch: 'Очистить поиск',
+    noMatch: 'В игре нет совпадений с «{query}»',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

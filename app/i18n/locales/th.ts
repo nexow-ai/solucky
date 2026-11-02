@@ -495,6 +495,9 @@ const th: Dict = {
     inPlay: 'ตัวเลขที่อยู่ในเกม',
     empty: 'ยังไม่มีตั๋ว',
     beFirst: 'มาเป็นคนแรกที่เลือกตัวเลขในรอบนี้',
+    search: 'ค้นหาตัวเลข กระเป๋าเงิน หรือประเทศ',
+    clearSearch: 'ล้างการค้นหา',
+    noMatch: 'ไม่มีรายการที่ตรงกับ “{query}”',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

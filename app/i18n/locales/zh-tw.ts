@@ -480,6 +480,9 @@ const zhtw: Dict = {
     inPlay: '已選號碼',
     empty: '還沒有彩券',
     beFirst: '成為本期第一個選號的人。',
+    search: '搜尋號碼、錢包或國家',
+    clearSearch: '清除搜尋',
+    noMatch: '沒有與「{query}」相符的結果',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

@@ -499,6 +499,9 @@ const id: Dict = {
     inPlay: 'Angka yang dimainkan',
     empty: 'Belum ada tiket',
     beFirst: 'Jadilah yang pertama memilih angka di ronde ini.',
+    search: 'Cari angka, dompet, atau negara',
+    clearSearch: 'Hapus pencarian',
+    noMatch: 'Tidak ada yang cocok dengan “{query}”',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

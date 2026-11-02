@@ -501,6 +501,9 @@ const nl: Dict = {
     inPlay: 'Getallen in het spel',
     empty: 'Nog geen loten',
     beFirst: 'Kies in deze ronde als eerste een getal.',
+    search: 'Zoek een getal, wallet of land',
+    clearSearch: 'Zoekopdracht wissen',
+    noMatch: 'Niets in het spel komt overeen met ‘{query}’',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

@@ -501,6 +501,9 @@ const hi: Dict = {
     inPlay: 'खेल में नंबर',
     empty: 'अभी कोई टिकट नहीं',
     beFirst: 'इस राउंड में नंबर चुनने वाले पहले व्यक्ति बनें।',
+    search: 'नंबर, वॉलेट या देश खोजें',
+    clearSearch: 'खोज साफ़ करें',
+    noMatch: 'खेल में “{query}” से कुछ मेल नहीं खाता',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

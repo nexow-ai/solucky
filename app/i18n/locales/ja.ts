@@ -498,6 +498,9 @@ const ja: Dict = {
     inPlay: '参加中の番号',
     empty: 'チケットはまだありません',
     beFirst: 'このラウンドで最初に番号を選びましょう。',
+    search: '番号・ウォレット・国で検索',
+    clearSearch: '検索をクリア',
+    noMatch: '「{query}」に一致するものはありません',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

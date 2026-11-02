@@ -497,6 +497,9 @@ const vi: Dict = {
     inPlay: 'Các số đang chơi',
     empty: 'Chưa có vé nào',
     beFirst: 'Hãy là người đầu tiên chọn số trong vòng này.',
+    search: 'Tìm số, ví hoặc quốc gia',
+    clearSearch: 'Xóa tìm kiếm',
+    noMatch: 'Không có gì khớp với “{query}”',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

@@ -497,6 +497,9 @@ const ko: Dict = {
     inPlay: '참여 중인 번호',
     empty: '아직 티켓이 없어요',
     beFirst: '이번 라운드에서 첫 번째로 번호를 골라 보세요.',
+    search: '번호, 지갑 또는 국가 검색',
+    clearSearch: '검색 지우기',
+    noMatch: '“{query}”와 일치하는 항목이 없어요',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

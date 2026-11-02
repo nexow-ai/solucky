@@ -500,6 +500,9 @@ const ar: Dict = {
     inPlay: 'الأرقام في اللعب',
     empty: 'لا تذاكر بعد',
     beFirst: 'كن أول من يختار رقمًا في هذه الجولة.',
+    search: 'ابحث عن رقم أو محفظة أو بلد',
+    clearSearch: 'امسح البحث',
+    noMatch: 'لا شيء في اللعب يطابق «{query}»',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

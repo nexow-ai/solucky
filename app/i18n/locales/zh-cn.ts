@@ -480,6 +480,9 @@ const zhcn: Dict = {
     inPlay: '已选号码',
     empty: '还没有彩票',
     beFirst: '成为本期第一个选号的人。',
+    search: '搜索号码、钱包或国家',
+    clearSearch: '清除搜索',
+    noMatch: '没有与“{query}”匹配的结果',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

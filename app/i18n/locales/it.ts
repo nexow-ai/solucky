@@ -502,6 +502,9 @@ const it: Dict = {
     inPlay: 'Numeri in gioco',
     empty: 'Ancora nessun biglietto',
     beFirst: 'Sii la prima persona a scegliere un numero in questo round.',
+    search: 'Cerca un numero, un wallet o un paese',
+    clearSearch: 'Cancella la ricerca',
+    noMatch: 'Niente in gioco corrisponde a «{query}»',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

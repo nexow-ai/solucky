@@ -489,6 +489,9 @@ const he: Dict = {
     inPlay: 'מספרים במשחק',
     empty: 'עדיין אין כרטיסים',
     beFirst: 'היו הראשונים לבחור מספר בסבב הזה.',
+    search: 'חיפוש מספר, ארנק או מדינה',
+    clearSearch: 'ניקוי החיפוש',
+    noMatch: 'שום דבר במשחק לא תואם ל־„{query}”',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

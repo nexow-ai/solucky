@@ -511,6 +511,9 @@ const en = {
     inPlay: 'Numbers in play',
     empty: 'No tickets yet',
     beFirst: 'Be the first to pick a number in this round.',
+    search: 'Find a number, wallet or country',
+    clearSearch: 'Clear the search',
+    noMatch: 'Nothing in play matches “{query}”',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */

@@ -497,6 +497,9 @@ const tr: Dict = {
     inPlay: 'Oyundaki sayılar',
     empty: 'Henüz bilet yok',
     beFirst: 'Bu turda bir sayı seçen ilk kişi siz olun.',
+    search: 'Sayı, cüzdan veya ülke arayın',
+    clearSearch: 'Aramayı temizle',
+    noMatch: 'Oyunda “{query}” ile eşleşen bir şey yok',
   },
 
   /** The three games, as the play page's switcher and the landing page name them. */
