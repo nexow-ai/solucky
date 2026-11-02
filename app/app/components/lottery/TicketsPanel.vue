@@ -50,7 +50,7 @@ const stubs = computed(() => {
           </h2>
           <p v-if="myChance !== null" class="flex items-baseline gap-2">
             <span class="kicker text-[0.65rem]">{{ t('stat.winChance') }}</span>
-            <span class="chance font-mono text-lg tabular-nums">{{ formatPercent(myChance, intl) }}</span>
+            <LotteryPercent :ratio="myChance" class="chance font-mono text-lg tabular-nums" />
           </p>
         </header>
 
@@ -65,9 +65,7 @@ const stubs = computed(() => {
             >
               <span class="stub-flag" aria-hidden="true">{{ flagEmoji(stub.cc) }}</span>
               <span class="stub-number font-mono tabular-nums" dir="ltr">{{ formatNumber(stub.number) }}</span>
-              <span v-if="stub.share !== null" class="stub-meta font-mono tabular-nums">
-                {{ formatPercent(stub.share, intl) }}
-              </span>
+              <LotteryPercent v-if="stub.share !== null" :ratio="stub.share" class="stub-meta font-mono tabular-nums" />
               <span v-else class="stub-meta">
                 {{
                   stub.state === 'won'

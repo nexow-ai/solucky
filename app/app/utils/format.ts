@@ -61,15 +61,43 @@ export function formatUtcTime(unixSeconds: bigint | number): string {
   return new Date(Number(unixSeconds) * 1000).toISOString().slice(11, 19);
 }
 
-/** Percentage with one decimal (three below 0.1%), `—` when undefined. */
-export function formatPercent(ratio: number | null, locale = 'en-US'): string {
-  if (ratio === null || !Number.isFinite(ratio)) return '—';
-  const digits = ratio > 0 && ratio < 0.001 ? 3 : 1;
-  return numberFormat(locale, {
+/**
+ * A share as a percentage, in parts: `head` at the usual precision (one
+ * decimal, three below 0.1%), `tail` the further decimals a tiny share needs
+ * to show its first two digits, so it never reads as 0% (the page prints them
+ * smaller, `LotteryPercent`), and `rest` what follows the number (the percent
+ * sign, in most languages). 0.000000048 is `0.000` + `0048` + `%`.
+ */
+export function percentParts(ratio: number | null, locale = 'en-US'): { head: string; tail: string; rest: string } {
+  if (ratio === null || !Number.isFinite(ratio)) return { head: '—', tail: '', rest: '' };
+  const tiny = ratio > 0 && ratio < 0.001;
+  const base = tiny ? 3 : 1;
+  // Decimals of the percentage up to its second significant digit.
+  const digits = tiny ? Math.min(20, Math.max(base, Math.ceil(-Math.log10(ratio * 100)) + 1)) : base;
+  const parts = numberFormat(locale, {
     style: 'percent',
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
-  }).format(ratio);
+  }).formatToParts(ratio);
+  let head = '';
+  let tail = '';
+  let rest = '';
+  let past = false;
+  for (const part of parts) {
+    if (part.type === 'fraction') {
+      head += part.value.slice(0, base);
+      tail += part.value.slice(base);
+      past = true;
+    } else if (past) rest += part.value;
+    else head += part.value;
+  }
+  return { head, tail, rest };
+}
+
+/** Percentage with one decimal (three below 0.1%, and more for a tiny one, to its first two digits), `—` when undefined. */
+export function formatPercent(ratio: number | null, locale = 'en-US'): string {
+  const { head, tail, rest } = percentParts(ratio, locale);
+  return head + tail + rest;
 }
 
 /** `12 s`, `3 min`, `2 hours`, in the language's own words. */
