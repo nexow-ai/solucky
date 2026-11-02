@@ -11,7 +11,7 @@
 import { GAME_SLUGS, type GameSlug } from '@solucky/client';
 
 import { LEGAL_PAGES, LEGAL_UPDATED, OPERATOR } from '../../app/utils/legal';
-import { homePath, playPath } from '../../app/utils/play';
+import { homePath, playPath, shareImagePath } from '../../app/utils/play';
 import { DEFAULT_LOCALE, type Locale, type LocaleInfo, LOCALES } from '../../i18n/languages';
 import ar from '../../i18n/locales/ar';
 import de from '../../i18n/locales/de';
@@ -243,7 +243,7 @@ export function shellHead(
     `<meta data-shell property="og:title" content="${attr(title)}">`,
     `<meta data-shell property="og:description" content="${attr(description)}">`,
     `<meta data-shell property="og:url" content="${attr(canonical)}">`,
-    `<meta data-shell property="og:image" content="${attr(`${origin}/og.png`)}">`,
+    `<meta data-shell property="og:image" content="${attr(`${origin}${shareImagePath(page.slug)}`)}">`,
     `<meta data-shell property="og:image:width" content="1200">`,
     `<meta data-shell property="og:image:height" content="630">`,
     `<meta data-shell property="og:image:alt" content="${attr(d.meta.ogImageAlt)}">`,

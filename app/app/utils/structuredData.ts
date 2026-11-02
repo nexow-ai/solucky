@@ -14,6 +14,8 @@ export interface HomeGraphInput {
   title: string;
   description: string;
   lead: string;
+  /** The page's card (absolute); the site's own, `/og.png`, by default. */
+  image?: string;
   imageAlt: string;
   operator: { name: string; site: string; email: string };
   /** Code repository and social profiles; empty ones are left out. */
@@ -68,7 +70,13 @@ export function homeGraph(input: HomeGraphInput) {
         inLanguage: input.language,
         isPartOf: { '@id': site },
         about: { '@id': app },
-        primaryImageOfPage: { '@type': 'ImageObject', url: image, width: 1200, height: 630, caption: input.imageAlt },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          url: input.image ?? image,
+          width: 1200,
+          height: 630,
+          caption: input.imageAlt,
+        },
       },
       {
         '@type': 'WebApplication',

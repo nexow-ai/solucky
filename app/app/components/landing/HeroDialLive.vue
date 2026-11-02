@@ -126,7 +126,7 @@ const summary = computed(() => {
     </svg>
 
     <!-- The core: the pot, and the time to the draw or the numbers left to try. -->
-    <!-- scripts/og.ts swaps these for the draw's time on the share card, by their data-dial marks. -->
+    <!-- scripts/og.ts swaps these for what lasts (the draw's time, or Guess's open hunt) on the share cards, by their data-dial marks. -->
     <div class="absolute inset-[28%] flex flex-col items-center justify-center text-center">
       <p class="kicker text-[0.6rem]" data-dial-label>{{ label }}</p>
       <USkeleton v-if="loading" class="mt-2 h-9 w-28 rounded-full" />
@@ -146,10 +146,13 @@ const summary = computed(() => {
         </p>
       </template>
       <template v-else>
-        <p class="mt-[6%] font-mono text-[min(1.25rem,4.2cqw)] leading-none text-secondary tabular-nums">
+        <p
+          class="mt-[6%] font-mono text-[min(1.25rem,4.2cqw)] leading-none text-secondary tabular-nums"
+          data-dial-countdown
+        >
           {{ loading ? '…' : formatNumber(numbersLeft) }}
         </p>
-        <p class="kicker mt-1 text-[0.55rem]">{{ t('stat.numbersLeft') }}</p>
+        <p class="kicker mt-1 text-[0.55rem]" data-dial-day>{{ t('stat.numbersLeft') }}</p>
       </template>
     </div>
   </div>

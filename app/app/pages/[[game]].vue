@@ -97,6 +97,7 @@ useHead(() => ({
           title: title.value,
           description: description.value,
           lead: t('home.lead'),
+          image: absolute(shareImagePath(slug.value)),
           imageAlt: t('meta.ogImageAlt'),
           operator: OPERATOR,
           profiles: [config.githubUrl, config.twitterUrl, config.discordUrl].filter(Boolean),

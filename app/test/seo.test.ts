@@ -124,6 +124,8 @@ describe('shellHead', () => {
     expect(head).not.toMatch(/content="[^"]*[<>][^"]*"/);
     // Without scripts, the shell leads to the game's own page, which renders on the server.
     expect(noscript).toContain(`href="${ORIGIN}/fr/guess"`);
+    // Each game's pages share its own card.
+    expect(head).toContain(`property="og:image" content="${ORIGIN}/og-guess.png"`);
   });
 });
 
