@@ -670,6 +670,10 @@ const en = {
     title: 'Connect a wallet',
     description: 'Any Solana wallet that supports the Wallet Standard works.',
     none: 'No Solana wallet was found in this browser. Install one, then reload the page:',
+    /** A phone's browser without wallets: the wallet apps can open the page in their own browser. */
+    phone: 'Phone browsers have no wallet extensions. Open S☉Lucky in your wallet app to connect:',
+    openIn: 'Open in {wallet}',
+    getApp: 'No wallet app yet? Install one, then open S☉Lucky in it:',
     failed: 'Could not connect {wallet}',
     noAccount:
       '{wallet} did not share a Solana account. Add or select a Solana account in {wallet}, then connect again.',

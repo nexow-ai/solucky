@@ -654,6 +654,9 @@ const ko: Dict = {
     title: '지갑 연결하기',
     description: 'Wallet Standard를 지원하는 Solana 지갑이면 무엇이든 쓸 수 있어요.',
     none: '이 브라우저에서 Solana 지갑을 찾지 못했어요. 지갑을 설치한 뒤 페이지를 새로고침하세요:',
+    phone: '휴대폰 브라우저에는 지갑 확장 프로그램이 없어요. 지갑 앱에서 S☉Lucky를 열어 연결하세요:',
+    openIn: '{wallet}에서 열기',
+    getApp: '아직 지갑 앱이 없나요? 하나 설치한 뒤 그 앱에서 S☉Lucky를 여세요:',
     failed: '{wallet}에 연결하지 못했어요',
     noAccount:
       '{wallet}에서 공유된 Solana 계정이 없어요. {wallet}에서 Solana 계정을 추가하거나 선택한 뒤 다시 연결하세요.',

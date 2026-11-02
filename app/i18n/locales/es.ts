@@ -663,6 +663,10 @@ const es: Dict = {
     title: 'Conecta una billetera',
     description: 'Funciona cualquier billetera de Solana compatible con el Wallet Standard.',
     none: 'No se encontró ninguna billetera de Solana en este navegador. Instala una y luego recarga la página:',
+    phone:
+      'Los navegadores del móvil no tienen extensiones de billetera. Abre S☉Lucky en la app de tu billetera para conectarte:',
+    openIn: 'Abrir en {wallet}',
+    getApp: '¿Aún no tienes una app de billetera? Instala una y abre S☉Lucky en ella:',
     failed: 'No se pudo conectar con {wallet}',
     noAccount:
       '{wallet} no compartió ninguna cuenta de Solana. Añade o selecciona una cuenta de Solana en {wallet} y vuelve a conectarte.',

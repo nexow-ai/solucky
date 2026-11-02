@@ -23,6 +23,11 @@ const INSTALL = recommendedFirst([
   { name: 'Backpack', to: 'https://backpack.app/downloads' },
 ]);
 
+// A phone's browser has no wallet extensions: the wallet apps open this page in their own browser instead.
+const route = useRoute();
+const phone = import.meta.client && isPhone(navigator);
+const apps = computed(() => walletAppLinks(new URL(route.fullPath, location.origin).href, location.origin));
+
 const ticketNumbers = computed(() =>
   [...myTickets.value]
     .map((ticket) => ticket.data.number)
@@ -241,6 +246,46 @@ async function signOut() {
             class="ms-auto"
           />
         </UButton>
+      </div>
+      <div v-else-if="phone" class="space-y-3 text-sm text-muted">
+        <p>{{ t('wallet.phone') }}</p>
+        <div class="grid gap-2">
+          <UButton
+            v-for="app in apps"
+            :key="app.name"
+            :to="app.to"
+            color="neutral"
+            variant="outline"
+            size="lg"
+            block
+            icon="i-lucide-smartphone"
+            class="justify-start"
+          >
+            {{ t('wallet.openIn', { wallet: app.name }) }}
+            <UBadge
+              v-if="app.name === RECOMMENDED_WALLET"
+              :label="t('wallet.recommended')"
+              color="primary"
+              variant="subtle"
+              size="sm"
+              class="ms-auto"
+            />
+          </UButton>
+        </div>
+        <p class="pt-1">{{ t('wallet.getApp') }}</p>
+        <div class="flex flex-wrap gap-2">
+          <UButton
+            v-for="wallet in INSTALL"
+            :key="wallet.name"
+            :label="wallet.name"
+            :to="wallet.to"
+            target="_blank"
+            color="neutral"
+            variant="subtle"
+            size="sm"
+            trailing-icon="i-lucide-external-link"
+          />
+        </div>
       </div>
       <div v-else class="space-y-3 text-sm text-muted">
         <p>{{ t('wallet.none') }}</p>

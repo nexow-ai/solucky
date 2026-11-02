@@ -666,6 +666,10 @@ const fr: Dict = {
     title: 'Connecte un portefeuille',
     description: 'N’importe quel portefeuille Solana compatible avec le Wallet Standard fonctionne.',
     none: 'Aucun portefeuille Solana n’a été trouvé dans ce navigateur. Installes-en un, puis recharge la page :',
+    phone:
+      'Les navigateurs mobiles n’ont pas d’extensions de portefeuille. Ouvre S☉Lucky dans l’app de ton portefeuille pour te connecter :',
+    openIn: 'Ouvrir dans {wallet}',
+    getApp: 'Pas encore d’app de portefeuille ? Installes-en une, puis ouvre S☉Lucky dedans :',
     failed: 'Impossible de connecter {wallet}',
     noAccount:
       '{wallet} n’a partagé aucun compte Solana. Ajoute ou sélectionne un compte Solana dans {wallet}, puis reconnecte-toi.',
