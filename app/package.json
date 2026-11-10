@@ -17,7 +17,8 @@
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
     "test:browser": "playwright test",
-    "deploy": "NITRO_PRESET=cloudflare_durable nuxt build && wrangler deploy"
+    "deploy": "NITRO_PRESET=cloudflare_durable nuxt build && wrangler deploy",
+    "deploy:devnet": "NITRO_PRESET=cloudflare_durable nuxt build && wrangler deploy --env devnet"
   },
   "dependencies": {
     "@iconify-json/lucide": "1.2.149",

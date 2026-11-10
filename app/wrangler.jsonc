@@ -1,4 +1,13 @@
-// Cloudflare Workers deployment of the app: `bun run deploy` from the repo root.
+// Cloudflare Workers deployments of the app, one per cluster, from the same
+// build: `bun run deploy` for Mainnet at solucky.me (the top level below), and
+// `bun run deploy:devnet` for Devnet at devnet.solucky.me (env.devnet), where
+// tickets cost free test SOL. Each one's header links to the other.
+//
+// Secrets, per Worker (`wrangler secret put <NAME>`, add `--env devnet` for Devnet):
+//   NUXT_CRANK_KEYPAIR      byte array of the key the site's crank pays fees with
+//   NUXT_RPC_UPSTREAM       a provider's RPC URL, token included, for the RPC proxy and the crank
+//   NUXT_PUBLIC_RPC_URL, NUXT_PUBLIC_RPC_TOKEN   or a provider the browser calls directly
+//   NUXT_VAPID_PRIVATE_KEY, NUXT_PUSH_SECRET     draw notifications (`bun run vapid`)
 {
   "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "solucky",
@@ -7,14 +16,16 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": { "directory": "./.output/public", "binding": "ASSETS" },
   "observability": { "enabled": true },
+  // The site's crank (server/tasks/crank.ts): the same pattern as
+  // `scheduledTasks` in nuxt.config.ts. Each run settles for ~50 seconds.
+  "triggers": { "crons": ["* * * * *"] },
   // Nitro's cloudflare_durable preset sends every WebSocket of the play page's
   // live table to this one Durable Object, so all players share one table.
   "durable_objects": {
     "bindings": [{ "name": "$DurableObject", "class_name": "$DurableObject" }],
   },
   "migrations": [{ "tag": "v1-live-table", "new_sqlite_classes": ["$DurableObject"] }],
-  // Draw notification subscriptions (server/utils/push.ts). The first deploy
-  // creates the namespace and writes its id here: commit it.
+  // Draw notification subscriptions (server/utils/push.ts).
   "kv_namespaces": [{ "binding": "PUSH", "id": "3c4fd6f6f26a4a67be2df4868b7bb70d" }],
   // Apex + www; Cloudflare manages DNS and certificates for these.
   "routes": [
@@ -23,14 +34,38 @@
   ],
   // Public settings read by the app at runtime (see app/.env.example).
   "vars": {
-    "NUXT_PUBLIC_CLUSTER": "devnet",
-    // The header's Testnet | Mainnet selector links to the other deployment.
-    // S☉Lucky is not on Mainnet yet, so that side stays disabled; set the
-    // Mainnet site's URL here once it exists. This site is the test one.
+    "NUXT_PUBLIC_CLUSTER": "mainnet",
+    // The header's network selector opens the same page on the Devnet site.
+    "NUXT_PUBLIC_TESTNET_URL": "https://devnet.solucky.me",
     "NUXT_PUBLIC_MAINNET_URL": "",
-    "NUXT_PUBLIC_TESTNET_URL": "",
     "NUXT_PUBLIC_SITE_URL": "https://solucky.me",
     // The same URL, so every language's hreflang and canonical links are absolute.
     "NUXT_PUBLIC_I18N_BASE_URL": "https://solucky.me",
+    // Priority fees, in micro-lamports per compute unit: ◎0.000005 on a
+    // 100k-unit purchase, and twice that for the crank, whose draws must land
+    // before the pinned slot leaves SlotHashes.
+    "NUXT_PUBLIC_PRIORITY_FEE": "50000",
+    "NUXT_CRANK_PRIORITY_FEE": "100000",
+  },
+  "env": {
+    "devnet": {
+      "name": "solucky-devnet",
+      "routes": [{ "pattern": "devnet.solucky.me", "custom_domain": true }],
+      "durable_objects": {
+        "bindings": [{ "name": "$DurableObject", "class_name": "$DurableObject" }],
+      },
+      "migrations": [{ "tag": "v1-live-table", "new_sqlite_classes": ["$DurableObject"] }],
+      // The first deploy creates this namespace and writes its id here: commit it.
+      "kv_namespaces": [{ "binding": "PUSH" }],
+      "vars": {
+        "NUXT_PUBLIC_CLUSTER": "devnet",
+        "NUXT_PUBLIC_MAINNET_URL": "https://solucky.me",
+        "NUXT_PUBLIC_TESTNET_URL": "",
+        "NUXT_PUBLIC_SITE_URL": "https://devnet.solucky.me",
+        "NUXT_PUBLIC_I18N_BASE_URL": "https://devnet.solucky.me",
+        "NUXT_PUBLIC_PRIORITY_FEE": "0",
+        "NUXT_CRANK_PRIORITY_FEE": "0",
+      },
+    },
   },
 }
