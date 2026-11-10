@@ -892,7 +892,7 @@ const fr: Dict = {
         price:
           'modifier le prix du ticket de chaque jeu (au moins ◎0,002) et sa commission de la maison (au plus 20 %), avec effet à partir de la prochaine manche de ce jeu qui s’ouvre ;',
         pause:
-          'suspendre et reprendre la vente de tickets. Une pause n’arrête que les nouveaux tickets : les manches déjà jouées peuvent toujours être tirées et payées ;',
+          'suspendre et reprendre l’ouverture de nouvelles manches. Une pause empêche seulement l’ouverture de nouvelles manches : une manche déjà en vente continue jusqu’à sa fin, et toute manche peut toujours être tirée et payée ;',
         other: 'changer la trésorerie, le numéro le plus élevé, et l’autorité elle-même.',
         cannot:
           'Le code du programme ne permet ni à l’autorité ni à personne d’autre de prendre la cagnotte d’une manche ou de l’envoyer ailleurs qu’au propriétaire du ticket gagnant, à la trésorerie pour la commission et à la manche suivante du jeu, de prélever plus que la commission, ou de faire payer à un acheteur plus que le prix qui lui a été affiché.',

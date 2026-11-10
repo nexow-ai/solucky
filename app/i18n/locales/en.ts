@@ -891,7 +891,7 @@ const en = {
         price:
           'change each game’s ticket price (at least ◎0.002) and house fee (at most 20%), effective from that game’s next round to open;',
         pause:
-          'pause and resume ticket sales. A pause stops new tickets only: rounds already played can still be drawn and paid;',
+          'pause and resume new rounds. A pause stops new rounds from opening: a round already on sale keeps selling until it ends, and every round can still be drawn and paid;',
         other: 'change the treasury, the highest number, and the authority itself.',
         cannot:
           'The program’s code does not let the authority, or anyone else, take a round’s pot or send it anywhere but to the winning ticket’s owner, the treasury’s fee and the game’s next round, take more than the fee, or charge a buyer more than the price they were shown.',

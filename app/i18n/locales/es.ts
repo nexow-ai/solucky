@@ -887,7 +887,7 @@ const es: Dict = {
         price:
           'cambiar el precio del boleto de cada juego (como mínimo ◎0,002) y su comisión de la casa (como máximo el 20 %), con efecto desde la próxima ronda de ese juego que se abra;',
         pause:
-          'pausar y reanudar la venta de boletos. Una pausa solo detiene los boletos nuevos: las rondas ya jugadas se pueden seguir sorteando y pagando;',
+          'pausar y reanudar las rondas nuevas. Una pausa impide que se abran rondas nuevas: una ronda ya a la venta sigue vendiendo hasta que termina, y toda ronda se puede seguir sorteando y pagando;',
         other: 'cambiar la tesorería, el número más alto y la propia autoridad.',
         cannot:
           'El código del programa no permite a la autoridad, ni a nadie más, tomar el pozo de una ronda ni enviarlo a otro destino que no sea el dueño del boleto ganador, la comisión de la tesorería y la siguiente ronda del juego, quedarse con más que la comisión ni cobrar a un comprador más que el precio que se le mostró.',

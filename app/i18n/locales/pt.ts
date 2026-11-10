@@ -886,7 +886,7 @@ const pt: Dict = {
         price:
           'alterar o preço do bilhete de cada jogo (no mínimo ◎0,002) e a taxa da casa dele (no máximo 20%), com efeito a partir da próxima rodada desse jogo que abrir;',
         pause:
-          'pausar e retomar a venda de bilhetes. Uma pausa só impede novos bilhetes: as rodadas já jogadas ainda podem ser sorteadas e pagas;',
+          'pausar e retomar novas rodadas. Uma pausa só impede que novas rodadas abram: uma rodada já à venda continua vendendo até terminar, e toda rodada ainda pode ser sorteada e paga;',
         other: 'alterar a tesouraria, o maior número e a própria autoridade.',
         cannot:
           'O código do programa não permite que a autoridade, ou qualquer outra pessoa, pegue o pote de uma rodada ou o envie para outro lugar que não seja o dono do bilhete vencedor, a tesouraria (pela taxa) e a próxima rodada do jogo, fique com mais do que a taxa ou cobre de um comprador mais do que o preço que lhe foi mostrado.',

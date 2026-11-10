@@ -400,7 +400,7 @@ describe('errors', () => {
   });
 
   test('describe them in English', () => {
-    expect(describeError(failed(6004))).toBe('Ticket sales are paused.');
+    expect(describeError(failed(6004))).toBe('New rounds are paused.');
     expect(describeError(failed(0))).toMatch(/already holds this number in this round/);
     expect(describeError(new Error(''))).toBe('Something went wrong.');
   });

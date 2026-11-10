@@ -147,7 +147,9 @@ pub fn handle_buy_ticket(
 
 /// Checks that `period` is the game's round on sale and that it still takes
 /// tickets, opening it at the game's price if it is new. Returns whether it
-/// was opened now.
+/// was opened now. A pause only stops new rounds from opening: a round
+/// already on sale keeps selling until it ends, so a pause can never hold
+/// up a pot (a Guess round only ends when a guess finds its number).
 pub(crate) fn prepare_round(
     round: &mut Account<Round>,
     config: &Config,
@@ -157,7 +159,6 @@ pub(crate) fn prepare_round(
     bump: u8,
     clock: &Clock,
 ) -> Result<bool> {
-    require!(!config.paused, SoluckyError::Paused);
     let on_sale = match period_seconds(kind) {
         Some(seconds) => period_of(clock.unix_timestamp, seconds)?,
         None => game.current_round,
@@ -167,6 +168,7 @@ pub(crate) fn prepare_round(
     // A new account is all zeros, and a round's price is never zero.
     let opened = round.ticket_price == 0;
     if opened {
+        require!(!config.paused, SoluckyError::Paused);
         let round_key = round.key();
         round.set_inner(Round {
             kind,

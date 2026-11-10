@@ -888,7 +888,7 @@ const it: Dict = {
         price:
           'cambiare il prezzo del biglietto di ogni gioco (almeno ◎0,002) e la sua commissione della casa (al massimo 20%), con effetto dal prossimo round di quel gioco che si apre;',
         pause:
-          'sospendere e riprendere la vendita dei biglietti. Una pausa blocca solo i nuovi biglietti: i round già giocati possono comunque essere estratti e pagati;',
+          'sospendere e riprendere i nuovi round. Una pausa impedisce solo l’apertura di nuovi round: un round già in vendita continua a vendere fino alla fine, e ogni round può comunque essere estratto e pagato;',
         other: 'cambiare la tesoreria, il numero più alto e l’autorità stessa.',
         cannot:
           'Il codice del programma non consente all’autorità, né a nessun altro, di prendere il montepremi di un round o di inviarlo altrove che al proprietario del biglietto vincente, alla tesoreria per la commissione e al round successivo del gioco, di prendere più della commissione, o di far pagare a un acquirente più del prezzo che gli è stato mostrato.',

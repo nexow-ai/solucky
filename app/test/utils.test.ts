@@ -129,7 +129,7 @@ describe('countries', () => {
 describe('errors', () => {
   it('explains program errors', () => {
     expect(friendlyError(programError(6005))).toBe('Tickets can only be bought for the round on sale.');
-    expect(friendlyError(programError(6004))).toBe('Ticket sales are paused.');
+    expect(friendlyError(programError(6004))).toBe('New rounds are paused.');
   });
 
   it('explains a taken number', () => {

@@ -773,6 +773,42 @@ fn tickets_are_validated() {
 }
 
 #[test]
+fn a_pause_stops_new_rounds_but_lets_rounds_on_sale_finish() {
+    let mut env = Env::new();
+    let alice = env.player();
+    assert_ok(env.buy(&alice, GUESS, 0, 1));
+    assert_ok(env.buy(&alice, DAILY, DAY, 1));
+    let admin = env.admin.insecure_clone();
+    assert_ok(env.update(
+        &admin,
+        ConfigUpdate {
+            paused: Some(true),
+            ..Default::default()
+        },
+    ));
+
+    // Rounds already on sale keep selling: a Guess round only ends with a
+    // hit, so stopping its guesses would hold up its pot.
+    assert_ok(env.buy(&alice, GUESS, 0, 2));
+    assert_ok(env.buy(&alice, DAILY, DAY, 2));
+    // No new round opens.
+    assert_error(env.buy(&alice, HOURLY, HOUR, 1), SoluckyError::Paused);
+    env.end_of(DAILY, DAY);
+    assert_error(env.buy(&alice, DAILY, DAY + 1, 1), SoluckyError::Paused);
+    // The finished round still closes.
+    assert_ok(env.close(DAILY, DAY));
+
+    assert_ok(env.update(
+        &admin,
+        ConfigUpdate {
+            paused: Some(false),
+            ..Default::default()
+        },
+    ));
+    assert_ok(env.buy(&alice, DAILY, DAY + 1, 1));
+}
+
+#[test]
 fn the_closest_number_wins_80_percent() {
     let mut env = Env::new();
     let players: Vec<Keypair> = (0..5).map(|_| env.player()).collect();

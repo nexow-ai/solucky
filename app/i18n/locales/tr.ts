@@ -880,7 +880,7 @@ const tr: Dict = {
         price:
           'her oyunun bilet fiyatını (en az ◎0,002) ve kasa payını (en fazla %20) değiştirmek; değişiklik, o oyunun açılacak bir sonraki turundan itibaren geçerli olur;',
         pause:
-          'bilet satışlarını duraklatmak ve yeniden başlatmak. Duraklatma yalnızca yeni biletleri durdurur: zaten oynanmış turların çekilişi ve ödemesi yine yapılabilir;',
+          'yeni turları duraklatmak ve yeniden başlatmak. Duraklatma yalnızca yeni turların açılmasını engeller: satışta olan bir tur bitene kadar satmaya devam eder ve her turun çekilişi ve ödemesi yine yapılabilir;',
         other: 'hazineyi, en yüksek sayıyı ve yetkilinin kendisini değiştirmek.',
         cannot:
           'Programın kodu, yetkilinin ya da başka birinin bir turun havuzunu almasına veya onu kazanan biletin sahibi, hazinenin kasa payı ve oyunun bir sonraki turu dışında bir yere göndermesine, kasa payından fazlasını almasına ya da bir alıcıdan kendisine gösterilen fiyattan fazlasını tahsil etmesine izin vermez.',

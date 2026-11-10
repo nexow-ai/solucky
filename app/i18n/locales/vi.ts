@@ -877,7 +877,7 @@ const vi: Dict = {
         price:
           'thay đổi giá vé (ít nhất ◎0.002) và phí nhà cái (tối đa 20%) của từng trò chơi, có hiệu lực từ vòng tiếp theo được mở của trò chơi đó;',
         pause:
-          'tạm dừng và tiếp tục bán vé. Việc tạm dừng chỉ ngăn vé mới: các vòng đã chơi vẫn có thể được quay số và trả thưởng;',
+          'tạm dừng và tiếp tục mở vòng mới. Việc tạm dừng chỉ ngăn mở vòng mới: một vòng đang bán vẫn tiếp tục bán đến khi kết thúc, và mọi vòng vẫn có thể được quay số và trả thưởng;',
         other: 'thay đổi kho bạc, số lớn nhất, và chính quản trị viên.',
         cannot:
           'Mã của chương trình không cho phép quản trị viên, hay bất kỳ ai khác, lấy quỹ thưởng của một vòng hoặc gửi nó đến bất kỳ đâu ngoài chủ sở hữu vé thắng, khoản phí của kho bạc và vòng tiếp theo của trò chơi, lấy nhiều hơn khoản phí, hoặc thu của người mua nhiều hơn mức giá đã được hiển thị cho họ.',

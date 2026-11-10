@@ -23,7 +23,7 @@ export const SOLUCKY_ERROR__INVALID_TICKET_PRICE = 0x1771; // 6001
 export const SOLUCKY_ERROR__FEE_TOO_HIGH = 0x1772; // 6002
 /** InvalidMaxNumber: The highest number must be greater than zero */
 export const SOLUCKY_ERROR__INVALID_MAX_NUMBER = 0x1773; // 6003
-/** Paused: Ticket sales are paused */
+/** Paused: New rounds are paused */
 export const SOLUCKY_ERROR__PAUSED = 0x1774; // 6004
 /** WrongRound: Tickets can only be bought for the round on sale */
 export const SOLUCKY_ERROR__WRONG_ROUND = 0x1775; // 6005
@@ -132,7 +132,7 @@ if (process.env['NODE_ENV'] !== 'production') {
     [SOLUCKY_ERROR__NOT_WINNING_TICKET]: `This is not the winning ticket`,
     [SOLUCKY_ERROR__NUMBER_OUT_OF_RANGE]: `The number is out of range`,
     [SOLUCKY_ERROR__OVERFLOW]: `Arithmetic overflow`,
-    [SOLUCKY_ERROR__PAUSED]: `Ticket sales are paused`,
+    [SOLUCKY_ERROR__PAUSED]: `New rounds are paused`,
     [SOLUCKY_ERROR__PRICE_CHANGED]: `The ticket price is higher than the price you accepted`,
     [SOLUCKY_ERROR__RANDOMNESS_UNAVAILABLE]: `The pinned slot's hash is not readable yet; try again shortly, or close the round again once it expired`,
     [SOLUCKY_ERROR__ROUND_ALREADY_DRAWN]: `The round was already drawn`,

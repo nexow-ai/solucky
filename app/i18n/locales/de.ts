@@ -894,7 +894,7 @@ const de: Dict = {
         price:
           'den Ticketpreis (mindestens ◎0,002) und die Hausgebühr (höchstens 20 %) jedes Spiels ändern kann, wirksam ab der nächsten Runde dieses Spiels, die öffnet;',
         pause:
-          'den Ticketverkauf pausieren und fortsetzen kann. Eine Pause stoppt nur neue Tickets: Bereits gespielte Runden können weiterhin gezogen und ausgezahlt werden;',
+          'neue Runden pausieren und fortsetzen kann. Eine Pause verhindert nur, dass neue Runden beginnen: Eine Runde, die bereits läuft, verkauft weiter bis zu ihrem Ende, und jede Runde kann weiterhin gezogen und ausgezahlt werden;',
         other: 'die Treasury, die höchste Zahl und die Authority selbst ändern kann.',
         cannot:
           'Der Code des Programms erlaubt es weder der Authority noch sonst jemandem, den Pot einer Runde zu nehmen oder ihn anderswohin zu senden als an den Besitzer des Gewinnertickets, als Gebühr an die Treasury und an die nächste Runde des Spiels, mehr als die Gebühr zu nehmen oder einem Käufer mehr als den ihm angezeigten Preis zu berechnen.',

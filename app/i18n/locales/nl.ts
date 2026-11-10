@@ -887,7 +887,7 @@ const nl: Dict = {
         price:
           'per spel de lotprijs (minstens ◎0,002) en de huiscommissie (hoogstens 20%) kan wijzigen, met ingang van de volgende ronde van dat spel die opent;',
         pause:
-          'de verkoop van loten kan pauzeren en hervatten. Een pauze stopt alleen nieuwe loten: rondes die al gespeeld zijn, kunnen nog steeds worden getrokken en uitbetaald;',
+          'nieuwe rondes kan pauzeren en hervatten. Een pauze voorkomt alleen dat nieuwe rondes openen: een ronde die al loopt, blijft verkopen tot ze afloopt, en elke ronde kan nog steeds worden getrokken en uitbetaald;',
         other: 'de treasury, het hoogste getal en de authority zelf kan wijzigen.',
         cannot:
           'De code van het programma staat de authority, of wie dan ook, niet toe de pot van een ronde te nemen of hem ergens anders heen te sturen dan naar de eigenaar van het winnende lot, de treasury (voor de commissie) en de volgende ronde van het spel, meer te nemen dan de commissie, of een koper meer te rekenen dan de prijs die hij te zien kreeg.',

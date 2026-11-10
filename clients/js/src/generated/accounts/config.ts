@@ -62,7 +62,8 @@ export type Config = {
    */
   maxNumber: number;
   /**
-   * Blocks new tickets. Closing, drawing and claiming always stay open,
+   * Stops new rounds from opening. Rounds already on sale keep selling
+   * until they end, and closing, drawing and claiming always stay open,
    * so a pause can never lock a pot.
    */
   paused: boolean;
@@ -79,7 +80,8 @@ export type ConfigArgs = {
    */
   maxNumber: number;
   /**
-   * Blocks new tickets. Closing, drawing and claiming always stay open,
+   * Stops new rounds from opening. Rounds already on sale keep selling
+   * until they end, and closing, drawing and claiming always stay open,
    * so a pause can never lock a pot.
    */
   paused: boolean;

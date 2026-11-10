@@ -885,7 +885,7 @@ const id: Dict = {
         price:
           'mengubah harga tiket (minimal ◎0,002) dan biaya pengelola (maksimal 20%) setiap permainan, berlaku mulai ronde berikutnya dari permainan itu yang dibuka;',
         pause:
-          'menjeda dan melanjutkan penjualan tiket. Jeda hanya menghentikan tiket baru: ronde yang sudah dimainkan tetap bisa diundi dan dibayar;',
+          'menjeda dan melanjutkan ronde baru. Jeda hanya mencegah ronde baru dibuka: ronde yang sudah dijual tetap berjalan sampai selesai, dan setiap ronde tetap bisa diundi dan dibayar;',
         other: 'mengubah treasury, angka tertinggi, dan otoritas itu sendiri.',
         cannot:
           'Kode program tidak mengizinkan otoritas, atau siapa pun, mengambil pot sebuah ronde atau mengirimkannya ke mana pun selain kepada pemilik tiket pemenang, biaya ke treasury, dan ronde berikutnya dari permainan itu, mengambil lebih dari biaya, atau menagih pembeli lebih dari harga yang ditampilkan kepadanya.',
