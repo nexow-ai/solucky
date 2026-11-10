@@ -105,8 +105,15 @@ export default defineNuxtConfig({
     vapidPrivateKey: '',
     pushSecret: '',
     /**
-     * Where the site's RPC proxy (server/api/rpc.post.ts) sends its calls: a
-     * provider's URL, token included, kept on the server.
+     * The site's crank (server/tasks/crank.ts): the byte array of the key it
+     * signs with (a secret; empty turns it off), and its priority fee in
+     * micro-lamports per compute unit.
+     */
+    crankKeypair: '',
+    crankPriorityFee: 0,
+    /**
+     * Where the site's RPC proxy (server/api/rpc.post.ts) and its crank send
+     * their calls: a provider's URL, token included, kept on the server.
      * Defaults to the cluster's public endpoint.
      */
     rpcUpstream: '',
@@ -187,7 +194,10 @@ export default defineNuxtConfig({
   // (wrangler.jsonc), and in .data/push under the working directory on Node.
   nitro: {
     compressPublicAssets: true,
-    experimental: { websocket: true },
+    experimental: { websocket: true, tasks: true },
+    // The site's crank, every minute. On Cloudflare, the Cron Trigger in
+    // wrangler.jsonc must use the same pattern.
+    scheduledTasks: { '* * * * *': ['crank'] },
     storage: {
       push: process.env.NITRO_PRESET?.startsWith('cloudflare')
         ? { driver: 'cloudflare-kv-binding', binding: 'PUSH' }
