@@ -4,12 +4,17 @@ import { walletSigner } from '@solana/kit-plugin-wallet';
 import { rpcEndpoint, SOLUCKY_PROGRAM_ADDRESS, soluckyProgram } from '@solucky/client';
 
 import { WALLET_STORAGE_KEY } from '../utils/walletRestore';
-import { walletAwareSend } from '../utils/walletSend';
+import { setPriorityFee, walletAwareSend } from '../utils/walletSend';
 
 export type Cluster = 'mainnet' | 'devnet' | 'testnet' | 'localnet';
 
+/**
+ * Each cluster's endpoint when the site sets none. Solana's public Mainnet
+ * endpoint refuses browsers (HTTP 403), so Mainnet goes through the site's
+ * own proxy (server/api/rpc.post.ts), which has no websocket.
+ */
 const CLUSTERS: Record<Cluster, { rpcUrl: string; label: string; explorerQuery: string }> = {
-  mainnet: { rpcUrl: 'https://api.mainnet-beta.solana.com', label: 'Mainnet', explorerQuery: '' },
+  mainnet: { rpcUrl: '/api/rpc', label: 'Mainnet', explorerQuery: '' },
   devnet: { rpcUrl: 'https://api.devnet.solana.com', label: 'Devnet', explorerQuery: '?cluster=devnet' },
   testnet: { rpcUrl: 'https://api.testnet.solana.com', label: 'Testnet', explorerQuery: '?cluster=testnet' },
   localnet: {
@@ -66,17 +71,20 @@ export function useSolana() {
   const endpoint = config.rpcUrl
     ? rpcEndpoint({ url: config.rpcUrl, wsUrl: config.rpcWsUrl, token: config.rpcToken, tokenIn: 'path' })
     : { rpcUrl: settings.rpcUrl, rpcSubscriptionsUrl: undefined };
+  const proxied = endpoint.rpcUrl.startsWith('/');
 
-  client ??= createSoluckyClient({
-    cluster,
-    rpcUrl: endpoint.rpcUrl,
-    rpcWsUrl: endpoint.rpcSubscriptionsUrl,
-    programAddress,
-  });
+  if (!client) {
+    // The proxy lives on this site: Kit needs its absolute address.
+    const rpcUrl = proxied ? new URL(endpoint.rpcUrl, useRequestURL()).href : endpoint.rpcUrl;
+    setPriorityFee(BigInt(config.priorityFee || 0));
+    client = createSoluckyClient({ cluster, rpcUrl, rpcWsUrl: endpoint.rpcSubscriptionsUrl, programAddress });
+  }
 
   return {
     client,
     cluster,
+    /** Whether the endpoint has websockets; without them, pages poll. */
+    subscriptions: !proxied,
     clusterLabel: settings.label,
     isMainnet: cluster === 'mainnet',
     programAddress,

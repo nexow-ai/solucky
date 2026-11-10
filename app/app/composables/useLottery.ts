@@ -82,7 +82,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
   const pageGame = useGame();
   const kind = computed(() => (game === undefined ? pageGame.value : toValue(game)));
   const s = computed(() => stateOf(kind.value));
-  const { client, programAddress } = useSolana();
+  const { client, programAddress, subscriptions } = useSolana();
   const { address: wallet, refreshBalance } = useWallet();
   const { run } = useTransaction();
   const quick = useQuickBuy();
@@ -156,7 +156,7 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     const controller = new AbortController();
     state.subscription = controller;
     const period = state.period.value;
-    if (period === null) return;
+    if (period === null || !subscriptions) return;
     try {
       const [address] = await findRoundPda({ kind: k, period }, { programAddress });
       const notifications = await client.rpcSubscriptions
@@ -208,22 +208,26 @@ export function useLottery(game?: MaybeRefOrGetter<GameKind>) {
     state.started = true;
     if (isLottery(k)) state.period.value = periodOf(k, now.value);
     void refreshGame(k).then(() => watchRound(k));
-    // Polling backs up the round's websocket. A hidden tab skips it (the
-    // next poll after it shows again catches up), and the history, a scan of
-    // every round of the game, refreshes less often than the rest.
+    // Polling backs up the round's websocket, and replaces it, more often,
+    // on an endpoint without one. A hidden tab skips it (the next poll after
+    // it shows again catches up), and the history, a scan of every round of
+    // the game, refreshes less often than the rest.
     let polls = 0;
-    setInterval(() => {
-      if (document.visibilityState === 'hidden') return;
-      polls++;
-      void loadRound(k).catch(() => {});
-      if (polls % 2 === 0) {
-        // A poll that gets through clears the error a failed load left on the page.
-        void Promise.all([loadConfig(), loadGame(k), polls % 4 === 0 ? loadHistory(k) : null]).then(
-          () => (state.error.value = null),
-          () => {},
-        );
-      }
-    }, 15_000);
+    setInterval(
+      () => {
+        if (document.visibilityState === 'hidden') return;
+        polls++;
+        void loadRound(k).catch(() => {});
+        if (polls % 2 === 0) {
+          // A poll that gets through clears the error a failed load left on the page.
+          void Promise.all([loadConfig(), loadGame(k), polls % 4 === 0 ? loadHistory(k) : null]).then(
+            () => (state.error.value = null),
+            () => {},
+          );
+        }
+      },
+      subscriptions ? 15_000 : 8_000,
+    );
     // The watchers live in their own scope so they outlive the component that
     // first showed the game.
     effectScope(true).run(() => {

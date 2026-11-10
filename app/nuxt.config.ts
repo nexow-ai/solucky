@@ -104,6 +104,12 @@ export default defineNuxtConfig({
     /** Draw notifications (`bun run vapid`): the VAPID private key, and the secret the crank reports draws with. */
     vapidPrivateKey: '',
     pushSecret: '',
+    /**
+     * Where the site's RPC proxy (server/api/rpc.post.ts) sends its calls: a
+     * provider's URL, token included, kept on the server.
+     * Defaults to the cluster's public endpoint.
+     */
+    rpcUpstream: '',
     public: {
       /** VAPID public key; empty hides draw notifications. */
       vapidKey: '',
@@ -127,6 +133,11 @@ export default defineNuxtConfig({
       rpcToken: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
+      /**
+       * Priority fee the app's transactions offer, in micro-lamports per
+       * compute unit; 0 offers none. Wallets that find one keep it.
+       */
+      priorityFee: 0,
       /** Highest ticket number, shown until the on-chain config loads. */
       maxNumber: 21_000_000,
       /** Public URL of the site, for absolute links in social cards. */
