@@ -14,6 +14,7 @@ export * from './endpoint';
 export * from './errors';
 export * from './queries';
 export * from './session';
+export * from './settle';
 export * from './time';
 
 /** Lamports in one SOL. */
