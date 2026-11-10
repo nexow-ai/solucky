@@ -20,7 +20,7 @@
     "deploy": "NITRO_PRESET=cloudflare_durable nuxt build && wrangler deploy"
   },
   "dependencies": {
-    "@iconify-json/lucide": "1.2.149",
+    "@iconify-json/lucide": "1.2.151",
     "@iconify-json/simple-icons": "1.2.101",
     "@nuxt/ui": "4.12.0",
     "@nuxtjs/i18n": "10.6.0",
@@ -29,9 +29,9 @@
     "@solana/kit-plugin-wallet": "0.23.0",
     "@solana/sysvars": "8.6.0",
     "@solucky/client": "workspace:*",
-    "nuxt": "4.6.3",
-    "tailwindcss": "4.3.3",
-    "vue": "3.5.44"
+    "nuxt": "4.6.4",
+    "tailwindcss": "4.3.5",
+    "vue": "3.5.45"
   },
   "devDependencies": {
     "@intlify/message-compiler": "11.4.16",
