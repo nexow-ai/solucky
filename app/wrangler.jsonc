@@ -55,8 +55,8 @@
         "bindings": [{ "name": "$DurableObject", "class_name": "$DurableObject" }],
       },
       "migrations": [{ "tag": "v1-live-table", "new_sqlite_classes": ["$DurableObject"] }],
-      // The first deploy creates this namespace and writes its id here: commit it.
-      "kv_namespaces": [{ "binding": "PUSH" }],
+      // Draw notification subscriptions of the Devnet site.
+      "kv_namespaces": [{ "binding": "PUSH", "id": "22d9c5e7c5b54d78b070ab5a56a5b0a9" }],
       "vars": {
         "NUXT_PUBLIC_CLUSTER": "devnet",
         "NUXT_PUBLIC_MAINNET_URL": "https://solucky.me",
