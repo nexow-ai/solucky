@@ -161,7 +161,8 @@ const es: Dict = {
         },
         real: {
           q: '¿Es dinero real?',
-          a: 'La app pública funciona en la devnet de Solana, donde el SOL es dinero de prueba gratuito de faucet.solana.com. El programa funciona igual en mainnet, pero operar una lotería con dinero real requiere las licencias correspondientes allí donde operes.',
+          a: 'Sí. Este sitio funciona en Solana Mainnet: los boletos cuestan SOL real y los premios se pagan en SOL real. Para probar antes los juegos con SOL de prueba gratis, elige la red de prueba en el menú de ajustes. Juega solo con dinero que puedas permitirte perder, y solo donde las loterías en línea sean legales para ti.',
+          test: 'No. Este sitio funciona en Solana {cluster}, donde el SOL es dinero de prueba gratuito del faucet y no tiene valor, así que puedes aprender los juegos sin gastar nada. Los mismos juegos funcionan con SOL real en Solana Mainnet: elígela en el menú de ajustes.',
         },
         price: {
           q: '¿Cuánto cuesta un boleto?',
@@ -181,7 +182,7 @@ const es: Dict = {
         },
         validator: {
           q: '¿Puede un validador hacer trampa en el sorteo?',
-          a: 'Los jugadores no: el hash ganador no existe cuando se cierran las ventas. El validador que produce el slot fijado podría sesgarlo, eligiendo qué entra en ese bloque o saltándoselo. Eso es aceptable para un juego con dinero de prueba; para pozos con dinero real, el sorteo debería usar un oráculo de aleatoriedad verificable, y el README explica dónde conectar uno.',
+          a: 'Los jugadores no: el hash ganador no existe cuando se cierran las ventas. El validador que produce el slot fijado podría sesgarlo, eligiendo qué entra en ese bloque o saltándoselo. El sorteo aún no usa un oráculo de aleatoriedad verificable; el README en GitHub explica estos límites.',
         },
       },
     },

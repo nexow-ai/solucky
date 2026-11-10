@@ -172,7 +172,8 @@ const en = {
         },
         real: {
           q: 'Is this real money?',
-          a: 'The public app runs on Solana devnet, where SOL is free test money from faucet.solana.com. The program works the same on mainnet, but running a real-money lottery needs the right licences where you operate.',
+          a: 'Yes. This site runs on Solana Mainnet: tickets cost real SOL, and prizes are paid in real SOL. To try the games first with free test SOL, choose the test network in the settings menu. Play only with money you can afford to lose, and only where online lotteries are legal for you.',
+          test: 'No. This site runs on Solana {cluster}, where SOL is free test money from the faucet and has no value, so you can learn the games without spending anything. The same games run with real SOL on Solana Mainnet: choose it in the settings menu.',
         },
         price: {
           q: 'How much does a ticket cost?',
@@ -192,7 +193,7 @@ const en = {
         },
         validator: {
           q: 'Can a validator cheat the draw?',
-          a: 'Players cannot: the winning hash does not exist when sales close. The validator that produces the pinned slot could bias it, by choosing what goes in that block or by skipping it. That is acceptable for a test-money game; for real-money pots, the draw should use a verifiable randomness oracle, and the README explains where to plug one in.',
+          a: 'Players cannot: the winning hash does not exist when sales close. The validator that produces the pinned slot could bias it, by choosing what goes in that block or by skipping it. The draw does not use a verifiable randomness oracle yet; the README on GitHub explains these limits.',
         },
       },
     },

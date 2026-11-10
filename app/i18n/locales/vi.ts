@@ -160,7 +160,8 @@ const vi: Dict = {
         },
         real: {
           q: 'Đây có phải tiền thật không?',
-          a: 'Ứng dụng công khai chạy trên Solana devnet, nơi SOL là tiền thử nghiệm miễn phí từ faucet.solana.com. Chương trình hoạt động y hệt trên mainnet, nhưng vận hành một xổ số bằng tiền thật cần có giấy phép phù hợp ở nơi bạn hoạt động.',
+          a: 'Có. Trang này chạy trên Solana Mainnet: vé có giá bằng SOL thật, và giải thưởng được trả bằng SOL thật. Để chơi thử trước với SOL thử nghiệm miễn phí, hãy chọn mạng thử nghiệm trong menu cài đặt. Chỉ chơi bằng số tiền bạn có thể chấp nhận mất, và chỉ ở nơi xổ số trực tuyến là hợp pháp với bạn.',
+          test: 'Không. Trang này chạy trên Solana {cluster}, nơi SOL là tiền thử nghiệm miễn phí từ faucet và không có giá trị, nên bạn có thể tìm hiểu các trò chơi mà không tốn gì. Các trò chơi tương tự chạy bằng SOL thật trên Solana Mainnet: hãy chọn mạng đó trong menu cài đặt.',
         },
         price: {
           q: 'Một vé giá bao nhiêu?',
@@ -180,7 +181,7 @@ const vi: Dict = {
         },
         validator: {
           q: 'Validator có thể gian lận khi quay số không?',
-          a: 'Người chơi thì không: hash thắng chưa tồn tại khi việc bán vé kết thúc. Validator tạo ra slot đã ghim có thể làm lệch kết quả, bằng cách chọn những gì đưa vào khối đó hoặc bỏ qua khối đó. Điều này chấp nhận được với một trò chơi dùng tiền thử nghiệm; với quỹ thưởng bằng tiền thật, việc quay số nên dùng một oracle ngẫu nhiên có thể kiểm chứng, và README giải thích chỗ để tích hợp nó.',
+          a: 'Người chơi thì không: hash thắng chưa tồn tại khi việc bán vé kết thúc. Validator tạo ra slot đã ghim có thể làm lệch kết quả, bằng cách chọn những gì đưa vào khối đó hoặc bỏ qua khối đó. Việc quay số chưa dùng oracle ngẫu nhiên có thể kiểm chứng; README trên GitHub giải thích các giới hạn này.',
         },
       },
     },

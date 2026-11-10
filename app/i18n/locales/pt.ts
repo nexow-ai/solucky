@@ -161,7 +161,8 @@ const pt: Dict = {
         },
         real: {
           q: 'É dinheiro de verdade?',
-          a: 'O app público roda na devnet da Solana, onde o SOL é dinheiro de teste gratuito do faucet.solana.com. O programa funciona igual na mainnet, mas operar uma loteria com dinheiro de verdade exige as licenças adequadas onde você opera.',
+          a: 'Sim. Este site roda na Solana Mainnet: os bilhetes custam SOL de verdade, e os prêmios são pagos em SOL de verdade. Para experimentar os jogos antes com SOL de teste gratuito, escolha a rede de teste no menu de configurações. Jogue só com dinheiro que você pode perder, e só onde loterias online são legais para você.',
+          test: 'Não. Este site roda na Solana {cluster}, onde o SOL é dinheiro de teste gratuito do faucet e não tem valor, então você pode aprender os jogos sem gastar nada. Os mesmos jogos rodam com SOL de verdade na Solana Mainnet: escolha-a no menu de configurações.',
         },
         price: {
           q: 'Quanto custa um bilhete?',
@@ -181,7 +182,7 @@ const pt: Dict = {
         },
         validator: {
           q: 'Um validador pode trapacear no sorteio?',
-          a: 'Os jogadores, não: o hash vencedor não existe quando as vendas fecham. O validador que produz o slot fixado poderia enviesá-lo, escolhendo o que entra naquele bloco ou pulando-o. Isso é aceitável para um jogo com dinheiro de teste; para potes com dinheiro de verdade, o sorteio deveria usar um oráculo de aleatoriedade verificável, e o README explica onde conectar um.',
+          a: 'Os jogadores, não: o hash vencedor não existe quando as vendas fecham. O validador que produz o slot fixado poderia enviesá-lo, escolhendo o que entra naquele bloco ou pulando-o. O sorteio ainda não usa um oráculo de aleatoriedade verificável; o README no GitHub explica esses limites.',
         },
       },
     },

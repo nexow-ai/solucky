@@ -159,7 +159,8 @@ const tr: Dict = {
         },
         real: {
           q: 'Bu gerçek para mı?',
-          a: 'Herkese açık uygulama, SOL’un faucet.solana.com’dan alınan ücretsiz test parası olduğu Solana devnet üzerinde çalışır. Program mainnet’te de aynı şekilde çalışır, ancak gerçek parayla piyango işletmek, faaliyet gösterdiğiniz yerde gerekli lisanslara sahip olmayı gerektirir.',
+          a: 'Evet. Bu site Solana Mainnet üzerinde çalışır: biletler gerçek SOL ile ödenir ve ödüller gerçek SOL olarak ödenir. Oyunları önce ücretsiz test SOL ile denemek için ayarlar menüsünden test ağını seçin. Yalnızca kaybetmeyi göze alabileceğiniz parayla ve yalnızca çevrim içi piyangoların sizin için yasal olduğu yerlerde oynayın.',
+          test: 'Hayır. Bu site Solana {cluster} üzerinde çalışır; burada SOL, faucet’ten ücretsiz alınan ve hiçbir değeri olmayan test parasıdır, böylece hiçbir şey harcamadan oyunları öğrenebilirsiniz. Aynı oyunlar Solana Mainnet üzerinde gerçek SOL ile çalışır: ayarlar menüsünden onu seçin.',
         },
         price: {
           q: 'Bir bilet ne kadar?',
@@ -179,7 +180,7 @@ const tr: Dict = {
         },
         validator: {
           q: 'Bir doğrulayıcı çekilişte hile yapabilir mi?',
-          a: 'Oyuncular yapamaz: satışlar kapandığında kazanan hash henüz mevcut değildir. Sabitlenen slotu üreten doğrulayıcı ise o bloğa neyin gireceğini seçerek ya da bloğu atlayarak sonucu etkileyebilir. Test parasıyla oynanan bir oyun için bu kabul edilebilir; gerçek paralı havuzlarda çekiliş doğrulanabilir bir rastgelelik oracle’ı kullanmalıdır ve README bunun nereye bağlanacağını açıklar.',
+          a: 'Oyuncular yapamaz: satışlar kapandığında kazanan hash henüz mevcut değildir. Sabitlenen slotu üreten doğrulayıcı ise o bloğa neyin gireceğini seçerek ya da bloğu atlayarak sonucu etkileyebilir. Çekiliş henüz doğrulanabilir bir rastgelelik oracle’ı kullanmıyor; bu sınırlar GitHub’daki README’de açıklanıyor.',
         },
       },
     },

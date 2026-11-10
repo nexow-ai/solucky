@@ -162,7 +162,8 @@ const de: Dict = {
         },
         real: {
           q: 'Ist das echtes Geld?',
-          a: 'Die öffentliche App läuft im Devnet von Solana, wo SOL kostenloses Testgeld von faucet.solana.com ist. Das Programm funktioniert im Mainnet genauso, aber wer eine Lotterie mit echtem Geld betreibt, braucht dort, wo er tätig ist, die passenden Lizenzen.',
+          a: 'Ja. Diese Website läuft auf Solana Mainnet: Tickets kosten echte SOL, und Gewinne werden in echten SOL ausgezahlt. Um die Spiele erst mit kostenlosen Test-SOL auszuprobieren, wähle im Einstellungsmenü das Testnetz. Spiele nur mit Geld, dessen Verlust du dir leisten kannst, und nur dort, wo Online-Lotterien für dich legal sind.',
+          test: 'Nein. Diese Website läuft auf Solana {cluster}, wo SOL kostenloses Testgeld aus dem Faucet ist und keinen Wert hat. So lernst du die Spiele kennen, ohne etwas auszugeben. Dieselben Spiele laufen mit echten SOL auf Solana Mainnet: Wähle es im Einstellungsmenü.',
         },
         price: {
           q: 'Was kostet ein Ticket?',
@@ -182,7 +183,7 @@ const de: Dict = {
         },
         validator: {
           q: 'Kann ein Validator bei der Ziehung betrügen?',
-          a: 'Spieler können es nicht: Der Gewinner-Hash existiert noch nicht, wenn der Verkauf schließt. Der Validator, der den festgelegten Slot produziert, könnte ihn beeinflussen, indem er wählt, was in diesen Block kommt, oder ihn auslässt. Für ein Spiel mit Testgeld ist das akzeptabel; bei Pots mit echtem Geld sollte die Ziehung ein verifizierbares Zufallsorakel nutzen, und das README erklärt, wo man eines einbindet.',
+          a: 'Spieler können es nicht: Der Gewinner-Hash existiert noch nicht, wenn der Verkauf schließt. Der Validator, der den festgelegten Slot produziert, könnte ihn beeinflussen, indem er wählt, was in diesen Block kommt, oder ihn auslässt. Die Ziehung nutzt noch kein verifizierbares Zufallsorakel; das README auf GitHub erklärt diese Grenzen.',
         },
       },
     },

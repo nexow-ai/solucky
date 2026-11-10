@@ -9,6 +9,7 @@ definePageMeta({ validate: (route) => !route.params.game || ['hourly', 'guess'].
 const { t, localeProperties } = useI18n();
 const localePath = useLocalePath();
 const config = useRuntimeConfig().public;
+const { isMainnet, clusterLabel } = useSolana();
 
 const game = useGame();
 const slug = computed(() => GAME_SLUGS[game.value]);
@@ -74,7 +75,11 @@ const faq = computed(() =>
     : (['what', 'guess', 'real', 'price', 'odds', 'draw', 'country', 'validator'] as const)
   ).map((id) => ({
     label: t(`home.faq.items.${id}.q`),
-    content: t(`home.faq.items.${id}.a`, { max: max.value }),
+    // “Is this real money?” has its own answer where tickets cost test SOL.
+    content:
+      id === 'real' && !isMainnet
+        ? t('home.faq.items.real.test', { cluster: clusterLabel })
+        : t(`home.faq.items.${id}.a`, { max: max.value }),
   })),
 );
 

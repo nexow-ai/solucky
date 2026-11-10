@@ -160,7 +160,8 @@ const it: Dict = {
         },
         real: {
           q: 'Sono soldi veri?',
-          a: 'L’app pubblica gira sulla devnet di Solana, dove i SOL sono soldi di test gratuiti presi da faucet.solana.com. Il programma funziona allo stesso modo sulla mainnet, ma gestire una lotteria con soldi veri richiede le licenze adeguate nei luoghi in cui operi.',
+          a: 'Sì. Questo sito gira su Solana Mainnet: i biglietti costano SOL veri e i premi vengono pagati in SOL veri. Per provare prima i giochi con SOL di test gratuiti, scegli la rete di test nel menu delle impostazioni. Gioca solo con soldi che puoi permetterti di perdere, e solo dove le lotterie online sono legali per te.',
+          test: 'No. Questo sito gira su Solana {cluster}, dove i SOL sono soldi di test gratuiti del faucet e non hanno valore, quindi puoi imparare i giochi senza spendere nulla. Gli stessi giochi girano con SOL veri su Solana Mainnet: sceglila nel menu delle impostazioni.',
         },
         price: {
           q: 'Quanto costa un biglietto?',
@@ -180,7 +181,7 @@ const it: Dict = {
         },
         validator: {
           q: 'Un validatore può truccare l’estrazione?',
-          a: 'I giocatori no: l’hash vincente non esiste quando le vendite si chiudono. Il validatore che produce lo slot fissato potrebbe influenzarlo, scegliendo cosa entra in quel blocco o saltandolo. È accettabile per un gioco con soldi di test; per montepremi con soldi veri, l’estrazione dovrebbe usare un oracolo di casualità verificabile, e il README spiega dove collegarne uno.',
+          a: 'I giocatori no: l’hash vincente non esiste quando le vendite si chiudono. Il validatore che produce lo slot fissato potrebbe influenzarlo, scegliendo cosa entra in quel blocco o saltandolo. L’estrazione non usa ancora un oracolo di casualità verificabile; il README su GitHub spiega questi limiti.',
         },
       },
     },
