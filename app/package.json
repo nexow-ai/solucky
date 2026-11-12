@@ -20,7 +20,7 @@
     "deploy": "NITRO_PRESET=cloudflare_durable nuxt build && wrangler deploy"
   },
   "dependencies": {
-    "@iconify-json/lucide": "1.2.151",
+    "@iconify-json/lucide": "1.2.152",
     "@iconify-json/simple-icons": "1.2.101",
     "@nuxt/ui": "4.12.0",
     "@nuxtjs/i18n": "10.6.0",
