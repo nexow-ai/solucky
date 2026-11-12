@@ -12,7 +12,8 @@ pub struct Config {
     /// Highest number a ticket can carry (inclusive), in every game. Changes
     /// only apply to rounds opened afterwards.
     pub max_number: u32,
-    /// Blocks new tickets. Closing, drawing and claiming always stay open,
+    /// Stops new rounds from opening. Rounds already on sale keep selling
+    /// until they end, and closing, drawing and claiming always stay open,
     /// so a pause can never lock a pot.
     pub paused: bool,
     pub bump: u8,

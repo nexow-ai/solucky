@@ -161,7 +161,8 @@ const nl: Dict = {
         },
         real: {
           q: 'Is dit echt geld?',
-          a: 'De openbare app draait op Solana devnet, waar SOL gratis testgeld is van faucet.solana.com. Het programma werkt hetzelfde op mainnet, maar voor een loterij met echt geld heb je de juiste vergunningen nodig waar je actief bent.',
+          a: 'Ja. Deze site draait op Solana Mainnet: loten kosten echte SOL, en prijzen worden in echte SOL uitbetaald. Wil je de spellen eerst proberen met gratis test-SOL, kies dan het testnetwerk in het instellingenmenu. Speel alleen met geld dat je kunt missen, en alleen waar online loterijen voor jou legaal zijn.',
+          test: 'Nee. Deze site draait op Solana {cluster}, waar SOL gratis testgeld uit de faucet is zonder waarde, dus je kunt de spellen leren kennen zonder iets uit te geven. Dezelfde spellen draaien met echte SOL op Solana Mainnet: kies het in het instellingenmenu.',
         },
         price: {
           q: 'Wat kost een lot?',
@@ -181,7 +182,7 @@ const nl: Dict = {
         },
         validator: {
           q: 'Kan een validator vals spelen bij de trekking?',
-          a: 'Spelers niet: de winnende hash bestaat nog niet als de verkoop sluit. De validator die het vastgelegde slot produceert, zou het kunnen beïnvloeden door te kiezen wat er in dat blok komt of door het over te slaan. Voor een spel met testgeld is dat acceptabel; voor potten met echt geld zou de trekking een oracle voor verifieerbare willekeur moeten gebruiken, en de README legt uit waar je er een inplugt.',
+          a: 'Spelers niet: de winnende hash bestaat nog niet als de verkoop sluit. De validator die het vastgelegde slot produceert, zou het kunnen beïnvloeden door te kiezen wat er in dat blok komt of door het over te slaan. De trekking gebruikt nog geen oracle voor verifieerbare willekeur; de README op GitHub legt deze grenzen uit.',
         },
       },
     },
@@ -887,7 +888,7 @@ const nl: Dict = {
         price:
           'per spel de lotprijs (minstens ◎0,002) en de huiscommissie (hoogstens 20%) kan wijzigen, met ingang van de volgende ronde van dat spel die opent;',
         pause:
-          'de verkoop van loten kan pauzeren en hervatten. Een pauze stopt alleen nieuwe loten: rondes die al gespeeld zijn, kunnen nog steeds worden getrokken en uitbetaald;',
+          'nieuwe rondes kan pauzeren en hervatten. Een pauze voorkomt alleen dat nieuwe rondes openen: een ronde die al loopt, blijft verkopen tot ze afloopt, en elke ronde kan nog steeds worden getrokken en uitbetaald;',
         other: 'de treasury, het hoogste getal en de authority zelf kan wijzigen.',
         cannot:
           'De code van het programma staat de authority, of wie dan ook, niet toe de pot van een ronde te nemen of hem ergens anders heen te sturen dan naar de eigenaar van het winnende lot, de treasury (voor de commissie) en de volgende ronde van het spel, meer te nemen dan de commissie, of een koper meer te rekenen dan de prijs die hij te zien kreeg.',

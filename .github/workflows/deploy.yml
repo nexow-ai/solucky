@@ -1,11 +1,12 @@
 name: Deploy
 
-# Builds the app for Cloudflare Workers and deploys it to solucky.me once CI
-# passes on a push to main (or by hand from the Actions tab), so production
-# follows a known commit instead of whatever a laptop last built. Needs the
-# repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID. Public
-# settings come from app/wrangler.jsonc; secrets (NUXT_VAPID_PRIVATE_KEY,
-# NUXT_PUSH_SECRET) stay in Cloudflare.
+# Builds the app for Cloudflare Workers once and deploys it twice, to
+# solucky.me (Mainnet) and devnet.solucky.me (Devnet), once CI passes on a
+# push to main (or by hand from the Actions tab), so production follows a
+# known commit instead of whatever a laptop last built. Needs the repository
+# secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID. Public settings come
+# from app/wrangler.jsonc; secrets (NUXT_CRANK_KEYPAIR, NUXT_RPC_UPSTREAM,
+# NUXT_VAPID_PRIVATE_KEY, NUXT_PUSH_SECRET) stay in Cloudflare.
 
 on:
   workflow_dispatch:
@@ -50,16 +51,30 @@ jobs:
       - name: Unit tests
         run: bun run test:js
 
-      - name: Build and deploy
-        run: bun run deploy
+      - name: Build
+        run: bun run build:cloudflare
+
+      - name: Deploy to Devnet
+        working-directory: app
+        run: bun x wrangler deploy --env devnet
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      - name: The site serves the new build
+      - name: Deploy to Mainnet
+        working-directory: app
+        run: bun x wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Both sites serve the new build
         run: |
-          for i in $(seq 1 30); do
-            curl -sf https://solucky.me/_nuxt/builds/latest.json && exit 0
-            sleep 2
+          build=$(jq -r .id app/.output/public/_nuxt/builds/latest.json)
+          for site in https://solucky.me https://devnet.solucky.me; do
+            for i in $(seq 1 30); do
+              [ "$(curl -sf "$site/_nuxt/builds/latest.json" | jq -r .id)" = "$build" ] && continue 2
+              sleep 2
+            done
+            echo "$site does not serve build $build"; exit 1
           done
-          exit 1

@@ -58,7 +58,8 @@ const left = computed(() =>
 const prizeIfYouWin = computed(() => prizeFor(pot.value + (ticketPrice.value ?? 0n)));
 const prizeShown = useTween(() => Number(prizeIfYouWin.value));
 
-const paused = computed(() => config.value?.data.paused ?? false);
+// A pause only stops a new round from opening: a round on sale keeps selling.
+const paused = computed(() => (config.value?.data.paused ?? false) && !round.value);
 
 // The number line: the round's numbers in order, yours, and what the picked number would win on.
 const sorted = computed(() => sortNumbers(takenNumbers.value));

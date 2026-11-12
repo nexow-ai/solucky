@@ -29,6 +29,9 @@ import type { GameKind } from './time';
 /** Byte offsets of `Ticket` fields, after the 8-byte discriminator. */
 export const TICKET_OFFSETS = { round: 8, owner: 40, number: 72, index: 76 } as const;
 
+/** Byte offsets of `Round` fields: `fee_collected` is the last one before the bump. */
+export const ROUND_OFFSETS = { kind: 8, feeCollected: 222 } as const;
+
 type ProgramAccountsRpc = Rpc<GetProgramAccountsApi>;
 type Filter = { dataSize: bigint } | { memcmp: { offset: bigint; bytes: Base58EncodedBytes; encoding: 'base58' } };
 
@@ -112,7 +115,22 @@ export async function fetchRounds(
   programAddress: Address = SOLUCKY_PROGRAM_ADDRESS,
 ): Promise<Account<Round>[]> {
   const filters = [memcmp(0, getRoundDiscriminatorBytes())];
-  if (kind !== undefined) filters.push(memcmp(8, Uint8Array.of(kind)));
+  if (kind !== undefined) filters.push(memcmp(ROUND_OFFSETS.kind, Uint8Array.of(kind)));
+  const rounds = await programAccounts(rpc, filters, decodeRound, programAddress, getRoundSize());
+  return rounds.sort((a, b) => b.data.period - a.data.period);
+}
+
+/**
+ * The rounds that still need a step: every round whose fee is not collected
+ * yet. That covers the rounds on sale, closed, drawn, and settled with the
+ * fee waiting (a round with no fee is marked collected when it is paid).
+ * Newest first, like `fetchRounds`, without downloading the settled history.
+ */
+export async function fetchPendingRounds(
+  rpc: ProgramAccountsRpc,
+  programAddress: Address = SOLUCKY_PROGRAM_ADDRESS,
+): Promise<Account<Round>[]> {
+  const filters = [memcmp(0, getRoundDiscriminatorBytes()), memcmp(ROUND_OFFSETS.feeCollected, Uint8Array.of(0))];
   const rounds = await programAccounts(rpc, filters, decodeRound, programAddress, getRoundSize());
   return rounds.sort((a, b) => b.data.period - a.data.period);
 }

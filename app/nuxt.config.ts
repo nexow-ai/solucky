@@ -104,6 +104,19 @@ export default defineNuxtConfig({
     /** Draw notifications (`bun run vapid`): the VAPID private key, and the secret the crank reports draws with. */
     vapidPrivateKey: '',
     pushSecret: '',
+    /**
+     * The site's crank (server/tasks/crank.ts): the byte array of the key it
+     * signs with (a secret; empty turns it off), and its priority fee in
+     * micro-lamports per compute unit.
+     */
+    crankKeypair: '',
+    crankPriorityFee: 0,
+    /**
+     * Where the site's RPC proxy (server/api/rpc.post.ts) and its crank send
+     * their calls: a provider's URL, token included, kept on the server.
+     * Defaults to the cluster's public endpoint.
+     */
+    rpcUpstream: '',
     public: {
       /** VAPID public key; empty hides draw notifications. */
       vapidKey: '',
@@ -127,6 +140,11 @@ export default defineNuxtConfig({
       rpcToken: '',
       /** Program address. Defaults to the address in the IDL. */
       programId: '',
+      /**
+       * Priority fee the app's transactions offer, in micro-lamports per
+       * compute unit; 0 offers none. Wallets that find one keep it.
+       */
+      priorityFee: 0,
       /** Highest ticket number, shown until the on-chain config loads. */
       maxNumber: 21_000_000,
       /** Public URL of the site, for absolute links in social cards. */
@@ -176,7 +194,10 @@ export default defineNuxtConfig({
   // (wrangler.jsonc), and in .data/push under the working directory on Node.
   nitro: {
     compressPublicAssets: true,
-    experimental: { websocket: true },
+    experimental: { websocket: true, tasks: true },
+    // The site's crank, every minute. On Cloudflare, the Cron Trigger in
+    // wrangler.jsonc must use the same pattern.
+    scheduledTasks: { '* * * * *': ['crank'] },
     storage: {
       push: process.env.NITRO_PRESET?.startsWith('cloudflare')
         ? { driver: 'cloudflare-kv-binding', binding: 'PUSH' }

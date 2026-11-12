@@ -10,7 +10,7 @@ pub enum SoluckyError {
     FeeTooHigh,
     #[msg("The highest number must be greater than zero")]
     InvalidMaxNumber,
-    #[msg("Ticket sales are paused")]
+    #[msg("New rounds are paused")]
     Paused,
     #[msg("Tickets can only be bought for the round on sale")]
     WrongRound,

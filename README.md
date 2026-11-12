@@ -8,6 +8,8 @@
 
 Every ticket, every lamport of the pot and every draw lives on-chain, where anyone can check it. In 20 languages.
 
+**Play with real SOL at [solucky.me](https://solucky.me) (Solana Mainnet), or for free with test SOL at [devnet.solucky.me](https://devnet.solucky.me) (Solana Devnet).**
+
 [![CI](https://github.com/nexow-ai/solucky/actions/workflows/ci.yml/badge.svg)](https://github.com/nexow-ai/solucky/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Anchor 1.2](https://img.shields.io/badge/Anchor-1.2-9945FF)
@@ -43,7 +45,7 @@ stateDiagram-v2
     Settled --> [*]: collect_fee pays the treasury
 ```
 
-1. **Buy.** `buy_ticket` moves the ticket price from the player to the round account and mixes the purchase into the round's entropy. The first ticket opens the round, which copies the game's price and fee and the config's highest number. The buyer passes the price they were shown and never pays more. A lottery round also keeps its numbers sorted after its fields; the buyer pays the rent of those 4 bytes.
+1. **Buy.** `buy_ticket` moves the ticket price from the player to the round account and mixes the purchase into the round's entropy. The first ticket opens the round, which copies the game's price and fee and the config's highest number; its buyer also pays the rent of the round's account, which stays on-chain as the round's record. The buyer passes the price they were shown and never pays more. A lottery round also keeps its numbers sorted after its fields; each buyer pays the rent of their 4 bytes.
 2. **Close.** Once a lottery round is over, anyone can call `close_round`. In Guess, `close_round` seals the guesses not checked yet, any time; sales go on until the pinned slot is produced. Either way it pins a slot 8 slots in the future, whose hash nobody knows yet.
 3. **Draw.** Once that slot exists, anyone can call `draw_round`. The program reads the slot's hash from the SlotHashes sysvar and computes `randomness = sha256(entropy ‖ slot_hash ‖ slot ‖ round)`, then `x = u64(randomness[0..8])`.
    - **Lotteries:** the drawn number is `x mod (max_number + 1)`, and the winner is the ticket closest to it (a tie goes to the lower number), found by binary search in the round's sorted numbers.
@@ -52,14 +54,14 @@ stateDiagram-v2
 4. **Pay.** Anyone can call `claim_prize`. The winner's 80% goes to the winning ticket's owner, and nobody else can receive it. Anyone can then call `collect_fee` to send the fee to the treasury; the two steps are separate so the treasury can never hold up a winner.
 5. **Reclaim.** After the payout, players can close their tickets to get the ticket rent back. The round account stays on-chain as the public record of the round.
 
-A bot (the **crank**, `bun run crank`) closes, draws and pays the lottery rounds right after they end, and checks new guesses every few seconds. Any player can do the same from the app. Each step only costs network fees.
+A bot (the **crank**) closes, draws and pays the lottery rounds right after they end, and checks new guesses every few seconds: the site's Worker runs it every minute (`app/server/tasks/crank.ts`), and `bun run crank` runs the same steps from a terminal. Any player can do the same from the app. Each step only costs network fees.
 
 ## Fairness and trust
 
 | Guarantee | Enforced by |
 | --- | --- |
 | The pot can only go to the winner, the fee to the treasury and the rest to the game's next round | `draw_round` splits it; `claim_prize` checks the ticket and its owner; `collect_fee` checks the configured treasury |
-| The operator cannot withdraw a pot or stop it from being paid | No such instruction exists; pausing only blocks new tickets, and the winner's payout never touches the treasury. The authority can only change where fees go |
+| The operator cannot withdraw a pot or stop it from being paid | No such instruction exists; pausing only stops new rounds from opening (a round on sale keeps selling until it ends, so even a Guess round can always finish), and the winner's payout never touches the treasury. The authority can only change where fees go |
 | The winner always gets 80%, the fee is at most 20%, and price, fee or range changes never affect a round already selling | `WINNER_SHARE_BPS`, `MAX_FEE_BPS`, and each round copies the price, fee and highest number when it opens |
 | A buyer never pays more than the price they saw | `buy_ticket` takes a `max_price` |
 | Prizes can always be paid, even to an empty wallet | Tickets cost at least 0.002 SOL, so 80% of a pot is always above the rent-exempt minimum |
@@ -72,7 +74,7 @@ A bot (the **crank**, `bun run crank`) closes, draws and pays the lottery rounds
 
 - The randomness comes from the hash of a slot pinned a few slots in the future, so nobody can predict it when the round closes. But the slot hash is a bank hash, which depends on the block's contents: the leader of that slot can try different blocks and publish a favourable one, or skip it (leaders produce 4 slots in a row, and the next leader can fork a block out). A validator who also closes the round can aim the pinned slot at its own leader slots.
 - Guess runs a draw every few seconds while guesses come in, so a validator gets many more chances to land on a pinned slot than in the lotteries.
-- Once the pinned slot exists, anyone can compute the result before drawing. The draw stays possible while SlotHashes still holds that slot (about 512 slots, ~3.5 minutes), and `close_round` only pins a new slot once SlotHashes proves the old one is out of reach. A player who closes a round and dislikes the result could still withhold the draw and hope nobody else draws in time. Run the crank continuously (`bun run crank --watch --interval 10`) so every round is drawn and every guess checked within seconds.
+- Once the pinned slot exists, anyone can compute the result before drawing. The draw stays possible while SlotHashes still holds that slot (about 512 slots, ~3.5 minutes), and `close_round` only pins a new slot once SlotHashes proves the old one is out of reach. A player who closes a round and dislikes the result could still withhold the draw and hope nobody else draws in time. The site's crank draws every round within seconds of its pinned slot, which leaves no such window.
 - For real-money pots, replace the draw with a verifiable randomness oracle such as Switchboard On-Demand or ORAO VRF. The draw logic is one function in [`draw_round.rs`](programs/solucky/src/instructions/draw_round.rs).
 - An upgradeable program is only as trustworthy as its upgrade authority. Consider a multisig, or making the program immutable once it is stable.
 
@@ -118,11 +120,13 @@ NUXT_PUBLIC_CLUSTER=localnet bun run dev
 
 `localnet` and `e2e` only run against a local RPC. They load `target/deploy/solucky.so` at the program address with your keypair (or a throwaway one) as upgrade authority, and open the three games with ◎0.1 tickets, a 5% fee and numbers from 0 to `SOLUCKY_MAX_NUMBER`. Point your wallet at `http://127.0.0.1:8899` to play.
 
-The program address in the code, `JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF` (earlier versions ran at `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` and, for 1.0, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`), belongs to a keypair that Nexow keeps out of the repository. On a fresh clone, `anchor build` creates a new `target/deploy/solucky-keypair.json`; run `anchor keys sync` and `bun run program:build` once to switch the code, IDL and client to your own address. Keep that keypair backed up and never commit it.
+The program address in the code, `JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF`, is the same on Mainnet and Devnet (earlier versions ran at `GC81vFcGhBvT9poUzXAFqvfZ8rnAqGVmKUPehrXLq6ux` and, for 1.0, `8uiVKnUeC7L4KG93MWvfhRoJkprdAUZ3eg3nzzKfowq2`), belongs to a keypair that Nexow keeps out of the repository. On a fresh clone, `anchor build` creates a new `target/deploy/solucky-keypair.json`; run `anchor keys sync` and `bun run program:build` once to switch the code, IDL and client to your own address. Keep that keypair backed up and never commit it.
 
 ## Deploying
 
-1. **Program.** Make a [verifiable build](#verifiable-builds), then deploy it with the wallet that should be the upgrade authority:
+S☉Lucky runs as two sites from the same code: **[solucky.me](https://solucky.me)** on Mainnet, the default, and **[devnet.solucky.me](https://devnet.solucky.me)** on Devnet, where tickets cost free test SOL from the faucet. The program has the same address on both clusters, each with its own upgrade authority: `AULjrh6f58mKv2eHt7817NtgnPNdJXNVFzS6T8ZBJ33k` on Mainnet, `2BkswEk2Nt8x8GCy37RRCwFNyEQSRYkQ5mhXEQprcYuJ` on Devnet. The steps below are the same for both; replace `-u devnet` with `-u mainnet-beta` for Mainnet.
+
+1. **Program.** Make a [verifiable build](#verifiable-builds), then deploy it with the wallet that should be the upgrade authority. On Mainnet, add a priority fee so the deploy's transactions land (`--with-compute-unit-price 100000`); the program's rent is about ◎2:
    ```bash
    bun run program:build:verifiable
    solana program deploy -u devnet --program-id target/deploy/solucky-keypair.json target/verifiable/solucky.so
@@ -139,20 +143,28 @@ The program address in the code, `JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF` 
    bun run admin status
    ```
    Later changes: `bun run admin game <daily|hourly|guess> --price <SOL> --fee-bps <n>`, and `bun run admin set --max-number <n>`, `--treasury <ADDRESS>`, `--authority <ADDRESS>`, `--pause`, `--resume`.
-3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys with [`app/wrangler.jsonc`](app/wrangler.jsonc); the [Deploy workflow](.github/workflows/deploy.yml) does the same once CI passes on a push to `main`, or by hand from the Actions tab (secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). The cluster, the site URL and the other network's site (`NUXT_PUBLIC_MAINNET_URL` or `NUXT_PUBLIC_TESTNET_URL`, for the header's network selector) are `vars` in `wrangler.jsonc`, and each deploy replaces the variables set in the dashboard with them. Use a dedicated RPC endpoint in production (the public ones answer HTTP 429 under load) and keep it out of the repository: `wrangler secret put NUXT_PUBLIC_RPC_URL` and, for QuickNode, `wrangler secret put NUXT_PUBLIC_RPC_TOKEN` (secrets survive deploys; the app still sends both to every browser, so restrict the endpoint to the site's domains at the provider). `bun run build` produces a Node server in `app/.output` instead. The app installs as a PWA and updates itself: a page left open offers each deploy within ten minutes and loads it on its next page change, and an installed app gets it on its next launch. Its install screenshots come from the play page: retake them with `bun run screenshots <site URL>` when the page changes. The images that shared links show are each game's hero, laid out as a card: `app/public/og.png` for the home page and the daily lottery, `og-hourly.png` and `og-guess.png` for the others. Retake them with `bun run og <site URL>` when a hero changes.
+3. **App.** `bun run deploy` builds for Cloudflare Workers and deploys the Mainnet site with [`app/wrangler.jsonc`](app/wrangler.jsonc); `bun run deploy:devnet` deploys the Devnet site (its `env.devnet`). The [Deploy workflow](.github/workflows/deploy.yml) builds once and deploys both once CI passes on a push to `main`, or by hand from the Actions tab (secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). Each site's cluster, URL, priority fees and the other site's URL (`NUXT_PUBLIC_MAINNET_URL` or `NUXT_PUBLIC_TESTNET_URL`, for the network choice in the settings menu) are `vars` in `wrangler.jsonc`, and each deploy replaces the variables set in the dashboard with them. Only the Mainnet site is indexed: the Devnet one answers `X-Robots-Tag: noindex`.
+   **RPC.** Solana's public Mainnet endpoint refuses browsers (HTTP 403), so without a configured endpoint the Mainnet site sends the app's calls through its own proxy, `/api/rpc` (`app/server/api/rpc.post.ts`), which forwards only the methods the app uses, and polls instead of using websockets. The public endpoint rate-limits, so give production a provider's endpoint, kept out of the repository: `wrangler secret put NUXT_RPC_UPSTREAM` with the provider's full URL, token included, keeps it on the server behind the proxy; or `wrangler secret put NUXT_PUBLIC_RPC_URL` and, for QuickNode, `NUXT_PUBLIC_RPC_TOKEN` let browsers call it directly, with websockets (both reach every visitor, so restrict the endpoint to the site's domains at the provider). Add `--env devnet` for the Devnet site. `bun run build` produces a Node server in `app/.output` instead. The app installs as a PWA and updates itself: a page left open offers each deploy within ten minutes and loads it on its next page change, and an installed app gets it on its next launch. Its install screenshots come from the play page: retake them with `bun run screenshots <site URL>` when the page changes. The images that shared links show are each game's hero, laid out as a card: `app/public/og.png` for the home page and the daily lottery, `og-hourly.png` and `og-guess.png` for the others. Retake them with `bun run og <site URL>` when a hero changes.
    **Draw notifications** are optional. `bun run vapid` prints new keys: set `NUXT_PUBLIC_VAPID_KEY` in `vars`, the private key and the push secret with `wrangler secret put NUXT_VAPID_PRIVATE_KEY` and `wrangler secret put NUXT_PUSH_SECRET`, and give the crank the site's URL and the same secret (below). The first deploy creates the `PUSH` KV namespace for the subscriptions and writes its id into `app/wrangler.jsonc`: commit it. On Node, subscriptions are files in `.data/push` under the working directory. Without a VAPID key, the bell on the play page stays hidden.
-4. **Crank.** Run `bun run crank --watch --interval 10` as a service (systemd, a container, a small VM) so lottery rounds are drawn within seconds of their end and Guess players get their check within seconds; it polls every 3 seconds while guesses wait. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON` (and, for notifications, the variable `SOLUCKY_APP_URL` and the secret `SOLUCKY_PUSH_SECRET`). Each crank reports the draws it makes to the app, which notifies the players who asked. Use a dedicated, lightly funded keypair: the crank never needs authority.
+4. **Crank.** Each site runs its own crank: a Cron Trigger starts `app/server/tasks/crank.ts` every minute, and it settles rounds for about 50 seconds, every 3 seconds while something is due and every 10 otherwise, so lottery rounds are drawn within seconds of their end and Guess players get their check within seconds. Give it a dedicated, lightly funded key (it never needs authority): `wrangler secret put NUXT_CRANK_KEYPAIR` with the key's byte array, and `--env devnet` for Devnet; without it, the task does nothing. It uses `NUXT_RPC_UPSTREAM` when set, and notifies the players who follow a drawn game itself. `bun run crank --watch --interval 10` runs the same steps from any machine. [`.github/workflows/crank.yml`](.github/workflows/crank.yml) is a backup, since scheduled Actions often start minutes late: enable it with the repository variable `SOLUCKY_CRANK_ENABLED=true`, the variable `SOLANA_RPC_URL` and the secret `SOLANA_KEYPAIR_JSON` (and, for notifications, the variable `SOLUCKY_APP_URL` and the secret `SOLUCKY_PUSH_SECRET`). Each crank reports the draws it makes to the app, which notifies the players who asked. Use a dedicated, lightly funded keypair: the crank never needs authority.
 5. **Monitoring.** `bun run monitor --crank <CRANK ADDRESS>` exits with an error when buying a ticket in any game fails in simulation (it simulates one unsigned purchase per game, so a broken program, client or RPC shows up before players hit it), when a finished lottery round is still unsettled 15 minutes after it ended, when a Guess winner is still unpaid, or when the crank holds less than ◎0.05; with `ALERT_WEBHOOK_URL` set it also posts to a Slack or Discord webhook. [`.github/workflows/monitor.yml`](.github/workflows/monitor.yml) runs it twice a day once the repository variable `SOLUCKY_MONITOR_ENABLED=true` is set (with the variables `SOLANA_RPC_URL` and `SOLUCKY_CRANK`, and the secret `ALERT_WEBHOOK_URL`); GitHub also emails you when a run fails.
 
-### Before a mainnet launch
+### Mainnet
 
-S☉Lucky runs on devnet. None of these is done yet; each one closes a gap listed under [Fairness and trust](#fairness-and-trust):
+S☉Lucky runs on Mainnet with real SOL. Done for the launch:
 
-- [ ] Draw with a verifiable randomness oracle (Switchboard On-Demand or ORAO VRF) instead of a slot hash, which the slot's leader can bias and which a player can re-roll by withholding the draw.
+- [x] A [verifiable build](#verifiable-builds) deployed on both clusters.
+- [x] An always-on crank in each site's Worker, so no draw waits for a player or a late scheduled Action.
+- [x] The site's own RPC proxy, since the public Mainnet endpoint refuses browsers, and priority fees on every transaction.
+- [x] A pause can no longer hold up a pot: it only stops new rounds from opening.
+
+Still open; each one closes a gap listed under [Fairness and trust](#fairness-and-trust):
+
+- [ ] Draw with a verifiable randomness oracle (Switchboard On-Demand or ORAO VRF) instead of a slot hash, which the slot's leader can bias. New per-round state belongs in a companion account: a lottery round's sorted numbers follow its fields, so `Round`'s layout must not change.
 - [ ] Put the upgrade authority and the config authority behind a multisig (for example Squads) with a time lock, or make the program immutable. Today the authority can change the highest number for rounds that have not opened yet, and a range of one or two numbers would hand it the next pot and the carry.
-- [ ] Have the program audited, then deploy a [verifiable build](#verifiable-builds) and publish its verification.
-- [ ] Run `crank --watch` as an always-on service with alerting, and enable the monitor workflow; scheduled GitHub Actions start minutes to hours late.
-- [ ] Use a dedicated mainnet RPC endpoint restricted to the site's domains, or proxy it through the Worker.
+- [ ] Have the program audited, and publish the verification of the deployed build (`solana-verify verify-from-repo --remote`).
+- [ ] A provider's RPC endpoint for production (`NUXT_RPC_UPSTREAM`); the public one rate-limits under load.
+- [ ] Enable the monitor workflow against Mainnet, with alerting.
 - [ ] Get legal advice for each market: a real-money lottery is regulated or banned in many countries, and the copy must state only what the program enforces.
 - [ ] Rotate the keys and passwords that the 2022 prototype committed to this public repository's history (see [SECURITY.md](SECURITY.md)).
 
@@ -167,7 +179,7 @@ To check a deployed program against a commit, rebuild that commit (or download t
 ```bash
 git checkout <COMMIT> && bun run program:build:verifiable
 solana-verify get-executable-hash target/verifiable/solucky.so
-solana-verify get-program-hash -u devnet JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF   # must print the same hash
+solana-verify get-program-hash -u mainnet-beta JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF   # must print the same hash (or -u devnet)
 ```
 
 To show the program as verified in Solana explorers, the upgrade authority can publish the check with `solana-verify verify-from-repo --remote`, passing `--base-image quay.io/ottersec/anchor:v1.2.1` so it builds exactly like `program:build:verifiable`.
@@ -184,6 +196,7 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `NUXT_PUBLIC_RPC_WS_URL` | from the RPC URL | Websocket endpoint, if different; without the token |
 | `NUXT_PUBLIC_RPC_TOKEN` | empty | The provider's auth token (QuickNode), added as the last path segment of both URLs, since browsers cannot send QuickNode's `x-token` header. Every visitor sees it: restrict the endpoint to your domains at the provider |
 | `NUXT_PUBLIC_PROGRAM_ID` | from the IDL | Program address |
+| `NUXT_PUBLIC_PRIORITY_FEE` | `0` | Priority fee the app's transactions offer, in micro-lamports per compute unit; the Mainnet site uses 50 000 |
 | `NUXT_PUBLIC_MAX_NUMBER` | `21000000` | Highest ticket number, shown until the on-chain config loads; keep it equal to `SOLUCKY_MAX_NUMBER` |
 | `NUXT_PUBLIC_SITE_URL` | empty | Public URL of the site, for absolute social-card links |
 | `NUXT_PUBLIC_I18N_BASE_URL` | empty | The same URL again, for the hreflang and canonical links of every language |
@@ -195,7 +208,10 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | Variable | Meaning |
 | --- | --- |
 | `NUXT_VAPID_PRIVATE_KEY` | The private half of `NUXT_PUBLIC_VAPID_KEY`, which signs every notification |
-| `NUXT_PUSH_SECRET` | What the crank must send to report a draw (`/api/push/draw`) |
+| `NUXT_PUSH_SECRET` | What a crank outside the site must send to report a draw (`/api/push/draw`) |
+| `NUXT_CRANK_KEYPAIR` | The byte array of the key the site's crank pays fees with; empty turns the crank off |
+| `NUXT_CRANK_PRIORITY_FEE` | The crank's priority fee, in micro-lamports per compute unit (a `var`; 100 000 on Mainnet) |
+| `NUXT_RPC_UPSTREAM` | A provider's RPC URL, token included, for the site's RPC proxy and its crank; defaults to the cluster's public endpoint |
 
 **Scripts** (`admin`, `crank`, `monitor`, `localnet`, `e2e`; a `.env` at the root, see [`.env.example`](.env.example)):
 
@@ -207,6 +223,7 @@ To show the program as verified in Solana explorers, the upgrade authority can p
 | `SOLANA_KEYPAIR` | `~/.config/solana/id.json` | Signer keypair file |
 | `SOLANA_KEYPAIR_JSON` | — | The keypair's byte array, for CI secrets |
 | `SOLUCKY_PROGRAM_ID` | from the IDL | Program address |
+| `SOLANA_PRIORITY_FEE` | — | Priority fee in micro-lamports per compute unit; set it on Mainnet (e.g. 100000) |
 | `SOLUCKY_MAX_NUMBER` | `21000000` | Highest ticket number in every game, written to the config by `admin init` and `localnet` |
 | `ALERT_WEBHOOK_URL` | — | `monitor` only: Slack or Discord webhook for alerts |
 | `SOLUCKY_APP_URL`, `SOLUCKY_PUSH_SECRET` | — | `crank` only: the site, and its `NUXT_PUSH_SECRET`, to report each draw for the notifications |
@@ -230,7 +247,7 @@ To add a language: add it to `LOCALES` with its plural forms, copy `en.ts` to `<
 | Instruction | Who | What |
 | --- | --- | --- |
 | `initialize(max_number)` | upgrade authority | Creates the config |
-| `update_config(update)` | config authority | Changes the authority, treasury, number range or pause flag |
+| `update_config(update)` | config authority | Changes the authority, treasury, number range or pause flag (a pause stops new rounds from opening) |
 | `set_game(kind, ticket_price, fee_bps)` | config authority | Opens a game, or changes its price and fee for its next rounds |
 | `buy_ticket(kind, period, number, country, max_price)` | any player | Buys `number` in the game's round on sale, at no more than `max_price` |
 | `close_round` | anyone | Ends a finished lottery round, or seals a Guess round's new guesses, and pins the draw slot |
@@ -265,7 +282,7 @@ Report vulnerabilities privately; see [SECURITY.md](SECURITY.md). Production bui
 
 ## Legal
 
-Lotteries and gambling are regulated in most countries. The public app runs on devnet with test SOL. Running S☉Lucky with real money is the operator's responsibility: check the licences you need, restrict access where it is not allowed, and only let adults play.
+Lotteries and gambling are regulated in most countries. solucky.me runs on Mainnet with real SOL, and devnet.solucky.me with test SOL. Running S☉Lucky with real money is the operator's responsibility: check the licences you need, restrict access where it is not allowed, and only let adults play.
 
 ## License
 

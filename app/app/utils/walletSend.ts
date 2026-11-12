@@ -25,8 +25,9 @@ import {
   isTransactionModifyingSigner,
   isTransactionPartialSigner,
   isTransactionSendingSigner,
+  type MicroLamports,
   pipe,
-  sendAndConfirmTransactionFactory,
+  setTransactionMessageComputeUnitPrice,
   setTransactionMessageLifetimeUsingBlockhash,
   signature,
   signTransactionMessageWithSigners,
@@ -147,21 +148,8 @@ function payerOf(client: object): TransactionSigner | null {
 /** Replaces `client.sendTransaction` with a wallet-aware sender. */
 export function walletAwareSend() {
   return <T extends object>(client: T): T => {
-    const c = client as T & {
-      rpc: StatusRpc & {
-        getLatestBlockhash: () => {
-          send: (config?: { abortSignal?: AbortSignal }) => Promise<{
-            value: Parameters<typeof setTransactionMessageLifetimeUsingBlockhash>[0];
-          }>;
-        };
-      };
-      rpcSubscriptions: Parameters<typeof sendAndConfirmTransactionFactory>[0]['rpcSubscriptions'];
-    };
+    const c = client as T & { rpc: BatchRpc };
 
-    const sendAndConfirmTransaction = sendAndConfirmTransactionFactory({
-      rpc: c.rpc as unknown as Parameters<typeof sendAndConfirmTransactionFactory>[0]['rpc'],
-      rpcSubscriptions: c.rpcSubscriptions,
-    });
     const estimateAndSetResourceLimits = resourceLimitsSetter(c.rpc);
 
     const executor = createTransactionPlanExecutor({
@@ -193,10 +181,15 @@ export function walletAwareSend() {
         assertIsTransactionWithBlockhashLifetime(signedTransaction);
         const sig = getSignatureFromTransaction(signedTransaction);
         Object.assign(context, { transaction: signedTransaction, signature: sig });
-        await sendAndConfirmTransaction(signedTransaction, {
-          commitment: 'confirmed',
-          ...executorConfig,
-        });
+        // Sent with a preflight, then confirmed by polling: no websocket needed,
+        // so it also works through the app's RPC proxy (server/api/rpc.post.ts).
+        await c.rpc
+          .sendTransaction(getBase64EncodedWireTransaction(signedTransaction), {
+            encoding: 'base64',
+            preflightCommitment: 'confirmed',
+          })
+          .send({ abortSignal: signal });
+        await confirmSignature(c.rpc, sig, latestBlockhash.lastValidBlockHeight, { abortSignal: signal });
         return context as typeof context & { signature: Signature };
       },
     });
@@ -306,11 +299,30 @@ export async function sendInstructionSets(
 
 type LimitsRpc = Parameters<typeof estimateResourceLimitsFactory>[0]['rpc'];
 
-/** Sets a message's compute unit limit from a simulation, with Kit's margin (see `withComputeUnitMargin`). */
+/** The priority fee every transaction offers, in micro-lamports per compute unit (`NUXT_PUBLIC_PRIORITY_FEE`). */
+let priorityFee = 0n;
+
+/** Sets the priority fee of the transactions sent from now on; 0 sends none. */
+export function setPriorityFee(microLamports: bigint) {
+  priorityFee = microLamports > 0n ? microLamports : 0n;
+}
+
+/**
+ * Sets a message's priority fee, if any, then its compute unit limit from a
+ * simulation, with Kit's margin (see `withComputeUnitMargin`). A wallet that
+ * finds a priority fee already set keeps it rather than adding its own.
+ */
 function resourceLimitsSetter(rpc: unknown) {
   const estimateResourceLimits = estimateResourceLimitsFactory({ rpc: rpc as LimitsRpc });
-  return estimateAndSetResourceLimitsFactory(async (message, config) => {
+  const setLimits = estimateAndSetResourceLimitsFactory(async (message, config) => {
     const estimate = await estimateResourceLimits(message, config);
     return { ...estimate, computeUnitLimit: withComputeUnitMargin(estimate.computeUnitLimit) };
   });
+  return <M extends Parameters<typeof setLimits>[0]>(message: M, config?: Parameters<typeof setLimits>[1]) =>
+    setLimits(
+      priorityFee > 0n
+        ? (setTransactionMessageComputeUnitPrice(priorityFee as MicroLamports, message as never) as M)
+        : message,
+      config,
+    );
 }

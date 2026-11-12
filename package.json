@@ -28,6 +28,7 @@
     "build": "bun run --cwd app build",
     "build:cloudflare": "bun run --cwd app build:cloudflare",
     "deploy": "bun run --cwd app deploy",
+    "deploy:devnet": "bun run --cwd app deploy:devnet",
     "preview": "bun run --cwd app preview",
     "program:build": "anchor build && cp target/idl/solucky.json idl/solucky.json && bun run codegen",
     "program:build:verifiable": "anchor build --verifiable",

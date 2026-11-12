@@ -162,7 +162,8 @@ const fr: Dict = {
         },
         real: {
           q: 'Est-ce de l’argent réel ?',
-          a: 'L’appli publique tourne sur le devnet de Solana, où le SOL est de l’argent de test gratuit, obtenu sur faucet.solana.com. Le programme fonctionne de la même façon sur le mainnet, mais exploiter une loterie en argent réel exige les licences adéquates là où tu opères.',
+          a: 'Oui. Ce site tourne sur Solana Mainnet : les tickets coûtent du vrai SOL, et les gains sont payés en vrai SOL. Pour essayer d’abord les jeux avec du SOL de test gratuit, choisis le réseau de test dans le menu des réglages. Ne joue qu’avec de l’argent que tu peux te permettre de perdre, et seulement là où les loteries en ligne sont légales pour toi.',
+          test: 'Non. Ce site tourne sur Solana {cluster}, où le SOL est de l’argent de test gratuit, obtenu sur le faucet et sans valeur : tu peux donc découvrir les jeux sans rien dépenser. Les mêmes jeux tournent avec du vrai SOL sur Solana Mainnet : choisis-le dans le menu des réglages.',
         },
         price: {
           q: 'Combien coûte un ticket ?',
@@ -182,7 +183,7 @@ const fr: Dict = {
         },
         validator: {
           q: 'Un validateur peut-il fausser le tirage ?',
-          a: 'Les joueurs, non : le hash gagnant n’existe pas encore à la clôture des ventes. Le validateur qui produit le slot fixé pourrait l’influencer, en choisissant ce qui entre dans ce bloc ou en le sautant. C’est acceptable pour un jeu en argent de test ; pour des cagnottes en argent réel, le tirage devrait utiliser un oracle d’aléa vérifiable, et le README explique où en brancher un.',
+          a: 'Les joueurs, non : le hash gagnant n’existe pas encore à la clôture des ventes. Le validateur qui produit le slot fixé pourrait l’influencer, en choisissant ce qui entre dans ce bloc ou en le sautant. Le tirage n’utilise pas encore d’oracle d’aléa vérifiable ; le README sur GitHub explique ces limites.',
         },
       },
     },
@@ -892,7 +893,7 @@ const fr: Dict = {
         price:
           'modifier le prix du ticket de chaque jeu (au moins ◎0,002) et sa commission de la maison (au plus 20 %), avec effet à partir de la prochaine manche de ce jeu qui s’ouvre ;',
         pause:
-          'suspendre et reprendre la vente de tickets. Une pause n’arrête que les nouveaux tickets : les manches déjà jouées peuvent toujours être tirées et payées ;',
+          'suspendre et reprendre l’ouverture de nouvelles manches. Une pause empêche seulement l’ouverture de nouvelles manches : une manche déjà en vente continue jusqu’à sa fin, et toute manche peut toujours être tirée et payée ;',
         other: 'changer la trésorerie, le numéro le plus élevé, et l’autorité elle-même.',
         cannot:
           'Le code du programme ne permet ni à l’autorité ni à personne d’autre de prendre la cagnotte d’une manche ou de l’envoyer ailleurs qu’au propriétaire du ticket gagnant, à la trésorerie pour la commission et à la manche suivante du jeu, de prélever plus que la commission, ou de faire payer à un acheteur plus que le prix qui lui a été affiché.',

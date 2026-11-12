@@ -161,7 +161,8 @@ const es: Dict = {
         },
         real: {
           q: '¿Es dinero real?',
-          a: 'La app pública funciona en la devnet de Solana, donde el SOL es dinero de prueba gratuito de faucet.solana.com. El programa funciona igual en mainnet, pero operar una lotería con dinero real requiere las licencias correspondientes allí donde operes.',
+          a: 'Sí. Este sitio funciona en Solana Mainnet: los boletos cuestan SOL real y los premios se pagan en SOL real. Para probar antes los juegos con SOL de prueba gratis, elige la red de prueba en el menú de ajustes. Juega solo con dinero que puedas permitirte perder, y solo donde las loterías en línea sean legales para ti.',
+          test: 'No. Este sitio funciona en Solana {cluster}, donde el SOL es dinero de prueba gratuito del faucet y no tiene valor, así que puedes aprender los juegos sin gastar nada. Los mismos juegos funcionan con SOL real en Solana Mainnet: elígela en el menú de ajustes.',
         },
         price: {
           q: '¿Cuánto cuesta un boleto?',
@@ -181,7 +182,7 @@ const es: Dict = {
         },
         validator: {
           q: '¿Puede un validador hacer trampa en el sorteo?',
-          a: 'Los jugadores no: el hash ganador no existe cuando se cierran las ventas. El validador que produce el slot fijado podría sesgarlo, eligiendo qué entra en ese bloque o saltándoselo. Eso es aceptable para un juego con dinero de prueba; para pozos con dinero real, el sorteo debería usar un oráculo de aleatoriedad verificable, y el README explica dónde conectar uno.',
+          a: 'Los jugadores no: el hash ganador no existe cuando se cierran las ventas. El validador que produce el slot fijado podría sesgarlo, eligiendo qué entra en ese bloque o saltándoselo. El sorteo aún no usa un oráculo de aleatoriedad verificable; el README en GitHub explica estos límites.',
         },
       },
     },
@@ -887,7 +888,7 @@ const es: Dict = {
         price:
           'cambiar el precio del boleto de cada juego (como mínimo ◎0,002) y su comisión de la casa (como máximo el 20 %), con efecto desde la próxima ronda de ese juego que se abra;',
         pause:
-          'pausar y reanudar la venta de boletos. Una pausa solo detiene los boletos nuevos: las rondas ya jugadas se pueden seguir sorteando y pagando;',
+          'pausar y reanudar las rondas nuevas. Una pausa impide que se abran rondas nuevas: una ronda ya a la venta sigue vendiendo hasta que termina, y toda ronda se puede seguir sorteando y pagando;',
         other: 'cambiar la tesorería, el número más alto y la propia autoridad.',
         cannot:
           'El código del programa no permite a la autoridad, ni a nadie más, tomar el pozo de una ronda ni enviarlo a otro destino que no sea el dueño del boleto ganador, la comisión de la tesorería y la siguiente ronda del juego, quedarse con más que la comisión ni cobrar a un comprador más que el precio que se le mostró.',

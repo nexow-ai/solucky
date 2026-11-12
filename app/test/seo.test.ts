@@ -77,6 +77,12 @@ describe('robotsTxt', () => {
     expect(robots).toContain('Allow: /');
     expect(robots).toContain(`Sitemap: ${ORIGIN}/sitemap.xml`);
   });
+
+  it('lists no sitemap on a test-money site', () => {
+    const robots = robotsTxt(ORIGIN, { indexed: false });
+    expect(robots).toContain('Allow: /');
+    expect(robots).not.toContain('Sitemap');
+  });
 });
 
 describe('llmsTxt', () => {

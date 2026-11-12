@@ -162,7 +162,8 @@ const de: Dict = {
         },
         real: {
           q: 'Ist das echtes Geld?',
-          a: 'Die öffentliche App läuft im Devnet von Solana, wo SOL kostenloses Testgeld von faucet.solana.com ist. Das Programm funktioniert im Mainnet genauso, aber wer eine Lotterie mit echtem Geld betreibt, braucht dort, wo er tätig ist, die passenden Lizenzen.',
+          a: 'Ja. Diese Website läuft auf Solana Mainnet: Tickets kosten echte SOL, und Gewinne werden in echten SOL ausgezahlt. Um die Spiele erst mit kostenlosen Test-SOL auszuprobieren, wähle im Einstellungsmenü das Testnetz. Spiele nur mit Geld, dessen Verlust du dir leisten kannst, und nur dort, wo Online-Lotterien für dich legal sind.',
+          test: 'Nein. Diese Website läuft auf Solana {cluster}, wo SOL kostenloses Testgeld aus dem Faucet ist und keinen Wert hat. So lernst du die Spiele kennen, ohne etwas auszugeben. Dieselben Spiele laufen mit echten SOL auf Solana Mainnet: Wähle es im Einstellungsmenü.',
         },
         price: {
           q: 'Was kostet ein Ticket?',
@@ -182,7 +183,7 @@ const de: Dict = {
         },
         validator: {
           q: 'Kann ein Validator bei der Ziehung betrügen?',
-          a: 'Spieler können es nicht: Der Gewinner-Hash existiert noch nicht, wenn der Verkauf schließt. Der Validator, der den festgelegten Slot produziert, könnte ihn beeinflussen, indem er wählt, was in diesen Block kommt, oder ihn auslässt. Für ein Spiel mit Testgeld ist das akzeptabel; bei Pots mit echtem Geld sollte die Ziehung ein verifizierbares Zufallsorakel nutzen, und das README erklärt, wo man eines einbindet.',
+          a: 'Spieler können es nicht: Der Gewinner-Hash existiert noch nicht, wenn der Verkauf schließt. Der Validator, der den festgelegten Slot produziert, könnte ihn beeinflussen, indem er wählt, was in diesen Block kommt, oder ihn auslässt. Die Ziehung nutzt noch kein verifizierbares Zufallsorakel; das README auf GitHub erklärt diese Grenzen.',
         },
       },
     },
@@ -894,7 +895,7 @@ const de: Dict = {
         price:
           'den Ticketpreis (mindestens ◎0,002) und die Hausgebühr (höchstens 20 %) jedes Spiels ändern kann, wirksam ab der nächsten Runde dieses Spiels, die öffnet;',
         pause:
-          'den Ticketverkauf pausieren und fortsetzen kann. Eine Pause stoppt nur neue Tickets: Bereits gespielte Runden können weiterhin gezogen und ausgezahlt werden;',
+          'neue Runden pausieren und fortsetzen kann. Eine Pause verhindert nur, dass neue Runden beginnen: Eine Runde, die bereits läuft, verkauft weiter bis zu ihrem Ende, und jede Runde kann weiterhin gezogen und ausgezahlt werden;',
         other: 'die Treasury, die höchste Zahl und die Authority selbst ändern kann.',
         cannot:
           'Der Code des Programms erlaubt es weder der Authority noch sonst jemandem, den Pot einer Runde zu nehmen oder ihn anderswohin zu senden als an den Besitzer des Gewinnertickets, als Gebühr an die Treasury und an die nächste Runde des Spiels, mehr als die Gebühr zu nehmen oder einem Käufer mehr als den ihm angezeigten Preis zu berechnen.',

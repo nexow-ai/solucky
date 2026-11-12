@@ -160,7 +160,8 @@ const id: Dict = {
         },
         real: {
           q: 'Apakah ini uang sungguhan?',
-          a: 'Aplikasi publik berjalan di Solana devnet, tempat SOL adalah uang uji coba gratis dari faucet.solana.com. Program bekerja dengan cara yang sama di mainnet, tetapi menjalankan lotre dengan uang sungguhan memerlukan lisensi yang sesuai di tempat kamu beroperasi.',
+          a: 'Ya. Situs ini berjalan di Solana Mainnet: tiket dibayar dengan SOL sungguhan, dan hadiah dibayar dengan SOL sungguhan. Untuk mencoba permainannya dulu dengan SOL uji coba gratis, pilih jaringan uji coba di menu pengaturan. Bermainlah hanya dengan uang yang sanggup kamu relakan, dan hanya di tempat lotere online legal bagimu.',
+          test: 'Bukan. Situs ini berjalan di Solana {cluster}, tempat SOL adalah uang uji coba gratis dari faucet dan tidak bernilai, jadi kamu bisa mempelajari permainannya tanpa mengeluarkan apa pun. Permainan yang sama berjalan dengan SOL sungguhan di Solana Mainnet: pilih jaringan itu di menu pengaturan.',
         },
         price: {
           q: 'Berapa harga satu tiket?',
@@ -180,7 +181,7 @@ const id: Dict = {
         },
         validator: {
           q: 'Bisakah validator mencurangi undian?',
-          a: 'Pemain tidak bisa: hash pemenang belum ada saat penjualan ditutup. Validator yang menghasilkan slot yang ditetapkan bisa memengaruhinya, dengan memilih apa yang masuk ke blok itu atau dengan melewatkannya. Hal itu masih bisa diterima untuk permainan dengan uang uji coba; untuk pot berisi uang sungguhan, undian sebaiknya memakai oracle keacakan yang dapat diverifikasi, dan README menjelaskan di mana memasangnya.',
+          a: 'Pemain tidak bisa: hash pemenang belum ada saat penjualan ditutup. Validator yang menghasilkan slot yang ditetapkan bisa memengaruhinya, dengan memilih apa yang masuk ke blok itu atau dengan melewatkannya. Undian belum memakai oracle keacakan yang dapat diverifikasi; README di GitHub menjelaskan batasan ini.',
         },
       },
     },
@@ -885,7 +886,7 @@ const id: Dict = {
         price:
           'mengubah harga tiket (minimal ◎0,002) dan biaya pengelola (maksimal 20%) setiap permainan, berlaku mulai ronde berikutnya dari permainan itu yang dibuka;',
         pause:
-          'menjeda dan melanjutkan penjualan tiket. Jeda hanya menghentikan tiket baru: ronde yang sudah dimainkan tetap bisa diundi dan dibayar;',
+          'menjeda dan melanjutkan ronde baru. Jeda hanya mencegah ronde baru dibuka: ronde yang sudah dijual tetap berjalan sampai selesai, dan setiap ronde tetap bisa diundi dan dibayar;',
         other: 'mengubah treasury, angka tertinggi, dan otoritas itu sendiri.',
         cannot:
           'Kode program tidak mengizinkan otoritas, atau siapa pun, mengambil pot sebuah ronde atau mengirimkannya ke mana pun selain kepada pemilik tiket pemenang, biaya ke treasury, dan ronde berikutnya dari permainan itu, mengambil lebih dari biaya, atau menagih pembeli lebih dari harga yang ditampilkan kepadanya.',

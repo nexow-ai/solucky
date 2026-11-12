@@ -110,7 +110,15 @@ export function sitemapXml(origin: string): string {
 }
 
 /** robots.txt: every page may be crawled; the API and the live socket are not pages. */
-export function robotsTxt(origin: string): string {
+export function robotsTxt(origin: string, { indexed = true }: { indexed?: boolean } = {}): string {
+  // A test-money site answers every request with `X-Robots-Tag: noindex`
+  // (server/middleware/noindex.ts): crawlers may read it, to see that, but
+  // only the Mainnet site is listed.
+  if (!indexed) {
+    return ['# S☉Lucky with test SOL: not indexed. Every page says noindex.', 'User-agent: *', 'Allow: /', ''].join(
+      '\n',
+    );
+  }
   return [
     '# S☉Lucky: every page may be crawled, indexed and quoted.',
     '# A summary for AI assistants is at /llms.txt.',
@@ -161,9 +169,13 @@ export function llmsTxt(facts: SiteFacts, d: Dict = en): string {
       return `- **${rule.title}**${game}: ${rule.description}`;
     },
   );
-  const faq = (['what', 'real', 'price', 'odds', 'guess', 'draw', 'country', 'validator'] as const).map(
-    (id) => `### ${d.home.faq.items[id].q}\n\n${fill(d.home.faq.items[id].a, { max })}`,
-  );
+  const faq = (['what', 'real', 'price', 'odds', 'guess', 'draw', 'country', 'validator'] as const).map((id) => {
+    const answer =
+      id === 'real' && facts.cluster !== 'mainnet'
+        ? fill(d.home.faq.items.real.test, { cluster: facts.clusterLabel })
+        : fill(d.home.faq.items[id].a, { max });
+    return `### ${d.home.faq.items[id].q}\n\n${answer}`;
+  });
   const legal = LEGAL_PAGES.map((page) => `- [${d.legal.pages[page.key].label}](${url(page.to)})`);
   const languages = LOCALES.map((l: LocaleInfo) => `${l.english} (${url(localizedPath(l.code, '/'))})`).join(', ');
 

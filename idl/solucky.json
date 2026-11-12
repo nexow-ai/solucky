@@ -1180,7 +1180,7 @@
     {
       "code": 6004,
       "name": "Paused",
-      "msg": "Ticket sales are paused"
+      "msg": "New rounds are paused"
     },
     {
       "code": 6005,
@@ -1349,7 +1349,8 @@
           {
             "name": "paused",
             "docs": [
-              "Blocks new tickets. Closing, drawing and claiming always stay open,",
+              "Stops new rounds from opening. Rounds already on sale keep selling",
+              "until they end, and closing, drawing and claiming always stay open,",
               "so a pause can never lock a pot."
             ],
             "type": "bool"

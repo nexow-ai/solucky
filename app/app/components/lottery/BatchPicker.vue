@@ -122,7 +122,8 @@ const roundOpen = computed(() => {
   const status = round.value?.data.status;
   return status === undefined || status === RoundStatus.Open || (!isLottery.value && status === RoundStatus.Closed);
 });
-const paused = computed(() => config.value?.data.paused ?? false);
+// A pause only stops a new round from opening: a round on sale keeps selling.
+const paused = computed(() => (config.value?.data.paused ?? false) && !round.value);
 
 const block = computed(() => {
   if (!fresh.value.length && ticketPrice.value !== null) return 'empty' as const;

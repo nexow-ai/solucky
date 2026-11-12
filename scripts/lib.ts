@@ -12,6 +12,8 @@
  *   SOLUCKY_PROGRAM_ID   program address (default: the address in the IDL)
  *   SOLUCKY_MAX_NUMBER   highest ticket number in every game, for `admin init` and `localnet`
  *                        (default: 21000000)
+ *   SOLANA_PRIORITY_FEE  priority fee in micro-lamports per compute unit (default: none); set
+ *                        it on mainnet so transactions land when the cluster is busy
  *   SOLUCKY_APP_URL      the site, and SOLUCKY_PUSH_SECRET its push secret: the crank reports
  *                        each draw there for the draw notifications (`bun run vapid`)
  *
@@ -28,16 +30,16 @@ import {
   getAddressEncoder,
   getProgramDerivedAddress,
   type KeyPairSigner,
+  type MicroLamports,
   type TransactionSigner,
 } from '@solana/kit';
 import { solanaRpc } from '@solana/kit-plugin-rpc';
 import { payer } from '@solana/kit-plugin-signer';
 import {
   findGamePda,
-  formatPeriod,
-  GAME_SLUGS,
   GameKind,
   type Round,
+  roundLabel,
   rpcEndpoint,
   SOLUCKY_PROGRAM_ADDRESS,
   soluckyProgram,
@@ -63,12 +65,12 @@ if (!Number.isSafeInteger(MAX_NUMBER) || MAX_NUMBER <= 0 || MAX_NUMBER > 0xffff_
   throw new Error(`Invalid SOLUCKY_MAX_NUMBER: ${process.env.SOLUCKY_MAX_NUMBER}`);
 }
 
+/** Priority fee for every transaction, in micro-lamports per compute unit. */
+export const PRIORITY_FEE = BigInt(process.env.SOLANA_PRIORITY_FEE || 0);
+
 export const GAMES = [GameKind.Daily, GameKind.Hourly, GameKind.Guess] as const;
 
-/** `daily 2026-10-21`, `hourly 2026-10-21T14`, `guess 3`: how logs name a round. */
-export function roundLabel({ kind, period }: Pick<Round, 'kind' | 'period'>): string {
-  return `${GAME_SLUGS[kind]} ${formatPeriod(kind, period)}`;
-}
+export { roundLabel };
 
 export function gamePda(kind: number) {
   return findGamePda({ kind }, { programAddress: PROGRAM_ADDRESS }).then(([address]) => address);
@@ -99,7 +101,10 @@ export function clientFor(signer: TransactionSigner) {
           rpcUrl: RPC_URL,
           rpcConfig: RPC_CONFIG,
           rpcSubscriptionsUrl: RPC_ENDPOINT.rpcSubscriptionsUrl,
-          transactionConfig: { version: 0 },
+          transactionConfig: {
+            version: 0,
+            ...(PRIORITY_FEE > 0n && { microLamportsPerComputeUnit: PRIORITY_FEE as MicroLamports }),
+          },
         }),
       )
       .use(soluckyProgram({ programAddress: PROGRAM_ADDRESS }))

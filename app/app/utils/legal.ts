@@ -6,7 +6,7 @@ export const OPERATOR = {
 } as const;
 
 /** When the wording of the legal pages last changed. Update it with every change to them. */
-export const LEGAL_UPDATED = '2026-10-21';
+export const LEGAL_UPDATED = '2026-11-10';
 
 /**
  * The legal documents, in the order they are listed. Each one's title and

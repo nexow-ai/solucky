@@ -6,6 +6,9 @@ package_manager = "bun"
 resolution = true
 skip-lint = false
 
+[programs.mainnet]
+solucky = "JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF"
+
 [programs.devnet]
 solucky = "JCupk8SMKzCzApb7LbW3LHryrj7ZN9i1sGo6w2cSQLdF"
 

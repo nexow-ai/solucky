@@ -44,6 +44,7 @@ import {
   formatPeriod,
   gameFromSlug,
   GameKind,
+  getRoundDecoder,
   getRoundEncoder,
   getBuyTicketsWithTicketsInstruction,
   getRoundSize,
@@ -66,6 +67,8 @@ import {
   SOLUCKY_ERROR__PAUSED,
   SOLUCKY_PROGRAM_ADDRESS,
   TICKET_OFFSETS,
+  ROUND_OFFSETS,
+  isDue,
   winShare,
 } from '../src';
 
@@ -264,7 +267,11 @@ describe('accounts', () => {
     });
     expect(fields.length).toBe(getRoundSize());
     // The kind byte follows the discriminator, where `fetchRounds` filters on it.
-    expect(fields[8]).toBe(Daily);
+    expect(fields[ROUND_OFFSETS.kind]).toBe(Daily);
+    // `fetchPendingRounds` filters on the fee_collected byte.
+    expect(fields[ROUND_OFFSETS.feeCollected]).toBe(0);
+    const collected = getRoundEncoder().encode({ ...getRoundDecoder().decode(fields), feeCollected: true });
+    expect(collected[ROUND_OFFSETS.feeCollected]).toBe(1);
     const data = new Uint8Array([...fields, 7, 0, 0, 0, 0x40, 0x6f, 0x40, 0x01]);
     expect(roundNumbers(data)).toEqual([7, 21_000_000]);
     expect(roundNumbers(fields)).toEqual([]);
@@ -400,7 +407,7 @@ describe('errors', () => {
   });
 
   test('describe them in English', () => {
-    expect(describeError(failed(6004))).toBe('Ticket sales are paused.');
+    expect(describeError(failed(6004))).toBe('New rounds are paused.');
     expect(describeError(failed(0))).toMatch(/already holds this number in this round/);
     expect(describeError(new Error(''))).toBe('Something went wrong.');
   });
@@ -481,5 +488,26 @@ describe('batches', () => {
       { address: source.address, role: AccountRole.WRITABLE_SIGNER, signer: source },
       { address: destination, role: AccountRole.WRITABLE },
     ]);
+  });
+});
+
+describe('settling', () => {
+  const round = getRoundDecoder().decode(new Uint8Array(getRoundSize()));
+  const now = Date.UTC(2026, 10, 10, 12);
+
+  test('a lottery round is due once its period is over, until its fee is collected', () => {
+    const today = periodOf(Daily, now);
+    expect(isDue({ ...round, kind: Daily, period: today }, now)).toBe(false);
+    expect(isDue({ ...round, kind: Daily, period: today - 1 }, now)).toBe(true);
+    const settled = { ...round, kind: Daily, period: today - 1, status: RoundStatus.Settled };
+    expect(isDue(settled, now)).toBe(true);
+    expect(isDue({ ...settled, feeCollected: true }, now)).toBe(false);
+  });
+
+  test('a Guess round is due while guesses wait for a check', () => {
+    const guess = { ...round, kind: GameKind.Guess, period: 0 };
+    expect(isDue({ ...guess, ticketCount: 5, checked: 5 }, now)).toBe(false);
+    expect(isDue({ ...guess, ticketCount: 6, checked: 5 }, now)).toBe(true);
+    expect(isDue({ ...guess, status: RoundStatus.Closed, ticketCount: 5, checked: 5 }, now)).toBe(true);
   });
 });
